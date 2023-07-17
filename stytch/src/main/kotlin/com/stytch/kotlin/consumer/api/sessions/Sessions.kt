@@ -10,7 +10,10 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.stytch.kotlin.common.JWTException
+import com.stytch.kotlin.common.JwtOptions
+import com.stytch.kotlin.common.StytchException
 import com.stytch.kotlin.common.StytchResult
+import com.stytch.kotlin.common.StytchSessionClaim
 import com.stytch.kotlin.consumer.models.sessions.AuthenticateRequest
 import com.stytch.kotlin.consumer.models.sessions.AuthenticateResponse
 import com.stytch.kotlin.consumer.models.sessions.GetJWKSRequest
@@ -26,6 +29,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jose4j.jwk.HttpsJwks
+import org.jose4j.jwt.MalformedClaimException
+import org.jose4j.jwt.consumer.InvalidJwtException
+import org.jose4j.jwt.consumer.JwtConsumerBuilder
+import org.jose4j.lang.JoseException
+import java.time.Instant
+import java.util.Date
 
 public interface Sessions {
     /**
@@ -81,6 +90,8 @@ public interface Sessions {
     public fun getJWKS(data: GetJWKSRequest, callback: (StytchResult<GetJWKSResponse>) -> Unit)
 
     // MANUAL(authenticateJWT_interface)(INTERFACE_METHOD)
+    // ADDIMPORT import com.stytch.kotlin.consumer.models.sessions.Session
+    // ADDIMPORT import com.stytch.kotlin.common.JWTException
     /** Parse a JWT and verify the signature, preferring local verification over remote.
      *
      * If maxTokenAgeSeconds is set, remote verification will be forced if the JWT was issued at
@@ -89,7 +100,7 @@ public interface Sessions {
      * To force remote validation for all tokens, set max_token_age_seconds to zero or use the
      * authenticate method instead.
      */
-    public suspend fun authenticateJwt(jwt: String, maxTokenAgeSeconds: Int?): Session?
+    public suspend fun authenticateJwt(jwt: String, maxTokenAgeSeconds: Int?): StytchResult<Session?>
 
     /** Parse a JWT and verify the signature, preferring local verification over remote.
      *
@@ -99,7 +110,7 @@ public interface Sessions {
      * To force remote validation for all tokens, set max_token_age_seconds to zero or use the
      * authenticate method instead.
      */
-    public fun authenticateJwt(jwt: String, maxTokenAgeSeconds: Int?, callback: (Session?) -> Unit)
+    public fun authenticateJwt(jwt: String, maxTokenAgeSeconds: Int?, callback: (StytchResult<Session?>) -> Unit)
 
     /** Parse a JWT and verify the signature locally (without calling /authenticate in the API).
      *
@@ -112,7 +123,7 @@ public interface Sessions {
      * The value for leeway is the maximum allowable difference when comparing
      * timestamps. It defaults to zero.
      */
-    public suspend fun authenticateJwtLocal(jwt: String, maxTokenAgeSeconds: Int?, leeway: Int = 0): Session?
+    public suspend fun authenticateJwtLocal(jwt: String, maxTokenAgeSeconds: Int?, leeway: Int = 0): StytchResult<Session?>
 
     /** Parse a JWT and verify the signature locally (without calling /authenticate in the API).
      *
@@ -125,14 +136,15 @@ public interface Sessions {
      * The value for leeway is the maximum allowable difference when comparing
      * timestamps. It defaults to zero.
      */
-    public fun authenticateJwtLocal(jwt: String, maxTokenAgeSeconds: Int?, leeway: Int = 0, callback: (Session?) -> Unit)
+    public fun authenticateJwtLocal(jwt: String, maxTokenAgeSeconds: Int?, leeway: Int = 0, callback: (StytchResult<Session?>) -> Unit)
     // ENDMANUAL(authenticateJWT_interface)
 }
 
 internal class SessionsImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
-    private val jwksClient: HttpsJwks? = null,
+    private val jwksClient: HttpsJwks,
+    private val jwtOptions: JwtOptions,
 ) : Sessions {
 
     private val moshi = Moshi.Builder().build()
@@ -188,13 +200,13 @@ internal class SessionsImpl(
     override suspend fun authenticateJwt(
         jwt: String,
         maxTokenAgeSeconds: Int?,
-    ): Session? = withContext(Dispatchers.IO) {
+    ): StytchResult<Session?> = withContext(Dispatchers.IO) {
         try {
             authenticateJwtLocal(jwt = jwt, maxTokenAgeSeconds = maxTokenAgeSeconds)
         } catch (e: JWTException) {
             when (val result = authenticate(AuthenticateRequest(sessionJwt = jwt))) {
-                is StytchResult.Success -> result.value.session
-                else -> null
+                is StytchResult.Success -> StytchResult.Success(result.value.session)
+                else -> StytchResult.Success(null)
             }
         }
     }
@@ -202,7 +214,7 @@ internal class SessionsImpl(
     override fun authenticateJwt(
         jwt: String,
         maxTokenAgeSeconds: Int?,
-        callback: (Session?) -> Unit,
+        callback: (StytchResult<Session?>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(authenticateJwt(jwt, maxTokenAgeSeconds))
@@ -213,15 +225,61 @@ internal class SessionsImpl(
         jwt: String,
         maxTokenAgeSeconds: Int?,
         leeway: Int,
-    ): Session? {
-        // TODO: All the jwt validation
+    ): StytchResult<Session?> {
+        val now = Date().time
+        return try {
+            val jwtConsumer = JwtConsumerBuilder().apply {
+                setRequireExpirationTime()
+                setAllowedClockSkewInSeconds(leeway)
+                setRequireSubject()
+                setExpectedIssuer(jwtOptions.issuer)
+                setExpectedSubject(jwtOptions.audience)
+                setVerificationKey(jwksClient.jsonWebKeys[0].key)
+            }.build()
+            val jwtClaims = jwtConsumer.processToClaims(jwt)
+            if (maxTokenAgeSeconds != null) {
+                val iat = jwtClaims.issuedAt
+                if ((now - iat.valueInMillis) / 1000 >= maxTokenAgeSeconds) {
+                    return StytchResult.Error(
+                        StytchException.Critical(
+                            JWTException.JwtTooOld(
+                                iat = iat.valueInMillis / 1000,
+                                maxTokenAgeSeconds = maxTokenAgeSeconds,
+                            ),
+                        ),
+                    )
+                }
+            }
+            val payload = jwtClaims.claimsMap["https://stytch.com/session"] as String
+            val stytchSessionClaim =
+                moshi.adapter(StytchSessionClaim::class.java).fromJson(payload)
+                    ?: return StytchResult.Error(StytchException.Critical(JWTException.JwtMissingClaims))
+            return StytchResult.Success(
+                Session(
+                    sessionId = stytchSessionClaim.id,
+                    attributes = stytchSessionClaim.attributes,
+                    authenticationFactors = stytchSessionClaim.authenticationFactors,
+                    userId = jwtClaims.subject,
+                    startedAt = Instant.ofEpochMilli(stytchSessionClaim.startedAt.toLong()),
+                    lastAccessedAt = Instant.ofEpochMilli(stytchSessionClaim.lastAccessedAt.toLong()),
+                    expiresAt = Instant.ofEpochMilli(stytchSessionClaim.expiresAt.toLong()),
+                    customClaims = jwtClaims.claimsMap,
+                ),
+            )
+        } catch (e: JoseException) {
+            StytchResult.Error(StytchException.Critical(JWTException.JwtError(e)))
+        } catch (e: InvalidJwtException) {
+            StytchResult.Error(StytchException.Critical(JWTException.JwtError(e)))
+        } catch (e: MalformedClaimException) {
+            StytchResult.Error(StytchException.Critical(JWTException.JwtError(e)))
+        }
     }
 
     override fun authenticateJwtLocal(
         jwt: String,
         maxTokenAgeSeconds: Int?,
         leeway: Int,
-        callback: (Session?) -> Unit,
+        callback: (StytchResult<Session?>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(authenticateJwtLocal(jwt, maxTokenAgeSeconds, leeway))

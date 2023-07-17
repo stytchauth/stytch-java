@@ -19,6 +19,7 @@ import com.stytch.kotlin.b2b.api.sso.SSO
 import com.stytch.kotlin.b2b.api.sso.SSOImpl
 import com.stytch.kotlin.common.BASE_LIVE_URL
 import com.stytch.kotlin.common.BASE_TEST_URL
+import com.stytch.kotlin.common.JwtOptions
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -27,6 +28,7 @@ import org.jose4j.jwk.HttpsJwks
 public object StytchB2BClient {
     private lateinit var httpClient: HttpClient
     private lateinit var httpsJwks: HttpsJwks
+    private lateinit var jwtOptions: JwtOptions
     public lateinit var discovery: Discovery
     public lateinit var magicLinks: MagicLinks
     public lateinit var organizations: Organizations
@@ -40,6 +42,11 @@ public object StytchB2BClient {
             baseUrl = baseUrl,
             projectId = projectId,
             secret = secret,
+        )
+        jwtOptions = JwtOptions(
+            audience = projectId,
+            issuer = "stytch.com/$projectId",
+            type = "JWT",
         )
         val coroutineScope = CoroutineScope(SupervisorJob())
         httpsJwks = HttpsJwks("$baseUrl/v1/sessions/jwks/$projectId")

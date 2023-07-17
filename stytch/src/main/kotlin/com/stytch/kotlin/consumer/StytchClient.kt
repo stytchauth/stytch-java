@@ -7,6 +7,7 @@ package com.stytch.kotlin.consumer
 // !!!
 import com.stytch.kotlin.common.BASE_LIVE_URL
 import com.stytch.kotlin.common.BASE_TEST_URL
+import com.stytch.kotlin.common.JwtOptions
 import com.stytch.kotlin.consumer.api.cryptowallets.CryptoWallets
 import com.stytch.kotlin.consumer.api.cryptowallets.CryptoWalletsImpl
 import com.stytch.kotlin.consumer.api.magiclinks.MagicLinks
@@ -33,6 +34,7 @@ import org.jose4j.jwk.HttpsJwks
 public object StytchClient {
     private lateinit var httpClient: HttpClient
     private lateinit var httpsJwks: HttpsJwks
+    private lateinit var jwtOptions: JwtOptions
     public lateinit var cryptoWallets: CryptoWallets
     public lateinit var magicLinks: MagicLinks
     public lateinit var oAuth: OAuth
@@ -50,6 +52,11 @@ public object StytchClient {
             projectId = projectId,
             secret = secret,
         )
+        jwtOptions = JwtOptions(
+            audience = projectId,
+            issuer = "stytch.com/$projectId",
+            type = "JWT",
+        )
         val coroutineScope = CoroutineScope(SupervisorJob())
         httpsJwks = HttpsJwks("$baseUrl/v1/sessions/jwks/$projectId")
         cryptoWallets = CryptoWalletsImpl(httpClient, coroutineScope)
@@ -57,7 +64,7 @@ public object StytchClient {
         oAuth = OAuthImpl(httpClient, coroutineScope)
         oTPs = OTPsImpl(httpClient, coroutineScope)
         passwords = PasswordsImpl(httpClient, coroutineScope)
-        sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks)
+        sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
         tOTPs = TOTPsImpl(httpClient, coroutineScope)
         users = UsersImpl(httpClient, coroutineScope)
         webAuthn = WebAuthnImpl(httpClient, coroutineScope)
