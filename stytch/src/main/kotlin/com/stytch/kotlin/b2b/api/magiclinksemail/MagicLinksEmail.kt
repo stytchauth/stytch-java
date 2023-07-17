@@ -19,6 +19,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface Email {
     public val discovery: Discovery
@@ -38,6 +40,13 @@ public interface Email {
     public fun loginOrSignup(data: LoginOrSignupRequest, callback: (StytchResult<LoginOrSignupResponse>) -> Unit)
 
     /**
+     * Send either a login or signup magic link to a Member. A new, pending, or invited Member will receive a signup Email
+     * Magic Link. Members will have a `pending` status until they successfully authenticate. An active Member will receive a
+     * login Email Magic Link.
+     */
+    public fun loginOrSignupCompletable(data: LoginOrSignupRequest): CompletableFuture<StytchResult<LoginOrSignupResponse>>
+
+    /**
      * Send an invite email to a new Member to join an Organization. The Member will be created with an `invited` status until
      * they successfully authenticate. Sending invites to `pending` Members will update their status to `invited`. Sending
      * invites to already `active` Members will return an error.
@@ -50,6 +59,13 @@ public interface Email {
      * invites to already `active` Members will return an error.
      */
     public fun invite(data: InviteRequest, callback: (StytchResult<InviteResponse>) -> Unit)
+
+    /**
+     * Send an invite email to a new Member to join an Organization. The Member will be created with an `invited` status until
+     * they successfully authenticate. Sending invites to `pending` Members will update their status to `invited`. Sending
+     * invites to already `active` Members will return an error.
+     */
+    public fun inviteCompletable(data: InviteRequest): CompletableFuture<StytchResult<InviteResponse>>
 }
 
 internal class EmailImpl(
@@ -71,6 +87,14 @@ internal class EmailImpl(
             callback(loginOrSignup(data))
         }
     }
+
+    override fun loginOrSignupCompletable(data: LoginOrSignupRequest): CompletableFuture<StytchResult<LoginOrSignupResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(LoginOrSignupRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/magic_links/email/login_or_signup", asJson)
+        }, executor)
+    }
     override suspend fun invite(data: InviteRequest): StytchResult<InviteResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(InviteRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/magic_links/email/invite", asJson)
@@ -80,5 +104,13 @@ internal class EmailImpl(
         coroutineScope.launch {
             callback(invite(data))
         }
+    }
+
+    override fun inviteCompletable(data: InviteRequest): CompletableFuture<StytchResult<InviteResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(InviteRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/magic_links/email/invite", asJson)
+        }, executor)
     }
 }

@@ -25,6 +25,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface Sessions {
     /**
@@ -36,6 +38,11 @@ public interface Sessions {
      * Retrieves all active Sessions for a Member.
      */
     public fun get(data: GetRequest, callback: (StytchResult<GetResponse>) -> Unit)
+
+    /**
+     * Retrieves all active Sessions for a Member.
+     */
+    public fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>>
 
     /**
      * Authenticates a Session and updates its lifetime by the specified `session_duration_minutes`. If the
@@ -58,6 +65,16 @@ public interface Sessions {
     public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
 
     /**
+     * Authenticates a Session and updates its lifetime by the specified `session_duration_minutes`. If the
+     * `session_duration_minutes` is not specified, a Session will not be extended. This endpoint requires either a
+     * `session_jwt` or `session_token` be included in the request. It will return an error if both are present.
+     *
+     * You may provide a JWT that needs to be refreshed and is expired according to its `exp` claim. A new JWT will be
+     * returned if both the signature and the underlying Session are still valid.
+     */
+    public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
+
+    /**
      * Revoke a Session and immediately invalidate all its tokens. To revoke a specific Session, pass either the
      * `member_session_id`, `session_token`, or `session_jwt`. To revoke all Sessions for a Member, pass the `member_id`.
      */
@@ -68,6 +85,12 @@ public interface Sessions {
      * `member_session_id`, `session_token`, or `session_jwt`. To revoke all Sessions for a Member, pass the `member_id`.
      */
     public fun revoke(data: RevokeRequest, callback: (StytchResult<RevokeResponse>) -> Unit)
+
+    /**
+     * Revoke a Session and immediately invalidate all its tokens. To revoke a specific Session, pass either the
+     * `member_session_id`, `session_token`, or `session_jwt`. To revoke all Sessions for a Member, pass the `member_id`.
+     */
+    public fun revokeCompletable(data: RevokeRequest): CompletableFuture<StytchResult<RevokeResponse>>
 
     /**
      * Use this endpoint to exchange a Member's existing session for another session in a different Organization. This can be
@@ -88,6 +111,15 @@ public interface Sessions {
     public fun exchange(data: ExchangeRequest, callback: (StytchResult<ExchangeResponse>) -> Unit)
 
     /**
+     * Use this endpoint to exchange a Member's existing session for another session in a different Organization. This can be
+     * used to accept an invite, but not to create a new member via domain matching.
+     *
+     * To create a new member via domain matching, use the
+     * [Exchange Intermediate Session](https://stytch.com/docs/b2b/api/exchange-intermediate-session) flow instead.
+     */
+    public fun exchangeCompletable(data: ExchangeRequest): CompletableFuture<StytchResult<ExchangeResponse>>
+
+    /**
      * Get the JSON Web Key Set (JWKS) for a project.
      */
     public suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse>
@@ -96,6 +128,11 @@ public interface Sessions {
      * Get the JSON Web Key Set (JWKS) for a project.
      */
     public fun getJWKS(data: GetJWKSRequest, callback: (StytchResult<GetJWKSResponse>) -> Unit)
+
+    /**
+     * Get the JSON Web Key Set (JWKS) for a project.
+     */
+    public fun getJWKSCompletable(data: GetJWKSRequest): CompletableFuture<StytchResult<GetJWKSResponse>>
 }
 
 internal class SessionsImpl(
@@ -118,6 +155,17 @@ internal class SessionsImpl(
             callback(get(data))
         }
     }
+
+    override fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/sessions", asMap)
+        }, executor)
+    }
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/sessions/authenticate", asJson)
@@ -127,6 +175,14 @@ internal class SessionsImpl(
         coroutineScope.launch {
             callback(authenticate(data))
         }
+    }
+
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/sessions/authenticate", asJson)
+        }, executor)
     }
     override suspend fun revoke(data: RevokeRequest): StytchResult<RevokeResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(RevokeRequest::class.java).toJson(data)
@@ -138,6 +194,14 @@ internal class SessionsImpl(
             callback(revoke(data))
         }
     }
+
+    override fun revokeCompletable(data: RevokeRequest): CompletableFuture<StytchResult<RevokeResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(RevokeRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/sessions/revoke", asJson)
+        }, executor)
+    }
     override suspend fun exchange(data: ExchangeRequest): StytchResult<ExchangeResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(ExchangeRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/sessions/exchange", asJson)
@@ -147,6 +211,14 @@ internal class SessionsImpl(
         coroutineScope.launch {
             callback(exchange(data))
         }
+    }
+
+    override fun exchangeCompletable(data: ExchangeRequest): CompletableFuture<StytchResult<ExchangeResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(ExchangeRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/sessions/exchange", asJson)
+        }, executor)
     }
     override suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(GetJWKSRequest::class.java).toJson(data)
@@ -160,5 +232,16 @@ internal class SessionsImpl(
         coroutineScope.launch {
             callback(getJWKS(data))
         }
+    }
+
+    override fun getJWKSCompletable(data: GetJWKSRequest): CompletableFuture<StytchResult<GetJWKSResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(GetJWKSRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/sessions/jwks/${data.projectId}", asMap)
+        }, executor)
     }
 }

@@ -15,6 +15,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface Discovery {
     /**
@@ -26,6 +28,11 @@ public interface Discovery {
      * Send a discovery magic link to an email address.
      */
     public fun send(data: SendRequest, callback: (StytchResult<SendResponse>) -> Unit)
+
+    /**
+     * Send a discovery magic link to an email address.
+     */
+    public fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>>
 }
 
 internal class DiscoveryImpl(
@@ -44,5 +51,13 @@ internal class DiscoveryImpl(
         coroutineScope.launch {
             callback(send(data))
         }
+    }
+
+    override fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(SendRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/magic_links/email/discovery/send", asJson)
+        }, executor)
     }
 }

@@ -21,6 +21,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface SAML {
     /**
@@ -32,6 +34,11 @@ public interface SAML {
      * Create a new SAML Connection.
      */
     public fun createConnection(data: CreateConnectionRequest, callback: (StytchResult<CreateConnectionResponse>) -> Unit)
+
+    /**
+     * Create a new SAML Connection.
+     */
+    public fun createConnectionCompletable(data: CreateConnectionRequest): CompletableFuture<StytchResult<CreateConnectionResponse>>
 
     /**
      * Updates an existing SAML connection.
@@ -56,6 +63,17 @@ public interface SAML {
     public fun updateConnection(data: UpdateConnectionRequest, callback: (StytchResult<UpdateConnectionResponse>) -> Unit)
 
     /**
+     * Updates an existing SAML connection.
+     *
+     * Note that a newly created connection will not become active until all of the following are provided:
+     * * `idp_sso_url`
+     * * `attribute_mapping`
+     * * `idp_entity_id`
+     * * `x509_certificate`
+     */
+    public fun updateConnectionCompletable(data: UpdateConnectionRequest): CompletableFuture<StytchResult<UpdateConnectionResponse>>
+
+    /**
      * Delete a SAML verification certificate.
      *
      * You may need to do this when rotating certificates from your IdP, since Stytch allows a maximum of 5 certificates per
@@ -70,6 +88,14 @@ public interface SAML {
      * connection. There must always be at least one certificate per active connection.
      */
     public fun deleteVerificationCertificate(data: DeleteVerificationCertificateRequest, callback: (StytchResult<DeleteVerificationCertificateResponse>) -> Unit)
+
+    /**
+     * Delete a SAML verification certificate.
+     *
+     * You may need to do this when rotating certificates from your IdP, since Stytch allows a maximum of 5 certificates per
+     * connection. There must always be at least one certificate per active connection.
+     */
+    public fun deleteVerificationCertificateCompletable(data: DeleteVerificationCertificateRequest): CompletableFuture<StytchResult<DeleteVerificationCertificateResponse>>
 }
 
 internal class SAMLImpl(
@@ -89,6 +115,14 @@ internal class SAMLImpl(
             callback(createConnection(data))
         }
     }
+
+    override fun createConnectionCompletable(data: CreateConnectionRequest): CompletableFuture<StytchResult<CreateConnectionResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(CreateConnectionRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/sso/saml/${data.organizationId}", asJson)
+        }, executor)
+    }
     override suspend fun updateConnection(data: UpdateConnectionRequest): StytchResult<UpdateConnectionResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(UpdateConnectionRequest::class.java).toJson(data)
         httpClient.put("/v1/b2b/sso/saml/$data.organizationId/connections/${data.connectionId}", asJson)
@@ -98,6 +132,14 @@ internal class SAMLImpl(
         coroutineScope.launch {
             callback(updateConnection(data))
         }
+    }
+
+    override fun updateConnectionCompletable(data: UpdateConnectionRequest): CompletableFuture<StytchResult<UpdateConnectionResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(UpdateConnectionRequest::class.java).toJson(data)
+            httpClient.put("/v1/b2b/sso/saml/$data.organizationId/connections/${data.connectionId}", asJson)
+        }, executor)
     }
     override suspend fun deleteVerificationCertificate(data: DeleteVerificationCertificateRequest): StytchResult<DeleteVerificationCertificateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(DeleteVerificationCertificateRequest::class.java).toJson(data)
@@ -111,5 +153,16 @@ internal class SAMLImpl(
         coroutineScope.launch {
             callback(deleteVerificationCertificate(data))
         }
+    }
+
+    override fun deleteVerificationCertificateCompletable(data: DeleteVerificationCertificateRequest): CompletableFuture<StytchResult<DeleteVerificationCertificateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(DeleteVerificationCertificateRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.delete("/v1/b2b/sso/saml/$data.organizationId/connections/$data.connectionId/verification_certificates/${data.certificateId}", asMap)
+        }, executor)
     }
 }

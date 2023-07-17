@@ -27,6 +27,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface Members {
     /**
@@ -40,6 +42,11 @@ public interface Members {
     public fun update(data: UpdateRequest, callback: (StytchResult<UpdateResponse>) -> Unit)
 
     /**
+     * Updates a Member specified by `organization_id` and `member_id`.
+     */
+    public fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>>
+
+    /**
      * Deletes a Member specified by `organization_id` and `member_id`.
      */
     public suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse>
@@ -48,6 +55,11 @@ public interface Members {
      * Deletes a Member specified by `organization_id` and `member_id`.
      */
     public fun delete(data: DeleteRequest, callback: (StytchResult<DeleteResponse>) -> Unit)
+
+    /**
+     * Deletes a Member specified by `organization_id` and `member_id`.
+     */
+    public fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>>
 
     /**
      * Search for Members within specified Organizations. An array with at least one `organization_id` is required. Submitting
@@ -66,6 +78,14 @@ public interface Members {
     public fun search(data: SearchRequest, callback: (StytchResult<SearchResponse>) -> Unit)
 
     /**
+     * Search for Members within specified Organizations. An array with at least one `organization_id` is required. Submitting
+     * an empty `query` returns all Members within the specified Organizations.
+     *
+     * *All fuzzy search filters require a minimum of three characters.
+     */
+    public fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>>
+
+    /**
      * Delete a Member's password.
      */
     public suspend fun deletePassword(data: DeletePasswordRequest): StytchResult<DeletePasswordResponse>
@@ -74,6 +94,11 @@ public interface Members {
      * Delete a Member's password.
      */
     public fun deletePassword(data: DeletePasswordRequest, callback: (StytchResult<DeletePasswordResponse>) -> Unit)
+
+    /**
+     * Delete a Member's password.
+     */
+    public fun deletePasswordCompletable(data: DeletePasswordRequest): CompletableFuture<StytchResult<DeletePasswordResponse>>
 
     /**
      * Creates a Member. An `organization_id` and `email_address` are required.
@@ -86,6 +111,11 @@ public interface Members {
     public fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit)
 
     /**
+     * Creates a Member. An `organization_id` and `email_address` are required.
+     */
+    public fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>>
+
+    /**
      * Get a Member by `member_id` or `email_address`.
      */
     public suspend fun get(data: GetRequest): StytchResult<GetResponse>
@@ -94,6 +124,11 @@ public interface Members {
      * Get a Member by `member_id` or `email_address`.
      */
     public fun get(data: GetRequest, callback: (StytchResult<GetResponse>) -> Unit)
+
+    /**
+     * Get a Member by `member_id` or `email_address`.
+     */
+    public fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>>
 }
 
 internal class MembersImpl(
@@ -113,6 +148,14 @@ internal class MembersImpl(
             callback(update(data))
         }
     }
+
+    override fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
+            httpClient.put("/v1/b2b/organizations/$data.organizationId/members/${data.memberId}", asJson)
+        }, executor)
+    }
     override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(DeleteRequest::class.java).toJson(data)
         val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
@@ -126,6 +169,17 @@ internal class MembersImpl(
             callback(delete(data))
         }
     }
+
+    override fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(DeleteRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.delete("/v1/b2b/organizations/$data.organizationId/members/${data.memberId}", asMap)
+        }, executor)
+    }
     override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/organizations/members/search", asJson)
@@ -135,6 +189,14 @@ internal class MembersImpl(
         coroutineScope.launch {
             callback(search(data))
         }
+    }
+
+    override fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/organizations/members/search", asJson)
+        }, executor)
     }
     override suspend fun deletePassword(data: DeletePasswordRequest): StytchResult<DeletePasswordResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(DeletePasswordRequest::class.java).toJson(data)
@@ -149,6 +211,17 @@ internal class MembersImpl(
             callback(deletePassword(data))
         }
     }
+
+    override fun deletePasswordCompletable(data: DeletePasswordRequest): CompletableFuture<StytchResult<DeletePasswordResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(DeletePasswordRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.delete("/v1/b2b/organizations/$data.organizationId/members/passwords/${data.memberPasswordId}", asMap)
+        }, executor)
+    }
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/organizations/${data.organizationId}/members", asJson)
@@ -158,6 +231,14 @@ internal class MembersImpl(
         coroutineScope.launch {
             callback(create(data))
         }
+    }
+
+    override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/organizations/${data.organizationId}/members", asJson)
+        }, executor)
     }
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
@@ -171,5 +252,16 @@ internal class MembersImpl(
         coroutineScope.launch {
             callback(get(data))
         }
+    }
+
+    override fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/organizations/${data.organizationId}/member", asMap)
+        }, executor)
     }
 }

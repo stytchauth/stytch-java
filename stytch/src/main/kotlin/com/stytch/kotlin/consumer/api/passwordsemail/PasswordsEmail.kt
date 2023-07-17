@@ -17,6 +17,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface Email {
     /**
@@ -30,6 +32,12 @@ public interface Email {
      * containing a magic link that will allow them to set a new password and authenticate.
      */
     public fun resetStart(data: ResetStartRequest, callback: (StytchResult<ResetStartResponse>) -> Unit)
+
+    /**
+     * Initiates a password reset for the email address provided. This will trigger an email to be sent to the address,
+     * containing a magic link that will allow them to set a new password and authenticate.
+     */
+    public fun resetStartCompletable(data: ResetStartRequest): CompletableFuture<StytchResult<ResetStartResponse>>
 
     /**
      * Reset the user’s password and authenticate them. This endpoint checks that the magic link `token` is valid, hasn’t
@@ -52,6 +60,17 @@ public interface Email {
      * authentication and the user is authenticated.
      */
     public fun reset(data: ResetRequest, callback: (StytchResult<ResetResponse>) -> Unit)
+
+    /**
+     * Reset the user’s password and authenticate them. This endpoint checks that the magic link `token` is valid, hasn’t
+     * expired, or already been used – and can optionally require additional security settings, such as the IP address and
+     * user agent matching the initial reset request.
+     *
+     * The provided password needs to meet our password strength requirements, which can be checked in advance with the
+     * password strength endpoint. If the token and password are accepted, the password is securely stored for future
+     * authentication and the user is authenticated.
+     */
+    public fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>>
 }
 
 internal class EmailImpl(
@@ -71,6 +90,14 @@ internal class EmailImpl(
             callback(resetStart(data))
         }
     }
+
+    override fun resetStartCompletable(data: ResetStartRequest): CompletableFuture<StytchResult<ResetStartResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(ResetStartRequest::class.java).toJson(data)
+            httpClient.post("/v1/passwords/email/reset/start", asJson)
+        }, executor)
+    }
     override suspend fun reset(data: ResetRequest): StytchResult<ResetResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
         httpClient.post("/v1/passwords/email/reset", asJson)
@@ -80,5 +107,13 @@ internal class EmailImpl(
         coroutineScope.launch {
             callback(reset(data))
         }
+    }
+
+    override fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
+            httpClient.post("/v1/passwords/email/reset", asJson)
+        }, executor)
     }
 }

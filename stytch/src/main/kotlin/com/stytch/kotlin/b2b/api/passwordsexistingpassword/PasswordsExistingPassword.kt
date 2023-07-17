@@ -15,6 +15,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface ExistingPassword {
     /**
@@ -44,6 +46,20 @@ public interface ExistingPassword {
      * [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
      */
     public fun reset(data: ResetRequest, callback: (StytchResult<ResetResponse>) -> Unit)
+
+    /**
+     * Reset the member’s password using their existing password.
+     *
+     * This endpoint adapts to your Project's password strength configuration.
+     * If you're using [zxcvbn](https://stytch.com/docs/passwords#strength-requirements), the default, your passwords are
+     * considered valid
+     * if the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/passwords#strength-requirements), your
+     * passwords are
+     * considered valid if they meet the requirements that you've set with Stytch.
+     * You may update your password strength configuration in the
+     * [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
+     */
+    public fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>>
 }
 
 internal class ExistingPasswordImpl(
@@ -62,5 +78,13 @@ internal class ExistingPasswordImpl(
         coroutineScope.launch {
             callback(reset(data))
         }
+    }
+
+    override fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/passwords/existing_password/reset", asJson)
+        }, executor)
     }
 }

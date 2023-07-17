@@ -19,6 +19,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface MagicLinks {
     public val email: Email
@@ -34,6 +36,12 @@ public interface MagicLinks {
      * been previously used, and any optional security settings such as IP match or user agent match are satisfied.
      */
     public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+
+    /**
+     * Authenticate a User given a Magic Link. This endpoint verifies that the Magic Link token is valid, hasn't expired or
+     * been previously used, and any optional security settings such as IP match or user agent match are satisfied.
+     */
+    public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 
     /**
      * Create an embeddable Magic Link token for a User. Access to this endpoint is restricted. To enable it, please send us a
@@ -56,6 +64,17 @@ public interface MagicLinks {
      * to complete authentication.
      */
     public fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit)
+
+    /**
+     * Create an embeddable Magic Link token for a User. Access to this endpoint is restricted. To enable it, please send us a
+     * note at support@stytch.com.
+     *
+     * ### Next steps
+     * Send the returned `token` value to the end user in a link which directs to your application. When the end user follows
+     * your link, collect the token, and call [Authenticate Magic Link](https://stytch.com/docs/api/authenticate-magic-link)
+     * to complete authentication.
+     */
+    public fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>>
 }
 
 internal class MagicLinksImpl(
@@ -77,6 +96,14 @@ internal class MagicLinksImpl(
             callback(authenticate(data))
         }
     }
+
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/magic_links/authenticate", asJson)
+        }, executor)
+    }
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
         httpClient.post("/v1/magic_links", asJson)
@@ -86,5 +113,13 @@ internal class MagicLinksImpl(
         coroutineScope.launch {
             callback(create(data))
         }
+    }
+
+    override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
+            httpClient.post("/v1/magic_links", asJson)
+        }, executor)
     }
 }

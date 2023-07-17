@@ -15,6 +15,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface Discovery {
     /**
@@ -28,6 +30,12 @@ public interface Discovery {
      * Tokens can be used for various Discovery login flows and are valid for 10 minutes.
      */
     public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+
+    /**
+     * Authenticates the Discovery Magic Link token and exchanges it for an Intermediate Session Token. Intermediate Session
+     * Tokens can be used for various Discovery login flows and are valid for 10 minutes.
+     */
+    public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
 internal class DiscoveryImpl(
@@ -46,5 +54,13 @@ internal class DiscoveryImpl(
         coroutineScope.launch {
             callback(authenticate(data))
         }
+    }
+
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/magic_links/discovery/authenticate", asJson)
+        }, executor)
     }
 }

@@ -17,6 +17,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface Email {
     /**
@@ -54,6 +56,23 @@ public interface Email {
     public fun send(data: SendRequest, callback: (StytchResult<SendResponse>) -> Unit)
 
     /**
+     * Send a one-time passcode (OTP) to a User using their email. If you'd like to create a user and send them a passcode
+     * with one request, use our [log in or create endpoint](https://stytch.com/docs/api/log-in-or-create-user-by-email-otp).
+     *
+     * ### Add an email to an existing user
+     * This endpoint also allows you to add a new email to an existing Stytch User. Including a `user_id`, `session_token`, or
+     * `session_jwt` in the request will add the email to the pre-existing Stytch User upon successful authentication.
+     *
+     * Adding a new email to an existing Stytch User requires the User to be present and validate the email via OTP. This
+     * requirement is in place to prevent account takeover attacks.
+     *
+     * ### Next steps
+     * Collect the OTP which was delivered to the user. Call [Authenticate OTP](https://stytch.com/docs/api/authenticate-otp)
+     * using the OTP `code` along with the `phone_id` found in the response as the `method_id`.
+     */
+    public fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>>
+
+    /**
      * Send a one-time passcode (OTP) to a User using their email. If the email is not associated with a User already, a User
      * will be created.
      *
@@ -74,6 +93,17 @@ public interface Email {
      * using the OTP `code` along with the `phone_id` found in the response as the `method_id`.
      */
     public fun loginOrCreate(data: LoginOrCreateRequest, callback: (StytchResult<LoginOrCreateResponse>) -> Unit)
+
+    /**
+     * Send a one-time passcode (OTP) to a User using their email. If the email is not associated with a User already, a User
+     * will be created.
+     *
+     * ### Next steps
+     *
+     * Collect the OTP which was delivered to the User. Call [Authenticate OTP](https://stytch.com/docs/api/authenticate-otp)
+     * using the OTP `code` along with the `phone_id` found in the response as the `method_id`.
+     */
+    public fun loginOrCreateCompletable(data: LoginOrCreateRequest): CompletableFuture<StytchResult<LoginOrCreateResponse>>
 }
 
 internal class EmailImpl(
@@ -93,6 +123,14 @@ internal class EmailImpl(
             callback(send(data))
         }
     }
+
+    override fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(SendRequest::class.java).toJson(data)
+            httpClient.post("/v1/otps/email/send", asJson)
+        }, executor)
+    }
     override suspend fun loginOrCreate(data: LoginOrCreateRequest): StytchResult<LoginOrCreateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(LoginOrCreateRequest::class.java).toJson(data)
         httpClient.post("/v1/otps/email/login_or_create", asJson)
@@ -102,5 +140,13 @@ internal class EmailImpl(
         coroutineScope.launch {
             callback(loginOrCreate(data))
         }
+    }
+
+    override fun loginOrCreateCompletable(data: LoginOrCreateRequest): CompletableFuture<StytchResult<LoginOrCreateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(LoginOrCreateRequest::class.java).toJson(data)
+            httpClient.post("/v1/otps/email/login_or_create", asJson)
+        }, executor)
     }
 }

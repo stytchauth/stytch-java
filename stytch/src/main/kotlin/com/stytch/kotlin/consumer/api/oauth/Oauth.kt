@@ -17,6 +17,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface OAuth {
     /**
@@ -46,6 +48,19 @@ public interface OAuth {
     public fun attach(data: AttachRequest, callback: (StytchResult<AttachResponse>) -> Unit)
 
     /**
+     * Generate an OAuth Attach Token to pre-associate an OAuth flow with an existing Stytch User. Pass the returned
+     * `oauth_attach_token` to the same provider's OAuth Start endpoint to treat this OAuth flow as a login for that user
+     * instead of a signup for a new user.
+     *
+     * Exactly one of `user_id`, `session_token`, or `session_jwt` must be provided to identify the target Stytch User.
+     *
+     * This is an optional step in the OAuth flow. Stytch can often determine whether to create a new user or log in an
+     * existing one based on verified identity provider information. This endpoint is useful for cases where we can't, such as
+     * missing or unverified provider information.
+     */
+    public fun attachCompletable(data: AttachRequest): CompletableFuture<StytchResult<AttachResponse>>
+
+    /**
      * Authenticate a User given a `token`. This endpoint verifies that the user completed the OAuth flow by verifying that
      * the token is valid and hasn't expired. To initiate a Stytch session for the user while authenticating their OAuth
      * token, include `session_duration_minutes`; a session with the identity provider, e.g. Google or Facebook, will always
@@ -60,6 +75,14 @@ public interface OAuth {
      * be initiated upon successful authentication.
      */
     public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+
+    /**
+     * Authenticate a User given a `token`. This endpoint verifies that the user completed the OAuth flow by verifying that
+     * the token is valid and hasn't expired. To initiate a Stytch session for the user while authenticating their OAuth
+     * token, include `session_duration_minutes`; a session with the identity provider, e.g. Google or Facebook, will always
+     * be initiated upon successful authentication.
+     */
+    public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
 internal class OAuthImpl(
@@ -79,6 +102,14 @@ internal class OAuthImpl(
             callback(attach(data))
         }
     }
+
+    override fun attachCompletable(data: AttachRequest): CompletableFuture<StytchResult<AttachResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(AttachRequest::class.java).toJson(data)
+            httpClient.post("/v1/oauth/attach", asJson)
+        }, executor)
+    }
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
         httpClient.post("/v1/oauth/authenticate", asJson)
@@ -88,5 +119,13 @@ internal class OAuthImpl(
         coroutineScope.launch {
             callback(authenticate(data))
         }
+    }
+
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/oauth/authenticate", asJson)
+        }, executor)
     }
 }

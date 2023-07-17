@@ -15,6 +15,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface ExistingPassword {
     /**
@@ -26,6 +28,11 @@ public interface ExistingPassword {
      * Reset the User’s password using their existing password.
      */
     public fun reset(data: ResetRequest, callback: (StytchResult<ResetResponse>) -> Unit)
+
+    /**
+     * Reset the User’s password using their existing password.
+     */
+    public fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>>
 }
 
 internal class ExistingPasswordImpl(
@@ -44,5 +51,13 @@ internal class ExistingPasswordImpl(
         coroutineScope.launch {
             callback(reset(data))
         }
+    }
+
+    override fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
+            httpClient.post("/v1/passwords/existing_password/reset", asJson)
+        }, executor)
     }
 }

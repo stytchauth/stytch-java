@@ -25,6 +25,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface SSO {
     public val oidc: OIDC
@@ -42,6 +44,11 @@ public interface SSO {
     public fun getConnections(data: GetConnectionsRequest, callback: (StytchResult<GetConnectionsResponse>) -> Unit)
 
     /**
+     * Get all SSO Connections owned by the organization.
+     */
+    public fun getConnectionsCompletable(data: GetConnectionsRequest): CompletableFuture<StytchResult<GetConnectionsResponse>>
+
+    /**
      * Delete an existing SSO connection.
      */
     public suspend fun deleteConnection(data: DeleteConnectionRequest): StytchResult<DeleteConnectionResponse>
@@ -50,6 +57,11 @@ public interface SSO {
      * Delete an existing SSO connection.
      */
     public fun deleteConnection(data: DeleteConnectionRequest, callback: (StytchResult<DeleteConnectionResponse>) -> Unit)
+
+    /**
+     * Delete an existing SSO connection.
+     */
+    public fun deleteConnectionCompletable(data: DeleteConnectionRequest): CompletableFuture<StytchResult<DeleteConnectionResponse>>
 
     /**
      * Authenticate a user given a token.
@@ -74,6 +86,18 @@ public interface SSO {
      * param.
      */
     public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+
+    /**
+     * Authenticate a user given a token.
+     * This endpoint verifies that the user completed the SSO Authentication flow by verifying that the token is valid and
+     * hasn't expired.
+     * Provide the `session_duration_minutes` parameter to set the lifetime of the session.
+     * If the `session_duration_minutes` parameter is not specified, a Stytch session will be created with a 60 minute
+     * duration.
+     * To link this authentication event to an existing Stytch session, include either the `session_token` or `session_jwt`
+     * param.
+     */
+    public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
 internal class SSOImpl(
@@ -99,6 +123,17 @@ internal class SSOImpl(
             callback(getConnections(data))
         }
     }
+
+    override fun getConnectionsCompletable(data: GetConnectionsRequest): CompletableFuture<StytchResult<GetConnectionsResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(GetConnectionsRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/sso/${data.organizationId}", asMap)
+        }, executor)
+    }
     override suspend fun deleteConnection(data: DeleteConnectionRequest): StytchResult<DeleteConnectionResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(DeleteConnectionRequest::class.java).toJson(data)
         val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
@@ -112,6 +147,17 @@ internal class SSOImpl(
             callback(deleteConnection(data))
         }
     }
+
+    override fun deleteConnectionCompletable(data: DeleteConnectionRequest): CompletableFuture<StytchResult<DeleteConnectionResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(DeleteConnectionRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.delete("/v1/b2b/sso/$data.organizationId/connections/${data.connectionId}", asMap)
+        }, executor)
+    }
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/sso/authenticate", asJson)
@@ -121,5 +167,13 @@ internal class SSOImpl(
         coroutineScope.launch {
             callback(authenticate(data))
         }
+    }
+
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/sso/authenticate", asJson)
+        }, executor)
     }
 }

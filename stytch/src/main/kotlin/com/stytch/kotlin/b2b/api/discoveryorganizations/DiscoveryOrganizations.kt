@@ -17,6 +17,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface Organizations {
     /**
@@ -42,6 +44,18 @@ public interface Organizations {
      * This endpoint can also be used to start an initial session for the newly created member and organization.
      */
     public fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit)
+
+    /**
+     * If an end user does not want to join any already-existing organization, or has no possible organizations to join, this
+     * endpoint can be used to create a new
+     * [Organization](https://stytch.com/docs/b2b/api/organization-object) and
+     * [Member](https://stytch.com/docs/b2b/api/member-object).
+     *
+     * This operation consumes the Intermediate Session.
+     *
+     * This endpoint can also be used to start an initial session for the newly created member and organization.
+     */
+    public fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>>
 
     /**
      * List all possible organization relationships connected to a
@@ -86,6 +100,28 @@ public interface Organizations {
      * This operation does not consume the Intermediate Session or Session Token passed in.
      */
     public fun list(data: ListRequest, callback: (StytchResult<ListResponse>) -> Unit)
+
+    /**
+     * List all possible organization relationships connected to a
+     * [Member Session](https://stytch.com/docs/b2b/api/session-object) or Intermediate Session.
+     *
+     * When a Member Session is passed in, relationships with a type of `active_member`, `pending_member`, or `invited_member`
+     * will be returned, and any membership can be assumed by calling the
+     * [Exchange Session](https://stytch.com/docs/b2b/api/exchange-session) endpoint.
+     *
+     * When an Intermediate Session is passed in, all relationship types - `active_member`, `pending_member`,
+     * `invited_member`,
+     * and `eligible_to_join_by_email_domain` - will be returned,
+     * and any membership can be assumed by calling the
+     * [Exchange Intermediate Session](https://stytch.com/docs/b2b/api/exchange-intermediate-session) endpoint.
+     *
+     * This endpoint requires either an `intermediate_session_token`, `session_jwt` or `session_token` be included in the
+     * request.
+     * It will return an error if multiple are present.
+     *
+     * This operation does not consume the Intermediate Session or Session Token passed in.
+     */
+    public fun listCompletable(data: ListRequest): CompletableFuture<StytchResult<ListResponse>>
 }
 
 internal class OrganizationsImpl(
@@ -105,6 +141,14 @@ internal class OrganizationsImpl(
             callback(create(data))
         }
     }
+
+    override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/discovery/organizations/create", asJson)
+        }, executor)
+    }
     override suspend fun list(data: ListRequest): StytchResult<ListResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(ListRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/discovery/organizations", asJson)
@@ -114,5 +158,13 @@ internal class OrganizationsImpl(
         coroutineScope.launch {
             callback(list(data))
         }
+    }
+
+    override fun listCompletable(data: ListRequest): CompletableFuture<StytchResult<ListResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(ListRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/discovery/organizations", asJson)
+        }, executor)
     }
 }

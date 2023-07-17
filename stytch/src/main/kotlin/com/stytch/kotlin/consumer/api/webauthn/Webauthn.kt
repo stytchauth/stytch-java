@@ -21,6 +21,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface WebAuthn {
     /**
@@ -50,6 +52,19 @@ public interface WebAuthn {
     public fun registerStart(data: RegisterStartRequest, callback: (StytchResult<RegisterStartResponse>) -> Unit)
 
     /**
+     * Initiate the process of creating a new WebAuthn registration. After calling this endpoint, the browser will need to
+     * call [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) with the data from
+     * [public_key_credential_creation_options](https://w3c.github.io/webauthn/#dictionary-makecredentialoptions) passed to
+     * the [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) request via the public
+     * key argument. We recommend using the `create()` wrapper provided by the webauthn-json library.
+     *
+     * If you are not using the [webauthn-json](https://github.com/github/webauthn-json) library, the
+     * `public_key_credential_creation_options` will need to be converted to a suitable public key by unmarshalling the JSON,
+     * base64 decoding the user ID field, and converting user ID and the challenge fields into an array buffer.
+     */
+    public fun registerStartCompletable(data: RegisterStartRequest): CompletableFuture<StytchResult<RegisterStartResponse>>
+
+    /**
      * Complete the creation of a WebAuthn registration by passing the response from the
      * [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) request to this endpoint as
      * the `public_key_credential` parameter.
@@ -74,6 +89,19 @@ public interface WebAuthn {
      * converted from array buffers to strings and marshalled into JSON.
      */
     public fun register(data: RegisterRequest, callback: (StytchResult<RegisterResponse>) -> Unit)
+
+    /**
+     * Complete the creation of a WebAuthn registration by passing the response from the
+     * [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) request to this endpoint as
+     * the `public_key_credential` parameter.
+     *
+     * If the [webauthn-json](https://github.com/github/webauthn-json) library's `create()` method was used, the response can
+     * be passed directly to the [register endpoint](https://stytch.com/docs/api/webauthn-register). If not, some fields (the
+     * client data and the attestation object) from the
+     * [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) response will need to be
+     * converted from array buffers to strings and marshalled into JSON.
+     */
+    public fun registerCompletable(data: RegisterRequest): CompletableFuture<StytchResult<RegisterResponse>>
 
     /**
      * Initiate the authentication of a WebAuthn registration. After calling this endpoint, the browser will need to call
@@ -102,6 +130,19 @@ public interface WebAuthn {
     public fun authenticateStart(data: AuthenticateStartRequest, callback: (StytchResult<AuthenticateStartResponse>) -> Unit)
 
     /**
+     * Initiate the authentication of a WebAuthn registration. After calling this endpoint, the browser will need to call
+     * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) with the data from
+     * `public_key_credential_request_options` passed to the
+     * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) request via the public key argument.
+     * We recommend using the `get()` wrapper provided by the webauthn-json library.
+     *
+     * If you are not using the [webauthn-json](https://github.com/github/webauthn-json) library, `the
+     * public_key_credential_request_options` will need to be converted to a suitable public key by unmarshalling the JSON and
+     * converting some the fields to array buffers.
+     */
+    public fun authenticateStartCompletable(data: AuthenticateStartRequest): CompletableFuture<StytchResult<AuthenticateStartResponse>>
+
+    /**
      * Complete the authentication of a WebAuthn registration by passing the response from the
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) request to the authenticate
      * endpoint.
@@ -124,6 +165,18 @@ public interface WebAuthn {
      * converted from array buffers to strings and marshalled into JSON.
      */
     public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+
+    /**
+     * Complete the authentication of a WebAuthn registration by passing the response from the
+     * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) request to the authenticate
+     * endpoint.
+     *
+     * If the [webauthn-json](https://github.com/github/webauthn-json) library's `get()` method was used, the response can be
+     * passed directly to the [authenticate endpoint](https://stytch.com/docs/api/webauthn-authenticate). If not some fields
+     * from the [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) response will need to be
+     * converted from array buffers to strings and marshalled into JSON.
+     */
+    public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
 internal class WebAuthnImpl(
@@ -143,6 +196,14 @@ internal class WebAuthnImpl(
             callback(registerStart(data))
         }
     }
+
+    override fun registerStartCompletable(data: RegisterStartRequest): CompletableFuture<StytchResult<RegisterStartResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(RegisterStartRequest::class.java).toJson(data)
+            httpClient.post("/v1/webauthn/register/start", asJson)
+        }, executor)
+    }
     override suspend fun register(data: RegisterRequest): StytchResult<RegisterResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(RegisterRequest::class.java).toJson(data)
         httpClient.post("/v1/webauthn/register", asJson)
@@ -152,6 +213,14 @@ internal class WebAuthnImpl(
         coroutineScope.launch {
             callback(register(data))
         }
+    }
+
+    override fun registerCompletable(data: RegisterRequest): CompletableFuture<StytchResult<RegisterResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(RegisterRequest::class.java).toJson(data)
+            httpClient.post("/v1/webauthn/register", asJson)
+        }, executor)
     }
     override suspend fun authenticateStart(data: AuthenticateStartRequest): StytchResult<AuthenticateStartResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AuthenticateStartRequest::class.java).toJson(data)
@@ -163,6 +232,14 @@ internal class WebAuthnImpl(
             callback(authenticateStart(data))
         }
     }
+
+    override fun authenticateStartCompletable(data: AuthenticateStartRequest): CompletableFuture<StytchResult<AuthenticateStartResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(AuthenticateStartRequest::class.java).toJson(data)
+            httpClient.post("/v1/webauthn/authenticate/start", asJson)
+        }, executor)
+    }
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
         httpClient.post("/v1/webauthn/authenticate", asJson)
@@ -172,5 +249,13 @@ internal class WebAuthnImpl(
         coroutineScope.launch {
             callback(authenticate(data))
         }
+    }
+
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/webauthn/authenticate", asJson)
+        }, executor)
     }
 }

@@ -17,6 +17,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface CryptoWallets {
     /**
@@ -32,6 +34,12 @@ public interface CryptoWallets {
     public fun authenticateStart(data: AuthenticateStartRequest, callback: (StytchResult<AuthenticateStartResponse>) -> Unit)
 
     /**
+     * Initiate the authentication of a crypto wallet. After calling this endpoint, the user will need to sign a message
+     * containing only the returned `challenge` field.
+     */
+    public fun authenticateStartCompletable(data: AuthenticateStartRequest): CompletableFuture<StytchResult<AuthenticateStartResponse>>
+
+    /**
      * Complete the authentication of a crypto wallet by passing the signature.
      */
     public suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse>
@@ -40,6 +48,11 @@ public interface CryptoWallets {
      * Complete the authentication of a crypto wallet by passing the signature.
      */
     public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+
+    /**
+     * Complete the authentication of a crypto wallet by passing the signature.
+     */
+    public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
 internal class CryptoWalletsImpl(
@@ -59,6 +72,14 @@ internal class CryptoWalletsImpl(
             callback(authenticateStart(data))
         }
     }
+
+    override fun authenticateStartCompletable(data: AuthenticateStartRequest): CompletableFuture<StytchResult<AuthenticateStartResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(AuthenticateStartRequest::class.java).toJson(data)
+            httpClient.post("/v1/crypto_wallets/authenticate/start", asJson)
+        }, executor)
+    }
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
         httpClient.post("/v1/crypto_wallets/authenticate", asJson)
@@ -68,5 +89,13 @@ internal class CryptoWalletsImpl(
         coroutineScope.launch {
             callback(authenticate(data))
         }
+    }
+
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/crypto_wallets/authenticate", asJson)
+        }, executor)
     }
 }

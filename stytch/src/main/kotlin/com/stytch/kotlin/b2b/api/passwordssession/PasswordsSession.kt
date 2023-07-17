@@ -15,6 +15,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface Sessions {
     /**
@@ -30,6 +32,13 @@ public interface Sessions {
      * provided.
      */
     public fun reset(data: ResetRequest, callback: (StytchResult<ResetResponse>) -> Unit)
+
+    /**
+     * Reset the Member's password using their existing session. The endpoint will error if the session does not contain an
+     * authentication factor that has been issued within the last 5 minutes. Either `session_token` or `session_jwt` should be
+     * provided.
+     */
+    public fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>>
 }
 
 internal class SessionsImpl(
@@ -48,5 +57,13 @@ internal class SessionsImpl(
         coroutineScope.launch {
             callback(reset(data))
         }
+    }
+
+    override fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/passwords/session/reset", asJson)
+        }, executor)
     }
 }

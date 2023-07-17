@@ -35,6 +35,8 @@ import org.jose4j.jwt.consumer.JwtConsumerBuilder
 import org.jose4j.lang.JoseException
 import java.time.Instant
 import java.util.Date
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface Sessions {
     /**
@@ -48,6 +50,12 @@ public interface Sessions {
      * expressed in UTC, e.g. `2021-12-29T12:33:09Z`.
      */
     public fun get(data: GetRequest, callback: (StytchResult<GetResponse>) -> Unit)
+
+    /**
+     * List all active Sessions for a given `user_id`. All timestamps are formatted according to the RFC 3339 standard and are
+     * expressed in UTC, e.g. `2021-12-29T12:33:09Z`.
+     */
+    public fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>>
 
     /**
      * Authenticate a session token and retrieve associated session data. If `session_duration_minutes` is included, update
@@ -66,6 +74,14 @@ public interface Sessions {
     public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
 
     /**
+     * Authenticate a session token and retrieve associated session data. If `session_duration_minutes` is included, update
+     * the lifetime of the session to be that many minutes from now. All timestamps are formatted according to the RFC 3339
+     * standard and are expressed in UTC, e.g. `2021-12-29T12:33:09Z`. This endpoint requires exactly one `session_jwt` or
+     * `session_token` as part of the request. If both are included you will receive a `too_many_session_arguments` error.
+     */
+    public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
+
+    /**
      * Revoke a Session, immediately invalidating all of its session tokens. You can revoke a session in three ways: using its
      * ID, or using one of its session tokens, or one of its JWTs. This endpoint requires exactly one of those to be included
      * in the request. It will return an error if multiple are present.
@@ -80,6 +96,13 @@ public interface Sessions {
     public fun revoke(data: RevokeRequest, callback: (StytchResult<RevokeResponse>) -> Unit)
 
     /**
+     * Revoke a Session, immediately invalidating all of its session tokens. You can revoke a session in three ways: using its
+     * ID, or using one of its session tokens, or one of its JWTs. This endpoint requires exactly one of those to be included
+     * in the request. It will return an error if multiple are present.
+     */
+    public fun revokeCompletable(data: RevokeRequest): CompletableFuture<StytchResult<RevokeResponse>>
+
+    /**
      * Get the JSON Web Key Set (JWKS) for a Stytch Project.
      */
     public suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse>
@@ -88,6 +111,11 @@ public interface Sessions {
      * Get the JSON Web Key Set (JWKS) for a Stytch Project.
      */
     public fun getJWKS(data: GetJWKSRequest, callback: (StytchResult<GetJWKSResponse>) -> Unit)
+
+    /**
+     * Get the JSON Web Key Set (JWKS) for a Stytch Project.
+     */
+    public fun getJWKSCompletable(data: GetJWKSRequest): CompletableFuture<StytchResult<GetJWKSResponse>>
 
     // MANUAL(authenticateJWT_interface)(INTERFACE_METHOD)
     // ADDIMPORT import com.stytch.kotlin.consumer.models.sessions.Session
@@ -162,6 +190,17 @@ internal class SessionsImpl(
             callback(get(data))
         }
     }
+
+    override fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/sessions", asMap)
+        }, executor)
+    }
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
         httpClient.post("/v1/sessions/authenticate", asJson)
@@ -172,6 +211,14 @@ internal class SessionsImpl(
             callback(authenticate(data))
         }
     }
+
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/sessions/authenticate", asJson)
+        }, executor)
+    }
     override suspend fun revoke(data: RevokeRequest): StytchResult<RevokeResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(RevokeRequest::class.java).toJson(data)
         httpClient.post("/v1/sessions/revoke", asJson)
@@ -181,6 +228,14 @@ internal class SessionsImpl(
         coroutineScope.launch {
             callback(revoke(data))
         }
+    }
+
+    override fun revokeCompletable(data: RevokeRequest): CompletableFuture<StytchResult<RevokeResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(RevokeRequest::class.java).toJson(data)
+            httpClient.post("/v1/sessions/revoke", asJson)
+        }, executor)
     }
     override suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(GetJWKSRequest::class.java).toJson(data)
@@ -194,6 +249,17 @@ internal class SessionsImpl(
         coroutineScope.launch {
             callback(getJWKS(data))
         }
+    }
+
+    override fun getJWKSCompletable(data: GetJWKSRequest): CompletableFuture<StytchResult<GetJWKSResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(GetJWKSRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/sessions/jwks/${data.projectId}", asMap)
+        }, executor)
     }
 
     // MANUAL(authenticateJWT_impl)(SERVICE_METHOD)

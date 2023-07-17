@@ -19,6 +19,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface MagicLinks {
     public val email: Email
@@ -40,6 +42,14 @@ public interface MagicLinks {
      * not specified, a Stytch session will be created with a 60 minute duration.
      */
     public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+
+    /**
+     * Authenticate a Member with a Magic Link. This endpoint requires a Magic Link token that is not expired or previously
+     * used. If the Member’s status is `pending` or `invited`, they will be updated to `active`. Provide the
+     * `session_duration_minutes` parameter to set the lifetime of the session. If the `session_duration_minutes` parameter is
+     * not specified, a Stytch session will be created with a 60 minute duration.
+     */
+    public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
 internal class MagicLinksImpl(
@@ -61,5 +71,13 @@ internal class MagicLinksImpl(
         coroutineScope.launch {
             callback(authenticate(data))
         }
+    }
+
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/magic_links/authenticate", asJson)
+        }, executor)
     }
 }

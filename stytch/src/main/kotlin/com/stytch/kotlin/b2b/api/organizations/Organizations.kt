@@ -27,6 +27,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface Organizations {
     public val members: Members
@@ -54,6 +56,17 @@ public interface Organizations {
     public fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit)
 
     /**
+     * Creates an Organization. An `organization_name` and a unique `organization_slug` are required.
+     *
+     * By default, `email_invites` and `sso_jit_provisioning` will be set to `ALL_ALLOWED` if no Organization authentication
+     * settings are explicitly defined in the request.
+     *
+     * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
+     * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
+     */
+    public fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>>
+
+    /**
      * Returns an Organization specified by `organization_id`.
      */
     public suspend fun get(data: GetRequest): StytchResult<GetResponse>
@@ -62,6 +75,11 @@ public interface Organizations {
      * Returns an Organization specified by `organization_id`.
      */
     public fun get(data: GetRequest, callback: (StytchResult<GetResponse>) -> Unit)
+
+    /**
+     * Returns an Organization specified by `organization_id`.
+     */
+    public fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>>
 
     /**
      * Updates an Organization specified by `organization_id`. An Organization must always have at least one auth setting set
@@ -82,6 +100,15 @@ public interface Organizations {
     public fun update(data: UpdateRequest, callback: (StytchResult<UpdateResponse>) -> Unit)
 
     /**
+     * Updates an Organization specified by `organization_id`. An Organization must always have at least one auth setting set
+     * to either `RESTRICTED` or `ALL_ALLOWED` in order to provision new Members. test
+     *
+     * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
+     * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
+     */
+    public fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>>
+
+    /**
      * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted.
      */
     public suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse>
@@ -90,6 +117,11 @@ public interface Organizations {
      * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted.
      */
     public fun delete(data: DeleteRequest, callback: (StytchResult<DeleteResponse>) -> Unit)
+
+    /**
+     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted.
+     */
+    public fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>>
 
     /**
      * Search for Organizations. If you send a request with no body params, no filtering will be applied and the endpoint will
@@ -102,6 +134,12 @@ public interface Organizations {
      * return all Organizations. All fuzzy search filters require a minimum of three characters.
      */
     public fun search(data: SearchRequest, callback: (StytchResult<SearchResponse>) -> Unit)
+
+    /**
+     * Search for Organizations. If you send a request with no body params, no filtering will be applied and the endpoint will
+     * return all Organizations. All fuzzy search filters require a minimum of three characters.
+     */
+    public fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>>
 }
 
 internal class OrganizationsImpl(
@@ -123,6 +161,14 @@ internal class OrganizationsImpl(
             callback(create(data))
         }
     }
+
+    override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/organizations", asJson)
+        }, executor)
+    }
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
         val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
@@ -136,6 +182,17 @@ internal class OrganizationsImpl(
             callback(get(data))
         }
     }
+
+    override fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/organizations/${data.organizationId}", asMap)
+        }, executor)
+    }
     override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
         httpClient.put("/v1/b2b/organizations/${data.organizationId}", asJson)
@@ -145,6 +202,14 @@ internal class OrganizationsImpl(
         coroutineScope.launch {
             callback(update(data))
         }
+    }
+
+    override fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
+            httpClient.put("/v1/b2b/organizations/${data.organizationId}", asJson)
+        }, executor)
     }
     override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(DeleteRequest::class.java).toJson(data)
@@ -159,6 +224,17 @@ internal class OrganizationsImpl(
             callback(delete(data))
         }
     }
+
+    override fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(DeleteRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.delete("/v1/b2b/organizations/${data.organizationId}", asMap)
+        }, executor)
+    }
     override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/organizations/search", asJson)
@@ -168,5 +244,13 @@ internal class OrganizationsImpl(
         coroutineScope.launch {
             callback(search(data))
         }
+    }
+
+    override fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/organizations/search", asJson)
+        }, executor)
     }
 }

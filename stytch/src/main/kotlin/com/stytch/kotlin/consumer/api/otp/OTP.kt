@@ -21,6 +21,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface OTPs {
     public val sms: Sms
@@ -44,6 +46,14 @@ public interface OTPs {
      * requests another OTP code before the first one has expired, the first one will be invalidated.
      */
     public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+
+    /**
+     * Authenticate a User given a `method_id` (the associated `email_id` or `phone_id`) and a `code`. This endpoint verifies
+     * that the code is valid, hasn't expired or been previously used, and any optional security settings such as IP match or
+     * user agent match are satisfied. A given `method_id` may only have a single active OTP code at any given time, if a User
+     * requests another OTP code before the first one has expired, the first one will be invalidated.
+     */
+    public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
 internal class OTPsImpl(
@@ -66,5 +76,13 @@ internal class OTPsImpl(
         coroutineScope.launch {
             callback(authenticate(data))
         }
+    }
+
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/otps/authenticate", asJson)
+        }, executor)
     }
 }

@@ -17,6 +17,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 public interface OIDC {
     /**
@@ -28,6 +30,11 @@ public interface OIDC {
      * Create a new OIDC Connection.
      */
     public fun createConnection(data: CreateConnectionRequest, callback: (StytchResult<CreateConnectionResponse>) -> Unit)
+
+    /**
+     * Create a new OIDC Connection.
+     */
+    public fun createConnectionCompletable(data: CreateConnectionRequest): CompletableFuture<StytchResult<CreateConnectionResponse>>
 
     /**
      * Updates an existing OIDC connection.
@@ -84,6 +91,34 @@ public interface OIDC {
      * * `jwks_url`
      */
     public fun updateConnection(data: UpdateConnectionRequest, callback: (StytchResult<UpdateConnectionResponse>) -> Unit)
+
+    /**
+     * Updates an existing OIDC connection.
+     *
+     * When the value of `issuer` changes, Stytch will attempt to retrieve the
+     * [OpenID Provider Metadata](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata) document found
+     * at `$/.well-known/openid-configuration`.
+     * If the metadata document can be retrieved successfully, Stytch will use it to infer the values of `authorization_url`,
+     * `token_url`, `jwks_url`, and `userinfo_url`.
+     * The `client_id` and `client_secret` values cannot be inferred from the metadata document, and *must* be passed in
+     * explicitly.
+     *
+     * If the metadata document cannot be retrieved, Stytch will still update the connection using values from the request
+     * body.
+     *
+     * If the metadata document can be retrieved, and values are passed in the request body, the explicit values passed in
+     * from the request body will take precedence over the values inferred from the metadata document.
+     *
+     * Note that a newly created connection will not become active until all of the following fields are provided:
+     * * `issuer`
+     * * `client_id`
+     * * `client_secret`
+     * * `authorization_url`
+     * * `token_url`
+     * * `userinfo_url`
+     * * `jwks_url`
+     */
+    public fun updateConnectionCompletable(data: UpdateConnectionRequest): CompletableFuture<StytchResult<UpdateConnectionResponse>>
 }
 
 internal class OIDCImpl(
@@ -103,6 +138,14 @@ internal class OIDCImpl(
             callback(createConnection(data))
         }
     }
+
+    override fun createConnectionCompletable(data: CreateConnectionRequest): CompletableFuture<StytchResult<CreateConnectionResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(CreateConnectionRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/sso/oidc/${data.organizationId}", asJson)
+        }, executor)
+    }
     override suspend fun updateConnection(data: UpdateConnectionRequest): StytchResult<UpdateConnectionResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(UpdateConnectionRequest::class.java).toJson(data)
         httpClient.put("/v1/b2b/sso/oidc/$data.organizationId/connections/${data.connectionId}", asJson)
@@ -112,5 +155,13 @@ internal class OIDCImpl(
         coroutineScope.launch {
             callback(updateConnection(data))
         }
+    }
+
+    override fun updateConnectionCompletable(data: UpdateConnectionRequest): CompletableFuture<StytchResult<UpdateConnectionResponse>> {
+        val executor = Executors.newFixedThreadPool(1)
+        return CompletableFuture.supplyAsync({
+            val asJson = moshi.adapter(UpdateConnectionRequest::class.java).toJson(data)
+            httpClient.put("/v1/b2b/sso/oidc/$data.organizationId/connections/${data.connectionId}", asJson)
+        }, executor)
     }
 }
