@@ -17,10 +17,11 @@ import com.stytch.kotlin.consumer.models.magiclinks.CreateResponse
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface MagicLinks {
     public val email: Email
@@ -97,13 +98,10 @@ internal class MagicLinksImpl(
         }
     }
 
-    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-            httpClient.post("/v1/magic_links/authenticate", asJson)
-        }, executor)
-    }
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
+        coroutineScope.async {
+            authenticate(data)
+        }.asCompletableFuture()
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
         httpClient.post("/v1/magic_links", asJson)
@@ -115,11 +113,8 @@ internal class MagicLinksImpl(
         }
     }
 
-    override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-            httpClient.post("/v1/magic_links", asJson)
-        }, executor)
-    }
+    override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> =
+        coroutineScope.async {
+            create(data)
+        }.asCompletableFuture()
 }

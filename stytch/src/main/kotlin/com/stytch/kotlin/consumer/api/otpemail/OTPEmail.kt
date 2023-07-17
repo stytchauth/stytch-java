@@ -15,10 +15,11 @@ import com.stytch.kotlin.consumer.models.otpemail.SendResponse
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface Email {
     /**
@@ -124,13 +125,10 @@ internal class EmailImpl(
         }
     }
 
-    override fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(SendRequest::class.java).toJson(data)
-            httpClient.post("/v1/otps/email/send", asJson)
-        }, executor)
-    }
+    override fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>> =
+        coroutineScope.async {
+            send(data)
+        }.asCompletableFuture()
     override suspend fun loginOrCreate(data: LoginOrCreateRequest): StytchResult<LoginOrCreateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(LoginOrCreateRequest::class.java).toJson(data)
         httpClient.post("/v1/otps/email/login_or_create", asJson)
@@ -142,11 +140,8 @@ internal class EmailImpl(
         }
     }
 
-    override fun loginOrCreateCompletable(data: LoginOrCreateRequest): CompletableFuture<StytchResult<LoginOrCreateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(LoginOrCreateRequest::class.java).toJson(data)
-            httpClient.post("/v1/otps/email/login_or_create", asJson)
-        }, executor)
-    }
+    override fun loginOrCreateCompletable(data: LoginOrCreateRequest): CompletableFuture<StytchResult<LoginOrCreateResponse>> =
+        coroutineScope.async {
+            loginOrCreate(data)
+        }.asCompletableFuture()
 }

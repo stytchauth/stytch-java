@@ -25,10 +25,11 @@ import com.stytch.kotlin.consumer.models.passwords.StrengthCheckResponse
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface Passwords {
     public val email: Email
@@ -255,13 +256,10 @@ internal class PasswordsImpl(
         }
     }
 
-    override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-            httpClient.post("/v1/passwords", asJson)
-        }, executor)
-    }
+    override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> =
+        coroutineScope.async {
+            create(data)
+        }.asCompletableFuture()
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
         httpClient.post("/v1/passwords/authenticate", asJson)
@@ -273,13 +271,10 @@ internal class PasswordsImpl(
         }
     }
 
-    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-            httpClient.post("/v1/passwords/authenticate", asJson)
-        }, executor)
-    }
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
+        coroutineScope.async {
+            authenticate(data)
+        }.asCompletableFuture()
     override suspend fun strengthCheck(data: StrengthCheckRequest): StytchResult<StrengthCheckResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(StrengthCheckRequest::class.java).toJson(data)
         httpClient.post("/v1/passwords/strength_check", asJson)
@@ -291,13 +286,10 @@ internal class PasswordsImpl(
         }
     }
 
-    override fun strengthCheckCompletable(data: StrengthCheckRequest): CompletableFuture<StytchResult<StrengthCheckResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(StrengthCheckRequest::class.java).toJson(data)
-            httpClient.post("/v1/passwords/strength_check", asJson)
-        }, executor)
-    }
+    override fun strengthCheckCompletable(data: StrengthCheckRequest): CompletableFuture<StytchResult<StrengthCheckResponse>> =
+        coroutineScope.async {
+            strengthCheck(data)
+        }.asCompletableFuture()
     override suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(MigrateRequest::class.java).toJson(data)
         httpClient.post("/v1/passwords/migrate", asJson)
@@ -309,11 +301,8 @@ internal class PasswordsImpl(
         }
     }
 
-    override fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(MigrateRequest::class.java).toJson(data)
-            httpClient.post("/v1/passwords/migrate", asJson)
-        }, executor)
-    }
+    override fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>> =
+        coroutineScope.async {
+            migrate(data)
+        }.asCompletableFuture()
 }

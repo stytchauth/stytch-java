@@ -19,10 +19,11 @@ import com.stytch.kotlin.consumer.models.magiclinksemail.SendResponse
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface Email {
     /**
@@ -194,13 +195,10 @@ internal class EmailImpl(
         }
     }
 
-    override fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(SendRequest::class.java).toJson(data)
-            httpClient.post("/v1/magic_links/email/send", asJson)
-        }, executor)
-    }
+    override fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>> =
+        coroutineScope.async {
+            send(data)
+        }.asCompletableFuture()
     override suspend fun loginOrCreate(data: LoginOrCreateRequest): StytchResult<LoginOrCreateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(LoginOrCreateRequest::class.java).toJson(data)
         httpClient.post("/v1/magic_links/email/login_or_create", asJson)
@@ -212,13 +210,10 @@ internal class EmailImpl(
         }
     }
 
-    override fun loginOrCreateCompletable(data: LoginOrCreateRequest): CompletableFuture<StytchResult<LoginOrCreateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(LoginOrCreateRequest::class.java).toJson(data)
-            httpClient.post("/v1/magic_links/email/login_or_create", asJson)
-        }, executor)
-    }
+    override fun loginOrCreateCompletable(data: LoginOrCreateRequest): CompletableFuture<StytchResult<LoginOrCreateResponse>> =
+        coroutineScope.async {
+            loginOrCreate(data)
+        }.asCompletableFuture()
     override suspend fun invite(data: InviteRequest): StytchResult<InviteResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(InviteRequest::class.java).toJson(data)
         httpClient.post("/v1/magic_links/email/invite", asJson)
@@ -230,13 +225,10 @@ internal class EmailImpl(
         }
     }
 
-    override fun inviteCompletable(data: InviteRequest): CompletableFuture<StytchResult<InviteResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(InviteRequest::class.java).toJson(data)
-            httpClient.post("/v1/magic_links/email/invite", asJson)
-        }, executor)
-    }
+    override fun inviteCompletable(data: InviteRequest): CompletableFuture<StytchResult<InviteResponse>> =
+        coroutineScope.async {
+            invite(data)
+        }.asCompletableFuture()
     override suspend fun revokeInvite(data: RevokeInviteRequest): StytchResult<RevokeInviteResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(RevokeInviteRequest::class.java).toJson(data)
         httpClient.post("/v1/magic_links/email/revoke_invite", asJson)
@@ -248,11 +240,8 @@ internal class EmailImpl(
         }
     }
 
-    override fun revokeInviteCompletable(data: RevokeInviteRequest): CompletableFuture<StytchResult<RevokeInviteResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(RevokeInviteRequest::class.java).toJson(data)
-            httpClient.post("/v1/magic_links/email/revoke_invite", asJson)
-        }, executor)
-    }
+    override fun revokeInviteCompletable(data: RevokeInviteRequest): CompletableFuture<StytchResult<RevokeInviteResponse>> =
+        coroutineScope.async {
+            revokeInvite(data)
+        }.asCompletableFuture()
 }

@@ -23,10 +23,11 @@ import com.stytch.kotlin.common.StytchResult
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface Passwords {
     public val email: Email
@@ -214,13 +215,10 @@ internal class PasswordsImpl(
         }
     }
 
-    override fun strengthCheckCompletable(data: StrengthCheckRequest): CompletableFuture<StytchResult<StrengthCheckResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(StrengthCheckRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/passwords/strength_check", asJson)
-        }, executor)
-    }
+    override fun strengthCheckCompletable(data: StrengthCheckRequest): CompletableFuture<StytchResult<StrengthCheckResponse>> =
+        coroutineScope.async {
+            strengthCheck(data)
+        }.asCompletableFuture()
     override suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(MigrateRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/passwords/migrate", asJson)
@@ -232,13 +230,10 @@ internal class PasswordsImpl(
         }
     }
 
-    override fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(MigrateRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/passwords/migrate", asJson)
-        }, executor)
-    }
+    override fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>> =
+        coroutineScope.async {
+            migrate(data)
+        }.asCompletableFuture()
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/passwords/authenticate", asJson)
@@ -250,11 +245,8 @@ internal class PasswordsImpl(
         }
     }
 
-    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/passwords/authenticate", asJson)
-        }, executor)
-    }
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
+        coroutineScope.async {
+            authenticate(data)
+        }.asCompletableFuture()
 }

@@ -15,10 +15,11 @@ import com.stytch.kotlin.common.StytchResult
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface OIDC {
     /**
@@ -139,13 +140,10 @@ internal class OIDCImpl(
         }
     }
 
-    override fun createConnectionCompletable(data: CreateConnectionRequest): CompletableFuture<StytchResult<CreateConnectionResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(CreateConnectionRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/sso/oidc/${data.organizationId}", asJson)
-        }, executor)
-    }
+    override fun createConnectionCompletable(data: CreateConnectionRequest): CompletableFuture<StytchResult<CreateConnectionResponse>> =
+        coroutineScope.async {
+            createConnection(data)
+        }.asCompletableFuture()
     override suspend fun updateConnection(data: UpdateConnectionRequest): StytchResult<UpdateConnectionResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(UpdateConnectionRequest::class.java).toJson(data)
         httpClient.put("/v1/b2b/sso/oidc/$data.organizationId/connections/${data.connectionId}", asJson)
@@ -157,11 +155,8 @@ internal class OIDCImpl(
         }
     }
 
-    override fun updateConnectionCompletable(data: UpdateConnectionRequest): CompletableFuture<StytchResult<UpdateConnectionResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(UpdateConnectionRequest::class.java).toJson(data)
-            httpClient.put("/v1/b2b/sso/oidc/$data.organizationId/connections/${data.connectionId}", asJson)
-        }, executor)
-    }
+    override fun updateConnectionCompletable(data: UpdateConnectionRequest): CompletableFuture<StytchResult<UpdateConnectionResponse>> =
+        coroutineScope.async {
+            updateConnection(data)
+        }.asCompletableFuture()
 }

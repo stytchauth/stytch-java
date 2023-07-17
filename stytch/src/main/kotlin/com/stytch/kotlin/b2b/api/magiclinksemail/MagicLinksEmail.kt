@@ -17,10 +17,11 @@ import com.stytch.kotlin.common.StytchResult
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface Email {
     public val discovery: Discovery
@@ -88,13 +89,10 @@ internal class EmailImpl(
         }
     }
 
-    override fun loginOrSignupCompletable(data: LoginOrSignupRequest): CompletableFuture<StytchResult<LoginOrSignupResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(LoginOrSignupRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/magic_links/email/login_or_signup", asJson)
-        }, executor)
-    }
+    override fun loginOrSignupCompletable(data: LoginOrSignupRequest): CompletableFuture<StytchResult<LoginOrSignupResponse>> =
+        coroutineScope.async {
+            loginOrSignup(data)
+        }.asCompletableFuture()
     override suspend fun invite(data: InviteRequest): StytchResult<InviteResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(InviteRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/magic_links/email/invite", asJson)
@@ -106,11 +104,8 @@ internal class EmailImpl(
         }
     }
 
-    override fun inviteCompletable(data: InviteRequest): CompletableFuture<StytchResult<InviteResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(InviteRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/magic_links/email/invite", asJson)
-        }, executor)
-    }
+    override fun inviteCompletable(data: InviteRequest): CompletableFuture<StytchResult<InviteResponse>> =
+        coroutineScope.async {
+            invite(data)
+        }.asCompletableFuture()
 }

@@ -19,10 +19,11 @@ import com.stytch.kotlin.consumer.models.webauthn.RegisterStartResponse
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface WebAuthn {
     /**
@@ -197,13 +198,10 @@ internal class WebAuthnImpl(
         }
     }
 
-    override fun registerStartCompletable(data: RegisterStartRequest): CompletableFuture<StytchResult<RegisterStartResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(RegisterStartRequest::class.java).toJson(data)
-            httpClient.post("/v1/webauthn/register/start", asJson)
-        }, executor)
-    }
+    override fun registerStartCompletable(data: RegisterStartRequest): CompletableFuture<StytchResult<RegisterStartResponse>> =
+        coroutineScope.async {
+            registerStart(data)
+        }.asCompletableFuture()
     override suspend fun register(data: RegisterRequest): StytchResult<RegisterResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(RegisterRequest::class.java).toJson(data)
         httpClient.post("/v1/webauthn/register", asJson)
@@ -215,13 +213,10 @@ internal class WebAuthnImpl(
         }
     }
 
-    override fun registerCompletable(data: RegisterRequest): CompletableFuture<StytchResult<RegisterResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(RegisterRequest::class.java).toJson(data)
-            httpClient.post("/v1/webauthn/register", asJson)
-        }, executor)
-    }
+    override fun registerCompletable(data: RegisterRequest): CompletableFuture<StytchResult<RegisterResponse>> =
+        coroutineScope.async {
+            register(data)
+        }.asCompletableFuture()
     override suspend fun authenticateStart(data: AuthenticateStartRequest): StytchResult<AuthenticateStartResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AuthenticateStartRequest::class.java).toJson(data)
         httpClient.post("/v1/webauthn/authenticate/start", asJson)
@@ -233,13 +228,10 @@ internal class WebAuthnImpl(
         }
     }
 
-    override fun authenticateStartCompletable(data: AuthenticateStartRequest): CompletableFuture<StytchResult<AuthenticateStartResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(AuthenticateStartRequest::class.java).toJson(data)
-            httpClient.post("/v1/webauthn/authenticate/start", asJson)
-        }, executor)
-    }
+    override fun authenticateStartCompletable(data: AuthenticateStartRequest): CompletableFuture<StytchResult<AuthenticateStartResponse>> =
+        coroutineScope.async {
+            authenticateStart(data)
+        }.asCompletableFuture()
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
         httpClient.post("/v1/webauthn/authenticate", asJson)
@@ -251,11 +243,8 @@ internal class WebAuthnImpl(
         }
     }
 
-    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-            httpClient.post("/v1/webauthn/authenticate", asJson)
-        }, executor)
-    }
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
+        coroutineScope.async {
+            authenticate(data)
+        }.asCompletableFuture()
 }

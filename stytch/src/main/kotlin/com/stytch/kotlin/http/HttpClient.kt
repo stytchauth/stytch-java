@@ -5,6 +5,9 @@ import com.stytch.kotlin.common.ErrorResponse
 import com.stytch.kotlin.common.SDK_NAME
 import com.stytch.kotlin.common.StytchException
 import com.stytch.kotlin.common.StytchResult
+import kotlinx.coroutines.suspendCancellableCoroutine
+import okhttp3.Call
+import okhttp3.Callback
 import okhttp3.Credentials
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -13,7 +16,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import java.io.IOException
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 private const val ONE_HUNDRED_TWENTY = 120L
 
@@ -54,37 +60,48 @@ internal class HttpClient(
             moshi.adapter(clazz).fromJson(it.source())
         }
 
-    private inline fun <reified T> makeRequest(request: Request, clazz: Class<T>): StytchResult<T> {
-        client.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) {
-                return StytchResult.Error(
-                    mapResponseToClass(response, ErrorResponse::class.java)?.let {
-                        StytchException.Response(it)
-                    } ?: StytchException.Critical(
-                        reason = IllegalStateException("Unable to map error data"),
-                        response = response.body?.source()?.readUtf8(),
-                    ),
+    private suspend inline fun <reified T> makeRequest(request: Request, clazz: Class<T>): StytchResult<T> = suspendCancellableCoroutine { cont ->
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                if (cont.isCancelled) return
+                cont.resumeWithException(e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                cont.resume(
+                    response.use {
+                        if (!response.isSuccessful) {
+                            return@use StytchResult.Error(
+                                mapResponseToClass(response, ErrorResponse::class.java)?.let {
+                                    StytchException.Response(it)
+                                } ?: StytchException.Critical(
+                                    reason = IllegalStateException("Unable to map error data"),
+                                    response = response.body?.source()?.readUtf8(),
+                                ),
+                            )
+                        }
+                        return@use mapResponseToClass(response, clazz)?.let {
+                            StytchResult.Success(it)
+                        } ?: StytchResult.Error(
+                            StytchException.Critical(
+                                reason = IllegalStateException("Unable to map response data"),
+                                response = response.body?.source()?.readUtf8(),
+                            ),
+                        )
+                    },
                 )
             }
-            return mapResponseToClass(response, clazz)?.let {
-                StytchResult.Success(it)
-            } ?: StytchResult.Error(
-                StytchException.Critical(
-                    reason = IllegalStateException("Unable to map response data"),
-                    response = response.body?.source()?.readUtf8(),
-                ),
-            )
-        }
+        })
     }
 
-    inline fun <reified T> get(path: String, params: Map<String, Any> = emptyMap()): StytchResult<T> {
+    suspend inline fun <reified T> get(path: String, params: Map<String, Any> = emptyMap()): StytchResult<T> {
         val request = Request.Builder()
             .url(buildUrl(path, params))
             .build()
         return makeRequest(request, T::class.java)
     }
 
-    inline fun <reified T> post(path: String, json: String): StytchResult<T> {
+    suspend inline fun <reified T> post(path: String, json: String): StytchResult<T> {
         val request = Request.Builder()
             .url(buildUrl(path))
             .post(json.toRequestBody("application/json".toMediaType()))
@@ -92,7 +109,7 @@ internal class HttpClient(
         return makeRequest(request, T::class.java)
     }
 
-    inline fun <reified T> put(path: String, json: String): StytchResult<T> {
+    suspend inline fun <reified T> put(path: String, json: String): StytchResult<T> {
         val request = Request.Builder()
             .url(buildUrl(path))
             .put(json.toRequestBody("application/json".toMediaType()))
@@ -100,7 +117,7 @@ internal class HttpClient(
         return makeRequest(request, T::class.java)
     }
 
-    inline fun <reified T> delete(path: String, params: Map<String, Any> = emptyMap()): StytchResult<T> {
+    suspend inline fun <reified T> delete(path: String, params: Map<String, Any> = emptyMap()): StytchResult<T> {
         val request = Request.Builder()
             .url(buildUrl(path, params))
             .delete()

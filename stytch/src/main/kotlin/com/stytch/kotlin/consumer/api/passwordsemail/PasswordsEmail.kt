@@ -15,10 +15,11 @@ import com.stytch.kotlin.consumer.models.passwordsemail.ResetStartResponse
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface Email {
     /**
@@ -91,13 +92,10 @@ internal class EmailImpl(
         }
     }
 
-    override fun resetStartCompletable(data: ResetStartRequest): CompletableFuture<StytchResult<ResetStartResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(ResetStartRequest::class.java).toJson(data)
-            httpClient.post("/v1/passwords/email/reset/start", asJson)
-        }, executor)
-    }
+    override fun resetStartCompletable(data: ResetStartRequest): CompletableFuture<StytchResult<ResetStartResponse>> =
+        coroutineScope.async {
+            resetStart(data)
+        }.asCompletableFuture()
     override suspend fun reset(data: ResetRequest): StytchResult<ResetResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
         httpClient.post("/v1/passwords/email/reset", asJson)
@@ -109,11 +107,8 @@ internal class EmailImpl(
         }
     }
 
-    override fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
-            httpClient.post("/v1/passwords/email/reset", asJson)
-        }, executor)
-    }
+    override fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>> =
+        coroutineScope.async {
+            reset(data)
+        }.asCompletableFuture()
 }

@@ -19,10 +19,11 @@ import com.stytch.kotlin.consumer.models.totps.RecoveryCodesResponse
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface TOTPs {
     /**
@@ -107,13 +108,10 @@ internal class TOTPsImpl(
         }
     }
 
-    override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-            httpClient.post("/v1/totps", asJson)
-        }, executor)
-    }
+    override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> =
+        coroutineScope.async {
+            create(data)
+        }.asCompletableFuture()
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
         httpClient.post("/v1/totps/authenticate", asJson)
@@ -125,13 +123,10 @@ internal class TOTPsImpl(
         }
     }
 
-    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-            httpClient.post("/v1/totps/authenticate", asJson)
-        }, executor)
-    }
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
+        coroutineScope.async {
+            authenticate(data)
+        }.asCompletableFuture()
     override suspend fun recoveryCodes(data: RecoveryCodesRequest): StytchResult<RecoveryCodesResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(RecoveryCodesRequest::class.java).toJson(data)
         httpClient.post("/v1/totps/recovery_codes", asJson)
@@ -143,13 +138,10 @@ internal class TOTPsImpl(
         }
     }
 
-    override fun recoveryCodesCompletable(data: RecoveryCodesRequest): CompletableFuture<StytchResult<RecoveryCodesResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(RecoveryCodesRequest::class.java).toJson(data)
-            httpClient.post("/v1/totps/recovery_codes", asJson)
-        }, executor)
-    }
+    override fun recoveryCodesCompletable(data: RecoveryCodesRequest): CompletableFuture<StytchResult<RecoveryCodesResponse>> =
+        coroutineScope.async {
+            recoveryCodes(data)
+        }.asCompletableFuture()
     override suspend fun recover(data: RecoverRequest): StytchResult<RecoverResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(RecoverRequest::class.java).toJson(data)
         httpClient.post("/v1/totps/recover", asJson)
@@ -161,11 +153,8 @@ internal class TOTPsImpl(
         }
     }
 
-    override fun recoverCompletable(data: RecoverRequest): CompletableFuture<StytchResult<RecoverResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(RecoverRequest::class.java).toJson(data)
-            httpClient.post("/v1/totps/recover", asJson)
-        }, executor)
-    }
+    override fun recoverCompletable(data: RecoverRequest): CompletableFuture<StytchResult<RecoverResponse>> =
+        coroutineScope.async {
+            recover(data)
+        }.asCompletableFuture()
 }

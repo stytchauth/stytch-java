@@ -15,10 +15,11 @@ import com.stytch.kotlin.consumer.models.oauth.AuthenticateResponse
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface OAuth {
     /**
@@ -103,13 +104,10 @@ internal class OAuthImpl(
         }
     }
 
-    override fun attachCompletable(data: AttachRequest): CompletableFuture<StytchResult<AttachResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(AttachRequest::class.java).toJson(data)
-            httpClient.post("/v1/oauth/attach", asJson)
-        }, executor)
-    }
+    override fun attachCompletable(data: AttachRequest): CompletableFuture<StytchResult<AttachResponse>> =
+        coroutineScope.async {
+            attach(data)
+        }.asCompletableFuture()
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
         httpClient.post("/v1/oauth/authenticate", asJson)
@@ -121,11 +119,8 @@ internal class OAuthImpl(
         }
     }
 
-    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-            httpClient.post("/v1/oauth/authenticate", asJson)
-        }, executor)
-    }
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
+        coroutineScope.async {
+            authenticate(data)
+        }.asCompletableFuture()
 }

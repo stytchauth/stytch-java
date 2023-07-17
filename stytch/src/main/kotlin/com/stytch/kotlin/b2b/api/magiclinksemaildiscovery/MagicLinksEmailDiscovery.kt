@@ -13,10 +13,11 @@ import com.stytch.kotlin.common.StytchResult
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface Discovery {
     /**
@@ -53,11 +54,8 @@ internal class DiscoveryImpl(
         }
     }
 
-    override fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(SendRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/magic_links/email/discovery/send", asJson)
-        }, executor)
-    }
+    override fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>> =
+        coroutineScope.async {
+            send(data)
+        }.asCompletableFuture()
 }

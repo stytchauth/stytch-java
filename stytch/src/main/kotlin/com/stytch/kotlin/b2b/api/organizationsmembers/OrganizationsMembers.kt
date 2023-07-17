@@ -25,10 +25,11 @@ import com.stytch.kotlin.common.StytchResult
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface Members {
     /**
@@ -149,13 +150,10 @@ internal class MembersImpl(
         }
     }
 
-    override fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
-            httpClient.put("/v1/b2b/organizations/$data.organizationId/members/${data.memberId}", asJson)
-        }, executor)
-    }
+    override fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>> =
+        coroutineScope.async {
+            update(data)
+        }.asCompletableFuture()
     override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(DeleteRequest::class.java).toJson(data)
         val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
@@ -170,16 +168,10 @@ internal class MembersImpl(
         }
     }
 
-    override fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(DeleteRequest::class.java).toJson(data)
-            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-            val asMap = adapter.fromJson(asJson) ?: emptyMap()
-            httpClient.delete("/v1/b2b/organizations/$data.organizationId/members/${data.memberId}", asMap)
-        }, executor)
-    }
+    override fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>> =
+        coroutineScope.async {
+            delete(data)
+        }.asCompletableFuture()
     override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/organizations/members/search", asJson)
@@ -191,13 +183,10 @@ internal class MembersImpl(
         }
     }
 
-    override fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/organizations/members/search", asJson)
-        }, executor)
-    }
+    override fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>> =
+        coroutineScope.async {
+            search(data)
+        }.asCompletableFuture()
     override suspend fun deletePassword(data: DeletePasswordRequest): StytchResult<DeletePasswordResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(DeletePasswordRequest::class.java).toJson(data)
         val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
@@ -212,16 +201,10 @@ internal class MembersImpl(
         }
     }
 
-    override fun deletePasswordCompletable(data: DeletePasswordRequest): CompletableFuture<StytchResult<DeletePasswordResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(DeletePasswordRequest::class.java).toJson(data)
-            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-            val asMap = adapter.fromJson(asJson) ?: emptyMap()
-            httpClient.delete("/v1/b2b/organizations/$data.organizationId/members/passwords/${data.memberPasswordId}", asMap)
-        }, executor)
-    }
+    override fun deletePasswordCompletable(data: DeletePasswordRequest): CompletableFuture<StytchResult<DeletePasswordResponse>> =
+        coroutineScope.async {
+            deletePassword(data)
+        }.asCompletableFuture()
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/organizations/${data.organizationId}/members", asJson)
@@ -233,13 +216,10 @@ internal class MembersImpl(
         }
     }
 
-    override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/organizations/${data.organizationId}/members", asJson)
-        }, executor)
-    }
+    override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> =
+        coroutineScope.async {
+            create(data)
+        }.asCompletableFuture()
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
         val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
@@ -254,14 +234,8 @@ internal class MembersImpl(
         }
     }
 
-    override fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
-            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-            val asMap = adapter.fromJson(asJson) ?: emptyMap()
-            httpClient.get("/v1/b2b/organizations/${data.organizationId}/member", asMap)
-        }, executor)
-    }
+    override fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>> =
+        coroutineScope.async {
+            get(data)
+        }.asCompletableFuture()
 }

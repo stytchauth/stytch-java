@@ -15,10 +15,11 @@ import com.stytch.kotlin.common.StytchResult
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface Organizations {
     /**
@@ -142,13 +143,10 @@ internal class OrganizationsImpl(
         }
     }
 
-    override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/discovery/organizations/create", asJson)
-        }, executor)
-    }
+    override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> =
+        coroutineScope.async {
+            create(data)
+        }.asCompletableFuture()
     override suspend fun list(data: ListRequest): StytchResult<ListResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(ListRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/discovery/organizations", asJson)
@@ -160,11 +158,8 @@ internal class OrganizationsImpl(
         }
     }
 
-    override fun listCompletable(data: ListRequest): CompletableFuture<StytchResult<ListResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(ListRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/discovery/organizations", asJson)
-        }, executor)
-    }
+    override fun listCompletable(data: ListRequest): CompletableFuture<StytchResult<ListResponse>> =
+        coroutineScope.async {
+            list(data)
+        }.asCompletableFuture()
 }

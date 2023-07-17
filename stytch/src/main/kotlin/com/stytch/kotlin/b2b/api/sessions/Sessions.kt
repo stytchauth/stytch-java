@@ -23,10 +23,11 @@ import com.stytch.kotlin.common.StytchResult
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface Sessions {
     /**
@@ -156,16 +157,10 @@ internal class SessionsImpl(
         }
     }
 
-    override fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
-            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-            val asMap = adapter.fromJson(asJson) ?: emptyMap()
-            httpClient.get("/v1/b2b/sessions", asMap)
-        }, executor)
-    }
+    override fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>> =
+        coroutineScope.async {
+            get(data)
+        }.asCompletableFuture()
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/sessions/authenticate", asJson)
@@ -177,13 +172,10 @@ internal class SessionsImpl(
         }
     }
 
-    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/sessions/authenticate", asJson)
-        }, executor)
-    }
+    override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
+        coroutineScope.async {
+            authenticate(data)
+        }.asCompletableFuture()
     override suspend fun revoke(data: RevokeRequest): StytchResult<RevokeResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(RevokeRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/sessions/revoke", asJson)
@@ -195,13 +187,10 @@ internal class SessionsImpl(
         }
     }
 
-    override fun revokeCompletable(data: RevokeRequest): CompletableFuture<StytchResult<RevokeResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(RevokeRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/sessions/revoke", asJson)
-        }, executor)
-    }
+    override fun revokeCompletable(data: RevokeRequest): CompletableFuture<StytchResult<RevokeResponse>> =
+        coroutineScope.async {
+            revoke(data)
+        }.asCompletableFuture()
     override suspend fun exchange(data: ExchangeRequest): StytchResult<ExchangeResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(ExchangeRequest::class.java).toJson(data)
         httpClient.post("/v1/b2b/sessions/exchange", asJson)
@@ -213,13 +202,10 @@ internal class SessionsImpl(
         }
     }
 
-    override fun exchangeCompletable(data: ExchangeRequest): CompletableFuture<StytchResult<ExchangeResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(ExchangeRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/sessions/exchange", asJson)
-        }, executor)
-    }
+    override fun exchangeCompletable(data: ExchangeRequest): CompletableFuture<StytchResult<ExchangeResponse>> =
+        coroutineScope.async {
+            exchange(data)
+        }.asCompletableFuture()
     override suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(GetJWKSRequest::class.java).toJson(data)
         val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
@@ -234,14 +220,8 @@ internal class SessionsImpl(
         }
     }
 
-    override fun getJWKSCompletable(data: GetJWKSRequest): CompletableFuture<StytchResult<GetJWKSResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(GetJWKSRequest::class.java).toJson(data)
-            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-            val asMap = adapter.fromJson(asJson) ?: emptyMap()
-            httpClient.get("/v1/b2b/sessions/jwks/${data.projectId}", asMap)
-        }, executor)
-    }
+    override fun getJWKSCompletable(data: GetJWKSRequest): CompletableFuture<StytchResult<GetJWKSResponse>> =
+        coroutineScope.async {
+            getJWKS(data)
+        }.asCompletableFuture()
 }

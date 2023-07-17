@@ -19,10 +19,11 @@ import com.stytch.kotlin.common.StytchResult
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface SAML {
     /**
@@ -116,13 +117,10 @@ internal class SAMLImpl(
         }
     }
 
-    override fun createConnectionCompletable(data: CreateConnectionRequest): CompletableFuture<StytchResult<CreateConnectionResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(CreateConnectionRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/sso/saml/${data.organizationId}", asJson)
-        }, executor)
-    }
+    override fun createConnectionCompletable(data: CreateConnectionRequest): CompletableFuture<StytchResult<CreateConnectionResponse>> =
+        coroutineScope.async {
+            createConnection(data)
+        }.asCompletableFuture()
     override suspend fun updateConnection(data: UpdateConnectionRequest): StytchResult<UpdateConnectionResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(UpdateConnectionRequest::class.java).toJson(data)
         httpClient.put("/v1/b2b/sso/saml/$data.organizationId/connections/${data.connectionId}", asJson)
@@ -134,13 +132,10 @@ internal class SAMLImpl(
         }
     }
 
-    override fun updateConnectionCompletable(data: UpdateConnectionRequest): CompletableFuture<StytchResult<UpdateConnectionResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(UpdateConnectionRequest::class.java).toJson(data)
-            httpClient.put("/v1/b2b/sso/saml/$data.organizationId/connections/${data.connectionId}", asJson)
-        }, executor)
-    }
+    override fun updateConnectionCompletable(data: UpdateConnectionRequest): CompletableFuture<StytchResult<UpdateConnectionResponse>> =
+        coroutineScope.async {
+            updateConnection(data)
+        }.asCompletableFuture()
     override suspend fun deleteVerificationCertificate(data: DeleteVerificationCertificateRequest): StytchResult<DeleteVerificationCertificateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(DeleteVerificationCertificateRequest::class.java).toJson(data)
         val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
@@ -155,14 +150,8 @@ internal class SAMLImpl(
         }
     }
 
-    override fun deleteVerificationCertificateCompletable(data: DeleteVerificationCertificateRequest): CompletableFuture<StytchResult<DeleteVerificationCertificateResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(DeleteVerificationCertificateRequest::class.java).toJson(data)
-            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-            val asMap = adapter.fromJson(asJson) ?: emptyMap()
-            httpClient.delete("/v1/b2b/sso/saml/$data.organizationId/connections/$data.connectionId/verification_certificates/${data.certificateId}", asMap)
-        }, executor)
-    }
+    override fun deleteVerificationCertificateCompletable(data: DeleteVerificationCertificateRequest): CompletableFuture<StytchResult<DeleteVerificationCertificateResponse>> =
+        coroutineScope.async {
+            deleteVerificationCertificate(data)
+        }.asCompletableFuture()
 }

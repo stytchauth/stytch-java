@@ -13,10 +13,11 @@ import com.stytch.kotlin.consumer.models.passwordssession.ResetResponse
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 public interface Sessions {
     /**
@@ -56,11 +57,8 @@ internal class SessionsImpl(
         }
     }
 
-    override fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>> {
-        val executor = Executors.newFixedThreadPool(1)
-        return CompletableFuture.supplyAsync({
-            val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
-            httpClient.post("/v1/passwords/session/reset", asJson)
-        }, executor)
-    }
+    override fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>> =
+        coroutineScope.async {
+            reset(data)
+        }.asCompletableFuture()
 }

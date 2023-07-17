@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     implementation(libs.coroutines)
+    implementation(libs.coroutines.jdk8)
     implementation(libs.jose4j)
     implementation(libs.moshi)
     kapt(libs.moshi.codegen)
