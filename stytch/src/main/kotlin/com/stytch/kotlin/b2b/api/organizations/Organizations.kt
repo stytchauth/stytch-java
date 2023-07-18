@@ -200,11 +200,7 @@ internal class OrganizationsImpl(
             update(data)
         }.asCompletableFuture()
     override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(DeleteRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/b2b/organizations/${data.organizationId}", asMap)
+        httpClient.delete("/v1/b2b/organizations/${data.organizationId}")
     }
 
     override fun delete(data: DeleteRequest, callback: (StytchResult<DeleteResponse>) -> Unit) {

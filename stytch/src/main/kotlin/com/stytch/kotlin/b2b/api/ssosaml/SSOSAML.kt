@@ -6,9 +6,7 @@ package com.stytch.kotlin.b2b.api.ssosaml
 // or your changes may be overwritten later!
 // !!!
 
-import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import com.stytch.kotlin.b2b.models.ssosaml.CreateConnectionRequest
 import com.stytch.kotlin.b2b.models.ssosaml.CreateConnectionResponse
 import com.stytch.kotlin.b2b.models.ssosaml.DeleteVerificationCertificateRequest
@@ -136,11 +134,7 @@ internal class SAMLImpl(
             updateConnection(data)
         }.asCompletableFuture()
     override suspend fun deleteVerificationCertificate(data: DeleteVerificationCertificateRequest): StytchResult<DeleteVerificationCertificateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(DeleteVerificationCertificateRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/b2b/sso/saml/${data.organizationId}/connections/${data.connectionId}/verification_certificates/${data.certificateId}", asMap)
+        httpClient.delete("/v1/b2b/sso/saml/${data.organizationId}/connections/${data.connectionId}/verification_certificates/${data.certificateId}")
     }
 
     override fun deleteVerificationCertificate(data: DeleteVerificationCertificateRequest, callback: (StytchResult<DeleteVerificationCertificateResponse>) -> Unit) {

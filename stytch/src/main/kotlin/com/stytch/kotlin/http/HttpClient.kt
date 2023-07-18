@@ -48,7 +48,7 @@ internal class HttpClient(
     private val baseUrl: String,
     projectId: String,
     secret: String,
-    private val client: OkHttpClient = createHttpClient(projectId, secret)
+    private val client: OkHttpClient = createHttpClient(projectId, secret),
 ) {
     private val moshi = Moshi.Builder().build()
 
@@ -131,9 +131,9 @@ internal class HttpClient(
         }
     }
 
-    suspend inline fun <reified T> delete(path: String, params: Map<String, Any> = emptyMap()): StytchResult<T> {
+    suspend inline fun <reified T> delete(path: String): StytchResult<T> {
         val request = Request.Builder()
-            .url(buildUrl(path, params))
+            .url(buildUrl(path, emptyMap()))
             .delete()
             .build()
         return try { makeRequest(request, T::class.java) } catch (e: Exception) {

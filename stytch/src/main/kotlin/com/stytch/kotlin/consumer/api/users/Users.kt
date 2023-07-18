@@ -333,11 +333,7 @@ internal class UsersImpl(
             update(data)
         }.asCompletableFuture()
     override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(DeleteRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/users/${data.userId}", asMap)
+        httpClient.delete("/v1/users/${data.userId}")
     }
 
     override fun delete(data: DeleteRequest, callback: (StytchResult<DeleteResponse>) -> Unit) {
@@ -351,11 +347,7 @@ internal class UsersImpl(
             delete(data)
         }.asCompletableFuture()
     override suspend fun deleteEmail(data: DeleteEmailRequest): StytchResult<DeleteEmailResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(DeleteEmailRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/users/emails/${data.emailId}", asMap)
+        httpClient.delete("/v1/users/emails/${data.emailId}")
     }
 
     override fun deleteEmail(data: DeleteEmailRequest, callback: (StytchResult<DeleteEmailResponse>) -> Unit) {
@@ -369,11 +361,7 @@ internal class UsersImpl(
             deleteEmail(data)
         }.asCompletableFuture()
     override suspend fun deletePhoneNumber(data: DeletePhoneNumberRequest): StytchResult<DeletePhoneNumberResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(DeletePhoneNumberRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/users/phone_numbers/${data.phoneId}", asMap)
+        httpClient.delete("/v1/users/phone_numbers/${data.phoneId}")
     }
 
     override fun deletePhoneNumber(data: DeletePhoneNumberRequest, callback: (StytchResult<DeletePhoneNumberResponse>) -> Unit) {
@@ -387,11 +375,7 @@ internal class UsersImpl(
             deletePhoneNumber(data)
         }.asCompletableFuture()
     override suspend fun deleteWebAuthnRegistration(data: DeleteWebAuthnRegistrationRequest): StytchResult<DeleteWebAuthnRegistrationResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(DeleteWebAuthnRegistrationRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/users/webauthn_registrations/${data.webauthnRegistrationId}", asMap)
+        httpClient.delete("/v1/users/webauthn_registrations/${data.webauthnRegistrationId}")
     }
 
     override fun deleteWebAuthnRegistration(data: DeleteWebAuthnRegistrationRequest, callback: (StytchResult<DeleteWebAuthnRegistrationResponse>) -> Unit) {
@@ -405,11 +389,7 @@ internal class UsersImpl(
             deleteWebAuthnRegistration(data)
         }.asCompletableFuture()
     override suspend fun deleteBiometricRegistration(data: DeleteBiometricRegistrationRequest): StytchResult<DeleteBiometricRegistrationResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(DeleteBiometricRegistrationRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/users/biometric_registrations/${data.biometricRegistrationId}", asMap)
+        httpClient.delete("/v1/users/biometric_registrations/${data.biometricRegistrationId}")
     }
 
     override fun deleteBiometricRegistration(data: DeleteBiometricRegistrationRequest, callback: (StytchResult<DeleteBiometricRegistrationResponse>) -> Unit) {
@@ -423,11 +403,7 @@ internal class UsersImpl(
             deleteBiometricRegistration(data)
         }.asCompletableFuture()
     override suspend fun deleteTOTP(data: DeleteTOTPRequest): StytchResult<DeleteTOTPResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(DeleteTOTPRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/users/totps/${data.totpId}", asMap)
+        httpClient.delete("/v1/users/totps/${data.totpId}")
     }
 
     override fun deleteTOTP(data: DeleteTOTPRequest, callback: (StytchResult<DeleteTOTPResponse>) -> Unit) {
@@ -441,11 +417,7 @@ internal class UsersImpl(
             deleteTOTP(data)
         }.asCompletableFuture()
     override suspend fun deleteCryptoWallet(data: DeleteCryptoWalletRequest): StytchResult<DeleteCryptoWalletResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(DeleteCryptoWalletRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/users/crypto_wallets/${data.cryptoWalletId}", asMap)
+        httpClient.delete("/v1/users/crypto_wallets/${data.cryptoWalletId}")
     }
 
     override fun deleteCryptoWallet(data: DeleteCryptoWalletRequest, callback: (StytchResult<DeleteCryptoWalletResponse>) -> Unit) {
@@ -459,11 +431,7 @@ internal class UsersImpl(
             deleteCryptoWallet(data)
         }.asCompletableFuture()
     override suspend fun deletePassword(data: DeletePasswordRequest): StytchResult<DeletePasswordResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(DeletePasswordRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/users/passwords/${data.passwordId}", asMap)
+        httpClient.delete("/v1/users/passwords/${data.passwordId}")
     }
 
     override fun deletePassword(data: DeletePasswordRequest, callback: (StytchResult<DeletePasswordResponse>) -> Unit) {
@@ -477,11 +445,7 @@ internal class UsersImpl(
             deletePassword(data)
         }.asCompletableFuture()
     override suspend fun deleteOAuthRegistration(data: DeleteOAuthRegistrationRequest): StytchResult<DeleteOAuthRegistrationResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(DeleteOAuthRegistrationRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/users/oauth/${data.oauthUserRegistrationId}", asMap)
+        httpClient.delete("/v1/users/oauth/${data.oauthUserRegistrationId}")
     }
 
     override fun deleteOAuthRegistration(data: DeleteOAuthRegistrationRequest, callback: (StytchResult<DeleteOAuthRegistrationResponse>) -> Unit) {

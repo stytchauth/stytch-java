@@ -31,6 +31,7 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
 internal class HttpClientTest {
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
+
     @MockK
     private lateinit var mockOkhttpClient: OkHttpClient
     private lateinit var httpClient: HttpClient
@@ -39,12 +40,14 @@ internal class HttpClientTest {
     fun before() {
         Dispatchers.setMain(mainThreadSurrogate)
         MockKAnnotations.init(this, true, true)
-        httpClient = spyk(HttpClient(
-            baseUrl = "http://something",
-            projectId = "project-id",
-            secret = "secret",
-            client = mockOkhttpClient
-        ))
+        httpClient = spyk(
+            HttpClient(
+                baseUrl = "http://something",
+                projectId = "project-id",
+                secret = "secret",
+                client = mockOkhttpClient,
+            ),
+        )
     }
 
     @Test
@@ -116,11 +119,14 @@ internal class HttpClientTest {
         val slot = slot<Callback>()
         val mockCall: Call = mockk {
             every { enqueue(capture(slot)) } answers {
-                slot.captured.onResponse(mockk(), mockk {
-                    every { isSuccessful } returns false
-                    every { body } returns null
-                    every { close() } just runs
-                })
+                slot.captured.onResponse(
+                    mockk(),
+                    mockk {
+                        every { isSuccessful } returns false
+                        every { body } returns null
+                        every { close() } just runs
+                    },
+                )
             }
         }
         every { mockOkhttpClient.newCall(mockRequest) } returns mockCall
@@ -136,11 +142,14 @@ internal class HttpClientTest {
         val slot = slot<Callback>()
         val mockCall: Call = mockk {
             every { enqueue(capture(slot)) } answers {
-                slot.captured.onResponse(mockk(), mockk {
-                    every { isSuccessful } returns true
-                    every { body } returns null
-                    every { close() } just runs
-                })
+                slot.captured.onResponse(
+                    mockk(),
+                    mockk {
+                        every { isSuccessful } returns true
+                        every { body } returns null
+                        every { close() } just runs
+                    },
+                )
             }
         }
         every { mockOkhttpClient.newCall(mockRequest) } returns mockCall

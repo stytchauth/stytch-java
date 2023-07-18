@@ -129,11 +129,7 @@ internal class SSOImpl(
             getConnections(data)
         }.asCompletableFuture()
     override suspend fun deleteConnection(data: DeleteConnectionRequest): StytchResult<DeleteConnectionResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(DeleteConnectionRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/b2b/sso/${data.organizationId}/connections/${data.connectionId}", asMap)
+        httpClient.delete("/v1/b2b/sso/${data.organizationId}/connections/${data.connectionId}")
     }
 
     override fun deleteConnection(data: DeleteConnectionRequest, callback: (StytchResult<DeleteConnectionResponse>) -> Unit) {

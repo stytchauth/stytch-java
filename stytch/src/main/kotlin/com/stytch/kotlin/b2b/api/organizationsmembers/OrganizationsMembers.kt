@@ -154,11 +154,7 @@ internal class MembersImpl(
             update(data)
         }.asCompletableFuture()
     override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(DeleteRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/${data.memberId}", asMap)
+        httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/${data.memberId}")
     }
 
     override fun delete(data: DeleteRequest, callback: (StytchResult<DeleteResponse>) -> Unit) {
@@ -187,11 +183,7 @@ internal class MembersImpl(
             search(data)
         }.asCompletableFuture()
     override suspend fun deletePassword(data: DeletePasswordRequest): StytchResult<DeletePasswordResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(DeletePasswordRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/passwords/${data.memberPasswordId}", asMap)
+        httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/passwords/${data.memberPasswordId}")
     }
 
     override fun deletePassword(data: DeletePasswordRequest, callback: (StytchResult<DeletePasswordResponse>) -> Unit) {
