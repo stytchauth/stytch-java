@@ -23,14 +23,9 @@ import kotlin.coroutines.resumeWithException
 
 private const val ONE_HUNDRED_TWENTY = 120L
 
-internal class HttpClient(
-    private val baseUrl: String,
-    projectId: String,
-    secret: String,
-) {
-    private val credentials = Credentials.basic(username = projectId, password = secret)
-    private val moshi = Moshi.Builder().build()
-    private val client = OkHttpClient.Builder()
+private fun createHttpClient(projectId: String, secret: String): OkHttpClient {
+    val credentials = Credentials.basic(username = projectId, password = secret)
+    return OkHttpClient.Builder()
         .readTimeout(ONE_HUNDRED_TWENTY, TimeUnit.SECONDS)
         .writeTimeout(ONE_HUNDRED_TWENTY, TimeUnit.SECONDS)
         .connectTimeout(ONE_HUNDRED_TWENTY, TimeUnit.SECONDS)
@@ -47,20 +42,33 @@ internal class HttpClient(
             )
         }
         .build()
+}
 
-    private fun buildUrl(path: String, params: Map<String, Any> = emptyMap()): HttpUrl =
+internal class HttpClient(
+    private val baseUrl: String,
+    projectId: String,
+    secret: String,
+    private val client: OkHttpClient = createHttpClient(projectId, secret)
+) {
+    private val moshi = Moshi.Builder().build()
+
+    internal fun buildUrl(path: String, params: Map<String, Any> = emptyMap()): HttpUrl =
         "$baseUrl$path".toHttpUrl().newBuilder().apply {
             params.forEach { (key, value) ->
                 addQueryParameter(key, value.toString())
             }
         }.build()
 
-    private inline fun <reified T> mapResponseToClass(response: Response, clazz: Class<T>): T? =
-        response.body?.let {
-            moshi.adapter(clazz).fromJson(it.source())
+    internal inline fun <reified T> mapResponseToClass(response: Response, clazz: Class<T>): T? =
+        try {
+            response.body?.let {
+                moshi.adapter(clazz).fromJson(it.source())
+            }
+        } catch (_: Exception) {
+            null
         }
 
-    private suspend inline fun <reified T> makeRequest(request: Request, clazz: Class<T>): StytchResult<T> = suspendCancellableCoroutine { cont ->
+    internal suspend inline fun <reified T> makeRequest(request: Request, clazz: Class<T>): StytchResult<T> = suspendCancellableCoroutine { cont ->
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 if (cont.isCancelled) return
@@ -98,7 +106,9 @@ internal class HttpClient(
         val request = Request.Builder()
             .url(buildUrl(path, params))
             .build()
-        return makeRequest(request, T::class.java)
+        return try { makeRequest(request, T::class.java) } catch (e: Exception) {
+            StytchResult.Error(StytchException.Critical(e))
+        }
     }
 
     suspend inline fun <reified T> post(path: String, json: String): StytchResult<T> {
@@ -106,7 +116,9 @@ internal class HttpClient(
             .url(buildUrl(path))
             .post(json.toRequestBody("application/json".toMediaType()))
             .build()
-        return makeRequest(request, T::class.java)
+        return try { makeRequest(request, T::class.java) } catch (e: Exception) {
+            StytchResult.Error(StytchException.Critical(e))
+        }
     }
 
     suspend inline fun <reified T> put(path: String, json: String): StytchResult<T> {
@@ -114,7 +126,9 @@ internal class HttpClient(
             .url(buildUrl(path))
             .put(json.toRequestBody("application/json".toMediaType()))
             .build()
-        return makeRequest(request, T::class.java)
+        return try { makeRequest(request, T::class.java) } catch (e: Exception) {
+            StytchResult.Error(StytchException.Critical(e))
+        }
     }
 
     suspend inline fun <reified T> delete(path: String, params: Map<String, Any> = emptyMap()): StytchResult<T> {
@@ -122,6 +136,8 @@ internal class HttpClient(
             .url(buildUrl(path, params))
             .delete()
             .build()
-        return makeRequest(request, T::class.java)
+        return try { makeRequest(request, T::class.java) } catch (e: Exception) {
+            StytchResult.Error(StytchException.Critical(e))
+        }
     }
 }

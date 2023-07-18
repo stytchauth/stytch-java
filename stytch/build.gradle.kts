@@ -17,11 +17,11 @@ dependencies {
     implementation(libs.moshi)
     kapt(libs.moshi.codegen)
     implementation(libs.okhttp)
-    testImplementation(kotlin("test"))
-}
 
-tasks.test {
-    useJUnitPlatform()
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.okhttp.mockwebserver)
 }
 
 kotlin {
