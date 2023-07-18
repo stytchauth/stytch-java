@@ -64,7 +64,7 @@ public object StytchB2BClient {
     /**
      * Resolve the base URL for the Stytch API environment.
      */
-    private fun getBaseUrl(projectId: String): String = when (projectId.contains("test")) {
+    private fun getBaseUrl(projectId: String): String = when (projectId.startsWith("project-test")) {
         true -> BASE_TEST_URL
         false -> BASE_LIVE_URL
     }
