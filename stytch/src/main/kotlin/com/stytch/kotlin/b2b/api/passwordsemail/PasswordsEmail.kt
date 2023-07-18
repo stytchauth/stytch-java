@@ -20,7 +20,6 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-
 public interface Email {
     /**
      * Initiates a password reset for the email address provided. This will trigger an email to be sent to the address,

@@ -20,7 +20,6 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-
 public interface OIDC {
     /**
      * Create a new OIDC Connection.
@@ -146,7 +145,7 @@ internal class OIDCImpl(
         }.asCompletableFuture()
     override suspend fun updateConnection(data: UpdateConnectionRequest): StytchResult<UpdateConnectionResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(UpdateConnectionRequest::class.java).toJson(data)
-        httpClient.put("/v1/b2b/sso/oidc/$data.organizationId/connections/${data.connectionId}", asJson)
+        httpClient.put("/v1/b2b/sso/oidc/${data.organizationId}/connections/${data.connectionId}", asJson)
     }
 
     override fun updateConnection(data: UpdateConnectionRequest, callback: (StytchResult<UpdateConnectionResponse>) -> Unit) {

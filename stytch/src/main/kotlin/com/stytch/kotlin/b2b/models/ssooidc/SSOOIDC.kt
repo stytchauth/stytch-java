@@ -93,24 +93,24 @@ public data class UpdateConnectionRequest(
      * The location of the URL that starts an OAuth login at the IdP. This will be provided by the IdP.
      */
     @Json(name = "authorization_url")
-    val authorizationUrl: String? = null,
+    val authorizationURL: String? = null,
     /**
      * The location of the URL that issues OAuth2.0 access tokens and OIDC ID tokens. This will be provided by the IdP.
      */
     @Json(name = "token_url")
-    val tokenUrl: String? = null,
+    val tokenURL: String? = null,
     /**
      * The location of the IDP's [UserInfo Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo). This
      * will be provided by the IdP.
      */
     @Json(name = "userinfo_url")
-    val userinfoUrl: String? = null,
+    val userinfoURL: String? = null,
     /**
      * The location of the IdP's JSON Web Key Set, used to verify credentials issued by the IdP. This will be provided by the
      * IdP.
      */
     @Json(name = "jwks_url")
-    val jwksUrl: String? = null,
+    val jwksURL: String? = null,
 )
 
 /**

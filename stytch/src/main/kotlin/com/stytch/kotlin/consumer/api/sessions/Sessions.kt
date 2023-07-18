@@ -38,7 +38,6 @@ import org.jose4j.lang.JoseException
 import java.time.Instant
 import java.util.Date
 import java.util.concurrent.CompletableFuture
-
 public interface Sessions {
     /**
      * List all active Sessions for a given `user_id`. All timestamps are formatted according to the RFC 3339 standard and are

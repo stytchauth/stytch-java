@@ -28,7 +28,6 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-
 public interface SSO {
     public val oidc: OIDC
 
@@ -134,7 +133,7 @@ internal class SSOImpl(
         val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
         val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
         val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/b2b/sso/$data.organizationId/connections/${data.connectionId}", asMap)
+        httpClient.delete("/v1/b2b/sso/${data.organizationId}/connections/${data.connectionId}", asMap)
     }
 
     override fun deleteConnection(data: DeleteConnectionRequest, callback: (StytchResult<DeleteConnectionResponse>) -> Unit) {

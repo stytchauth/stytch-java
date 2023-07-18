@@ -24,7 +24,6 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-
 public interface OTPs {
     public val sms: Sms
 

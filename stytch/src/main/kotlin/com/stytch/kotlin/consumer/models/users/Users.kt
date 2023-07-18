@@ -121,7 +121,7 @@ public data class OAuthProvider(
      * the User has authenticated with, e.g. Facebook profile picture.
      */
     @Json(name = "profile_picture_url")
-    val profilePictureUrl: String,
+    val profilePictureURL: String,
     /**
      * If available, the `locale` is the User's locale set in the OAuth identity provider that the user has authenticated with.
      */

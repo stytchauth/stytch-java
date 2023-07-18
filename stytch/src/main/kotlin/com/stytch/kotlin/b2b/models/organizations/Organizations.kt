@@ -120,13 +120,13 @@ public data class OAuthRegistration(
      * The unique ID of an OAuth registration.
      */
     @Json(name = "member_oauth_registration_id")
-    val memberOauthRegistrationId: String,
+    val memberOAuthRegistrationId: String,
     /**
      * If available, the `profile_picture_url` is a URL of the User's profile picture set in OAuth identity the provider that
      * the User has authenticated with, e.g. Google profile picture.
      */
     @Json(name = "profile_picture_url")
-    val profilePictureUrl: String? = null,
+    val profilePictureURL: String? = null,
     /**
      * If available, the `locale` is the Member's locale set in the OAuth identity provider that the user has authenticated
      * with.
@@ -152,7 +152,7 @@ public data class Organization(
      * The image URL of the Organization logo.
      */
     @Json(name = "organization_logo_url")
-    val organizationLogoUrl: String,
+    val organizationLogoURL: String,
     /**
      * The unique URL slug of the Organization. A minimum of two characters is required. The slug only accepts alphanumeric
      * characters and the following reserved characters: `-` `.` `_` `~`.
@@ -173,7 +173,7 @@ public data class Organization(
      *
      */
     @Json(name = "sso_jit_provisioning")
-    val ssoJitProvisioning: String,
+    val ssoJITProvisioning: String,
     /**
      * An array of `connection_id`s that reference
      * [SAML Connection objects](https://stytch.com/docs/b2b/api/saml-connection-object).
@@ -181,7 +181,7 @@ public data class Organization(
      * `RESTRICTED`.
      */
     @Json(name = "sso_jit_provisioning_allowed_connections")
-    val ssoJitProvisioningAllowedConnections: List<String>,
+    val ssoJITProvisioningAllowedConnections: List<String>,
     /**
      * An array of active [SAML Connection references](https://stytch.com/docs/b2b/api/saml-connection-object).
      */
@@ -208,7 +208,7 @@ public data class Organization(
      *
      */
     @Json(name = "email_jit_provisioning")
-    val emailJitProvisioning: String,
+    val emailJITProvisioning: String,
     /**
      * The authentication setting that controls how a new Member can be invited to an organization by email. The accepted
      * values are:
@@ -332,7 +332,7 @@ public data class CreateRequest(
      * The image URL of the Organization logo.
      */
     @Json(name = "organization_logo_url")
-    val organizationLogoUrl: String? = null,
+    val organizationLogoURL: String? = null,
     /**
      * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
      */
@@ -352,7 +352,7 @@ public data class CreateRequest(
      *
      */
     @Json(name = "sso_jit_provisioning")
-    val ssoJitProvisioning: String? = null,
+    val ssoJITProvisioning: String? = null,
     /**
      * An array of email domains that allow invites or JIT provisioning for new Members. This list is enforced when either
      * `email_invites` or `email_jit_provisioning` is set to `RESTRICTED`.
@@ -374,7 +374,7 @@ public data class CreateRequest(
      *
      */
     @Json(name = "email_jit_provisioning")
-    val emailJitProvisioning: String? = null,
+    val emailJITProvisioning: String? = null,
     /**
      * The authentication setting that controls how a new Member can be invited to an organization by email. The accepted
      * values are:
@@ -595,7 +595,7 @@ public data class UpdateRequest(
      * The image URL of the Organization logo.
      */
     @Json(name = "organization_logo_url")
-    val organizationLogoUrl: String? = null,
+    val organizationLogoURL: String? = null,
     /**
      * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
      */
@@ -620,7 +620,7 @@ public data class UpdateRequest(
      *
      */
     @Json(name = "sso_jit_provisioning")
-    val ssoJitProvisioning: String? = null,
+    val ssoJITProvisioning: String? = null,
     /**
      * An array of `connection_id`s that reference
      * [SAML Connection objects](https://stytch.com/docs/b2b/api/saml-connection-object).
@@ -628,7 +628,7 @@ public data class UpdateRequest(
      * `RESTRICTED`.
      */
     @Json(name = "sso_jit_provisioning_allowed_connections")
-    val ssoJitProvisioningAllowedConnections: List<String>? = null,
+    val ssoJITProvisioningAllowedConnections: List<String>? = null,
     /**
      * An array of email domains that allow invites or JIT provisioning for new Members. This list is enforced when either
      * `email_invites` or `email_jit_provisioning` is set to `RESTRICTED`.
@@ -650,7 +650,7 @@ public data class UpdateRequest(
      *
      */
     @Json(name = "email_jit_provisioning")
-    val emailJitProvisioning: String? = null,
+    val emailJITProvisioning: String? = null,
     /**
      * The authentication setting that controls how a new Member can be invited to an organization by email. The accepted
      * values are:

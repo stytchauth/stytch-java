@@ -44,7 +44,6 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-
 public interface Users {
     /**
      * Add a User to Stytch. A `user_id` is returned in the response that can then be used to perform other operations within

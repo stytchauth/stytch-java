@@ -162,7 +162,7 @@ public data class ResetStartRequest(
      *   If you have not set a default reset password redirect URL, an error is returned.
      */
     @Json(name = "reset_password_redirect_url")
-    val resetPasswordRedirectUrl: String? = null,
+    val resetPasswordRedirectURL: String? = null,
     /**
      * Set the expiration for the password reset, in minutes. By default, it expires in 30 minutes.
      *   The minimum expiration is 5 minutes and the maximum is 7 days (10080 mins).
@@ -188,7 +188,7 @@ public data class ResetStartRequest(
      * specified, the default Login URL will be used.
      */
     @Json(name = "login_redirect_url")
-    val loginRedirectUrl: String? = null,
+    val loginRedirectURL: String? = null,
     /**
      * Used to determine which language to use when sending the user this delivery method. Parameter is a
      * [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.

@@ -73,7 +73,7 @@ public data class CreateRequest(
      * The image URL of the Organization logo.
      */
     @Json(name = "organization_logo_url")
-    val organizationLogoUrl: String? = null,
+    val organizationLogoURL: String? = null,
     /**
      * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
      */
@@ -93,7 +93,7 @@ public data class CreateRequest(
      *
      */
     @Json(name = "sso_jit_provisioning")
-    val ssoJitProvisioning: String? = null,
+    val ssoJITProvisioning: String? = null,
     /**
      * An array of email domains that allow invites or JIT provisioning for new Members. This list is enforced when either
      * `email_invites` or `email_jit_provisioning` is set to `RESTRICTED`.
@@ -115,7 +115,7 @@ public data class CreateRequest(
      *
      */
     @Json(name = "email_jit_provisioning")
-    val emailJitProvisioning: String? = null,
+    val emailJITProvisioning: String? = null,
     /**
      * The authentication setting that controls how a new Member can be invited to an organization by email. The accepted
      * values are:

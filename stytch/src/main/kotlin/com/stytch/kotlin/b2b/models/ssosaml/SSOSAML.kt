@@ -143,7 +143,7 @@ public data class UpdateConnectionRequest(
      * The URL for which assertions for login requests will be sent. This will be provided by the IdP.
      */
     @Json(name = "idp_sso_url")
-    val idpSsoUrl: String? = null,
+    val idpSSOURL: String? = null,
 )
 
 /**

@@ -30,20 +30,19 @@ import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import org.jose4j.jwk.HttpsJwks
-
 public object StytchClient {
     private lateinit var httpClient: HttpClient
     private lateinit var httpsJwks: HttpsJwks
     private lateinit var jwtOptions: JwtOptions
     public lateinit var cryptoWallets: CryptoWallets
     public lateinit var magicLinks: MagicLinks
-    public lateinit var oAuth: OAuth
-    public lateinit var oTPs: OTPs
+    public lateinit var oauth: OAuth
+    public lateinit var otps: OTPs
     public lateinit var passwords: Passwords
     public lateinit var sessions: Sessions
-    public lateinit var tOTPs: TOTPs
+    public lateinit var totps: TOTPs
     public lateinit var users: Users
-    public lateinit var webAuthn: WebAuthn
+    public lateinit var webauthn: WebAuthn
 
     public fun configure(projectId: String, secret: String) {
         val baseUrl = getBaseUrl(projectId)
@@ -61,13 +60,13 @@ public object StytchClient {
         httpsJwks = HttpsJwks("$baseUrl/v1/sessions/jwks/$projectId")
         cryptoWallets = CryptoWalletsImpl(httpClient, coroutineScope)
         magicLinks = MagicLinksImpl(httpClient, coroutineScope)
-        oAuth = OAuthImpl(httpClient, coroutineScope)
-        oTPs = OTPsImpl(httpClient, coroutineScope)
+        oauth = OAuthImpl(httpClient, coroutineScope)
+        otps = OTPsImpl(httpClient, coroutineScope)
         passwords = PasswordsImpl(httpClient, coroutineScope)
         sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
-        tOTPs = TOTPsImpl(httpClient, coroutineScope)
+        totps = TOTPsImpl(httpClient, coroutineScope)
         users = UsersImpl(httpClient, coroutineScope)
-        webAuthn = WebAuthnImpl(httpClient, coroutineScope)
+        webauthn = WebAuthnImpl(httpClient, coroutineScope)
     }
 
     /**

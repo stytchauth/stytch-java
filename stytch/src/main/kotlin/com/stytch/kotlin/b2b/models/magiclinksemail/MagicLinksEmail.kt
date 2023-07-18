@@ -63,7 +63,7 @@ public data class InviteRequest(
      *   that you set in your Dashboard is used. If you have not set a default `invite_redirect_url`, an error is returned.
      */
     @Json(name = "invite_redirect_url")
-    val inviteRedirectUrl: String? = null,
+    val inviteRedirectURL: String? = null,
     /**
      * The `member_id` of the Member who sends the invite.
      */
@@ -168,7 +168,7 @@ public data class LoginOrSignupRequest(
      * returned.
      */
     @Json(name = "login_redirect_url")
-    val loginRedirectUrl: String? = null,
+    val loginRedirectURL: String? = null,
     /**
      * The URL the Member clicks from the signup Email Magic Link. This URL should be an endpoint in the backend server that
      * verifies
@@ -177,7 +177,7 @@ public data class LoginOrSignupRequest(
      *   that you set in your Dashboard is used. If you have not set a default sign-up redirect URL, an error is returned.
      */
     @Json(name = "signup_redirect_url")
-    val signupRedirectUrl: String? = null,
+    val signupRedirectURL: String? = null,
     /**
      * A base64url encoded SHA256 hash of a one time secret used to validate that the request starts and ends on the same
      * device.

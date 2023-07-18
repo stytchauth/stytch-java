@@ -178,7 +178,7 @@ public data class ResetStartRequest(
      *   If you have not set a default `reset_password_redirect_url`, an error is returned.
      */
     @Json(name = "reset_password_redirect_url")
-    val resetPasswordRedirectUrl: String? = null,
+    val resetPasswordRedirectURL: String? = null,
     /**
      * Sets a time limit after which the email link to reset the member's password will no longer be valid.
      */
@@ -201,7 +201,7 @@ public data class ResetStartRequest(
      * returned.
      */
     @Json(name = "login_redirect_url")
-    val loginRedirectUrl: String? = null,
+    val loginRedirectURL: String? = null,
     /**
      * Used to determine which language to use when sending the user this delivery method. Parameter is a
      * [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.

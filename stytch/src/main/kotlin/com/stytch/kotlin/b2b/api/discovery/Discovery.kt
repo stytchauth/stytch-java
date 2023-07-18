@@ -13,7 +13,6 @@ import com.stytch.kotlin.b2b.api.discoveryorganizations.Organizations
 import com.stytch.kotlin.b2b.api.discoveryorganizations.OrganizationsImpl
 import com.stytch.kotlin.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
-
 public interface Discovery {
     public val intermediateSessions: IntermediateSessions
 

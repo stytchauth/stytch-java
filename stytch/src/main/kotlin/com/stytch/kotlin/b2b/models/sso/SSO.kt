@@ -24,7 +24,7 @@ public data class OIDCConnection(
     @Json(name = "display_name")
     val displayName: String,
     @Json(name = "redirect_url")
-    val redirectUrl: String,
+    val redirectURL: String,
     @Json(name = "client_id")
     val clientId: String,
     @Json(name = "client_secret")
@@ -32,13 +32,13 @@ public data class OIDCConnection(
     @Json(name = "issuer")
     val issuer: String,
     @Json(name = "authorization_url")
-    val authorizationUrl: String,
+    val authorizationURL: String,
     @Json(name = "token_url")
-    val tokenUrl: String,
+    val tokenURL: String,
     @Json(name = "userinfo_url")
-    val userinfoUrl: String,
+    val userinfoURL: String,
     @Json(name = "jwks_url")
-    val jwksUrl: String,
+    val jwksURL: String,
 )
 
 @JsonClass(generateAdapter = true)
@@ -54,9 +54,9 @@ public data class SAMLConnection(
     @Json(name = "display_name")
     val displayName: String,
     @Json(name = "idp_sso_url")
-    val idpSsoUrl: String,
+    val idpSSOURL: String,
     @Json(name = "acs_url")
-    val acsUrl: String,
+    val acsURL: String,
     @Json(name = "audience_uri")
     val audienceUri: String,
     @Json(name = "signing_certificates")

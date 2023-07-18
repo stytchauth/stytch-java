@@ -86,7 +86,7 @@ public data class InviteRequest(
      * an error is returned.
      */
     @Json(name = "invite_magic_link_url")
-    val inviteMagicLinkUrl: String? = null,
+    val inviteMagicLinkURL: String? = null,
     /**
      * Set the expiration for the email magic link, in minutes. By default, it expires in 1 hour. The minimum expiration is 5
      * minutes and the maximum is 7 days (10080 mins).
@@ -154,7 +154,7 @@ public data class LoginOrCreateRequest(
      * error is returned.
      */
     @Json(name = "login_magic_link_url")
-    val loginMagicLinkUrl: String? = null,
+    val loginMagicLinkURL: String? = null,
     /**
      * The URL the end user clicks from the sign-up Email Magic Link. This should be a URL that your app receives and parses
      * and subsequently send an API request to authenticate the Magic Link and sign-up the User. If this value is not passed,
@@ -162,7 +162,7 @@ public data class LoginOrCreateRequest(
      * URL, an error is returned.
      */
     @Json(name = "signup_magic_link_url")
-    val signupMagicLinkUrl: String? = null,
+    val signupMagicLinkURL: String? = null,
     /**
      * Set the expiration for the login email magic link, in minutes. By default, it expires in 1 hour. The minimum expiration
      * is 5 minutes and the maximum is 7 days (10080 mins).
@@ -315,7 +315,7 @@ public data class SendRequest(
      * error is returned.
      */
     @Json(name = "login_magic_link_url")
-    val loginMagicLinkUrl: String? = null,
+    val loginMagicLinkURL: String? = null,
     /**
      * The URL the end user clicks from the sign-up Email Magic Link. This should be a URL that your app receives and parses
      * and subsequently send an API request to authenticate the Magic Link and sign-up the User. If this value is not passed,
@@ -323,7 +323,7 @@ public data class SendRequest(
      * URL, an error is returned.
      */
     @Json(name = "signup_magic_link_url")
-    val signupMagicLinkUrl: String? = null,
+    val signupMagicLinkURL: String? = null,
     /**
      * Set the expiration for the login email magic link, in minutes. By default, it expires in 1 hour. The minimum expiration
      * is 5 minutes and the maximum is 7 days (10080 mins).

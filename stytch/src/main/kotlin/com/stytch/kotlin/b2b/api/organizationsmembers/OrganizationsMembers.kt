@@ -30,7 +30,6 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-
 public interface Members {
     /**
      * Updates a Member specified by `organization_id` and `member_id`.
@@ -141,7 +140,7 @@ internal class MembersImpl(
 
     override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
-        httpClient.put("/v1/b2b/organizations/$data.organizationId/members/${data.memberId}", asJson)
+        httpClient.put("/v1/b2b/organizations/${data.organizationId}/members/${data.memberId}", asJson)
     }
 
     override fun update(data: UpdateRequest, callback: (StytchResult<UpdateResponse>) -> Unit) {
@@ -159,7 +158,7 @@ internal class MembersImpl(
         val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
         val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
         val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/b2b/organizations/$data.organizationId/members/${data.memberId}", asMap)
+        httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/${data.memberId}", asMap)
     }
 
     override fun delete(data: DeleteRequest, callback: (StytchResult<DeleteResponse>) -> Unit) {
@@ -192,7 +191,7 @@ internal class MembersImpl(
         val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
         val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
         val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.delete("/v1/b2b/organizations/$data.organizationId/members/passwords/${data.memberPasswordId}", asMap)
+        httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/passwords/${data.memberPasswordId}", asMap)
     }
 
     override fun deletePassword(data: DeletePasswordRequest, callback: (StytchResult<DeletePasswordResponse>) -> Unit) {

@@ -20,7 +20,6 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-
 public interface Whatsapp {
     /**
      * Send a one-time passcode (OTP) to a User's WhatsApp. If you'd like to create a user and send them a passcode with one

@@ -20,7 +20,6 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-
 public interface OAuth {
     /**
      * Generate an OAuth Attach Token to pre-associate an OAuth flow with an existing Stytch User. Pass the returned

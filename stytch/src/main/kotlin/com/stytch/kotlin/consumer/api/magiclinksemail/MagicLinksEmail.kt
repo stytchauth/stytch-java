@@ -24,7 +24,6 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-
 public interface Email {
     /**
      * Send a magic link to an existing Stytch user using their email address. If you'd like to create a user and send them a

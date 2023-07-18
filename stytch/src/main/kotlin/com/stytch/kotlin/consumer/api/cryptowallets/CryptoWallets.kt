@@ -20,7 +20,6 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-
 public interface CryptoWallets {
     /**
      * Initiate the authentication of a crypto wallet. After calling this endpoint, the user will need to sign a message

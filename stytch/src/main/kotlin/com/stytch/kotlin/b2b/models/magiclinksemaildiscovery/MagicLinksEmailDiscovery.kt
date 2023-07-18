@@ -42,7 +42,7 @@ public data class SendRequest(
      * an error is returned.
      */
     @Json(name = "discovery_redirect_url")
-    val discoveryRedirectUrl: String? = null,
+    val discoveryRedirectURL: String? = null,
     /**
      * A base64url encoded SHA256 hash of a one time secret used to validate that the request starts and ends on the same
      * device.

@@ -18,7 +18,6 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-
 public interface Sessions {
     /**
      * Reset the Member's password using their existing session. The endpoint will error if the session does not contain an

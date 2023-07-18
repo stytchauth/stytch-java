@@ -18,7 +18,6 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-
 public interface IntermediateSessions {
     /**
      * Exchange an Intermediate Session for a fully realized [Member Session](https://stytch.com/docs/b2b/api/session-object)

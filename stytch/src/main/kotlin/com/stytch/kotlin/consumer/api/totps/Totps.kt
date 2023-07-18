@@ -24,7 +24,6 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
-
 public interface TOTPs {
     /**
      * Create a new TOTP instance for a user. The user can use the authenticator application of their choice to scan the QR
