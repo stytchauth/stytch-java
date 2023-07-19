@@ -12,18 +12,16 @@ import com.stytch.kotlin.b2b.models.organizations.Member
 import com.stytch.kotlin.b2b.models.organizations.Organization
 import com.stytch.kotlin.b2b.models.sessions.MemberSession
 
+@JsonClass(generateAdapter = false)
 public enum class ResetStartRequestLocale {
+    @Json(name = "en")
     EN,
+
+    @Json(name = "es")
     ES,
+
+    @Json(name = "ptbr")
     PTBR,
-    ;
-    public companion object {
-        public fun fromString(name: String): ResetStartRequestLocale? = try {
-            valueOf(name.uppercase())
-        } catch (e: Exception) {
-            null
-        }
-    }
 }
 
 /**

@@ -12,69 +12,139 @@ import com.stytch.kotlin.consumer.models.attribute.Attributes
 import com.stytch.kotlin.consumer.models.users.User
 import java.time.Instant
 
+@JsonClass(generateAdapter = false)
 public enum class AuthenticationFactorDeliveryMethod {
+    @Json(name = "email")
     EMAIL,
+
+    @Json(name = "sms")
     SMS,
+
+    @Json(name = "whatsapp")
     WHATSAPP,
+
+    @Json(name = "embedded")
     EMBEDDED,
+
+    @Json(name = "oauth_google")
     OAUTH_GOOGLE,
+
+    @Json(name = "oauth_microsoft")
     OAUTH_MICROSOFT,
+
+    @Json(name = "oauth_apple")
     OAUTH_APPLE,
+
+    @Json(name = "webauthn_registration")
     WEBAUTHN_REGISTRATION,
+
+    @Json(name = "authenticator_app")
     AUTHENTICATOR_APP,
+
+    @Json(name = "oauth_github")
     OAUTH_GITHUB,
+
+    @Json(name = "recovery_code")
     RECOVERY_CODE,
+
+    @Json(name = "oauth_facebook")
     OAUTH_FACEBOOK,
+
+    @Json(name = "crypto_wallet")
     CRYPTO_WALLET,
+
+    @Json(name = "oauth_amazon")
     OAUTH_AMAZON,
+
+    @Json(name = "oauth_bitbucket")
     OAUTH_BITBUCKET,
+
+    @Json(name = "oauth_coinbase")
     OAUTH_COINBASE,
+
+    @Json(name = "oauth_discord")
     OAUTH_DISCORD,
+
+    @Json(name = "oauth_figma")
     OAUTH_FIGMA,
+
+    @Json(name = "oauth_gitlab")
     OAUTH_GITLAB,
+
+    @Json(name = "oauth_instagram")
     OAUTH_INSTAGRAM,
+
+    @Json(name = "oauth_linkedin")
     OAUTH_LINKEDIN,
+
+    @Json(name = "oauth_shopify")
     OAUTH_SHOPIFY,
+
+    @Json(name = "oauth_slack")
     OAUTH_SLACK,
+
+    @Json(name = "oauth_snapchat")
     OAUTH_SNAPCHAT,
+
+    @Json(name = "oauth_spotify")
     OAUTH_SPOTIFY,
+
+    @Json(name = "oauth_steam")
     OAUTH_STEAM,
+
+    @Json(name = "oauth_tiktok")
     OAUTH_TIKTOK,
+
+    @Json(name = "oauth_twitch")
     OAUTH_TWITCH,
+
+    @Json(name = "oauth_twitter")
     OAUTH_TWITTER,
+
+    @Json(name = "knowledge")
     KNOWLEDGE,
+
+    @Json(name = "biometric")
     BIOMETRIC,
+
+    @Json(name = "sso_saml")
     SSO_SAML,
+
+    @Json(name = "sso_oidc")
     SSO_OIDC,
+
+    @Json(name = "oauth_salesforce")
     OAUTH_SALESFORCE,
-    ;
-    public companion object {
-        public fun fromString(name: String): AuthenticationFactorDeliveryMethod? = try {
-            valueOf(name.uppercase())
-        } catch (e: Exception) {
-            null
-        }
-    }
 }
 
+@JsonClass(generateAdapter = false)
 public enum class AuthenticationFactorType {
+    @Json(name = "magic_link")
     MAGIC_LINK,
+
+    @Json(name = "otp")
     OTP,
+
+    @Json(name = "oauth")
     OAUTH,
+
+    @Json(name = "webauthn")
     WEBAUTHN,
+
+    @Json(name = "totp")
     TOTP,
+
+    @Json(name = "crypto")
     CRYPTO,
+
+    @Json(name = "password")
     PASSWORD,
+
+    @Json(name = "signature_challenge")
     SIGNATURE_CHALLENGE,
+
+    @Json(name = "sso")
     SSO,
-    ;
-    public companion object {
-        public fun fromString(name: String): AuthenticationFactorType? = try {
-            valueOf(name.uppercase())
-        } catch (e: Exception) {
-            null
-        }
-    }
 }
 
 @JsonClass(generateAdapter = true)

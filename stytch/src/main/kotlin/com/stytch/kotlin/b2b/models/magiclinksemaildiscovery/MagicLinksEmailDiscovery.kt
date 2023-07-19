@@ -9,18 +9,16 @@ package com.stytch.kotlin.b2b.models.magiclinksemaildiscovery
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = false)
 public enum class SendRequestLocale {
+    @Json(name = "en")
     EN,
+
+    @Json(name = "es")
     ES,
+
+    @Json(name = "ptbr")
     PTBR,
-    ;
-    public companion object {
-        public fun fromString(name: String): SendRequestLocale? = try {
-            valueOf(name.uppercase())
-        } catch (e: Exception) {
-            null
-        }
-    }
 }
 
 /**

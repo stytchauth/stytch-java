@@ -10,32 +10,28 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.stytch.kotlin.consumer.models.attribute.Attributes
 
+@JsonClass(generateAdapter = false)
 public enum class LoginOrCreateRequestLocale {
+    @Json(name = "en")
     EN,
+
+    @Json(name = "es")
     ES,
+
+    @Json(name = "ptbr")
     PTBR,
-    ;
-    public companion object {
-        public fun fromString(name: String): LoginOrCreateRequestLocale? = try {
-            valueOf(name.uppercase())
-        } catch (e: Exception) {
-            null
-        }
-    }
 }
 
+@JsonClass(generateAdapter = false)
 public enum class SendRequestLocale {
+    @Json(name = "en")
     EN,
+
+    @Json(name = "es")
     ES,
+
+    @Json(name = "ptbr")
     PTBR,
-    ;
-    public companion object {
-        public fun fromString(name: String): SendRequestLocale? = try {
-            valueOf(name.uppercase())
-        } catch (e: Exception) {
-            null
-        }
-    }
 }
 
 /**

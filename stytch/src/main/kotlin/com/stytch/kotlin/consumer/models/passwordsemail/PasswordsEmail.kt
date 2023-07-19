@@ -13,18 +13,16 @@ import com.stytch.kotlin.consumer.models.magiclinks.Options
 import com.stytch.kotlin.consumer.models.sessions.Session
 import com.stytch.kotlin.consumer.models.users.User
 
+@JsonClass(generateAdapter = false)
 public enum class ResetStartRequestLocale {
+    @Json(name = "en")
     EN,
+
+    @Json(name = "es")
     ES,
+
+    @Json(name = "ptbr")
     PTBR,
-    ;
-    public companion object {
-        public fun fromString(name: String): ResetStartRequestLocale? = try {
-            valueOf(name.uppercase())
-        } catch (e: Exception) {
-            null
-        }
-    }
 }
 
 /**

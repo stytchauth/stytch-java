@@ -17,23 +17,31 @@ import com.stytch.kotlin.consumer.models.passwords.PBKDF2Config
 import com.stytch.kotlin.consumer.models.passwords.SHA1Config
 import com.stytch.kotlin.consumer.models.passwords.ScryptConfig
 
+@JsonClass(generateAdapter = false)
 public enum class MigrateRequestHashType {
+    @Json(name = "bcrypt")
     BCRYPT,
+
+    @Json(name = "md_5")
     MD_5,
+
+    @Json(name = "argon_2i")
     ARGON_2I,
+
+    @Json(name = "argon_2id")
     ARGON_2ID,
+
+    @Json(name = "sha_1")
     SHA_1,
+
+    @Json(name = "scrypt")
     SCRYPT,
+
+    @Json(name = "phpass")
     PHPASS,
+
+    @Json(name = "pbkdf_2")
     PBKDF_2,
-    ;
-    public companion object {
-        public fun fromString(name: String): MigrateRequestHashType? = try {
-            valueOf(name.uppercase())
-        } catch (e: Exception) {
-            null
-        }
-    }
 }
 
 @JsonClass(generateAdapter = true)

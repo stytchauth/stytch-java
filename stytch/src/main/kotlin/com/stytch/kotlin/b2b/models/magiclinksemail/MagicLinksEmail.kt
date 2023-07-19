@@ -11,32 +11,28 @@ import com.squareup.moshi.JsonClass
 import com.stytch.kotlin.b2b.models.organizations.Member
 import com.stytch.kotlin.b2b.models.organizations.Organization
 
+@JsonClass(generateAdapter = false)
 public enum class InviteRequestLocale {
+    @Json(name = "en")
     EN,
+
+    @Json(name = "es")
     ES,
+
+    @Json(name = "ptbr")
     PTBR,
-    ;
-    public companion object {
-        public fun fromString(name: String): InviteRequestLocale? = try {
-            valueOf(name.uppercase())
-        } catch (e: Exception) {
-            null
-        }
-    }
 }
 
+@JsonClass(generateAdapter = false)
 public enum class LoginOrSignupRequestLocale {
+    @Json(name = "en")
     EN,
+
+    @Json(name = "es")
     ES,
+
+    @Json(name = "ptbr")
     PTBR,
-    ;
-    public companion object {
-        public fun fromString(name: String): LoginOrSignupRequestLocale? = try {
-            valueOf(name.uppercase())
-        } catch (e: Exception) {
-            null
-        }
-    }
 }
 
 /**

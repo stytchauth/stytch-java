@@ -9,17 +9,13 @@ package com.stytch.kotlin.b2b.models.organizations
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = false)
 public enum class SearchQueryOperator {
+    @Json(name = "OR")
     OR,
+
+    @Json(name = "AND")
     AND,
-    ;
-    public companion object {
-        public fun fromString(name: String): SearchQueryOperator? = try {
-            valueOf(name.uppercase())
-        } catch (e: Exception) {
-            null
-        }
-    }
 }
 
 @JsonClass(generateAdapter = true)

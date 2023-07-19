@@ -11,17 +11,13 @@ import com.squareup.moshi.JsonClass
 import com.stytch.kotlin.consumer.models.attribute.Attributes
 import java.time.Instant
 
+@JsonClass(generateAdapter = false)
 public enum class SearchUsersQueryOperator {
+    @Json(name = "OR")
     OR,
+
+    @Json(name = "AND")
     AND,
-    ;
-    public companion object {
-        public fun fromString(name: String): SearchUsersQueryOperator? = try {
-            valueOf(name.uppercase())
-        } catch (e: Exception) {
-            null
-        }
-    }
 }
 
 @JsonClass(generateAdapter = true)
