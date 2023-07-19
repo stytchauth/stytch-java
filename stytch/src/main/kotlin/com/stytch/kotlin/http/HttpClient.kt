@@ -2,6 +2,7 @@ package com.stytch.kotlin.http
 
 import com.squareup.moshi.Moshi
 import com.stytch.kotlin.common.ErrorResponse
+import com.stytch.kotlin.common.InstantAdapter
 import com.stytch.kotlin.common.SDK_NAME
 import com.stytch.kotlin.common.StytchException
 import com.stytch.kotlin.common.StytchResult
@@ -50,7 +51,7 @@ internal class HttpClient(
     secret: String,
     private val client: OkHttpClient = createHttpClient(projectId, secret),
 ) {
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     internal fun buildUrl(path: String, params: Map<String, Any> = emptyMap()): HttpUrl =
         "$baseUrl$path".toHttpUrl().newBuilder().apply {
