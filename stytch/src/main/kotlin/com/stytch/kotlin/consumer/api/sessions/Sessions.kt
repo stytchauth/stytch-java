@@ -140,6 +140,16 @@ public interface Sessions {
      */
     public fun authenticateJwt(jwt: String, maxTokenAgeSeconds: Int?, callback: (StytchResult<Session?>) -> Unit)
 
+    /** Parse a JWT and verify the signature, preferring local verification over remote.
+     *
+     * If maxTokenAgeSeconds is set, remote verification will be forced if the JWT was issued at
+     * (based on the "iat" claim) more than that many seconds ago.
+     *
+     * To force remote validation for all tokens, set max_token_age_seconds to zero or use the
+     * authenticate method instead.
+     */
+    public fun authenticateJwtCompletable(jwt: String, maxTokenAgeSeconds: Int?): CompletableFuture<StytchResult<Session?>>
+
     /** Parse a JWT and verify the signature locally (without calling /authenticate in the API).
      *
      * If maxTokenAgeSeconds is set, this will return an error if the JWT was issued (based on the "iat"
@@ -165,6 +175,19 @@ public interface Sessions {
      * timestamps. It defaults to zero.
      */
     public fun authenticateJwtLocal(jwt: String, maxTokenAgeSeconds: Int?, leeway: Int = 0, callback: (StytchResult<Session?>) -> Unit)
+
+    /** Parse a JWT and verify the signature locally (without calling /authenticate in the API).
+     *
+     * If maxTokenAgeSeconds is set, this will return an error if the JWT was issued (based on the "iat"
+     * claim) more than maxTokenAge seconds ago.
+     *
+     * If maxTokenAgeSeconds is explicitly set to zero, all tokens will be considered too old,
+     * even if they are otherwise valid.
+     *
+     * The value for leeway is the maximum allowable difference when comparing
+     * timestamps. It defaults to zero.
+     */
+    public suspend fun authenticateJwtLocalCompletable(jwt: String, maxTokenAgeSeconds: Int?, leeway: Int = 0): CompletableFuture<StytchResult<Session?>>
     // ENDMANUAL(authenticateJWT_interface)
 }
 
@@ -269,6 +292,14 @@ internal class SessionsImpl(
         }
     }
 
+    override fun authenticateJwtCompletable(
+        jwt: String,
+        maxTokenAgeSeconds: Int?
+    ): CompletableFuture<StytchResult<Session?>> =
+        coroutineScope.async {
+            authenticateJwt(jwt, maxTokenAgeSeconds)
+        }.asCompletableFuture()
+
     override suspend fun authenticateJwtLocal(
         jwt: String,
         maxTokenAgeSeconds: Int?,
@@ -333,5 +364,14 @@ internal class SessionsImpl(
             callback(authenticateJwtLocal(jwt, maxTokenAgeSeconds, leeway))
         }
     }
+
+    override suspend fun authenticateJwtLocalCompletable(
+        jwt: String,
+        maxTokenAgeSeconds: Int?,
+        leeway: Int
+    ): CompletableFuture<StytchResult<Session?>> =
+        coroutineScope.async {
+            authenticateJwtLocal(jwt, maxTokenAgeSeconds, leeway)
+        }.asCompletableFuture()
     // ENDMANUAL(authenticateJWT_impl)
 }
