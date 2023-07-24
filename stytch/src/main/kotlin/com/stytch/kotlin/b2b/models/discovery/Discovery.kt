@@ -8,6 +8,7 @@ package com.stytch.kotlin.b2b.models.discovery
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import com.stytch.kotlin.b2b.models.mfa.MfaRequired
 import com.stytch.kotlin.b2b.models.organizations.Member
 import com.stytch.kotlin.b2b.models.organizations.Organization
 
@@ -30,6 +31,10 @@ public data class DiscoveredOrganization(
      */
     @Json(name = "membership")
     val membership: Membership? = null,
+    @Json(name = "primary_required")
+    val primaryRequired: PrimaryRequired? = null,
+    @Json(name = "mfa_required")
+    val mfaRequired: MfaRequired? = null,
 )
 
 @JsonClass(generateAdapter = true)
@@ -49,4 +54,10 @@ public data class Membership(
      */
     @Json(name = "member")
     val member: Member? = null,
+)
+
+@JsonClass(generateAdapter = true)
+public data class PrimaryRequired(
+    @Json(name = "allowed_auth_methods")
+    val allowedAuthMethods: List<String>,
 )

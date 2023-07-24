@@ -13,6 +13,8 @@ import com.stytch.kotlin.b2b.models.organizationsmembers.CreateRequest
 import com.stytch.kotlin.b2b.models.organizationsmembers.CreateResponse
 import com.stytch.kotlin.b2b.models.organizationsmembers.DeletePasswordRequest
 import com.stytch.kotlin.b2b.models.organizationsmembers.DeletePasswordResponse
+import com.stytch.kotlin.b2b.models.organizationsmembers.DeletePhoneNumberRequest
+import com.stytch.kotlin.b2b.models.organizationsmembers.DeletePhoneNumberResponse
 import com.stytch.kotlin.b2b.models.organizationsmembers.DeleteRequest
 import com.stytch.kotlin.b2b.models.organizationsmembers.DeleteResponse
 import com.stytch.kotlin.b2b.models.organizationsmembers.GetRequest
@@ -60,6 +62,12 @@ public interface Members {
      * Deletes a Member specified by `organization_id` and `member_id`.
      */
     public fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>>
+
+    public suspend fun deletePhoneNumber(data: DeletePhoneNumberRequest): StytchResult<DeletePhoneNumberResponse>
+
+    public fun deletePhoneNumber(data: DeletePhoneNumberRequest, callback: (StytchResult<DeletePhoneNumberResponse>) -> Unit)
+
+    public fun deletePhoneNumberCompletable(data: DeletePhoneNumberRequest): CompletableFuture<StytchResult<DeletePhoneNumberResponse>>
 
     /**
      * Search for Members within specified Organizations. An array with at least one `organization_id` is required. Submitting
@@ -166,6 +174,20 @@ internal class MembersImpl(
     override fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>> =
         coroutineScope.async {
             delete(data)
+        }.asCompletableFuture()
+    override suspend fun deletePhoneNumber(data: DeletePhoneNumberRequest): StytchResult<DeletePhoneNumberResponse> = withContext(Dispatchers.IO) {
+        httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/phone_numbers/${data.memberId}")
+    }
+
+    override fun deletePhoneNumber(data: DeletePhoneNumberRequest, callback: (StytchResult<DeletePhoneNumberResponse>) -> Unit) {
+        coroutineScope.launch {
+            callback(deletePhoneNumber(data))
+        }
+    }
+
+    override fun deletePhoneNumberCompletable(data: DeletePhoneNumberRequest): CompletableFuture<StytchResult<DeletePhoneNumberResponse>> =
+        coroutineScope.async {
+            deletePhoneNumber(data)
         }.asCompletableFuture()
     override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)

@@ -14,6 +14,18 @@ import com.stytch.kotlin.consumer.models.sessions.AuthenticationFactor
 import com.stytch.kotlin.consumer.models.sessions.JWK
 import java.time.Instant
 
+@JsonClass(generateAdapter = false)
+public enum class ExchangeRequestLocale {
+    @Json(name = "en")
+    EN,
+
+    @Json(name = "es")
+    ES,
+
+    @Json(name = "ptbr")
+    PTBR,
+}
+
 @JsonClass(generateAdapter = true)
 public data class MemberSession(
     /**
@@ -200,6 +212,8 @@ public data class ExchangeRequest(
      */
     @Json(name = "session_custom_claims")
     val sessionCustomClaims: Map<String, Any>? = null,
+    @Json(name = "locale")
+    val locale: ExchangeRequestLocale? = null,
 )
 
 /**

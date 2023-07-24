@@ -84,6 +84,10 @@ public data class Member(
      */
     @Json(name = "oauth_registrations")
     val oauthRegistrations: List<OAuthRegistration>,
+    @Json(name = "mfa_enrolled")
+    val mfaEnrolled: Boolean,
+    @Json(name = "mfa_phone_number")
+    val mfaPhoneNumber: String,
     /**
      * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
      */
@@ -239,6 +243,8 @@ public data class Organization(
      */
     @Json(name = "allowed_auth_methods")
     val allowedAuthMethods: List<String>,
+    @Json(name = "mfa_policy")
+    val mfaPolicy: String,
     /**
      * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
      */
@@ -405,6 +411,8 @@ public data class CreateRequest(
      */
     @Json(name = "allowed_auth_methods")
     val allowedAuthMethods: List<String>? = null,
+    @Json(name = "mfa_policy")
+    val mfaPolicy: String? = null,
 )
 
 /**
@@ -681,6 +689,8 @@ public data class UpdateRequest(
      */
     @Json(name = "allowed_auth_methods")
     val allowedAuthMethods: List<String>? = null,
+    @Json(name = "mfa_policy")
+    val mfaPolicy: String? = null,
 )
 
 /**

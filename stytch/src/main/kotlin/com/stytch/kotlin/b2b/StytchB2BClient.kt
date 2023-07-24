@@ -13,6 +13,8 @@ import com.stytch.kotlin.b2b.api.oauth.OAuth
 import com.stytch.kotlin.b2b.api.oauth.OAuthImpl
 import com.stytch.kotlin.b2b.api.organizations.Organizations
 import com.stytch.kotlin.b2b.api.organizations.OrganizationsImpl
+import com.stytch.kotlin.b2b.api.otp.OTPs
+import com.stytch.kotlin.b2b.api.otp.OTPsImpl
 import com.stytch.kotlin.b2b.api.passwords.Passwords
 import com.stytch.kotlin.b2b.api.passwords.PasswordsImpl
 import com.stytch.kotlin.b2b.api.sessions.Sessions
@@ -33,6 +35,7 @@ public object StytchB2BClient {
     public lateinit var discovery: Discovery
     public lateinit var magicLinks: MagicLinks
     public lateinit var oauth: OAuth
+    public lateinit var otps: OTPs
     public lateinit var organizations: Organizations
     public lateinit var passwords: Passwords
     public lateinit var sso: SSO
@@ -55,6 +58,7 @@ public object StytchB2BClient {
         discovery = DiscoveryImpl(httpClient, coroutineScope)
         magicLinks = MagicLinksImpl(httpClient, coroutineScope)
         oauth = OAuthImpl(httpClient, coroutineScope)
+        otps = OTPsImpl(httpClient, coroutineScope)
         organizations = OrganizationsImpl(httpClient, coroutineScope)
         passwords = PasswordsImpl(httpClient, coroutineScope)
         sso = SSOImpl(httpClient, coroutineScope)

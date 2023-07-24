@@ -12,6 +12,18 @@ import com.stytch.kotlin.b2b.models.organizations.Member
 import com.stytch.kotlin.b2b.models.organizations.Organization
 import com.stytch.kotlin.b2b.models.sessions.MemberSession
 
+@JsonClass(generateAdapter = false)
+public enum class ResetRequestLocale {
+    @Json(name = "en")
+    EN,
+
+    @Json(name = "es")
+    ES,
+
+    @Json(name = "ptbr")
+    PTBR,
+}
+
 /**
 * Request type for `ExistingPassword.reset`.
 */
@@ -76,6 +88,8 @@ public data class ResetRequest(
      */
     @Json(name = "session_custom_claims")
     val sessionCustomClaims: Map<String, Any>? = null,
+    @Json(name = "locale")
+    val locale: ResetRequestLocale? = null,
 )
 
 /**

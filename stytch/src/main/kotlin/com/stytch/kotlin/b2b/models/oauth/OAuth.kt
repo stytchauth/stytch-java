@@ -13,6 +13,18 @@ import com.stytch.kotlin.b2b.models.organizations.Organization
 import com.stytch.kotlin.b2b.models.sessions.MemberSession
 import java.time.Instant
 
+@JsonClass(generateAdapter = false)
+public enum class AuthenticateRequestLocale {
+    @Json(name = "en")
+    EN,
+
+    @Json(name = "es")
+    ES,
+
+    @Json(name = "ptbr")
+    PTBR,
+}
+
 @JsonClass(generateAdapter = true)
 public data class ProviderValues(
     /**
@@ -95,6 +107,8 @@ public data class AuthenticateRequest(
      */
     @Json(name = "pkce_code_verifier")
     val pkceCodeVerifier: String? = null,
+    @Json(name = "locale")
+    val locale: AuthenticateRequestLocale? = null,
 )
 
 /**

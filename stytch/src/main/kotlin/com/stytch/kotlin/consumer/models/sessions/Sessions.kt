@@ -115,6 +115,9 @@ public enum class AuthenticationFactorDeliveryMethod {
 
     @Json(name = "oauth_salesforce")
     OAUTH_SALESFORCE,
+
+    @Json(name = "oauth_yahoo")
+    OAUTH_YAHOO,
 }
 
 @JsonClass(generateAdapter = false)
@@ -243,6 +246,8 @@ public data class AuthenticationFactor(
     val oidcSSOFactor: OIDCSSOFactor? = null,
     @Json(name = "salesforce_oauth_factor")
     val salesforceOAuthFactor: SalesforceOAuthFactor? = null,
+    @Json(name = "yahoo_oauth_factor")
+    val yahooOAuthFactor: YahooOAuthFactor? = null,
 )
 
 @JsonClass(generateAdapter = true)
@@ -384,9 +389,9 @@ public data class JWK(
     @Json(name = "kid")
     val kid: String,
     @Json(name = "x5c")
-    val x5c: List<String>,
+    val x5C: List<String>,
     @Json(name = "x5tS256")
-    val x5tS256: String,
+    val x5TS256: String,
     @Json(name = "n")
     val n: String,
     @Json(name = "e")
@@ -592,6 +597,16 @@ public data class WebAuthnFactor(
     val domain: String,
     @Json(name = "user_agent")
     val userAgent: String,
+)
+
+@JsonClass(generateAdapter = true)
+public data class YahooOAuthFactor(
+    @Json(name = "id")
+    val id: String,
+    @Json(name = "email_id")
+    val emailId: String,
+    @Json(name = "provider_subject")
+    val providerSubject: String,
 )
 
 /**

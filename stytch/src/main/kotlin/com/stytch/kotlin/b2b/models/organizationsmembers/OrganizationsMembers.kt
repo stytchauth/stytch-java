@@ -63,6 +63,10 @@ public data class CreateRequest(
      */
     @Json(name = "is_breakglass")
     val isBreakglass: Boolean? = null,
+    @Json(name = "phone_number")
+    val phoneNumber: String? = null,
+    @Json(name = "mfa_enrolled")
+    val mfaEnrolled: Boolean? = null,
 )
 
 /**
@@ -147,6 +151,28 @@ public data class DeletePasswordResponse(
      * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
      * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
      */
+    @Json(name = "status_code")
+    val statusCode: Int,
+)
+
+@JsonClass(generateAdapter = true)
+public data class DeletePhoneNumberRequest(
+    @Json(name = "organization_id")
+    val organizationId: String,
+    @Json(name = "member_id")
+    val memberId: String,
+)
+
+@JsonClass(generateAdapter = true)
+public data class DeletePhoneNumberResponse(
+    @Json(name = "request_id")
+    val requestId: String,
+    @Json(name = "member_id")
+    val memberId: String,
+    @Json(name = "member")
+    val member: Member,
+    @Json(name = "organization")
+    val organization: Organization,
     @Json(name = "status_code")
     val statusCode: Int,
 )
@@ -365,6 +391,10 @@ public data class UpdateRequest(
      */
     @Json(name = "is_breakglass")
     val isBreakglass: Boolean? = null,
+    @Json(name = "phone_number")
+    val phoneNumber: String? = null,
+    @Json(name = "mfa_enrolled")
+    val mfaEnrolled: Boolean? = null,
 )
 
 /**

@@ -150,6 +150,8 @@ public data class CreateRequest(
      */
     @Json(name = "allowed_auth_methods")
     val allowedAuthMethods: List<String>? = null,
+    @Json(name = "mfa_policy")
+    val mfaPolicy: String? = null,
 )
 
 /**

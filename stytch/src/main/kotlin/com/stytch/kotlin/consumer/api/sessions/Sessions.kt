@@ -294,7 +294,7 @@ internal class SessionsImpl(
 
     override fun authenticateJwtCompletable(
         jwt: String,
-        maxTokenAgeSeconds: Int?
+        maxTokenAgeSeconds: Int?,
     ): CompletableFuture<StytchResult<Session?>> =
         coroutineScope.async {
             authenticateJwt(jwt, maxTokenAgeSeconds)
@@ -368,7 +368,7 @@ internal class SessionsImpl(
     override suspend fun authenticateJwtLocalCompletable(
         jwt: String,
         maxTokenAgeSeconds: Int?,
-        leeway: Int
+        leeway: Int,
     ): CompletableFuture<StytchResult<Session?>> =
         coroutineScope.async {
             authenticateJwtLocal(jwt, maxTokenAgeSeconds, leeway)

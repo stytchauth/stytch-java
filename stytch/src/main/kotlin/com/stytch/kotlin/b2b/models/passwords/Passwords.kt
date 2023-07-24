@@ -18,6 +18,18 @@ import com.stytch.kotlin.consumer.models.passwords.SHA1Config
 import com.stytch.kotlin.consumer.models.passwords.ScryptConfig
 
 @JsonClass(generateAdapter = false)
+public enum class AuthenticateRequestLocale {
+    @Json(name = "en")
+    EN,
+
+    @Json(name = "es")
+    ES,
+
+    @Json(name = "ptbr")
+    PTBR,
+}
+
+@JsonClass(generateAdapter = false)
 public enum class MigrateRequestHashType {
     @Json(name = "bcrypt")
     BCRYPT,
@@ -155,6 +167,8 @@ public data class AuthenticateRequest(
      */
     @Json(name = "session_custom_claims")
     val sessionCustomClaims: Map<String, Any>? = null,
+    @Json(name = "locale")
+    val locale: AuthenticateRequestLocale? = null,
 )
 
 /**

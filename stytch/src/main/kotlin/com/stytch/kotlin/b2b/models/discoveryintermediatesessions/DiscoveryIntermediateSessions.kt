@@ -12,6 +12,18 @@ import com.stytch.kotlin.b2b.models.organizations.Member
 import com.stytch.kotlin.b2b.models.organizations.Organization
 import com.stytch.kotlin.b2b.models.sessions.MemberSession
 
+@JsonClass(generateAdapter = false)
+public enum class ExchangeRequestLocale {
+    @Json(name = "en")
+    EN,
+
+    @Json(name = "es")
+    ES,
+
+    @Json(name = "ptbr")
+    PTBR,
+}
+
 /**
 * Request type for `IntermediateSessions.exchange`.
 */
@@ -57,6 +69,8 @@ public data class ExchangeRequest(
      */
     @Json(name = "session_custom_claims")
     val sessionCustomClaims: Map<String, Any>? = null,
+    @Json(name = "locale")
+    val locale: ExchangeRequestLocale? = null,
 )
 
 /**
