@@ -12,6 +12,10 @@ repositories {
 group = "com.stytch.kotlin"
 apply(from = project.rootProject.file("version.gradle.kts"))
 
+subprojects {
+    tasks.withType<Javadoc>().all { enabled = false }
+}
+
 // Publishing setup
 ext["ossrhUsername"] = System.getenv("OSSRH_USERNAME") ?: ""
 ext["ossrhPassword"] = System.getenv("OSSRH_PASSWORD") ?: ""

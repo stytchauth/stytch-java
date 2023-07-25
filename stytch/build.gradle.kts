@@ -33,6 +33,7 @@ kotlin {
 tasks.kotlinSourcesJar {
     archiveClassifier.set("sources")
     from(sourceSets.main.get().kotlin.srcDirs)
+    from(sourceSets.main.get().java.srcDirs)
 }
 artifacts {
     archives(tasks.kotlinSourcesJar)
@@ -44,6 +45,7 @@ afterEvaluate {
                 groupId = project.rootProject.group as String
                 artifactId = "sdk"
                 version = project.rootProject.version as String
+                from(components.findByName("java"))
                 from(components.findByName("kotlin"))
                 artifact(tasks.kotlinSourcesJar)
                 pom {
