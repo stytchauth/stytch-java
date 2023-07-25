@@ -1,9 +1,12 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     kotlin("jvm") version libs.versions.kotlin
     kotlin("kapt") version libs.versions.kotlin
     id("maven-publish")
     id("signing")
+    id("org.jetbrains.dokka")
 }
 
 repositories {
@@ -29,6 +32,13 @@ kotlin {
     explicitApi()
 }
 
+val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
+    dependsOn(dokkaHtml)
+    archiveClassifier.set("javadoc")
+    from(dokkaHtml.outputDirectory)
+}
+
 // Configure module publishing
 tasks.kotlinSourcesJar {
     archiveClassifier.set("sources")
@@ -45,9 +55,9 @@ afterEvaluate {
                 groupId = project.rootProject.group as String
                 artifactId = "sdk"
                 version = project.rootProject.version as String
-                from(components.findByName("java"))
                 from(components.findByName("kotlin"))
                 artifact(tasks.kotlinSourcesJar)
+                artifact(javadocJar)
                 pom {
                     name.set("com.stytch.kotlin")
                     description.set("Stytch Kotlin SDK")

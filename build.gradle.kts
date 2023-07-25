@@ -5,6 +5,12 @@ plugins {
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 }
 
+buildscript {
+    dependencies {
+        classpath(libs.dokka)
+    }
+}
+
 repositories {
     mavenCentral()
 }
@@ -12,9 +18,6 @@ repositories {
 group = "com.stytch.kotlin"
 apply(from = project.rootProject.file("version.gradle.kts"))
 
-subprojects {
-    tasks.withType<Javadoc>().all { enabled = false }
-}
 
 // Publishing setup
 ext["ossrhUsername"] = System.getenv("OSSRH_USERNAME") ?: ""
