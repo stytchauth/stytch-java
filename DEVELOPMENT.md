@@ -1,6 +1,6 @@
 # Development
 
-Thanks for contributing to Stytch's Kotlin library! If you run into trouble, find us in [Slack].
+Thanks for contributing to Stytch's Java library! If you run into trouble, find us in [Slack].
 
 ## Setup
 
