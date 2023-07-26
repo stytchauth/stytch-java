@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
-
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     kotlin("jvm") version libs.versions.kotlin
@@ -59,13 +57,13 @@ afterEvaluate {
                 artifact(tasks.kotlinSourcesJar)
                 artifact(javadocJar)
                 pom {
-                    name.set("com.stytch.kotlin")
-                    description.set("Stytch Kotlin SDK")
-                    url.set("https://github.com/stytch-auth/stytch-kotlin")
+                    name.set("com.stytch.java")
+                    description.set("Stytch Java SDK")
+                    url.set("https://github.com/stytch-auth/stytch-java")
                     licenses {
                         license {
                             name.set("Stytch License")
-                            url.set("https://github.com/stytchauth/stytch-kotlin/blob/main/LICENSE")
+                            url.set("https://github.com/stytchauth/stytch-java/blob/main/LICENSE")
                         }
                         developers {
                             developer {
@@ -75,9 +73,9 @@ afterEvaluate {
                             }
                         }
                         scm {
-                            connection.set("scm:git:github.com/stytchauth/stytch-kotlin.git")
-                            developerConnection.set("scm:git:ssh://github.com/stytchauth/stytch-kotlin.git")
-                            url.set("https://github.com/stytchauth/stytch-kotlin/tree/main")
+                            connection.set("scm:git:github.com/stytchauth/stytch-java.git")
+                            developerConnection.set("scm:git:ssh://github.com/stytchauth/stytch-java.git")
+                            url.set("https://github.com/stytchauth/stytch-java/tree/main")
                         }
                     }
                 }

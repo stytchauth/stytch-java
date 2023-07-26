@@ -1,6 +1,6 @@
 package com.stytch.workbench
-import com.stytch.kotlin.consumer.StytchClient
-import com.stytch.kotlin.consumer.models.magiclinksemail.LoginOrCreateRequest
+import com.stytch.java.consumer.StytchClient
+import com.stytch.java.consumer.models.magiclinksemail.LoginOrCreateRequest
 
 suspend fun main() {
     StytchClient.configure(

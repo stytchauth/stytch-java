@@ -1,13 +1,13 @@
-# Stytch Kotlin Library
+# Stytch Java Library
 
-The Stytch Kotlin library makes it easy to use the Stytch user infrastructure API in Kotlin and Java applications.
+The Stytch Java library makes it easy to use the Stytch user infrastructure API in Java, Kotlin and Scala applications.
 
 It pairs well with the Stytch [Web SDK](https://www.npmjs.com/package/@stytch/stytch-js) or your own custom authentication flow.
 
 ## Install
 
 ```
-implementation("com.stytch.kotlin:sdk:1.0.0")
+implementation("com.stytch.java:sdk:1.1.0")
 ```
 
 ## Usage
@@ -48,19 +48,20 @@ Create an API client:
 
 Kotlin:
 ```kotlin
-import com.stytch.kotlin.consumer.StytchClient
+import com.stytch.java.consumer.StytchClient
 StytchClient.configure(
     projectId = "project-live-c60c0abe-c25a-4472-a9ed-320c6667d317",
     secret = "secret-live-80JASucyk7z_G8Z-7dVwZVGXL5NT_qGAQ2I="
 )
 ```
 Java:
+
 ```java
-import com.stytch.kotlin.consumer.StytchClient;
-StytchClient.INSTANCE.configure(
-    "project-live-c60c0abe-c25a-4472-a9ed-320c6667d317",
-    "secret-live-80JASucyk7z_G8Z-7dVwZVGXL5NT_qGAQ2I="
-);
+import com.stytch.java.consumer.StytchClient;
+StytchClient.configure(
+        "project-live-c60c0abe-c25a-4472-a9ed-320c6667d317",
+        "secret-live-80JASucyk7z_G8Z-7dVwZVGXL5NT_qGAQ2I="
+        );
 ```
 
 Send a magic link by email:
@@ -93,7 +94,7 @@ LoginOrCreateRequest request = new LoginOrCreateRequest(
     null,
     null
 );
-StytchResult<LoginOrCreateResponse> response = StytchClient.INSTANCE.getMagicLinks().getEmail().loginOrCreateCompletable(request).get();
+StytchResult<LoginOrCreateResponse> response = StytchClient.magicLinks.getEmail().loginOrCreateCompletable(request).get();
 if (response instanceof StytchResult.Error) {
     var exception = ((StytchResult.Error) response).getException();
     System.out.println(exception.getReason());
@@ -116,7 +117,7 @@ when (val result = StytchClient.magicLinks.authenticate(
 Java:
 ```java
 AuthenticateRequest request = new AuthenticateRequest("DOYoip3rvIMMW5lgItikFK-Ak1CfMsgjuiCyI7uuU94=");
-StytchResult<AuthenticateResponse> response = StytchClient.INSTANCE.getMagicLinks().authenticateCompletable(request).get();
+StytchResult<AuthenticateResponse> response = StytchClient.magicLinks.authenticateCompletable(request).get();
 if (response instanceof StytchResult.Error) {
     var exception = ((StytchResult.Error) response).getException();
     System.out.println(exception.getReason());
@@ -131,7 +132,7 @@ Create an API client:
 
 Kotlin:
 ```kotlin
-import com.stytch.kotlin.b2b.StytchB2BClient
+import com.stytch.java.b2b.StytchB2BClient
 ...
 StytchB2BClient.configure(
     projectId = "project-live-c60c0abe-c25a-4472-a9ed-320c6667d317",
@@ -139,13 +140,14 @@ StytchB2BClient.configure(
 )
 ```
 Java:
+
 ```java
-import com.stytch.kotlin.b2b.StytchB2BClient;
+import com.stytch.java.b2b.StytchB2BClient;
 ...
-StytchB2BClient.INSTANCE.configure(
-    "project-live-c60c0abe-c25a-4472-a9ed-320c6667d317",
-    "secret-live-80JASucyk7z_G8Z-7dVwZVGXL5NT_qGAQ2I="
-);
+        StytchB2BClient.configure(
+        "project-live-c60c0abe-c25a-4472-a9ed-320c6667d317",
+        "secret-live-80JASucyk7z_G8Z-7dVwZVGXL5NT_qGAQ2I="
+        );
 ```
 
 Create an organization
@@ -171,13 +173,9 @@ CreateRequest request = new CreateRequest(
         null,
         null,
         null,
-        emailAllowedDomains,
-        null,
-        null,
-        null,
-        null
+        emailAllowedDomains
 );
-StytchResult<CreateResponse> response = StytchB2BClient.INSTANCE.getOrganizations().createCompletable(request).get();
+StytchResult<CreateResponse> response = StytchB2BClient.organizations.createCompletable(request).get();
 if (response instanceof StytchResult.Error) {
     var exception = ((StytchResult.Error) response).getException();
     System.out.println(exception.getReason());
@@ -206,13 +204,9 @@ LoginOrSignupRequest request = new LoginOrSignupRequest(
     "organization-id-from-create-response-...",
     "admin@acme.co",
     "https://example.com/authenticate",
-    "https://example.com/authenticate",
-    null,
-    null,
-    null,
-    null,
+    "https://example.com/authenticate"
 );
-StytchResult<LoginOrSignupResponse> response = StytchB2BClient.INSTANCE.getMagicLinks().getEmail().loginOrSignup(request).get();
+StytchResult<LoginOrSignupResponse> response = StytchB2BClient.magicLinks.getEmail().loginOrSignup(request).get();
 if (response instanceof StytchResult.Error) {
     var exception = ((StytchResult.Error) response).getException();
     System.out.println(exception.getReason());

@@ -15,9 +15,8 @@ repositories {
     mavenCentral()
 }
 
-group = "com.stytch.kotlin"
+group = "com.stytch.java"
 apply(from = project.rootProject.file("version.gradle.kts"))
-
 
 // Publishing setup
 ext["ossrhUsername"] = System.getenv("OSSRH_USERNAME") ?: ""
