@@ -7,7 +7,7 @@ It pairs well with the Stytch [Web SDK](https://www.npmjs.com/package/@stytch/st
 ## Install
 
 ```
-implementation("com.stytch.kotlin:sdk:0.0.1")
+implementation("com.stytch.kotlin:sdk:1.0.0")
 ```
 
 ## Usage
