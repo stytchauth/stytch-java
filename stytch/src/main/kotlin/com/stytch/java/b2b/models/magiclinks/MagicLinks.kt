@@ -8,6 +8,7 @@ package com.stytch.java.b2b.models.magiclinks
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import com.stytch.java.b2b.models.mfa.MfaRequired
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
@@ -85,6 +86,20 @@ public data class AuthenticateRequest @JvmOverloads constructor(
      */
     @Json(name = "session_custom_claims")
     val sessionCustomClaims: Map<String, Any>? = null,
+    /**
+     * (Coming Soon) If the Member needs to complete an MFA step, and the Member has a phone number, this endpoint will
+     * pre-emptively send a one-time passcode (OTP) to the Member's phone number. The locale argument will be used to
+     * determine which language to use when sending the passcode.
+     *
+     * Parameter is a [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
+     *
+     * Currently supported languages are English (`"en"`), Spanish (`"es"`), and Brazilian Portuguese (`"pt-br"`); if no value
+     * is provided, the copy defaults to English.
+     *
+     * Request support for additional languages
+     * [here](https://docs.google.com/forms/d/e/1FAIpQLScZSpAu_m2AmLXRT3F3kap-s_mcV6UTBitYn6CdyWP0-o7YjQ/viewform?usp=sf_link")!
+     *
+     */
     @Json(name = "locale")
     val locale: AuthenticateRequestLocale? = null,
 )
@@ -148,9 +163,34 @@ public data class AuthenticateResponse @JvmOverloads constructor(
     @Json(name = "organization")
     val organization: Organization,
     /**
+     * The returned Intermediate Session Token contains an Email Magic Link factor associated with the Member's email address.
+     *       The token can be used with the
+     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA flow and log
+     * in to the Organization.
+     *       It can also be used with the
+     * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join a
+     * different existing Organization that allows login with Email Magic Links,
+     *       or the
+     * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to
+     * create a new Organization.
+     */
+    @Json(name = "intermediate_session_token")
+    val intermediateSessionToken: String,
+    /**
+     * Indicates whether the Member is fully authenticated. If false, the Member needs to complete an MFA step to log in to
+     * the Organization.
+     */
+    @Json(name = "member_authenticated")
+    val memberAuthenticated: Boolean,
+    /**
      * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
      * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
      */
     @Json(name = "status_code")
     val statusCode: Int,
+    /**
+     * (Coming Soon) Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
+     */
+    @Json(name = "mfa_required")
+    val mfaRequired: MfaRequired? = null,
 )

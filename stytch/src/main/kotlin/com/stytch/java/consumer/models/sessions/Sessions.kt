@@ -655,6 +655,15 @@ public data class AuthenticateResponse @JvmOverloads constructor(
     @Json(name = "request_id")
     val requestId: String,
     /**
+     * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
+     * Session object in the response.
+     *
+     *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
+     *
+     */
+    @Json(name = "session")
+    val session: Session,
+    /**
      * A secret token for a given Stytch Session.
      */
     @Json(name = "session_token")
@@ -676,15 +685,6 @@ public data class AuthenticateResponse @JvmOverloads constructor(
      */
     @Json(name = "status_code")
     val statusCode: Int,
-    /**
-     * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
-     * Session object in the response.
-     *
-     *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
-     *
-     */
-    @Json(name = "session")
-    val session: Session? = null,
 )
 
 /**

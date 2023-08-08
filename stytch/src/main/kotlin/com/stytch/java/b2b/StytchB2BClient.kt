@@ -24,6 +24,8 @@ import com.stytch.java.b2b.api.sso.SSOImpl
 import com.stytch.java.common.BASE_LIVE_URL
 import com.stytch.java.common.BASE_TEST_URL
 import com.stytch.java.common.JwtOptions
+import com.stytch.java.consumer.api.m2m.M2M
+import com.stytch.java.consumer.api.m2m.M2MImpl
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -35,6 +37,9 @@ public object StytchB2BClient {
 
     @JvmStatic
     public lateinit var discovery: Discovery
+
+    @JvmStatic
+    public lateinit var m2m: M2M
 
     @JvmStatic
     public lateinit var magicLinks: MagicLinks
@@ -57,6 +62,7 @@ public object StytchB2BClient {
     @JvmStatic
     public lateinit var sessions: Sessions
 
+    @JvmStatic
     public fun configure(projectId: String, secret: String) {
         val baseUrl = getBaseUrl(projectId)
         httpClient = HttpClient(
@@ -72,6 +78,7 @@ public object StytchB2BClient {
         val coroutineScope = CoroutineScope(SupervisorJob())
         httpsJwks = HttpsJwks("$baseUrl/v1/sessions/jwks/$projectId")
         discovery = DiscoveryImpl(httpClient, coroutineScope)
+        m2m = M2MImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
         magicLinks = MagicLinksImpl(httpClient, coroutineScope)
         oauth = OAuthImpl(httpClient, coroutineScope)
         otps = OTPsImpl(httpClient, coroutineScope)

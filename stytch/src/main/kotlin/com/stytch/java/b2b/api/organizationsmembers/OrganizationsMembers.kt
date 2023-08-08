@@ -11,10 +11,10 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.stytch.java.b2b.models.organizationsmembers.CreateRequest
 import com.stytch.java.b2b.models.organizationsmembers.CreateResponse
+import com.stytch.java.b2b.models.organizationsmembers.DeleteMFAPhoneNumberRequest
+import com.stytch.java.b2b.models.organizationsmembers.DeleteMFAPhoneNumberResponse
 import com.stytch.java.b2b.models.organizationsmembers.DeletePasswordRequest
 import com.stytch.java.b2b.models.organizationsmembers.DeletePasswordResponse
-import com.stytch.java.b2b.models.organizationsmembers.DeletePhoneNumberRequest
-import com.stytch.java.b2b.models.organizationsmembers.DeletePhoneNumberResponse
 import com.stytch.java.b2b.models.organizationsmembers.DeleteRequest
 import com.stytch.java.b2b.models.organizationsmembers.DeleteResponse
 import com.stytch.java.b2b.models.organizationsmembers.GetRequest
@@ -63,11 +63,20 @@ public interface Members {
      */
     public fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>>
 
-    public suspend fun deletePhoneNumber(data: DeletePhoneNumberRequest): StytchResult<DeletePhoneNumberResponse>
+    /**
+     * Delete a Member's MFA phone number.
+     */
+    public suspend fun deleteMFAPhoneNumber(data: DeleteMFAPhoneNumberRequest): StytchResult<DeleteMFAPhoneNumberResponse>
 
-    public fun deletePhoneNumber(data: DeletePhoneNumberRequest, callback: (StytchResult<DeletePhoneNumberResponse>) -> Unit)
+    /**
+     * Delete a Member's MFA phone number.
+     */
+    public fun deleteMFAPhoneNumber(data: DeleteMFAPhoneNumberRequest, callback: (StytchResult<DeleteMFAPhoneNumberResponse>) -> Unit)
 
-    public fun deletePhoneNumberCompletable(data: DeletePhoneNumberRequest): CompletableFuture<StytchResult<DeletePhoneNumberResponse>>
+    /**
+     * Delete a Member's MFA phone number.
+     */
+    public fun deleteMFAPhoneNumberCompletable(data: DeleteMFAPhoneNumberRequest): CompletableFuture<StytchResult<DeleteMFAPhoneNumberResponse>>
 
     /**
      * Search for Members within specified Organizations. An array with at least one `organization_id` is required. Submitting
@@ -175,19 +184,19 @@ internal class MembersImpl(
         coroutineScope.async {
             delete(data)
         }.asCompletableFuture()
-    override suspend fun deletePhoneNumber(data: DeletePhoneNumberRequest): StytchResult<DeletePhoneNumberResponse> = withContext(Dispatchers.IO) {
-        httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/phone_numbers/${data.memberId}")
+    override suspend fun deleteMFAPhoneNumber(data: DeleteMFAPhoneNumberRequest): StytchResult<DeleteMFAPhoneNumberResponse> = withContext(Dispatchers.IO) {
+        httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/mfa_phone_numbers/${data.memberId}")
     }
 
-    override fun deletePhoneNumber(data: DeletePhoneNumberRequest, callback: (StytchResult<DeletePhoneNumberResponse>) -> Unit) {
+    override fun deleteMFAPhoneNumber(data: DeleteMFAPhoneNumberRequest, callback: (StytchResult<DeleteMFAPhoneNumberResponse>) -> Unit) {
         coroutineScope.launch {
-            callback(deletePhoneNumber(data))
+            callback(deleteMFAPhoneNumber(data))
         }
     }
 
-    override fun deletePhoneNumberCompletable(data: DeletePhoneNumberRequest): CompletableFuture<StytchResult<DeletePhoneNumberResponse>> =
+    override fun deleteMFAPhoneNumberCompletable(data: DeleteMFAPhoneNumberRequest): CompletableFuture<StytchResult<DeleteMFAPhoneNumberResponse>> =
         coroutineScope.async {
-            deletePhoneNumber(data)
+            deleteMFAPhoneNumber(data)
         }.asCompletableFuture()
     override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)

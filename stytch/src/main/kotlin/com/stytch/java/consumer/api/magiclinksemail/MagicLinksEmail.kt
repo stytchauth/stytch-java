@@ -39,8 +39,8 @@ public interface Email {
      *
      * ### Next steps
      * The user is emailed a magic link which redirects them to the provided
-     * [redirect URL](https://stytch.com/docs/magic-links#email-magic-links_redirect-routing). Collect the `token` from the
-     * URL query parameters, and call [Authenticate magic link](https://stytch.com/docs/api/authenticate-magic-link) to
+     * [redirect URL](https://stytch.com/docs/guides/magic-links/email-magic-links/redirect-routing). Collect the `token` from
+     * the URL query parameters, and call [Authenticate magic link](https://stytch.com/docs/api/authenticate-magic-link) to
      * complete authentication.
      */
     public suspend fun send(data: SendRequest): StytchResult<SendResponse>
@@ -59,8 +59,8 @@ public interface Email {
      *
      * ### Next steps
      * The user is emailed a magic link which redirects them to the provided
-     * [redirect URL](https://stytch.com/docs/magic-links#email-magic-links_redirect-routing). Collect the `token` from the
-     * URL query parameters, and call [Authenticate magic link](https://stytch.com/docs/api/authenticate-magic-link) to
+     * [redirect URL](https://stytch.com/docs/guides/magic-links/email-magic-links/redirect-routing). Collect the `token` from
+     * the URL query parameters, and call [Authenticate magic link](https://stytch.com/docs/api/authenticate-magic-link) to
      * complete authentication.
      */
     public fun send(data: SendRequest, callback: (StytchResult<SendResponse>) -> Unit)
@@ -79,8 +79,8 @@ public interface Email {
      *
      * ### Next steps
      * The user is emailed a magic link which redirects them to the provided
-     * [redirect URL](https://stytch.com/docs/magic-links#email-magic-links_redirect-routing). Collect the `token` from the
-     * URL query parameters, and call [Authenticate magic link](https://stytch.com/docs/api/authenticate-magic-link) to
+     * [redirect URL](https://stytch.com/docs/guides/magic-links/email-magic-links/redirect-routing). Collect the `token` from
+     * the URL query parameters, and call [Authenticate magic link](https://stytch.com/docs/api/authenticate-magic-link) to
      * complete authentication.
      */
     public fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>>

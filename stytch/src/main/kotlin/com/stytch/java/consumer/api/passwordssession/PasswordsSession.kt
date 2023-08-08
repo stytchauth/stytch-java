@@ -21,19 +21,22 @@ import java.util.concurrent.CompletableFuture
 public interface Sessions {
     /**
      * Reset the user’s password using their existing session. The endpoint will error if the session does not have a
-     * password, email magic link, or email OTP authentication factor that has been issued within the last 5 minutes.
+     * password, email magic link, or email OTP authentication factor that has been issued within the last 5 minutes. This
+     * endpoint requires either a `session_jwt` or `session_token` be included in the request.
      */
     public suspend fun reset(data: ResetRequest): StytchResult<ResetResponse>
 
     /**
      * Reset the user’s password using their existing session. The endpoint will error if the session does not have a
-     * password, email magic link, or email OTP authentication factor that has been issued within the last 5 minutes.
+     * password, email magic link, or email OTP authentication factor that has been issued within the last 5 minutes. This
+     * endpoint requires either a `session_jwt` or `session_token` be included in the request.
      */
     public fun reset(data: ResetRequest, callback: (StytchResult<ResetResponse>) -> Unit)
 
     /**
      * Reset the user’s password using their existing session. The endpoint will error if the session does not have a
-     * password, email magic link, or email OTP authentication factor that has been issued within the last 5 minutes.
+     * password, email magic link, or email OTP authentication factor that has been issued within the last 5 minutes. This
+     * endpoint requires either a `session_jwt` or `session_token` be included in the request.
      */
     public fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>>
 }

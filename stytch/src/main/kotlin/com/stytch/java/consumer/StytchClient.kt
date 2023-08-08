@@ -10,6 +10,8 @@ import com.stytch.java.common.BASE_TEST_URL
 import com.stytch.java.common.JwtOptions
 import com.stytch.java.consumer.api.cryptowallets.CryptoWallets
 import com.stytch.java.consumer.api.cryptowallets.CryptoWalletsImpl
+import com.stytch.java.consumer.api.m2m.M2M
+import com.stytch.java.consumer.api.m2m.M2MImpl
 import com.stytch.java.consumer.api.magiclinks.MagicLinks
 import com.stytch.java.consumer.api.magiclinks.MagicLinksImpl
 import com.stytch.java.consumer.api.oauth.OAuth
@@ -39,6 +41,9 @@ public object StytchClient {
     public lateinit var cryptoWallets: CryptoWallets
 
     @JvmStatic
+    public lateinit var m2m: M2M
+
+    @JvmStatic
     public lateinit var magicLinks: MagicLinks
 
     @JvmStatic
@@ -62,6 +67,7 @@ public object StytchClient {
     @JvmStatic
     public lateinit var webauthn: WebAuthn
 
+    @JvmStatic
     public fun configure(projectId: String, secret: String) {
         val baseUrl = getBaseUrl(projectId)
         httpClient = HttpClient(
@@ -77,6 +83,7 @@ public object StytchClient {
         val coroutineScope = CoroutineScope(SupervisorJob())
         httpsJwks = HttpsJwks("$baseUrl/v1/sessions/jwks/$projectId")
         cryptoWallets = CryptoWalletsImpl(httpClient, coroutineScope)
+        m2m = M2MImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
         magicLinks = MagicLinksImpl(httpClient, coroutineScope)
         oauth = OAuthImpl(httpClient, coroutineScope)
         otps = OTPsImpl(httpClient, coroutineScope)
