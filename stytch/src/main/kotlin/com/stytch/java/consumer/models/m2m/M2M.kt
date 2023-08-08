@@ -196,3 +196,47 @@ public data class ResultsMetadata @JvmOverloads constructor(
     @Json(name = "next_cursor")
     val nextCursor: String? = null,
 )
+
+// MANUAL(Token)(TYPES)
+@JsonClass(generateAdapter = true)
+public data class TokenRequest @JvmOverloads constructor(
+    @Json(name = "client_id")
+    val clientId: String,
+    @Json(name = "client_secret")
+    val clientSecret: String,
+    @Json(name = "scopes")
+    val scopes: List<String>? = null,
+)
+
+@JsonClass(generateAdapter = true)
+public data class TokenResponse @JvmOverloads constructor(
+    @Json(name = "access_token")
+    val accessToken: String,
+    @Json(name = "token_type")
+    val tokenType: String,
+    @Json(name = "expires_in")
+    val expiresIn: Int,
+)
+// ENDMANUAL(Token)
+
+// MANUAL(AuthenticateToken)(TYPES)
+@JsonClass(generateAdapter = true)
+public data class AuthenticateTokenRequest @JvmOverloads constructor(
+    @Json(name = "access_token")
+    val accessToken: String,
+    @Json(name = "required_scopes")
+    val requiredScopes: List<String>? = null,
+    @Json(name = "max_token_age_seconds")
+    val maxTokenAgeSeconds: Int? = null,
+)
+
+@JsonClass(generateAdapter = true)
+public data class AuthenticateTokenResponse @JvmOverloads constructor(
+    @Json(name = "client_id")
+    val clientId: String,
+    @Json(name = "scopes")
+    val scopes: List<String>,
+    @Json(name = "custom_claims")
+    val customClaims: Map<String, Any>? = null,
+)
+// ENDMANUAL(AuthenticateToken)

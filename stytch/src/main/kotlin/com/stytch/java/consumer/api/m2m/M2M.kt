@@ -8,13 +8,125 @@ package com.stytch.java.consumer.api.m2m
 
 import com.squareup.moshi.Moshi
 import com.stytch.java.common.JwtOptions
+import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.api.m2mclients.Clients
 import com.stytch.java.consumer.api.m2mclients.ClientsImpl
+import com.stytch.java.consumer.models.m2m.AuthenticateTokenRequest
+import com.stytch.java.consumer.models.m2m.AuthenticateTokenResponse
+import com.stytch.java.consumer.models.m2m.TokenRequest
+import com.stytch.java.consumer.models.m2m.TokenResponse
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.future.asCompletableFuture
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jose4j.jwk.HttpsJwks
+import java.util.concurrent.CompletableFuture
 public interface M2M {
     public val clients: Clients
+
+    // MANUAL(Token)(INTERFACE_METHOD)
+    // ADDIMPORT: import com.stytch.java.consumer.models.m2m.TokenRequest
+    // ADDIMPORT: import com.stytch.java.consumer.models.m2m.TokenResponse
+    /**
+     * Token retrieves an access token for the given M2M Client.
+     * Access tokens are JWTs signed with the project's JWKs, and are valid for one hour after issuance.
+     * M2M Access tokens contain a standard set of claims as well as any custom claims generated from templates.
+     * M2M Access tokens can be validated locally using the Authenticate Access Token method in the Stytch Backend SDKs,
+     * or with any library that supports JWT signature validation.
+     *
+     * Here is an example of a standard set of claims from a M2M Access Token:
+     * ```
+     *
+     *	{
+     *	  "sub": "m2m-client-test-d731954d-dab3-4a2b-bdee-07f3ad1be885",
+     *	  "iss": "stytch.com/project-test-3e71d0a1-1e3e-4ee2-9be0-d7c0900f02c2",
+     *	  "aud": ["project-test-3e71d0a1-1e3e-4ee2-9be0-d7c0900f02c2"],
+     *	  "scope": "read:users write:users",
+     *	  "iat": 4102473300,
+     *	  "nbf": 4102473300,
+     *	  "exp": 4102476900
+     *	}
+     *
+     * ```
+     */
+    public suspend fun token(data: TokenRequest): StytchResult<TokenResponse>
+
+    /**
+     * Token retrieves an access token for the given M2M Client.
+     * Access tokens are JWTs signed with the project's JWKs, and are valid for one hour after issuance.
+     * M2M Access tokens contain a standard set of claims as well as any custom claims generated from templates.
+     * M2M Access tokens can be validated locally using the Authenticate Access Token method in the Stytch Backend SDKs,
+     * or with any library that supports JWT signature validation.
+     *
+     * Here is an example of a standard set of claims from a M2M Access Token:
+     * ```
+     *
+     *	{
+     *	  "sub": "m2m-client-test-d731954d-dab3-4a2b-bdee-07f3ad1be885",
+     *	  "iss": "stytch.com/project-test-3e71d0a1-1e3e-4ee2-9be0-d7c0900f02c2",
+     *	  "aud": ["project-test-3e71d0a1-1e3e-4ee2-9be0-d7c0900f02c2"],
+     *	  "scope": "read:users write:users",
+     *	  "iat": 4102473300,
+     *	  "nbf": 4102473300,
+     *	  "exp": 4102476900
+     *	}
+     *
+     * ```
+     */
+    public fun token(data: TokenRequest, callback: (StytchResult<TokenResponse>) -> Unit)
+
+    /**
+     * Token retrieves an access token for the given M2M Client.
+     * Access tokens are JWTs signed with the project's JWKs, and are valid for one hour after issuance.
+     * M2M Access tokens contain a standard set of claims as well as any custom claims generated from templates.
+     * M2M Access tokens can be validated locally using the Authenticate Access Token method in the Stytch Backend SDKs,
+     * or with any library that supports JWT signature validation.
+     *
+     * Here is an example of a standard set of claims from a M2M Access Token:
+     * ```
+     *
+     *	{
+     *	  "sub": "m2m-client-test-d731954d-dab3-4a2b-bdee-07f3ad1be885",
+     *	  "iss": "stytch.com/project-test-3e71d0a1-1e3e-4ee2-9be0-d7c0900f02c2",
+     *	  "aud": ["project-test-3e71d0a1-1e3e-4ee2-9be0-d7c0900f02c2"],
+     *	  "scope": "read:users write:users",
+     *	  "iat": 4102473300,
+     *	  "nbf": 4102473300,
+     *	  "exp": 4102476900
+     *	}
+     *
+     * ```
+     */
+    public fun tokenCompletable(data: TokenRequest): CompletableFuture<StytchResult<TokenResponse>>
+    // ENDMANUAL(Token)
+
+    // MANUAL(AuthenticateM2MToken)(INTERFACE_METHOD)
+    // ADDIMPORT: import com.stytch.java.consumer.models.m2m.AuthenticateTokenRequest
+    // ADDIMPORT: import com.stytch.java.consumer.models.m2m.AuthenticateTokenResponse
+    /**
+     * AuthenticateToken validates an access token issued by Stytch from the Token endpoint.
+     * M2M access tokens are JWTs signed with the project's JWKs, and can be validated locally using any Stytch client library.
+     * You may pass in an optional set of scopes that the JWT must contain in order to enforce permissions.
+     */
+    public suspend fun authenticateToken(data: AuthenticateTokenRequest): StytchResult<AuthenticateTokenResponse>
+
+    /**
+     * AuthenticateToken validates an access token issued by Stytch from the Token endpoint.
+     * M2M access tokens are JWTs signed with the project's JWKs, and can be validated locally using any Stytch client library.
+     * You may pass in an optional set of scopes that the JWT must contain in order to enforce permissions.
+     */
+    public suspend fun authenticateToken(data: AuthenticateTokenRequest, callback: (StytchResult<AuthenticateTokenResponse>) -> Unit)
+
+    /**
+     * AuthenticateToken validates an access token issued by Stytch from the Token endpoint.
+     * M2M access tokens are JWTs signed with the project's JWKs, and can be validated locally using any Stytch client library.
+     * You may pass in an optional set of scopes that the JWT must contain in order to enforce permissions.
+     */
+    public suspend fun authenticateTokenCompletable(data: AuthenticateTokenRequest): CompletableFuture<StytchResult<AuthenticateTokenResponse>>
+    // ENDMANUAL(AuthenticateM2MToken)
 }
 
 internal class M2MImpl(
@@ -27,4 +139,43 @@ internal class M2MImpl(
     private val moshi = Moshi.Builder().build()
 
     override val clients: Clients = ClientsImpl(httpClient, coroutineScope)
+
+    // MANUAL(token_impl)(SERVICE_METHOD)
+    override suspend fun token(data: TokenRequest): StytchResult<TokenResponse> = withContext(Dispatchers.IO) {
+        TODO("Not yet implemented")
+    }
+
+    override fun token(data: TokenRequest, callback: (StytchResult<TokenResponse>) -> Unit) {
+        coroutineScope.launch {
+            callback(token(data))
+        }
+    }
+
+    override fun tokenCompletable(data: TokenRequest): CompletableFuture<StytchResult<TokenResponse>> {
+        return coroutineScope.async {
+            token(data)
+        }.asCompletableFuture()
+    }
+    // ENDMANUAL(token_impl)
+
+    // MANUAL(authenticateToken_impl)(SERVICE_METHOD)
+    override suspend fun authenticateToken(data: AuthenticateTokenRequest): StytchResult<AuthenticateTokenResponse> = withContext(Dispatchers.IO) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun authenticateToken(
+        data: AuthenticateTokenRequest,
+        callback: (StytchResult<AuthenticateTokenResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(authenticateToken(data))
+        }
+    }
+
+    override suspend fun authenticateTokenCompletable(data: AuthenticateTokenRequest): CompletableFuture<StytchResult<AuthenticateTokenResponse>> {
+        return coroutineScope.async {
+            authenticateToken(data)
+        }.asCompletableFuture()
+    }
+    // ENDMANUAL(authenticateToken_impl)
 }
