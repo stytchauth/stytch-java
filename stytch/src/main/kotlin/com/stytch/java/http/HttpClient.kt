@@ -12,6 +12,7 @@ import okhttp3.Callback
 import okhttp3.Credentials
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -112,20 +113,28 @@ internal class HttpClient(
         }
     }
 
-    suspend inline fun <reified T> post(path: String, json: String): StytchResult<T> {
+    suspend inline fun <reified T> post(
+        path: String,
+        json: String,
+        mediaType: MediaType = "application/json".toMediaType(),
+    ): StytchResult<T> {
         val request = Request.Builder()
             .url(buildUrl(path))
-            .post(json.toRequestBody("application/json".toMediaType()))
+            .post(json.toRequestBody(mediaType))
             .build()
         return try { makeRequest(request, T::class.java) } catch (e: Exception) {
             StytchResult.Error(StytchException.Critical(e))
         }
     }
 
-    suspend inline fun <reified T> put(path: String, json: String): StytchResult<T> {
+    suspend inline fun <reified T> put(
+        path: String,
+        json: String,
+        mediaType: MediaType = "application/json".toMediaType(),
+    ): StytchResult<T> {
         val request = Request.Builder()
             .url(buildUrl(path))
-            .put(json.toRequestBody("application/json".toMediaType()))
+            .put(json.toRequestBody(mediaType))
             .build()
         return try { makeRequest(request, T::class.java) } catch (e: Exception) {
             StytchResult.Error(StytchException.Critical(e))

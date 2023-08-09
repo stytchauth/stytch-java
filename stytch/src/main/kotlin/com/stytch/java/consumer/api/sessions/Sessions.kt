@@ -11,9 +11,11 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.stytch.java.common.JWTException
 import com.stytch.java.common.JwtOptions
+import com.stytch.java.common.ParseJWTClaimsOptions
 import com.stytch.java.common.StytchException
 import com.stytch.java.common.StytchResult
 import com.stytch.java.common.StytchSessionClaim
+import com.stytch.java.common.parseJWTClaims
 import com.stytch.java.consumer.models.sessions.AuthenticateRequest
 import com.stytch.java.consumer.models.sessions.AuthenticateResponse
 import com.stytch.java.consumer.models.sessions.GetJWKSRequest
@@ -31,12 +33,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jose4j.jwk.HttpsJwks
-import org.jose4j.jwt.MalformedClaimException
-import org.jose4j.jwt.consumer.InvalidJwtException
-import org.jose4j.jwt.consumer.JwtConsumerBuilder
-import org.jose4j.lang.JoseException
 import java.time.Instant
-import java.util.Date
 import java.util.concurrent.CompletableFuture
 public interface Sessions {
     /**
@@ -118,8 +115,11 @@ public interface Sessions {
     public fun getJWKSCompletable(data: GetJWKSRequest): CompletableFuture<StytchResult<GetJWKSResponse>>
 
     // MANUAL(authenticateJWT_interface)(INTERFACE_METHOD)
-    // ADDIMPORT import com.stytch.kotlin.consumer.models.sessions.Session
-    // ADDIMPORT import com.stytch.kotlin.common.JWTException
+    // ADDIMPORT: import com.stytch.java.consumer.models.sessions.Session
+    // ADDIMPORT: import com.stytch.java.common.JWTException
+    // ADDIMPORT: import com.stytch.java.common.ParseJWTClaimsOptions
+    // ADDIMPORT: import com.stytch.java.common.parseJWTClaims
+    // ADDIMPORT: import com.stytch.java.common.ParsedJWTClaims
     /** Parse a JWT and verify the signature, preferring local verification over remote.
      *
      * If maxTokenAgeSeconds is set, remote verification will be forced if the JWT was issued at
@@ -305,51 +305,37 @@ internal class SessionsImpl(
         maxTokenAgeSeconds: Int?,
         leeway: Int,
     ): StytchResult<Session?> {
-        val now = Date().time
         return try {
-            val jwtConsumer = JwtConsumerBuilder().apply {
-                setRequireExpirationTime()
-                setAllowedClockSkewInSeconds(leeway)
-                setRequireSubject()
-                setExpectedIssuer(jwtOptions.issuer)
-                setExpectedSubject(jwtOptions.audience)
-                setVerificationKey(jwksClient.jsonWebKeys[0].key)
-            }.build()
-            val jwtClaims = jwtConsumer.processToClaims(jwt)
-            if (maxTokenAgeSeconds != null) {
-                val iat = jwtClaims.issuedAt
-                if ((now - iat.valueInMillis) / 1000 >= maxTokenAgeSeconds) {
-                    return StytchResult.Error(
-                        StytchException.Critical(
-                            JWTException.JwtTooOld(
-                                iat = iat.valueInMillis / 1000,
-                                maxTokenAgeSeconds = maxTokenAgeSeconds,
-                            ),
-                        ),
-                    )
-                }
-            }
-            val payload = jwtClaims.claimsMap["https://stytch.com/session"] as String
+            val jwtClaims = parseJWTClaims(
+                jwt = jwt,
+                jwtOptions = jwtOptions,
+                jwksClient = jwksClient,
+                options = ParseJWTClaimsOptions(
+                    leeway = leeway,
+                    maxTokenAgeSeconds = maxTokenAgeSeconds,
+                ),
+            )
+            val stytchSessionClaims = jwtClaims.payload.claimsMap["https://stytch.com/session"] as String
             val stytchSessionClaim =
-                moshi.adapter(StytchSessionClaim::class.java).fromJson(payload)
-                    ?: return StytchResult.Error(StytchException.Critical(JWTException.JwtMissingClaims))
+                moshi.adapter(StytchSessionClaim::class.java).fromJson(stytchSessionClaims)
+                    ?: throw JWTException.JwtMissingClaims
             return StytchResult.Success(
                 Session(
                     sessionId = stytchSessionClaim.id,
                     attributes = stytchSessionClaim.attributes,
                     authenticationFactors = stytchSessionClaim.authenticationFactors,
-                    userId = jwtClaims.subject,
+                    userId = jwtClaims.payload.subject,
                     startedAt = Instant.ofEpochMilli(stytchSessionClaim.startedAt.toLong()),
                     lastAccessedAt = Instant.ofEpochMilli(stytchSessionClaim.lastAccessedAt.toLong()),
                     expiresAt = Instant.ofEpochMilli(stytchSessionClaim.expiresAt.toLong()),
-                    customClaims = jwtClaims.claimsMap,
+                    customClaims = jwtClaims.customClaims,
                 ),
             )
-        } catch (e: JoseException) {
-            StytchResult.Error(StytchException.Critical(JWTException.JwtError(e)))
-        } catch (e: InvalidJwtException) {
-            StytchResult.Error(StytchException.Critical(JWTException.JwtError(e)))
-        } catch (e: MalformedClaimException) {
+        } catch (e: JWTException.JwtTooOld) {
+            StytchResult.Error(StytchException.Critical(e))
+        } catch (e: JWTException.JwtMissingClaims) {
+            StytchResult.Error(StytchException.Critical(e))
+        } catch (e: Exception) {
             StytchResult.Error(StytchException.Critical(JWTException.JwtError(e)))
         }
     }
