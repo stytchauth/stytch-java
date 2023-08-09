@@ -7,6 +7,7 @@ package com.stytch.java.consumer.api.oauth
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.models.oauth.AttachRequest
 import com.stytch.java.consumer.models.oauth.AttachResponse
@@ -90,7 +91,7 @@ internal class OAuthImpl(
     private val coroutineScope: CoroutineScope,
 ) : OAuth {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun attach(data: AttachRequest): StytchResult<AttachResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AttachRequest::class.java).toJson(data)

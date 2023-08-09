@@ -9,6 +9,7 @@ package com.stytch.java.consumer.api.m2mclients
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.api.m2mclientssecrets.Secrets
 import com.stytch.java.consumer.api.m2mclientssecrets.SecretsImpl
@@ -180,7 +181,7 @@ internal class ClientsImpl(
     private val coroutineScope: CoroutineScope,
 ) : Clients {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val secrets: Secrets = SecretsImpl(httpClient, coroutineScope)
 

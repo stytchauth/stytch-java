@@ -11,6 +11,7 @@ import com.stytch.java.b2b.api.oauthdiscovery.Discovery
 import com.stytch.java.b2b.api.oauthdiscovery.DiscoveryImpl
 import com.stytch.java.b2b.models.oauth.AuthenticateRequest
 import com.stytch.java.b2b.models.oauth.AuthenticateResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -92,7 +93,7 @@ internal class OAuthImpl(
     private val coroutineScope: CoroutineScope,
 ) : OAuth {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val discovery: Discovery = DiscoveryImpl(httpClient, coroutineScope)
 

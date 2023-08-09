@@ -13,6 +13,7 @@ import com.stytch.java.b2b.api.magiclinksemail.Email
 import com.stytch.java.b2b.api.magiclinksemail.EmailImpl
 import com.stytch.java.b2b.models.magiclinks.AuthenticateRequest
 import com.stytch.java.b2b.models.magiclinks.AuthenticateResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -96,7 +97,7 @@ internal class MagicLinksImpl(
     private val coroutineScope: CoroutineScope,
 ) : MagicLinks {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val email: Email = EmailImpl(httpClient, coroutineScope)
     override val discovery: Discovery = DiscoveryImpl(httpClient, coroutineScope)

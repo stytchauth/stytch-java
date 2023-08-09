@@ -7,6 +7,7 @@ package com.stytch.java.consumer.api.m2m
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.JWTException
 import com.stytch.java.common.JwtOptions
 import com.stytch.java.common.ParseJWTClaimsOptions
@@ -146,7 +147,7 @@ internal class M2MImpl(
     private val jwtOptions: JwtOptions,
 ) : M2M {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val clients: Clients = ClientsImpl(httpClient, coroutineScope)
 
@@ -193,8 +194,8 @@ internal class M2MImpl(
                     maxTokenAgeSeconds = data.maxTokenAgeSeconds,
                 ),
             )
-            val scopeString = jwtClaims.customClaims["scope"] as String
-            val scopes = scopeString.split(" ")
+            val scopeString = jwtClaims.customClaims["scope"] as? String
+            val scopes = scopeString?.split(" ") ?: emptyList()
             if (!data.requiredScopes.isNullOrEmpty()) {
                 val missingScopes = data.requiredScopes.filter {
                     !scopes.contains(it)
@@ -211,8 +212,6 @@ internal class M2MImpl(
                 ),
             )
         } catch (e: JWTException.JwtTooOld) {
-            StytchResult.Error(StytchException.Critical(e))
-        } catch (e: JWTException.JwtMissingClaims) {
             StytchResult.Error(StytchException.Critical(e))
         } catch (e: JWTException.JwtMissingScopes) {
             StytchResult.Error(StytchException.Critical(e))

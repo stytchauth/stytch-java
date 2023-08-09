@@ -7,6 +7,7 @@ package com.stytch.java.consumer.api.passwordsemail
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.models.passwordsemail.ResetRequest
 import com.stytch.java.consumer.models.passwordsemail.ResetResponse
@@ -78,7 +79,7 @@ internal class EmailImpl(
     private val coroutineScope: CoroutineScope,
 ) : Email {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun resetStart(data: ResetStartRequest): StytchResult<ResetStartResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(ResetStartRequest::class.java).toJson(data)

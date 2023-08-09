@@ -7,6 +7,7 @@ package com.stytch.java.consumer.api.magiclinks
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.api.magiclinksemail.Email
 import com.stytch.java.consumer.api.magiclinksemail.EmailImpl
@@ -82,7 +83,7 @@ internal class MagicLinksImpl(
     private val coroutineScope: CoroutineScope,
 ) : MagicLinks {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val email: Email = EmailImpl(httpClient, coroutineScope)
 

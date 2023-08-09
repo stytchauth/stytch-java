@@ -19,6 +19,7 @@ import com.stytch.java.b2b.models.sso.DeleteConnectionRequest
 import com.stytch.java.b2b.models.sso.DeleteConnectionResponse
 import com.stytch.java.b2b.models.sso.GetConnectionsRequest
 import com.stytch.java.b2b.models.sso.GetConnectionsResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -132,7 +133,7 @@ internal class SSOImpl(
     private val coroutineScope: CoroutineScope,
 ) : SSO {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val oidc: OIDC = OIDCImpl(httpClient, coroutineScope)
     override val saml: SAML = SAMLImpl(httpClient, coroutineScope)

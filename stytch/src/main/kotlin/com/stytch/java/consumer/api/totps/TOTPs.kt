@@ -7,6 +7,7 @@ package com.stytch.java.consumer.api.totps
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.models.totps.AuthenticateRequest
 import com.stytch.java.consumer.models.totps.AuthenticateResponse
@@ -94,7 +95,7 @@ internal class TOTPsImpl(
     private val coroutineScope: CoroutineScope,
 ) : TOTPs {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)

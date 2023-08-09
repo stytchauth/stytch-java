@@ -10,7 +10,7 @@ internal data class ParsedJWTClaims(
     val customClaims: Map<String, Any> = emptyMap(),
 )
 
-private val IGNORED_CLAIMS = listOf("aud", "exp", "iat", "iss", "jti", "nbf", "sub")
+internal val IGNORED_CLAIMS = listOf("aud", "exp", "iat", "iss", "jti", "nbf", "sub")
 
 internal fun parseJWTClaims(
     jwt: String,
@@ -23,8 +23,8 @@ internal fun parseJWTClaims(
         setRequireExpirationTime()
         setAllowedClockSkewInSeconds(options.leeway)
         setRequireSubject()
+        setExpectedAudience(jwtOptions.audience)
         setExpectedIssuer(jwtOptions.issuer)
-        setExpectedSubject(jwtOptions.audience)
         setVerificationKey(jwksClient.jsonWebKeys[0].key)
     }.build()
     val jwtClaims = jwtConsumer.processToClaims(jwt)

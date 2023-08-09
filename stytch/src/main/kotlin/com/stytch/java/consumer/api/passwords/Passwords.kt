@@ -7,6 +7,7 @@ package com.stytch.java.consumer.api.passwords
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.api.passwordsemail.Email
 import com.stytch.java.consumer.api.passwordsemail.EmailImpl
@@ -238,7 +239,7 @@ internal class PasswordsImpl(
     private val coroutineScope: CoroutineScope,
 ) : Passwords {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val email: Email = EmailImpl(httpClient, coroutineScope)
     override val existingPassword: ExistingPassword = ExistingPasswordImpl(httpClient, coroutineScope)

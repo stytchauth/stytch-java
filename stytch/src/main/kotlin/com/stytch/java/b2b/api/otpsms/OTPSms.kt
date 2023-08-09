@@ -11,6 +11,7 @@ import com.stytch.java.b2b.models.otpsms.AuthenticateRequest
 import com.stytch.java.b2b.models.otpsms.AuthenticateResponse
 import com.stytch.java.b2b.models.otpsms.SendRequest
 import com.stytch.java.b2b.models.otpsms.SendResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -132,7 +133,7 @@ internal class SmsImpl(
     private val coroutineScope: CoroutineScope,
 ) : Sms {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun send(data: SendRequest): StytchResult<SendResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(SendRequest::class.java).toJson(data)

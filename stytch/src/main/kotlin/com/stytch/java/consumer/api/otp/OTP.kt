@@ -7,6 +7,7 @@ package com.stytch.java.consumer.api.otp
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.api.otpemail.Email
 import com.stytch.java.consumer.api.otpemail.EmailImpl
@@ -61,7 +62,7 @@ internal class OTPsImpl(
     private val coroutineScope: CoroutineScope,
 ) : OTPs {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val sms: Sms = SmsImpl(httpClient, coroutineScope)
     override val whatsapp: Whatsapp = WhatsappImpl(httpClient, coroutineScope)

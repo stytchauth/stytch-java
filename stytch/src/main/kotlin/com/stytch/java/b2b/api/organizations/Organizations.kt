@@ -21,6 +21,7 @@ import com.stytch.java.b2b.models.organizations.SearchRequest
 import com.stytch.java.b2b.models.organizations.SearchResponse
 import com.stytch.java.b2b.models.organizations.UpdateRequest
 import com.stytch.java.b2b.models.organizations.UpdateResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -147,7 +148,7 @@ internal class OrganizationsImpl(
     private val coroutineScope: CoroutineScope,
 ) : Organizations {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val members: Members = MembersImpl(httpClient, coroutineScope)
 

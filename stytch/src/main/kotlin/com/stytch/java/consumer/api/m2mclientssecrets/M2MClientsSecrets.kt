@@ -7,6 +7,7 @@ package com.stytch.java.consumer.api.m2mclientssecrets
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.models.m2mclientssecrets.RotateCancelRequest
 import com.stytch.java.consumer.models.m2mclientssecrets.RotateCancelResponse
@@ -122,7 +123,7 @@ internal class SecretsImpl(
     private val coroutineScope: CoroutineScope,
 ) : Secrets {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun rotateStart(data: RotateStartRequest): StytchResult<RotateStartResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(RotateStartRequest::class.java).toJson(data)

@@ -23,6 +23,7 @@ import com.stytch.java.b2b.models.organizationsmembers.SearchRequest
 import com.stytch.java.b2b.models.organizationsmembers.SearchResponse
 import com.stytch.java.b2b.models.organizationsmembers.UpdateRequest
 import com.stytch.java.b2b.models.organizationsmembers.UpdateResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -153,7 +154,7 @@ internal class MembersImpl(
     private val coroutineScope: CoroutineScope,
 ) : Members {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)

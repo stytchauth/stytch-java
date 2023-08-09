@@ -9,6 +9,7 @@ package com.stytch.java.b2b.api.oauthdiscovery
 import com.squareup.moshi.Moshi
 import com.stytch.java.b2b.models.oauthdiscovery.AuthenticateRequest
 import com.stytch.java.b2b.models.oauthdiscovery.AuthenticateResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -43,7 +44,7 @@ internal class DiscoveryImpl(
     private val coroutineScope: CoroutineScope,
 ) : Discovery {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)

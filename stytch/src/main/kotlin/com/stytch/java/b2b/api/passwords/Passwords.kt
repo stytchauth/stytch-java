@@ -19,6 +19,7 @@ import com.stytch.java.b2b.models.passwords.MigrateRequest
 import com.stytch.java.b2b.models.passwords.MigrateResponse
 import com.stytch.java.b2b.models.passwords.StrengthCheckRequest
 import com.stytch.java.b2b.models.passwords.StrengthCheckResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -224,7 +225,7 @@ internal class PasswordsImpl(
     private val coroutineScope: CoroutineScope,
 ) : Passwords {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val email: Email = EmailImpl(httpClient, coroutineScope)
     override val sessions: Sessions = SessionsImpl(httpClient, coroutineScope)

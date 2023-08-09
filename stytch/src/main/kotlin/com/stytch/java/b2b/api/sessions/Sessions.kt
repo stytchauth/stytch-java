@@ -19,6 +19,7 @@ import com.stytch.java.b2b.models.sessions.GetRequest
 import com.stytch.java.b2b.models.sessions.GetResponse
 import com.stytch.java.b2b.models.sessions.RevokeRequest
 import com.stytch.java.b2b.models.sessions.RevokeResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -188,7 +189,7 @@ internal class SessionsImpl(
     private val coroutineScope: CoroutineScope,
 ) : Sessions {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(GetRequest::class.java).toJson(data)

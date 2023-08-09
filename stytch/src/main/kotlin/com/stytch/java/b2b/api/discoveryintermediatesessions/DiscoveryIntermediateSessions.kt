@@ -9,6 +9,7 @@ package com.stytch.java.b2b.api.discoveryintermediatesessions
 import com.squareup.moshi.Moshi
 import com.stytch.java.b2b.models.discoveryintermediatesessions.ExchangeRequest
 import com.stytch.java.b2b.models.discoveryintermediatesessions.ExchangeResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -88,7 +89,7 @@ internal class IntermediateSessionsImpl(
     private val coroutineScope: CoroutineScope,
 ) : IntermediateSessions {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun exchange(data: ExchangeRequest): StytchResult<ExchangeResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(ExchangeRequest::class.java).toJson(data)

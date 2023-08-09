@@ -7,6 +7,7 @@ package com.stytch.java.consumer.api.magiclinksemail
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.models.magiclinksemail.InviteRequest
 import com.stytch.java.consumer.models.magiclinksemail.InviteResponse
@@ -181,7 +182,7 @@ internal class EmailImpl(
     private val coroutineScope: CoroutineScope,
 ) : Email {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun send(data: SendRequest): StytchResult<SendResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(SendRequest::class.java).toJson(data)

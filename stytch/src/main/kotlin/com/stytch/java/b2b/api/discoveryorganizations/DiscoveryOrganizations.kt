@@ -11,6 +11,7 @@ import com.stytch.java.b2b.models.discoveryorganizations.CreateRequest
 import com.stytch.java.b2b.models.discoveryorganizations.CreateResponse
 import com.stytch.java.b2b.models.discoveryorganizations.ListRequest
 import com.stytch.java.b2b.models.discoveryorganizations.ListResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -165,7 +166,7 @@ internal class OrganizationsImpl(
     private val coroutineScope: CoroutineScope,
 ) : Organizations {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)

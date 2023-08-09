@@ -9,6 +9,7 @@ package com.stytch.java.consumer.api.sessions
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.JWTException
 import com.stytch.java.common.JwtOptions
 import com.stytch.java.common.ParseJWTClaimsOptions
@@ -198,7 +199,7 @@ internal class SessionsImpl(
     private val jwtOptions: JwtOptions,
 ) : Sessions {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
@@ -315,19 +316,21 @@ internal class SessionsImpl(
                     maxTokenAgeSeconds = maxTokenAgeSeconds,
                 ),
             )
-            val stytchSessionClaims = jwtClaims.payload.claimsMap["https://stytch.com/session"] as String
-            val stytchSessionClaim =
-                moshi.adapter(StytchSessionClaim::class.java).fromJson(stytchSessionClaims)
-                    ?: throw JWTException.JwtMissingClaims
+            val stytchSessionClaims = jwtClaims.payload.claimsMap["https://stytch.com/session"] as? Map<*, *>
+            val stytchSessionClaim = stytchSessionClaims?.let {
+                val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+                val adapter: JsonAdapter<Map<*, *>> = moshi.adapter(type)
+                moshi.adapter(StytchSessionClaim::class.java).fromJson(adapter.toJson(it))
+            } ?: throw JWTException.JwtMissingClaims
             return StytchResult.Success(
                 Session(
                     sessionId = stytchSessionClaim.id,
                     attributes = stytchSessionClaim.attributes,
                     authenticationFactors = stytchSessionClaim.authenticationFactors,
                     userId = jwtClaims.payload.subject,
-                    startedAt = Instant.ofEpochMilli(stytchSessionClaim.startedAt.toLong()),
-                    lastAccessedAt = Instant.ofEpochMilli(stytchSessionClaim.lastAccessedAt.toLong()),
-                    expiresAt = Instant.ofEpochMilli(stytchSessionClaim.expiresAt.toLong()),
+                    startedAt = Instant.parse(stytchSessionClaim.startedAt),
+                    lastAccessedAt = Instant.parse(stytchSessionClaim.lastAccessedAt),
+                    expiresAt = Instant.parse(stytchSessionClaim.expiresAt),
                     customClaims = jwtClaims.customClaims,
                 ),
             )

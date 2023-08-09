@@ -11,6 +11,7 @@ import com.stytch.java.b2b.models.passwordsemail.ResetRequest
 import com.stytch.java.b2b.models.passwordsemail.ResetResponse
 import com.stytch.java.b2b.models.passwordsemail.ResetStartRequest
 import com.stytch.java.b2b.models.passwordsemail.ResetStartResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -129,7 +130,7 @@ internal class EmailImpl(
     private val coroutineScope: CoroutineScope,
 ) : Email {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun resetStart(data: ResetStartRequest): StytchResult<ResetStartResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(ResetStartRequest::class.java).toJson(data)

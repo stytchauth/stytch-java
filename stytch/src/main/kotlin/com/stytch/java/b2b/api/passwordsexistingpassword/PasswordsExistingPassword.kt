@@ -9,6 +9,7 @@ package com.stytch.java.b2b.api.passwordsexistingpassword
 import com.squareup.moshi.Moshi
 import com.stytch.java.b2b.models.passwordsexistingpassword.ResetRequest
 import com.stytch.java.b2b.models.passwordsexistingpassword.ResetResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -94,7 +95,7 @@ internal class ExistingPasswordImpl(
     private val coroutineScope: CoroutineScope,
 ) : ExistingPassword {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun reset(data: ResetRequest): StytchResult<ResetResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)

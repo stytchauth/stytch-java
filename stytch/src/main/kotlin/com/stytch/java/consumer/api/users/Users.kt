@@ -9,6 +9,7 @@ package com.stytch.java.consumer.api.users
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.models.users.CreateRequest
 import com.stytch.java.consumer.models.users.CreateResponse
@@ -267,7 +268,7 @@ internal class UsersImpl(
     private val coroutineScope: CoroutineScope,
 ) : Users {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)

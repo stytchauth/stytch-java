@@ -11,6 +11,7 @@ import com.stytch.java.b2b.models.ssooidc.CreateConnectionRequest
 import com.stytch.java.b2b.models.ssooidc.CreateConnectionResponse
 import com.stytch.java.b2b.models.ssooidc.UpdateConnectionRequest
 import com.stytch.java.b2b.models.ssooidc.UpdateConnectionResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -126,7 +127,7 @@ internal class OIDCImpl(
     private val coroutineScope: CoroutineScope,
 ) : OIDC {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun createConnection(data: CreateConnectionRequest): StytchResult<CreateConnectionResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(CreateConnectionRequest::class.java).toJson(data)

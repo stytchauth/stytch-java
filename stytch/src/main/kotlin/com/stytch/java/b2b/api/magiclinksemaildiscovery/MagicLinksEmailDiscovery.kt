@@ -9,6 +9,7 @@ package com.stytch.java.b2b.api.magiclinksemaildiscovery
 import com.squareup.moshi.Moshi
 import com.stytch.java.b2b.models.magiclinksemaildiscovery.SendRequest
 import com.stytch.java.b2b.models.magiclinksemaildiscovery.SendResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -40,7 +41,7 @@ internal class DiscoveryImpl(
     private val coroutineScope: CoroutineScope,
 ) : Discovery {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun send(data: SendRequest): StytchResult<SendResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(SendRequest::class.java).toJson(data)
