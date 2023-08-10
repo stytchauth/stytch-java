@@ -19,6 +19,7 @@ import com.stytch.java.b2b.models.sessions.GetRequest
 import com.stytch.java.b2b.models.sessions.GetResponse
 import com.stytch.java.b2b.models.sessions.RevokeRequest
 import com.stytch.java.b2b.models.sessions.RevokeResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -98,6 +99,22 @@ public interface Sessions {
      *
      * To create a new member via domain matching, use the
      * [Exchange Intermediate Session](https://stytch.com/docs/b2b/api/exchange-intermediate-session) flow instead.
+     *
+     * Only Email Magic Link, OAuth, and SMS OTP factors can be transferred between sessions. Other authentication factors,
+     * such as password factors, will not be transferred to the new session.
+     * SMS OTP factors can be used to fulfill MFA requirements for the target Organization if both the original and target
+     * Member have the same phone number and the phone number is verified for both Members.
+     *
+     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
+     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * The `intermediate_session_token` can be passed into the
+     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
+     * acquire a full member session.
+     * The `intermediate_session_token` can also be used with the
+     * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) or the
+     * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to join
+     * a different Organization or create a new one.
+     * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      */
     public suspend fun exchange(data: ExchangeRequest): StytchResult<ExchangeResponse>
 
@@ -107,6 +124,22 @@ public interface Sessions {
      *
      * To create a new member via domain matching, use the
      * [Exchange Intermediate Session](https://stytch.com/docs/b2b/api/exchange-intermediate-session) flow instead.
+     *
+     * Only Email Magic Link, OAuth, and SMS OTP factors can be transferred between sessions. Other authentication factors,
+     * such as password factors, will not be transferred to the new session.
+     * SMS OTP factors can be used to fulfill MFA requirements for the target Organization if both the original and target
+     * Member have the same phone number and the phone number is verified for both Members.
+     *
+     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
+     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * The `intermediate_session_token` can be passed into the
+     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
+     * acquire a full member session.
+     * The `intermediate_session_token` can also be used with the
+     * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) or the
+     * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to join
+     * a different Organization or create a new one.
+     * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      */
     public fun exchange(data: ExchangeRequest, callback: (StytchResult<ExchangeResponse>) -> Unit)
 
@@ -116,6 +149,22 @@ public interface Sessions {
      *
      * To create a new member via domain matching, use the
      * [Exchange Intermediate Session](https://stytch.com/docs/b2b/api/exchange-intermediate-session) flow instead.
+     *
+     * Only Email Magic Link, OAuth, and SMS OTP factors can be transferred between sessions. Other authentication factors,
+     * such as password factors, will not be transferred to the new session.
+     * SMS OTP factors can be used to fulfill MFA requirements for the target Organization if both the original and target
+     * Member have the same phone number and the phone number is verified for both Members.
+     *
+     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
+     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * The `intermediate_session_token` can be passed into the
+     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
+     * acquire a full member session.
+     * The `intermediate_session_token` can also be used with the
+     * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) or the
+     * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to join
+     * a different Organization or create a new one.
+     * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      */
     public fun exchangeCompletable(data: ExchangeRequest): CompletableFuture<StytchResult<ExchangeResponse>>
 
@@ -140,7 +189,7 @@ internal class SessionsImpl(
     private val coroutineScope: CoroutineScope,
 ) : Sessions {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(GetRequest::class.java).toJson(data)

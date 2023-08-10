@@ -7,6 +7,7 @@ package com.stytch.java.consumer.api.cryptowallets
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.models.cryptowallets.AuthenticateRequest
 import com.stytch.java.consumer.models.cryptowallets.AuthenticateResponse
@@ -60,7 +61,7 @@ internal class CryptoWalletsImpl(
     private val coroutineScope: CoroutineScope,
 ) : CryptoWallets {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun authenticateStart(data: AuthenticateStartRequest): StytchResult<AuthenticateStartResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(AuthenticateStartRequest::class.java).toJson(data)

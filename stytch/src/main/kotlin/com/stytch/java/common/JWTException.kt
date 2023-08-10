@@ -10,4 +10,8 @@ public sealed class JWTException(
     )
 
     public object JwtMissingClaims : JWTException()
+
+    public data class JwtMissingScopes(val missingScopes: List<String>) : JWTException(
+        reason = "Missing required scopes: $missingScopes",
+    )
 }

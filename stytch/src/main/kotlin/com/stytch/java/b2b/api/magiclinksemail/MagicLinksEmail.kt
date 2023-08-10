@@ -13,6 +13,7 @@ import com.stytch.java.b2b.models.magiclinksemail.InviteRequest
 import com.stytch.java.b2b.models.magiclinksemail.InviteResponse
 import com.stytch.java.b2b.models.magiclinksemail.LoginOrSignupRequest
 import com.stytch.java.b2b.models.magiclinksemail.LoginOrSignupResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -73,7 +74,7 @@ internal class EmailImpl(
     private val coroutineScope: CoroutineScope,
 ) : Email {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val discovery: Discovery = DiscoveryImpl(httpClient, coroutineScope)
 

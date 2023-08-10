@@ -41,13 +41,12 @@ public data class Member @JvmOverloads constructor(
     @Json(name = "organization_id")
     val organizationId: String,
     /**
-     * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
-     * so be sure to preserve this value.
+     * Globally unique UUID that identifies a specific Member.
      */
     @Json(name = "member_id")
     val memberId: String,
     /**
-     * The email address of the Member.
+     * The email address.
      */
     @Json(name = "email_address")
     val emailAddress: String,
@@ -84,8 +83,16 @@ public data class Member @JvmOverloads constructor(
      */
     @Json(name = "oauth_registrations")
     val oauthRegistrations: List<OAuthRegistration>,
+    /**
+     * (Coming Soon) Sets whether the Member is enrolled in MFA. If true, the Member must complete an MFA step whenever they
+     * wish to log in to their Organization. If false, the Member only needs to complete an MFA step if the Organization's MFA
+     * policy is set to `REQUIRED_FOR_ALL`.
+     */
     @Json(name = "mfa_enrolled")
     val mfaEnrolled: Boolean,
+    /**
+     * (Coming Soon) The Member's phone number. A Member may only have one phone number.
+     */
     @Json(name = "mfa_phone_number")
     val mfaPhoneNumber: String,
     /**
@@ -411,6 +418,16 @@ public data class CreateRequest @JvmOverloads constructor(
      */
     @Json(name = "allowed_auth_methods")
     val allowedAuthMethods: List<String>? = null,
+    /**
+     * (Coming Soon) The setting that controls the MFA policy for all Members in the Organization. The accepted values are:
+     *
+     *   `REQUIRED_FOR_ALL` – All Members within the Organization will be required to complete MFA every time they wish to log
+     * in.
+     *
+     *   `OPTIONAL` – The default value. The Organization does not require MFA by default for all Members. Members will be
+     * required to complete MFA only if their `mfa_enrolled` status is set to true.
+     *
+     */
     @Json(name = "mfa_policy")
     val mfaPolicy: String? = null,
 )
@@ -689,6 +706,16 @@ public data class UpdateRequest @JvmOverloads constructor(
      */
     @Json(name = "allowed_auth_methods")
     val allowedAuthMethods: List<String>? = null,
+    /**
+     * (Coming Soon) The setting that controls the MFA policy for all Members in the Organization. The accepted values are:
+     *
+     *   `REQUIRED_FOR_ALL` – All Members within the Organization will be required to complete MFA every time they wish to log
+     * in.
+     *
+     *   `OPTIONAL` – The default value. The Organization does not require MFA by default for all Members. Members will be
+     * required to complete MFA only if their `mfa_enrolled` status is set to true.
+     *
+     */
     @Json(name = "mfa_policy")
     val mfaPolicy: String? = null,
 )

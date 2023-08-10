@@ -13,6 +13,7 @@ import com.stytch.java.b2b.models.ssosaml.DeleteVerificationCertificateRequest
 import com.stytch.java.b2b.models.ssosaml.DeleteVerificationCertificateResponse
 import com.stytch.java.b2b.models.ssosaml.UpdateConnectionRequest
 import com.stytch.java.b2b.models.ssosaml.UpdateConnectionResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -101,7 +102,7 @@ internal class SAMLImpl(
     private val coroutineScope: CoroutineScope,
 ) : SAML {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun createConnection(data: CreateConnectionRequest): StytchResult<CreateConnectionResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(CreateConnectionRequest::class.java).toJson(data)

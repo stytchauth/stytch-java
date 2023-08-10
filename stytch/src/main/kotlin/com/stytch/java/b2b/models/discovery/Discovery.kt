@@ -15,9 +15,9 @@ import com.stytch.java.b2b.models.organizations.Organization
 @JsonClass(generateAdapter = true)
 public data class DiscoveredOrganization @JvmOverloads constructor(
     /**
-     * Indicates whether or not the discovery magic link initiated session is valid for the organization's allowed auth method
-     * settings.
-     *   If not, the member needs to perform additional authentication before logging in - such as password or SSO auth.
+     * Indicates whether the Member has all of the factors needed to fully authenticate to this Organization. If false, the
+     * Member may need to complete an MFA step or complete a different primary authentication flow. See the `primary_required`
+     * and `mfa_required` fields for more details on each.
      */
     @Json(name = "member_authenticated")
     val memberAuthenticated: Boolean,
@@ -31,8 +31,14 @@ public data class DiscoveredOrganization @JvmOverloads constructor(
      */
     @Json(name = "membership")
     val membership: Membership? = null,
+    /**
+     * (Coming Soon) Information about the primary authentication requirements of the Organization.
+     */
     @Json(name = "primary_required")
     val primaryRequired: PrimaryRequired? = null,
+    /**
+     * (Coming Soon) Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
+     */
     @Json(name = "mfa_required")
     val mfaRequired: MfaRequired? = null,
 )
@@ -58,6 +64,12 @@ public data class Membership @JvmOverloads constructor(
 
 @JsonClass(generateAdapter = true)
 public data class PrimaryRequired @JvmOverloads constructor(
+    /**
+     * If non-empty, indicates that the Organization restricts the authentication methods it allows for login (such as `sso`
+     * or `password`), and the end user must complete one of those authentication methods to log in. If empty, indicates that
+     * the Organization does not restrict the authentication method it allows for login, but the end user does not have any
+     * transferrable primary factors. Only email magic link and OAuth factors can be transferred between Organizations.
+     */
     @Json(name = "allowed_auth_methods")
     val allowedAuthMethods: List<String>,
 )

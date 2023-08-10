@@ -7,6 +7,7 @@ package com.stytch.java.consumer.api.passwords
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.api.passwordsemail.Email
 import com.stytch.java.consumer.api.passwordsemail.EmailImpl
@@ -138,8 +139,8 @@ public interface Passwords {
      * on how to increase the strength of their password.
      *
      * This endpoint adapts to your Project's password strength configuration. If you're using
-     * [zxcvbn](https://stytch.com/docs/passwords#strength-requirements), the default, your passwords are considered valid if
-     * the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/passwords#strength-requirements), your
+     * [zxcvbn](https://stytch.com/docs/guides/passwords/strength-policy), the default, your passwords are considered valid if
+     * the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/guides/passwords/strength-policy), your
      * passwords are considered valid if they meet the requirements that you've set with Stytch. You may update your password
      * strength configuration in the [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
      *
@@ -164,8 +165,8 @@ public interface Passwords {
      * on how to increase the strength of their password.
      *
      * This endpoint adapts to your Project's password strength configuration. If you're using
-     * [zxcvbn](https://stytch.com/docs/passwords#strength-requirements), the default, your passwords are considered valid if
-     * the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/passwords#strength-requirements), your
+     * [zxcvbn](https://stytch.com/docs/guides/passwords/strength-policy), the default, your passwords are considered valid if
+     * the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/guides/passwords/strength-policy), your
      * passwords are considered valid if they meet the requirements that you've set with Stytch. You may update your password
      * strength configuration in the [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
      *
@@ -190,8 +191,8 @@ public interface Passwords {
      * on how to increase the strength of their password.
      *
      * This endpoint adapts to your Project's password strength configuration. If you're using
-     * [zxcvbn](https://stytch.com/docs/passwords#strength-requirements), the default, your passwords are considered valid if
-     * the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/passwords#strength-requirements), your
+     * [zxcvbn](https://stytch.com/docs/guides/passwords/strength-policy), the default, your passwords are considered valid if
+     * the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/guides/passwords/strength-policy), your
      * passwords are considered valid if they meet the requirements that you've set with Stytch. You may update your password
      * strength configuration in the [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
      *
@@ -238,7 +239,7 @@ internal class PasswordsImpl(
     private val coroutineScope: CoroutineScope,
 ) : Passwords {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val email: Email = EmailImpl(httpClient, coroutineScope)
     override val existingPassword: ExistingPassword = ExistingPasswordImpl(httpClient, coroutineScope)

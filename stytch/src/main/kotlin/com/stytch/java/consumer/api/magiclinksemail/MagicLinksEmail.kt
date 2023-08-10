@@ -7,6 +7,7 @@ package com.stytch.java.consumer.api.magiclinksemail
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.models.magiclinksemail.InviteRequest
 import com.stytch.java.consumer.models.magiclinksemail.InviteResponse
@@ -39,8 +40,8 @@ public interface Email {
      *
      * ### Next steps
      * The user is emailed a magic link which redirects them to the provided
-     * [redirect URL](https://stytch.com/docs/magic-links#email-magic-links_redirect-routing). Collect the `token` from the
-     * URL query parameters, and call [Authenticate magic link](https://stytch.com/docs/api/authenticate-magic-link) to
+     * [redirect URL](https://stytch.com/docs/guides/magic-links/email-magic-links/redirect-routing). Collect the `token` from
+     * the URL query parameters, and call [Authenticate magic link](https://stytch.com/docs/api/authenticate-magic-link) to
      * complete authentication.
      */
     public suspend fun send(data: SendRequest): StytchResult<SendResponse>
@@ -59,8 +60,8 @@ public interface Email {
      *
      * ### Next steps
      * The user is emailed a magic link which redirects them to the provided
-     * [redirect URL](https://stytch.com/docs/magic-links#email-magic-links_redirect-routing). Collect the `token` from the
-     * URL query parameters, and call [Authenticate magic link](https://stytch.com/docs/api/authenticate-magic-link) to
+     * [redirect URL](https://stytch.com/docs/guides/magic-links/email-magic-links/redirect-routing). Collect the `token` from
+     * the URL query parameters, and call [Authenticate magic link](https://stytch.com/docs/api/authenticate-magic-link) to
      * complete authentication.
      */
     public fun send(data: SendRequest, callback: (StytchResult<SendResponse>) -> Unit)
@@ -79,8 +80,8 @@ public interface Email {
      *
      * ### Next steps
      * The user is emailed a magic link which redirects them to the provided
-     * [redirect URL](https://stytch.com/docs/magic-links#email-magic-links_redirect-routing). Collect the `token` from the
-     * URL query parameters, and call [Authenticate magic link](https://stytch.com/docs/api/authenticate-magic-link) to
+     * [redirect URL](https://stytch.com/docs/guides/magic-links/email-magic-links/redirect-routing). Collect the `token` from
+     * the URL query parameters, and call [Authenticate magic link](https://stytch.com/docs/api/authenticate-magic-link) to
      * complete authentication.
      */
     public fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>>
@@ -181,7 +182,7 @@ internal class EmailImpl(
     private val coroutineScope: CoroutineScope,
 ) : Email {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun send(data: SendRequest): StytchResult<SendResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(SendRequest::class.java).toJson(data)

@@ -9,6 +9,7 @@ package com.stytch.java.b2b.api.passwordsexistingpassword
 import com.squareup.moshi.Moshi
 import com.stytch.java.b2b.models.passwordsexistingpassword.ResetRequest
 import com.stytch.java.b2b.models.passwordsexistingpassword.ResetResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -23,13 +24,22 @@ public interface ExistingPassword {
      * Reset the member’s password using their existing password.
      *
      * This endpoint adapts to your Project's password strength configuration.
-     * If you're using [zxcvbn](https://stytch.com/docs/passwords#strength-requirements), the default, your passwords are
+     * If you're using [zxcvbn](https://stytch.com/docs/guides/passwords/strength-policy), the default, your passwords are
      * considered valid
-     * if the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/passwords#strength-requirements), your
+     * if the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/guides/passwords/strength-policy), your
      * passwords are
      * considered valid if they meet the requirements that you've set with Stytch.
      * You may update your password strength configuration in the
      * [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
+     *
+     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
+     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * The `intermediate_session_token` can be passed into the
+     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
+     * acquire a full member session.
+     * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
+     *
+     * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
      */
     public suspend fun reset(data: ResetRequest): StytchResult<ResetResponse>
 
@@ -37,13 +47,22 @@ public interface ExistingPassword {
      * Reset the member’s password using their existing password.
      *
      * This endpoint adapts to your Project's password strength configuration.
-     * If you're using [zxcvbn](https://stytch.com/docs/passwords#strength-requirements), the default, your passwords are
+     * If you're using [zxcvbn](https://stytch.com/docs/guides/passwords/strength-policy), the default, your passwords are
      * considered valid
-     * if the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/passwords#strength-requirements), your
+     * if the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/guides/passwords/strength-policy), your
      * passwords are
      * considered valid if they meet the requirements that you've set with Stytch.
      * You may update your password strength configuration in the
      * [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
+     *
+     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
+     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * The `intermediate_session_token` can be passed into the
+     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
+     * acquire a full member session.
+     * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
+     *
+     * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
      */
     public fun reset(data: ResetRequest, callback: (StytchResult<ResetResponse>) -> Unit)
 
@@ -51,13 +70,22 @@ public interface ExistingPassword {
      * Reset the member’s password using their existing password.
      *
      * This endpoint adapts to your Project's password strength configuration.
-     * If you're using [zxcvbn](https://stytch.com/docs/passwords#strength-requirements), the default, your passwords are
+     * If you're using [zxcvbn](https://stytch.com/docs/guides/passwords/strength-policy), the default, your passwords are
      * considered valid
-     * if the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/passwords#strength-requirements), your
+     * if the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/guides/passwords/strength-policy), your
      * passwords are
      * considered valid if they meet the requirements that you've set with Stytch.
      * You may update your password strength configuration in the
      * [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
+     *
+     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
+     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * The `intermediate_session_token` can be passed into the
+     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
+     * acquire a full member session.
+     * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
+     *
+     * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
      */
     public fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>>
 }
@@ -67,7 +95,7 @@ internal class ExistingPasswordImpl(
     private val coroutineScope: CoroutineScope,
 ) : ExistingPassword {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun reset(data: ResetRequest): StytchResult<ResetResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)

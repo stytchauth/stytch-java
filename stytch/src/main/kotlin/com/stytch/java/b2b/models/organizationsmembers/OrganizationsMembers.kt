@@ -63,8 +63,16 @@ public data class CreateRequest @JvmOverloads constructor(
      */
     @Json(name = "is_breakglass")
     val isBreakglass: Boolean? = null,
-    @Json(name = "phone_number")
-    val phoneNumber: String? = null,
+    /**
+     * (Coming Soon) The Member's phone number. A Member may only have one phone number.
+     */
+    @Json(name = "mfa_phone_number")
+    val mfaPhoneNumber: String? = null,
+    /**
+     * (Coming Soon) Sets whether the Member is enrolled in MFA. If true, the Member must complete an MFA step whenever they
+     * wish to log in to their Organization. If false, the Member only needs to complete an MFA step if the Organization's MFA
+     * policy is set to `REQUIRED_FOR_ALL`.
+     */
     @Json(name = "mfa_enrolled")
     val mfaEnrolled: Boolean? = null,
 )
@@ -74,6 +82,59 @@ public data class CreateRequest @JvmOverloads constructor(
 */
 @JsonClass(generateAdapter = true)
 public data class CreateResponse @JvmOverloads constructor(
+    /**
+     * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+     * may ask for this value to help identify a specific API call when helping you debug an issue.
+     */
+    @Json(name = "request_id")
+    val requestId: String,
+    /**
+     * Globally unique UUID that identifies a specific Member.
+     */
+    @Json(name = "member_id")
+    val memberId: String,
+    /**
+     * The [Member object](https://stytch.com/docs/b2b/api/member-object).
+     */
+    @Json(name = "member")
+    val member: Member,
+    /**
+     * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
+     */
+    @Json(name = "organization")
+    val organization: Organization,
+    /**
+     * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+     * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+     */
+    @Json(name = "status_code")
+    val statusCode: Int,
+)
+
+/**
+* Request type for `Members.deleteMFAPhoneNumber`.
+*/
+@JsonClass(generateAdapter = true)
+public data class DeleteMFAPhoneNumberRequest @JvmOverloads constructor(
+    /**
+     * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+     * on an Organization, so be sure to preserve this value.
+     */
+    @Json(name = "organization_id")
+    val organizationId: String,
+    /**
+     * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
+     * so be sure to preserve this value.
+     */
+    @Json(name = "member_id")
+    val memberId: String,
+)
+
+/**
+* Response type for `Members.deleteMFAPhoneNumber`.
+*/
+@JsonClass(generateAdapter = true)
+public data class DeleteMFAPhoneNumberResponse @JvmOverloads constructor(
     /**
      * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
      * may ask for this value to help identify a specific API call when helping you debug an issue.
@@ -151,28 +212,6 @@ public data class DeletePasswordResponse @JvmOverloads constructor(
      * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
      * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
      */
-    @Json(name = "status_code")
-    val statusCode: Int,
-)
-
-@JsonClass(generateAdapter = true)
-public data class DeletePhoneNumberRequest @JvmOverloads constructor(
-    @Json(name = "organization_id")
-    val organizationId: String,
-    @Json(name = "member_id")
-    val memberId: String,
-)
-
-@JsonClass(generateAdapter = true)
-public data class DeletePhoneNumberResponse @JvmOverloads constructor(
-    @Json(name = "request_id")
-    val requestId: String,
-    @Json(name = "member_id")
-    val memberId: String,
-    @Json(name = "member")
-    val member: Member,
-    @Json(name = "organization")
-    val organization: Organization,
     @Json(name = "status_code")
     val statusCode: Int,
 )
@@ -307,7 +346,7 @@ public data class SearchRequest @JvmOverloads constructor(
     /**
      * The optional query object contains the operator, i.e. `AND` or `OR`, and the operands that will filter your results.
      * Only an operator is required. If you include no operands, no filtering will be applied. If you include no query object,
-     * it will return all Organizations with no filtering applied.
+     * it will return all Members with no filtering applied.
      */
     @Json(name = "query")
     val query: SearchQuery? = null,
@@ -391,8 +430,19 @@ public data class UpdateRequest @JvmOverloads constructor(
      */
     @Json(name = "is_breakglass")
     val isBreakglass: Boolean? = null,
-    @Json(name = "phone_number")
-    val phoneNumber: String? = null,
+    /**
+     * (Coming Soon) Sets the Member's phone number. Throws an error if the Member already has a phone number. To change the
+     * Member's phone number, use the
+     * [Delete member phone number endpoint](https://stytch.com/docs/b2b/api/delete-member-mfa-phone-number) to delete the
+     * Member's existing phone number first.
+     */
+    @Json(name = "mfa_phone_number")
+    val mfaPhoneNumber: String? = null,
+    /**
+     * (Coming Soon) Sets whether the Member is enrolled in MFA. If true, the Member must complete an MFA step whenever they
+     * wish to log in to their Organization. If false, the Member only needs to complete an MFA step if the Organization's MFA
+     * policy is set to `REQUIRED_FOR_ALL`.
+     */
     @Json(name = "mfa_enrolled")
     val mfaEnrolled: Boolean? = null,
 )

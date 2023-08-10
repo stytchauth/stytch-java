@@ -21,6 +21,7 @@ import com.stytch.java.b2b.models.organizations.SearchRequest
 import com.stytch.java.b2b.models.organizations.SearchResponse
 import com.stytch.java.b2b.models.organizations.UpdateRequest
 import com.stytch.java.b2b.models.organizations.UpdateResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -36,8 +37,8 @@ public interface Organizations {
     /**
      * Creates an Organization. An `organization_name` and a unique `organization_slug` are required.
      *
-     * By default, `email_invites` and `sso_jit_provisioning` will be set to `ALL_ALLOWED` if no Organization authentication
-     * settings are explicitly defined in the request.
+     * By default, `email_invites` and `sso_jit_provisioning` will be set to `ALL_ALLOWED`, and `mfa_policy` will be set to
+     * `OPTIONAL` if no Organization authentication settings are explicitly defined in the request.
      *
      * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
      * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
@@ -47,8 +48,8 @@ public interface Organizations {
     /**
      * Creates an Organization. An `organization_name` and a unique `organization_slug` are required.
      *
-     * By default, `email_invites` and `sso_jit_provisioning` will be set to `ALL_ALLOWED` if no Organization authentication
-     * settings are explicitly defined in the request.
+     * By default, `email_invites` and `sso_jit_provisioning` will be set to `ALL_ALLOWED`, and `mfa_policy` will be set to
+     * `OPTIONAL` if no Organization authentication settings are explicitly defined in the request.
      *
      * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
      * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
@@ -58,8 +59,8 @@ public interface Organizations {
     /**
      * Creates an Organization. An `organization_name` and a unique `organization_slug` are required.
      *
-     * By default, `email_invites` and `sso_jit_provisioning` will be set to `ALL_ALLOWED` if no Organization authentication
-     * settings are explicitly defined in the request.
+     * By default, `email_invites` and `sso_jit_provisioning` will be set to `ALL_ALLOWED`, and `mfa_policy` will be set to
+     * `OPTIONAL` if no Organization authentication settings are explicitly defined in the request.
      *
      * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
      * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
@@ -147,7 +148,7 @@ internal class OrganizationsImpl(
     private val coroutineScope: CoroutineScope,
 ) : Organizations {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val members: Members = MembersImpl(httpClient, coroutineScope)
 

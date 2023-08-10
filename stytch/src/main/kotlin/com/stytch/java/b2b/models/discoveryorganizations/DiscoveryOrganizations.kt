@@ -9,6 +9,7 @@ package com.stytch.java.b2b.models.discoveryorganizations
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.stytch.java.b2b.models.discovery.DiscoveredOrganization
+import com.stytch.java.b2b.models.mfa.MfaRequired
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
@@ -19,8 +20,15 @@ import com.stytch.java.b2b.models.sessions.MemberSession
 @JsonClass(generateAdapter = true)
 public data class CreateRequest @JvmOverloads constructor(
     /**
-     * The Intermediate Session Token. This token does not belong to a specific instance of a member, but may be exchanged for
-     * an existing Member Session or used to create a new organization.
+     * The Intermediate Session Token. This token does not necessarily belong to a specific instance of a Member, but
+     * represents a bag of factors that may be converted to a member session.
+     *     The token can be used with the
+     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete an MFA flow;
+     *     the [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join
+     * a specific Organization that allows the factors represented by the intermediate session token;
+     *     or the
+     * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to
+     * create a new Organization and Member.
      */
     @Json(name = "intermediate_session_token")
     val intermediateSessionToken: String,
@@ -150,6 +158,16 @@ public data class CreateRequest @JvmOverloads constructor(
      */
     @Json(name = "allowed_auth_methods")
     val allowedAuthMethods: List<String>? = null,
+    /**
+     * (Coming Soon) The setting that controls the MFA policy for all Members in the Organization. The accepted values are:
+     *
+     *   `REQUIRED_FOR_ALL` – All Members within the Organization will be required to complete MFA every time they wish to log
+     * in.
+     *
+     *   `OPTIONAL` – The default value. The Organization does not require MFA by default for all Members. Members will be
+     * required to complete MFA only if their `mfa_enrolled` status is set to true.
+     *
+     */
     @Json(name = "mfa_policy")
     val mfaPolicy: String? = null,
 )
@@ -186,6 +204,26 @@ public data class CreateResponse @JvmOverloads constructor(
     @Json(name = "member")
     val member: Member,
     /**
+     * Indicates whether the Member is fully authenticated. If false, the Member needs to complete an MFA step to log in to
+     * the Organization.
+     */
+    @Json(name = "member_authenticated")
+    val memberAuthenticated: Boolean,
+    /**
+     * The returned Intermediate Session Token is identical to the one that was originally passed in to the request.
+     *       The token can be used with the
+     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA flow and log
+     * in to the Organization.
+     *       It can also be used with the
+     * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join a
+     * different existing Organization,
+     *       or the
+     * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to
+     * create a new Organization.
+     */
+    @Json(name = "intermediate_session_token")
+    val intermediateSessionToken: String,
+    /**
      * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
      * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
      */
@@ -201,6 +239,11 @@ public data class CreateResponse @JvmOverloads constructor(
      */
     @Json(name = "organization")
     val organization: Organization? = null,
+    /**
+     * (Coming Soon) Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
+     */
+    @Json(name = "mfa_required")
+    val mfaRequired: MfaRequired? = null,
 )
 
 /**
@@ -209,8 +252,15 @@ public data class CreateResponse @JvmOverloads constructor(
 @JsonClass(generateAdapter = true)
 public data class ListRequest @JvmOverloads constructor(
     /**
-     * The Intermediate Session Token. This token does not belong to a specific instance of a member, but may be exchanged for
-     * an existing Member Session or used to create a new organization.
+     * The Intermediate Session Token. This token does not necessarily belong to a specific instance of a Member, but
+     * represents a bag of factors that may be converted to a member session.
+     *     The token can be used with the
+     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete an MFA flow;
+     *     the [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join
+     * a specific Organization that allows the factors represented by the intermediate session token;
+     *     or the
+     * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to
+     * create a new Organization and Member.
      */
     @Json(name = "intermediate_session_token")
     val intermediateSessionToken: String? = null,
@@ -267,4 +317,11 @@ public data class ListResponse @JvmOverloads constructor(
      */
     @Json(name = "status_code")
     val statusCode: Int,
+    /**
+     * If the intermediate session token is associated with a specific Organization, that Organization ID will be returned
+     * here. The Organization ID will be null if the intermediate session token was generated by a email magic link discovery
+     * or OAuth discovery flow. If a session token or session JWT is provided, the Organization ID hint will be null.
+     */
+    @Json(name = "organization_id_hint")
+    val organizationIdHint: String? = null,
 )

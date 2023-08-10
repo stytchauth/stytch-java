@@ -7,6 +7,7 @@ package com.stytch.java.consumer.api.webauthn
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.models.webauthn.AuthenticateRequest
 import com.stytch.java.consumer.models.webauthn.AuthenticateResponse
@@ -184,7 +185,7 @@ internal class WebAuthnImpl(
     private val coroutineScope: CoroutineScope,
 ) : WebAuthn {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun registerStart(data: RegisterStartRequest): StytchResult<RegisterStartResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(RegisterStartRequest::class.java).toJson(data)

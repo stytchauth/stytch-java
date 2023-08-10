@@ -13,6 +13,7 @@ import com.stytch.java.b2b.api.magiclinksemail.Email
 import com.stytch.java.b2b.api.magiclinksemail.EmailImpl
 import com.stytch.java.b2b.models.magiclinks.AuthenticateRequest
 import com.stytch.java.b2b.models.magiclinks.AuthenticateResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -29,25 +30,64 @@ public interface MagicLinks {
 
     /**
      * Authenticate a Member with a Magic Link. This endpoint requires a Magic Link token that is not expired or previously
-     * used. If the Member’s status is `pending` or `invited`, they will be updated to `active`. Provide the
-     * `session_duration_minutes` parameter to set the lifetime of the session. If the `session_duration_minutes` parameter is
-     * not specified, a Stytch session will be created with a 60 minute duration.
+     * used. If the Member’s status is `pending` or `invited`, they will be updated to `active`.
+     * Provide the `session_duration_minutes` parameter to set the lifetime of the session. If the `session_duration_minutes`
+     * parameter is not specified, a Stytch session will be created with a 60 minute duration.
+     *
+     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
+     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * The `intermediate_session_token` can be passed into the
+     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
+     * acquire a full member session.
+     * The `intermediate_session_token` can also be used with the
+     * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) or the
+     * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to join
+     * a different Organization or create a new one.
+     * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
+     *
+     * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
      */
     public suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse>
 
     /**
      * Authenticate a Member with a Magic Link. This endpoint requires a Magic Link token that is not expired or previously
-     * used. If the Member’s status is `pending` or `invited`, they will be updated to `active`. Provide the
-     * `session_duration_minutes` parameter to set the lifetime of the session. If the `session_duration_minutes` parameter is
-     * not specified, a Stytch session will be created with a 60 minute duration.
+     * used. If the Member’s status is `pending` or `invited`, they will be updated to `active`.
+     * Provide the `session_duration_minutes` parameter to set the lifetime of the session. If the `session_duration_minutes`
+     * parameter is not specified, a Stytch session will be created with a 60 minute duration.
+     *
+     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
+     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * The `intermediate_session_token` can be passed into the
+     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
+     * acquire a full member session.
+     * The `intermediate_session_token` can also be used with the
+     * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) or the
+     * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to join
+     * a different Organization or create a new one.
+     * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
+     *
+     * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
      */
     public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
 
     /**
      * Authenticate a Member with a Magic Link. This endpoint requires a Magic Link token that is not expired or previously
-     * used. If the Member’s status is `pending` or `invited`, they will be updated to `active`. Provide the
-     * `session_duration_minutes` parameter to set the lifetime of the session. If the `session_duration_minutes` parameter is
-     * not specified, a Stytch session will be created with a 60 minute duration.
+     * used. If the Member’s status is `pending` or `invited`, they will be updated to `active`.
+     * Provide the `session_duration_minutes` parameter to set the lifetime of the session. If the `session_duration_minutes`
+     * parameter is not specified, a Stytch session will be created with a 60 minute duration.
+     *
+     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
+     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * The `intermediate_session_token` can be passed into the
+     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
+     * acquire a full member session.
+     * The `intermediate_session_token` can also be used with the
+     * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) or the
+     * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to join
+     * a different Organization or create a new one.
+     * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
+     *
+     * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
      */
     public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
@@ -57,7 +97,7 @@ internal class MagicLinksImpl(
     private val coroutineScope: CoroutineScope,
 ) : MagicLinks {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val email: Email = EmailImpl(httpClient, coroutineScope)
     override val discovery: Discovery = DiscoveryImpl(httpClient, coroutineScope)

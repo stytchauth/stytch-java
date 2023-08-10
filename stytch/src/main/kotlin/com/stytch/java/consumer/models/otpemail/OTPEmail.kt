@@ -46,8 +46,8 @@ public data class LoginOrCreateRequest @JvmOverloads constructor(
     @Json(name = "email")
     val email: String,
     /**
-     * Set the expiration for the Magic Link `token` in minutes. By default, it expires in 1 hour. The minimum expiration is 5
-     * minutes and the maximum is 7 days (10080 mins).
+     * Set the expiration for the one-time passcode, in minutes. The minimum expiration is 1 minute and the maximum is 10
+     * minutes. The default expiration is 2 minutes.
      */
     @Json(name = "expiration_minutes")
     val expirationMinutes: Int? = null,
@@ -138,8 +138,8 @@ public data class SendRequest @JvmOverloads constructor(
     @Json(name = "email")
     val email: String,
     /**
-     * Set the expiration for the Magic Link `token` in minutes. By default, it expires in 1 hour. The minimum expiration is 5
-     * minutes and the maximum is 7 days (10080 mins).
+     * Set the expiration for the one-time passcode, in minutes. The minimum expiration is 1 minute and the maximum is 10
+     * minutes. The default expiration is 2 minutes.
      */
     @Json(name = "expiration_minutes")
     val expirationMinutes: Int? = null,

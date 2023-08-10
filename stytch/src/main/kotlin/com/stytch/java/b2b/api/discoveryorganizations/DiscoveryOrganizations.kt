@@ -11,6 +11,7 @@ import com.stytch.java.b2b.models.discoveryorganizations.CreateRequest
 import com.stytch.java.b2b.models.discoveryorganizations.CreateResponse
 import com.stytch.java.b2b.models.discoveryorganizations.ListRequest
 import com.stytch.java.b2b.models.discoveryorganizations.ListResponse
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -30,6 +31,18 @@ public interface Organizations {
      * This operation consumes the Intermediate Session.
      *
      * This endpoint can also be used to start an initial session for the newly created member and organization.
+     *
+     * (Coming Soon) If the new Organization is created with a `mfa_policy` of `REQUIRED_FOR_ALL`, the newly created Member
+     * will need to complete an MFA step to log in to the Organization.
+     * The `intermediate_session_token` will not be consumed and instead will be returned in the response.
+     * The `intermediate_session_token` can be passed into the
+     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
+     * acquire a full member session.
+     * The `intermediate_session_token` can also be used with the
+     * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) or the
+     * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to join
+     * a different Organization or create a new one.
+     * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      */
     public suspend fun create(data: CreateRequest): StytchResult<CreateResponse>
 
@@ -42,6 +55,18 @@ public interface Organizations {
      * This operation consumes the Intermediate Session.
      *
      * This endpoint can also be used to start an initial session for the newly created member and organization.
+     *
+     * (Coming Soon) If the new Organization is created with a `mfa_policy` of `REQUIRED_FOR_ALL`, the newly created Member
+     * will need to complete an MFA step to log in to the Organization.
+     * The `intermediate_session_token` will not be consumed and instead will be returned in the response.
+     * The `intermediate_session_token` can be passed into the
+     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
+     * acquire a full member session.
+     * The `intermediate_session_token` can also be used with the
+     * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) or the
+     * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to join
+     * a different Organization or create a new one.
+     * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      */
     public fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit)
 
@@ -54,6 +79,18 @@ public interface Organizations {
      * This operation consumes the Intermediate Session.
      *
      * This endpoint can also be used to start an initial session for the newly created member and organization.
+     *
+     * (Coming Soon) If the new Organization is created with a `mfa_policy` of `REQUIRED_FOR_ALL`, the newly created Member
+     * will need to complete an MFA step to log in to the Organization.
+     * The `intermediate_session_token` will not be consumed and instead will be returned in the response.
+     * The `intermediate_session_token` can be passed into the
+     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
+     * acquire a full member session.
+     * The `intermediate_session_token` can also be used with the
+     * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) or the
+     * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to join
+     * a different Organization or create a new one.
+     * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      */
     public fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>>
 
@@ -129,7 +166,7 @@ internal class OrganizationsImpl(
     private val coroutineScope: CoroutineScope,
 ) : Organizations {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)

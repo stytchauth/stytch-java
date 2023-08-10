@@ -7,6 +7,7 @@ package com.stytch.java.consumer.api.otpsms
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.models.otpsms.LoginOrCreateRequest
 import com.stytch.java.consumer.models.otpsms.LoginOrCreateResponse
@@ -126,7 +127,7 @@ internal class SmsImpl(
     private val coroutineScope: CoroutineScope,
 ) : Sms {
 
-    private val moshi = Moshi.Builder().build()
+    private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun send(data: SendRequest): StytchResult<SendResponse> = withContext(Dispatchers.IO) {
         val asJson = moshi.adapter(SendRequest::class.java).toJson(data)
