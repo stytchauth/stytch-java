@@ -3,6 +3,7 @@ package com.stytch.java.common
 import org.jose4j.jwk.HttpsJwks
 import org.jose4j.jwt.JwtClaims
 import org.jose4j.jwt.consumer.JwtConsumerBuilder
+import org.jose4j.keys.resolvers.HttpsJwksVerificationKeyResolver
 import java.util.Date
 
 internal data class ParsedJWTClaims(
@@ -25,7 +26,7 @@ internal fun parseJWTClaims(
         setRequireSubject()
         setExpectedAudience(jwtOptions.audience)
         setExpectedIssuer(jwtOptions.issuer)
-        setVerificationKey(jwksClient.jsonWebKeys[0].key)
+        setVerificationKeyResolver(HttpsJwksVerificationKeyResolver(jwksClient))
     }.build()
     val jwtClaims = jwtConsumer.processToClaims(jwt)
     if (options.maxTokenAgeSeconds != null) {

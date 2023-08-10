@@ -36,9 +36,10 @@ internal class SessionsTest {
     fun before() {
         Dispatchers.setMain(mainThreadSurrogate)
         val rsaJsonWebKey = RsaJwkGenerator.generateJwk(2048)
-        rsaJsonWebKey.keyId = "k1"
         val jsonWebKey = JsonWebKey.Factory.newJwk(rsaJsonWebKey.publicKey)
+        jsonWebKey.keyId = "k1"
         jwksClient = mockk {
+            every { location } returns ""
             every { jsonWebKeys } returns listOf(jsonWebKey)
         }
         val now = Instant.now()
