@@ -28,6 +28,11 @@ public interface Sms {
      *
      * Note that sending another OTP code before the first has expired will invalidate the first code.
      *
+     * ### Cost to send SMS OTP
+     * Before configuring SMS or WhatsApp OTPs, please review how Stytch
+     * [bills the costs of international OTPs](https://stytch.com/pricing) and understand how to protect your app against
+     * [toll fraud](https://stytch.com/docs/guides/passcodes/toll-fraud/overview).
+     *
      * ### Add a phone number to an existing user
      *
      * This endpoint also allows you to add a new phone number to an existing Stytch User. Including a `user_id`,
@@ -49,6 +54,11 @@ public interface Sms {
      * one request, use our [log in or create](https://stytch.com/docs/api/log-in-or-create-user-by-sms) endpoint.
      *
      * Note that sending another OTP code before the first has expired will invalidate the first code.
+     *
+     * ### Cost to send SMS OTP
+     * Before configuring SMS or WhatsApp OTPs, please review how Stytch
+     * [bills the costs of international OTPs](https://stytch.com/pricing) and understand how to protect your app against
+     * [toll fraud](https://stytch.com/docs/guides/passcodes/toll-fraud/overview).
      *
      * ### Add a phone number to an existing user
      *
@@ -72,6 +82,11 @@ public interface Sms {
      *
      * Note that sending another OTP code before the first has expired will invalidate the first code.
      *
+     * ### Cost to send SMS OTP
+     * Before configuring SMS or WhatsApp OTPs, please review how Stytch
+     * [bills the costs of international OTPs](https://stytch.com/pricing) and understand how to protect your app against
+     * [toll fraud](https://stytch.com/docs/guides/passcodes/toll-fraud/overview).
+     *
      * ### Add a phone number to an existing user
      *
      * This endpoint also allows you to add a new phone number to an existing Stytch User. Including a `user_id`,
@@ -89,9 +104,13 @@ public interface Sms {
     public fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>>
 
     /**
-     * Send a one-time passcode (OTP) to a User using their phone number. If the phone number is not associated with a user
+     * Send a One-Time Passcode (OTP) to a User using their phone number. If the phone number is not associated with a user
      * already, a user will be created.
      *
+     * ### Cost to send SMS OTP
+     * Before configuring SMS or WhatsApp OTPs, please review how Stytch
+     * [bills the costs of international OTPs](https://stytch.com/pricing) and understand how to protect your app against
+     * [toll fraud](https://stytch.com/docs/guides/passcodes/toll-fraud/overview).
      * ### Next steps
      *
      * Collect the OTP which was delivered to the User. Call [Authenticate OTP](https://stytch.com/docs/api/authenticate-otp)
@@ -100,9 +119,13 @@ public interface Sms {
     public suspend fun loginOrCreate(data: LoginOrCreateRequest): StytchResult<LoginOrCreateResponse>
 
     /**
-     * Send a one-time passcode (OTP) to a User using their phone number. If the phone number is not associated with a user
+     * Send a One-Time Passcode (OTP) to a User using their phone number. If the phone number is not associated with a user
      * already, a user will be created.
      *
+     * ### Cost to send SMS OTP
+     * Before configuring SMS or WhatsApp OTPs, please review how Stytch
+     * [bills the costs of international OTPs](https://stytch.com/pricing) and understand how to protect your app against
+     * [toll fraud](https://stytch.com/docs/guides/passcodes/toll-fraud/overview).
      * ### Next steps
      *
      * Collect the OTP which was delivered to the User. Call [Authenticate OTP](https://stytch.com/docs/api/authenticate-otp)
@@ -111,9 +134,13 @@ public interface Sms {
     public fun loginOrCreate(data: LoginOrCreateRequest, callback: (StytchResult<LoginOrCreateResponse>) -> Unit)
 
     /**
-     * Send a one-time passcode (OTP) to a User using their phone number. If the phone number is not associated with a user
+     * Send a One-Time Passcode (OTP) to a User using their phone number. If the phone number is not associated with a user
      * already, a user will be created.
      *
+     * ### Cost to send SMS OTP
+     * Before configuring SMS or WhatsApp OTPs, please review how Stytch
+     * [bills the costs of international OTPs](https://stytch.com/pricing) and understand how to protect your app against
+     * [toll fraud](https://stytch.com/docs/guides/passcodes/toll-fraud/overview).
      * ### Next steps
      *
      * Collect the OTP which was delivered to the User. Call [Authenticate OTP](https://stytch.com/docs/api/authenticate-otp)

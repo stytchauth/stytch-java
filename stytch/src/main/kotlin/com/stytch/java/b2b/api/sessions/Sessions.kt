@@ -20,6 +20,7 @@ import com.stytch.java.b2b.models.sessions.GetResponse
 import com.stytch.java.b2b.models.sessions.RevokeRequest
 import com.stytch.java.b2b.models.sessions.RevokeResponse
 import com.stytch.java.common.InstantAdapter
+import com.stytch.java.common.JwtOptions
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +29,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jose4j.jwk.HttpsJwks
 import java.util.concurrent.CompletableFuture
 public interface Sessions {
     /**
@@ -105,8 +107,8 @@ public interface Sessions {
      * SMS OTP factors can be used to fulfill MFA requirements for the target Organization if both the original and target
      * Member have the same phone number and the phone number is verified for both Members.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -130,8 +132,8 @@ public interface Sessions {
      * SMS OTP factors can be used to fulfill MFA requirements for the target Organization if both the original and target
      * Member have the same phone number and the phone number is verified for both Members.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -155,8 +157,8 @@ public interface Sessions {
      * SMS OTP factors can be used to fulfill MFA requirements for the target Organization if both the original and target
      * Member have the same phone number and the phone number is verified for both Members.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -187,6 +189,8 @@ public interface Sessions {
 internal class SessionsImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
+    private val jwksClient: HttpsJwks,
+    private val jwtOptions: JwtOptions,
 ) : Sessions {
 
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()

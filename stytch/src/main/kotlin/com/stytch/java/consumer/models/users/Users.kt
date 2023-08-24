@@ -343,9 +343,8 @@ public data class CreateRequest @JvmOverloads constructor(
     @Json(name = "attributes")
     val attributes: Attributes? = null,
     /**
-     * The phone number to use for one-time passcodes. The phone number should be in E.164 format. The phone number should be
-     * in E.164 format (i.e. +1XXXXXXXXXX). You may use +10000000000 to test this endpoint, see
-     * [Testing](https://stytch.com/docs/home#resources_testing) for more detail.
+     * The phone number to use for one-time passcodes. The phone number should be in E.164 format (i.e. +1XXXXXXXXXX). You may
+     * use +10000000000 to test this endpoint, see [Testing](https://stytch.com/docs/home#resources_testing) for more detail.
      */
     @Json(name = "phone_number")
     val phoneNumber: String? = null,
@@ -765,6 +764,58 @@ public data class DeleteWebAuthnRegistrationRequest @JvmOverloads constructor(
 */
 @JsonClass(generateAdapter = true)
 public data class DeleteWebAuthnRegistrationResponse @JvmOverloads constructor(
+    /**
+     * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+     * may ask for this value to help identify a specific API call when helping you debug an issue.
+     */
+    @Json(name = "request_id")
+    val requestId: String,
+    /**
+     * The unique ID of the affected User.
+     */
+    @Json(name = "user_id")
+    val userId: String,
+    /**
+     * The `user` object affected by this API call. See the [Get user endpoint](https://stytch.com/docs/api/get-user) for
+     * complete response field details.
+     */
+    @Json(name = "user")
+    val user: User,
+    /**
+     * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+     * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+     */
+    @Json(name = "status_code")
+    val statusCode: Int,
+)
+
+/**
+* Request type for `Users.exchangePrimaryFactor`.
+*/
+@JsonClass(generateAdapter = true)
+public data class ExchangePrimaryFactorRequest @JvmOverloads constructor(
+    /**
+     * The unique ID of a specific User.
+     */
+    @Json(name = "user_id")
+    val userId: String,
+    /**
+     * The email address to exchange to.
+     */
+    @Json(name = "email_address")
+    val emailAddress: String? = null,
+    /**
+     * The phone number to exchange to. The phone number should be in E.164 format (i.e. +1XXXXXXXXXX).
+     */
+    @Json(name = "phone_number")
+    val phoneNumber: String? = null,
+)
+
+/**
+* Response type for `Users.exchangePrimaryFactor`.
+*/
+@JsonClass(generateAdapter = true)
+public data class ExchangePrimaryFactorResponse @JvmOverloads constructor(
     /**
      * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
      * may ask for this value to help identify a specific API call when helping you debug an issue.

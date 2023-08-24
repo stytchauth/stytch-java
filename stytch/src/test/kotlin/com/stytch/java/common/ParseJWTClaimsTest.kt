@@ -23,7 +23,7 @@ internal class ParseJWTClaimsTest {
         val rsaJsonWebKey = RsaJwkGenerator.generateJwk(2048)
         val jsonWebKey = JsonWebKey.Factory.newJwk(rsaJsonWebKey.publicKey)
         jsonWebKey.keyId = "k1"
-        jwksClient = mockk(relaxed=true, relaxUnitFun = true) {
+        jwksClient = mockk(relaxed = true, relaxUnitFun = true) {
             every { jsonWebKeys } returns listOf(jsonWebKey)
         }
         val now = Instant.now()

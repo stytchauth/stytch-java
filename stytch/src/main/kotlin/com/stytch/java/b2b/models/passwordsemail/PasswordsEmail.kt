@@ -104,9 +104,9 @@ public data class ResetRequest @JvmOverloads constructor(
     @Json(name = "session_custom_claims")
     val sessionCustomClaims: Map<String, Any>? = null,
     /**
-     * (Coming Soon) If the Member needs to complete an MFA step, and the Member has a phone number, this endpoint will
-     * pre-emptively send a one-time passcode (OTP) to the Member's phone number. The locale argument will be used to
-     * determine which language to use when sending the passcode.
+     * If the Member needs to complete an MFA step, and the Member has a phone number, this endpoint will pre-emptively send a
+     * one-time passcode (OTP) to the Member's phone number. The locale argument will be used to determine which language to
+     * use when sending the passcode.
      *
      * Parameter is a [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
      *
@@ -149,7 +149,7 @@ public data class ResetResponse @JvmOverloads constructor(
     @Json(name = "organization_id")
     val organizationId: String,
     /**
-     * The [Member object](https://stytch.com/docs/b2b/api/member-object).
+     * The [Member object](https://stytch.com/docs/b2b/api/member-object)
      */
     @Json(name = "member")
     val member: Member,
@@ -196,7 +196,7 @@ public data class ResetResponse @JvmOverloads constructor(
     @Json(name = "member_session")
     val memberSession: MemberSession? = null,
     /**
-     * (Coming Soon) Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
+     * Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
      */
     @Json(name = "mfa_required")
     val mfaRequired: MfaRequired? = null,

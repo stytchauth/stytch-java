@@ -40,9 +40,8 @@ public enum class SendRequestLocale {
 @JsonClass(generateAdapter = true)
 public data class LoginOrCreateRequest @JvmOverloads constructor(
     /**
-     * The phone number to use for one-time passcodes. The phone number should be in E.164 format. The phone number should be
-     * in E.164 format (i.e. +1XXXXXXXXXX). You may use +10000000000 to test this endpoint, see
-     * [Testing](https://stytch.com/docs/home#resources_testing) for more detail.
+     * The phone number to use for one-time passcodes. The phone number should be in E.164 format (i.e. +1XXXXXXXXXX). You may
+     * use +10000000000 to test this endpoint, see [Testing](https://stytch.com/docs/home#resources_testing) for more detail.
      */
     @Json(name = "phone_number")
     val phoneNumber: String,
@@ -121,9 +120,8 @@ public data class LoginOrCreateResponse @JvmOverloads constructor(
 @JsonClass(generateAdapter = true)
 public data class SendRequest @JvmOverloads constructor(
     /**
-     * The phone number to use for one-time passcodes. The phone number should be in E.164 format. The phone number should be
-     * in E.164 format (i.e. +1XXXXXXXXXX). You may use +10000000000 to test this endpoint, see
-     * [Testing](https://stytch.com/docs/home#resources_testing) for more detail.
+     * The phone number to use for one-time passcodes. The phone number should be in E.164 format (i.e. +1XXXXXXXXXX). You may
+     * use +10000000000 to test this endpoint, see [Testing](https://stytch.com/docs/home#resources_testing) for more detail.
      */
     @Json(name = "phone_number")
     val phoneNumber: String,

@@ -57,7 +57,7 @@ public data class ResetResponse @JvmOverloads constructor(
     @Json(name = "member_id")
     val memberId: String,
     /**
-     * The [Member object](https://stytch.com/docs/b2b/api/member-object).
+     * The [Member object](https://stytch.com/docs/b2b/api/member-object)
      */
     @Json(name = "member")
     val member: Member,

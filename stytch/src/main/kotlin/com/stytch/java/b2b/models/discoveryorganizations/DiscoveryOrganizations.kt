@@ -159,7 +159,7 @@ public data class CreateRequest @JvmOverloads constructor(
     @Json(name = "allowed_auth_methods")
     val allowedAuthMethods: List<String>? = null,
     /**
-     * (Coming Soon) The setting that controls the MFA policy for all Members in the Organization. The accepted values are:
+     * The setting that controls the MFA policy for all Members in the Organization. The accepted values are:
      *
      *   `REQUIRED_FOR_ALL` – All Members within the Organization will be required to complete MFA every time they wish to log
      * in.
@@ -199,7 +199,7 @@ public data class CreateResponse @JvmOverloads constructor(
     @Json(name = "session_jwt")
     val sessionJwt: String,
     /**
-     * The [Member object](https://stytch.com/docs/b2b/api/member-object).
+     * The [Member object](https://stytch.com/docs/b2b/api/member-object)
      */
     @Json(name = "member")
     val member: Member,
@@ -240,7 +240,7 @@ public data class CreateResponse @JvmOverloads constructor(
     @Json(name = "organization")
     val organization: Organization? = null,
     /**
-     * (Coming Soon) Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
+     * Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
      */
     @Json(name = "mfa_required")
     val mfaRequired: MfaRequired? = null,

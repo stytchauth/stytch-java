@@ -19,6 +19,8 @@ import com.stytch.java.b2b.models.organizationsmembers.DeleteRequest
 import com.stytch.java.b2b.models.organizationsmembers.DeleteResponse
 import com.stytch.java.b2b.models.organizationsmembers.GetRequest
 import com.stytch.java.b2b.models.organizationsmembers.GetResponse
+import com.stytch.java.b2b.models.organizationsmembers.ReactivateRequest
+import com.stytch.java.b2b.models.organizationsmembers.ReactivateResponse
 import com.stytch.java.b2b.models.organizationsmembers.SearchRequest
 import com.stytch.java.b2b.models.organizationsmembers.SearchResponse
 import com.stytch.java.b2b.models.organizationsmembers.UpdateRequest
@@ -65,23 +67,68 @@ public interface Members {
     public fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>>
 
     /**
+     * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
+     * `organization_id` and `member_id`.
+     */
+    public suspend fun reactivate(data: ReactivateRequest): StytchResult<ReactivateResponse>
+
+    /**
+     * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
+     * `organization_id` and `member_id`.
+     */
+    public fun reactivate(data: ReactivateRequest, callback: (StytchResult<ReactivateResponse>) -> Unit)
+
+    /**
+     * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
+     * `organization_id` and `member_id`.
+     */
+    public fun reactivateCompletable(data: ReactivateRequest): CompletableFuture<StytchResult<ReactivateResponse>>
+
+    /**
      * Delete a Member's MFA phone number.
+     *
+     * To change a Member's phone number, you must first call this endpoint to delete the existing phone number.
+     *
+     * Existing Member Sessions that include a phone number authentication factor will not be revoked if the phone number is
+     * deleted, and MFA will not be enforced until the Member logs in again.
+     * If you wish to enforce MFA immediately after a phone number is deleted, you can do so by prompting the Member to enter
+     * a new phone number
+     * and calling the [OTP SMS send](https://stytch.com/docs/b2b/api/otp-sms-send) endpoint, then calling the
+     * [OTP SMS Authenticate](https://stytch.com/docs/b2b/api/authenticate-otp-sms) endpoint.
      */
     public suspend fun deleteMFAPhoneNumber(data: DeleteMFAPhoneNumberRequest): StytchResult<DeleteMFAPhoneNumberResponse>
 
     /**
      * Delete a Member's MFA phone number.
+     *
+     * To change a Member's phone number, you must first call this endpoint to delete the existing phone number.
+     *
+     * Existing Member Sessions that include a phone number authentication factor will not be revoked if the phone number is
+     * deleted, and MFA will not be enforced until the Member logs in again.
+     * If you wish to enforce MFA immediately after a phone number is deleted, you can do so by prompting the Member to enter
+     * a new phone number
+     * and calling the [OTP SMS send](https://stytch.com/docs/b2b/api/otp-sms-send) endpoint, then calling the
+     * [OTP SMS Authenticate](https://stytch.com/docs/b2b/api/authenticate-otp-sms) endpoint.
      */
     public fun deleteMFAPhoneNumber(data: DeleteMFAPhoneNumberRequest, callback: (StytchResult<DeleteMFAPhoneNumberResponse>) -> Unit)
 
     /**
      * Delete a Member's MFA phone number.
+     *
+     * To change a Member's phone number, you must first call this endpoint to delete the existing phone number.
+     *
+     * Existing Member Sessions that include a phone number authentication factor will not be revoked if the phone number is
+     * deleted, and MFA will not be enforced until the Member logs in again.
+     * If you wish to enforce MFA immediately after a phone number is deleted, you can do so by prompting the Member to enter
+     * a new phone number
+     * and calling the [OTP SMS send](https://stytch.com/docs/b2b/api/otp-sms-send) endpoint, then calling the
+     * [OTP SMS Authenticate](https://stytch.com/docs/b2b/api/authenticate-otp-sms) endpoint.
      */
     public fun deleteMFAPhoneNumberCompletable(data: DeleteMFAPhoneNumberRequest): CompletableFuture<StytchResult<DeleteMFAPhoneNumberResponse>>
 
     /**
      * Search for Members within specified Organizations. An array with at least one `organization_id` is required. Submitting
-     * an empty `query` returns all Members within the specified Organizations.
+     * an empty `query` returns all non-deleted Members within the specified Organizations.
      *
      * *All fuzzy search filters require a minimum of three characters.
      */
@@ -89,7 +136,7 @@ public interface Members {
 
     /**
      * Search for Members within specified Organizations. An array with at least one `organization_id` is required. Submitting
-     * an empty `query` returns all Members within the specified Organizations.
+     * an empty `query` returns all non-deleted Members within the specified Organizations.
      *
      * *All fuzzy search filters require a minimum of three characters.
      */
@@ -97,7 +144,7 @@ public interface Members {
 
     /**
      * Search for Members within specified Organizations. An array with at least one `organization_id` is required. Submitting
-     * an empty `query` returns all Members within the specified Organizations.
+     * an empty `query` returns all non-deleted Members within the specified Organizations.
      *
      * *All fuzzy search filters require a minimum of three characters.
      */
@@ -184,6 +231,21 @@ internal class MembersImpl(
     override fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>> =
         coroutineScope.async {
             delete(data)
+        }.asCompletableFuture()
+    override suspend fun reactivate(data: ReactivateRequest): StytchResult<ReactivateResponse> = withContext(Dispatchers.IO) {
+        val asJson = moshi.adapter(ReactivateRequest::class.java).toJson(data)
+        httpClient.put("/v1/b2b/organizations/${data.organizationId}/members/${data.memberId}/reactivate", asJson)
+    }
+
+    override fun reactivate(data: ReactivateRequest, callback: (StytchResult<ReactivateResponse>) -> Unit) {
+        coroutineScope.launch {
+            callback(reactivate(data))
+        }
+    }
+
+    override fun reactivateCompletable(data: ReactivateRequest): CompletableFuture<StytchResult<ReactivateResponse>> =
+        coroutineScope.async {
+            reactivate(data)
         }.asCompletableFuture()
     override suspend fun deleteMFAPhoneNumber(data: DeleteMFAPhoneNumberRequest): StytchResult<DeleteMFAPhoneNumberResponse> = withContext(Dispatchers.IO) {
         httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/mfa_phone_numbers/${data.memberId}")

@@ -31,6 +31,8 @@ import com.stytch.java.consumer.models.users.DeleteTOTPRequest
 import com.stytch.java.consumer.models.users.DeleteTOTPResponse
 import com.stytch.java.consumer.models.users.DeleteWebAuthnRegistrationRequest
 import com.stytch.java.consumer.models.users.DeleteWebAuthnRegistrationResponse
+import com.stytch.java.consumer.models.users.ExchangePrimaryFactorRequest
+import com.stytch.java.consumer.models.users.ExchangePrimaryFactorResponse
 import com.stytch.java.consumer.models.users.GetRequest
 import com.stytch.java.consumer.models.users.GetResponse
 import com.stytch.java.consumer.models.users.SearchRequest
@@ -126,6 +128,42 @@ public interface Users {
      * vulnerability.
      */
     public fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>>
+
+    /**
+     * Exchange a user's email address or phone number for another.
+     *
+     * Must pass either an `email_address` or a `phone_number`.
+     *
+     * This endpoint only works if the user has exactly one factor. You are able to exchange the type of factor for another as
+     * well, i.e. exchange an `email_address` for a `phone_number`.
+     *
+     * Use this endpoint with caution as it performs an admin level action.
+     */
+    public suspend fun exchangePrimaryFactor(data: ExchangePrimaryFactorRequest): StytchResult<ExchangePrimaryFactorResponse>
+
+    /**
+     * Exchange a user's email address or phone number for another.
+     *
+     * Must pass either an `email_address` or a `phone_number`.
+     *
+     * This endpoint only works if the user has exactly one factor. You are able to exchange the type of factor for another as
+     * well, i.e. exchange an `email_address` for a `phone_number`.
+     *
+     * Use this endpoint with caution as it performs an admin level action.
+     */
+    public fun exchangePrimaryFactor(data: ExchangePrimaryFactorRequest, callback: (StytchResult<ExchangePrimaryFactorResponse>) -> Unit)
+
+    /**
+     * Exchange a user's email address or phone number for another.
+     *
+     * Must pass either an `email_address` or a `phone_number`.
+     *
+     * This endpoint only works if the user has exactly one factor. You are able to exchange the type of factor for another as
+     * well, i.e. exchange an `email_address` for a `phone_number`.
+     *
+     * Use this endpoint with caution as it performs an admin level action.
+     */
+    public fun exchangePrimaryFactorCompletable(data: ExchangePrimaryFactorRequest): CompletableFuture<StytchResult<ExchangePrimaryFactorResponse>>
 
     /**
      * Delete a User from Stytch.
@@ -332,6 +370,21 @@ internal class UsersImpl(
     override fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>> =
         coroutineScope.async {
             update(data)
+        }.asCompletableFuture()
+    override suspend fun exchangePrimaryFactor(data: ExchangePrimaryFactorRequest): StytchResult<ExchangePrimaryFactorResponse> = withContext(Dispatchers.IO) {
+        val asJson = moshi.adapter(ExchangePrimaryFactorRequest::class.java).toJson(data)
+        httpClient.put("/v1/users/${data.userId}/exchange_primary_factor", asJson)
+    }
+
+    override fun exchangePrimaryFactor(data: ExchangePrimaryFactorRequest, callback: (StytchResult<ExchangePrimaryFactorResponse>) -> Unit) {
+        coroutineScope.launch {
+            callback(exchangePrimaryFactor(data))
+        }
+    }
+
+    override fun exchangePrimaryFactorCompletable(data: ExchangePrimaryFactorRequest): CompletableFuture<StytchResult<ExchangePrimaryFactorResponse>> =
+        coroutineScope.async {
+            exchangePrimaryFactor(data)
         }.asCompletableFuture()
     override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> = withContext(Dispatchers.IO) {
         httpClient.delete("/v1/users/${data.userId}")

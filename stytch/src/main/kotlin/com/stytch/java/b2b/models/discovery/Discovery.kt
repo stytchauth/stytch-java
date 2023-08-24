@@ -32,12 +32,12 @@ public data class DiscoveredOrganization @JvmOverloads constructor(
     @Json(name = "membership")
     val membership: Membership? = null,
     /**
-     * (Coming Soon) Information about the primary authentication requirements of the Organization.
+     * Information about the primary authentication requirements of the Organization.
      */
     @Json(name = "primary_required")
     val primaryRequired: PrimaryRequired? = null,
     /**
-     * (Coming Soon) Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
+     * Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
      */
     @Json(name = "mfa_required")
     val mfaRequired: MfaRequired? = null,

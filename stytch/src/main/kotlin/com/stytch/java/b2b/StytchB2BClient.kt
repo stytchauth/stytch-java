@@ -85,7 +85,7 @@ public object StytchB2BClient {
         organizations = OrganizationsImpl(httpClient, coroutineScope)
         passwords = PasswordsImpl(httpClient, coroutineScope)
         sso = SSOImpl(httpClient, coroutineScope)
-        sessions = SessionsImpl(httpClient, coroutineScope)
+        sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
     }
 
     /**

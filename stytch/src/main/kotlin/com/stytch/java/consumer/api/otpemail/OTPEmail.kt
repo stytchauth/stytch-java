@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
 public interface Email {
     /**
-     * Send a one-time passcode (OTP) to a User using their email. If you'd like to create a user and send them a passcode
+     * Send a One-Time Passcode (OTP) to a User using their email. If you'd like to create a user and send them a passcode
      * with one request, use our [log in or create endpoint](https://stytch.com/docs/api/log-in-or-create-user-by-email-otp).
      *
      * ### Add an email to an existing user
@@ -40,7 +40,7 @@ public interface Email {
     public suspend fun send(data: SendRequest): StytchResult<SendResponse>
 
     /**
-     * Send a one-time passcode (OTP) to a User using their email. If you'd like to create a user and send them a passcode
+     * Send a One-Time Passcode (OTP) to a User using their email. If you'd like to create a user and send them a passcode
      * with one request, use our [log in or create endpoint](https://stytch.com/docs/api/log-in-or-create-user-by-email-otp).
      *
      * ### Add an email to an existing user
@@ -57,7 +57,7 @@ public interface Email {
     public fun send(data: SendRequest, callback: (StytchResult<SendResponse>) -> Unit)
 
     /**
-     * Send a one-time passcode (OTP) to a User using their email. If you'd like to create a user and send them a passcode
+     * Send a One-Time Passcode (OTP) to a User using their email. If you'd like to create a user and send them a passcode
      * with one request, use our [log in or create endpoint](https://stytch.com/docs/api/log-in-or-create-user-by-email-otp).
      *
      * ### Add an email to an existing user

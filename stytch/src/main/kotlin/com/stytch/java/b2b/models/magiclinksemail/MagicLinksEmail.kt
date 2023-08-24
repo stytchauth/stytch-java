@@ -122,7 +122,7 @@ public data class InviteResponse @JvmOverloads constructor(
     @Json(name = "member_id")
     val memberId: String,
     /**
-     * The [Member object](https://stytch.com/docs/b2b/api/member-object).
+     * The [Member object](https://stytch.com/docs/b2b/api/member-object)
      */
     @Json(name = "member")
     val member: Member,
@@ -231,7 +231,7 @@ public data class LoginOrSignupResponse @JvmOverloads constructor(
     @Json(name = "member_created")
     val memberCreated: Boolean,
     /**
-     * The [Member object](https://stytch.com/docs/b2b/api/member-object).
+     * The [Member object](https://stytch.com/docs/b2b/api/member-object)
      */
     @Json(name = "member")
     val member: Member,
