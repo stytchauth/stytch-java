@@ -19,6 +19,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface Discovery {
     /**
      * Send a discovery magic link to an email address.
@@ -28,7 +29,10 @@ public interface Discovery {
     /**
      * Send a discovery magic link to an email address.
      */
-    public fun send(data: SendRequest, callback: (StytchResult<SendResponse>) -> Unit)
+    public fun send(
+        data: SendRequest,
+        callback: (StytchResult<SendResponse>) -> Unit,
+    )
 
     /**
      * Send a discovery magic link to an email address.
@@ -40,15 +44,18 @@ internal class DiscoveryImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : Discovery {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override suspend fun send(data: SendRequest): StytchResult<SendResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(SendRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/magic_links/email/discovery/send", asJson)
-    }
+    override suspend fun send(data: SendRequest): StytchResult<SendResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(SendRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/magic_links/email/discovery/send", asJson)
+        }
 
-    override fun send(data: SendRequest, callback: (StytchResult<SendResponse>) -> Unit) {
+    override fun send(
+        data: SendRequest,
+        callback: (StytchResult<SendResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(send(data))
         }

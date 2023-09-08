@@ -1,4 +1,5 @@
 package com.stytch.java.common
+
 public sealed class JWTException(
     public open val exception: Exception? = null,
     public open val reason: String? = null,

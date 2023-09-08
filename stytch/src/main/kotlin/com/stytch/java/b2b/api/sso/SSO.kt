@@ -29,6 +29,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface SSO {
     public val oidc: OIDC
 
@@ -42,7 +43,10 @@ public interface SSO {
     /**
      * Get all SSO Connections owned by the organization.
      */
-    public fun getConnections(data: GetConnectionsRequest, callback: (StytchResult<GetConnectionsResponse>) -> Unit)
+    public fun getConnections(
+        data: GetConnectionsRequest,
+        callback: (StytchResult<GetConnectionsResponse>) -> Unit,
+    )
 
     /**
      * Get all SSO Connections owned by the organization.
@@ -57,7 +61,10 @@ public interface SSO {
     /**
      * Delete an existing SSO connection.
      */
-    public fun deleteConnection(data: DeleteConnectionRequest, callback: (StytchResult<DeleteConnectionResponse>) -> Unit)
+    public fun deleteConnection(
+        data: DeleteConnectionRequest,
+        callback: (StytchResult<DeleteConnectionResponse>) -> Unit,
+    )
 
     /**
      * Delete an existing SSO connection.
@@ -74,8 +81,8 @@ public interface SSO {
      * To link this authentication event to an existing Stytch session, include either the `session_token` or `session_jwt`
      * param.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -95,8 +102,8 @@ public interface SSO {
      * To link this authentication event to an existing Stytch session, include either the `session_token` or `session_jwt`
      * param.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -104,7 +111,10 @@ public interface SSO {
      *
      * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
      */
-    public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+    public fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    )
 
     /**
      * Authenticate a user given a token.
@@ -116,8 +126,8 @@ public interface SSO {
      * To link this authentication event to an existing Stytch session, include either the `session_token` or `session_jwt`
      * param.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -132,21 +142,24 @@ internal class SSOImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : SSO {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val oidc: OIDC = OIDCImpl(httpClient, coroutineScope)
     override val saml: SAML = SAMLImpl(httpClient, coroutineScope)
 
-    override suspend fun getConnections(data: GetConnectionsRequest): StytchResult<GetConnectionsResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(GetConnectionsRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.get("/v1/b2b/sso/${data.organizationId}", asMap)
-    }
+    override suspend fun getConnections(data: GetConnectionsRequest): StytchResult<GetConnectionsResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(GetConnectionsRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/sso/${data.organizationId}", asMap)
+        }
 
-    override fun getConnections(data: GetConnectionsRequest, callback: (StytchResult<GetConnectionsResponse>) -> Unit) {
+    override fun getConnections(
+        data: GetConnectionsRequest,
+        callback: (StytchResult<GetConnectionsResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(getConnections(data))
         }
@@ -156,11 +169,16 @@ internal class SSOImpl(
         coroutineScope.async {
             getConnections(data)
         }.asCompletableFuture()
-    override suspend fun deleteConnection(data: DeleteConnectionRequest): StytchResult<DeleteConnectionResponse> = withContext(Dispatchers.IO) {
-        httpClient.delete("/v1/b2b/sso/${data.organizationId}/connections/${data.connectionId}")
-    }
 
-    override fun deleteConnection(data: DeleteConnectionRequest, callback: (StytchResult<DeleteConnectionResponse>) -> Unit) {
+    override suspend fun deleteConnection(data: DeleteConnectionRequest): StytchResult<DeleteConnectionResponse> =
+        withContext(Dispatchers.IO) {
+            httpClient.delete("/v1/b2b/sso/${data.organizationId}/connections/${data.connectionId}")
+        }
+
+    override fun deleteConnection(
+        data: DeleteConnectionRequest,
+        callback: (StytchResult<DeleteConnectionResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(deleteConnection(data))
         }
@@ -170,12 +188,17 @@ internal class SSOImpl(
         coroutineScope.async {
             deleteConnection(data)
         }.asCompletableFuture()
-    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/sso/authenticate", asJson)
-    }
 
-    override fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit) {
+    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/sso/authenticate", asJson)
+        }
+
+    override fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(authenticate(data))
         }

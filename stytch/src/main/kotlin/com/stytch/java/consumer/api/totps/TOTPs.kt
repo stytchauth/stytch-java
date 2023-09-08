@@ -25,6 +25,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface TOTPs {
     /**
      * Create a new TOTP instance for a user. The user can use the authenticator application of their choice to scan the QR
@@ -36,7 +37,10 @@ public interface TOTPs {
      * Create a new TOTP instance for a user. The user can use the authenticator application of their choice to scan the QR
      * code or enter the secret.
      */
-    public fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit)
+    public fun create(
+        data: CreateRequest,
+        callback: (StytchResult<CreateResponse>) -> Unit,
+    )
 
     /**
      * Create a new TOTP instance for a user. The user can use the authenticator application of their choice to scan the QR
@@ -52,7 +56,10 @@ public interface TOTPs {
     /**
      * Authenticate a TOTP code entered by a user.
      */
-    public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+    public fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    )
 
     /**
      * Authenticate a TOTP code entered by a user.
@@ -67,7 +74,10 @@ public interface TOTPs {
     /**
      * Retrieve the recovery codes for a TOTP instance tied to a User.
      */
-    public fun recoveryCodes(data: RecoveryCodesRequest, callback: (StytchResult<RecoveryCodesResponse>) -> Unit)
+    public fun recoveryCodes(
+        data: RecoveryCodesRequest,
+        callback: (StytchResult<RecoveryCodesResponse>) -> Unit,
+    )
 
     /**
      * Retrieve the recovery codes for a TOTP instance tied to a User.
@@ -82,7 +92,10 @@ public interface TOTPs {
     /**
      * Authenticate a recovery code for a TOTP instance.
      */
-    public fun recover(data: RecoverRequest, callback: (StytchResult<RecoverResponse>) -> Unit)
+    public fun recover(
+        data: RecoverRequest,
+        callback: (StytchResult<RecoverResponse>) -> Unit,
+    )
 
     /**
      * Authenticate a recovery code for a TOTP instance.
@@ -94,15 +107,18 @@ internal class TOTPsImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : TOTPs {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-        httpClient.post("/v1/totps", asJson)
-    }
+    override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
+            httpClient.post("/v1/totps", asJson)
+        }
 
-    override fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit) {
+    override fun create(
+        data: CreateRequest,
+        callback: (StytchResult<CreateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(create(data))
         }
@@ -112,12 +128,17 @@ internal class TOTPsImpl(
         coroutineScope.async {
             create(data)
         }.asCompletableFuture()
-    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-        httpClient.post("/v1/totps/authenticate", asJson)
-    }
 
-    override fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit) {
+    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/totps/authenticate", asJson)
+        }
+
+    override fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(authenticate(data))
         }
@@ -127,12 +148,17 @@ internal class TOTPsImpl(
         coroutineScope.async {
             authenticate(data)
         }.asCompletableFuture()
-    override suspend fun recoveryCodes(data: RecoveryCodesRequest): StytchResult<RecoveryCodesResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(RecoveryCodesRequest::class.java).toJson(data)
-        httpClient.post("/v1/totps/recovery_codes", asJson)
-    }
 
-    override fun recoveryCodes(data: RecoveryCodesRequest, callback: (StytchResult<RecoveryCodesResponse>) -> Unit) {
+    override suspend fun recoveryCodes(data: RecoveryCodesRequest): StytchResult<RecoveryCodesResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(RecoveryCodesRequest::class.java).toJson(data)
+            httpClient.post("/v1/totps/recovery_codes", asJson)
+        }
+
+    override fun recoveryCodes(
+        data: RecoveryCodesRequest,
+        callback: (StytchResult<RecoveryCodesResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(recoveryCodes(data))
         }
@@ -142,12 +168,17 @@ internal class TOTPsImpl(
         coroutineScope.async {
             recoveryCodes(data)
         }.asCompletableFuture()
-    override suspend fun recover(data: RecoverRequest): StytchResult<RecoverResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(RecoverRequest::class.java).toJson(data)
-        httpClient.post("/v1/totps/recover", asJson)
-    }
 
-    override fun recover(data: RecoverRequest, callback: (StytchResult<RecoverResponse>) -> Unit) {
+    override suspend fun recover(data: RecoverRequest): StytchResult<RecoverResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(RecoverRequest::class.java).toJson(data)
+            httpClient.post("/v1/totps/recover", asJson)
+        }
+
+    override fun recover(
+        data: RecoverRequest,
+        callback: (StytchResult<RecoverResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(recover(data))
         }

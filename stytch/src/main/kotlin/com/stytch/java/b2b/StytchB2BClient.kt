@@ -63,18 +63,23 @@ public object StytchB2BClient {
     public lateinit var sessions: Sessions
 
     @JvmStatic
-    public fun configure(projectId: String, secret: String) {
+    public fun configure(
+        projectId: String,
+        secret: String,
+    ) {
         val baseUrl = getBaseUrl(projectId)
-        httpClient = HttpClient(
-            baseUrl = baseUrl,
-            projectId = projectId,
-            secret = secret,
-        )
-        jwtOptions = JwtOptions(
-            audience = projectId,
-            issuer = "stytch.com/$projectId",
-            type = "JWT",
-        )
+        httpClient =
+            HttpClient(
+                baseUrl = baseUrl,
+                projectId = projectId,
+                secret = secret,
+            )
+        jwtOptions =
+            JwtOptions(
+                audience = projectId,
+                issuer = "stytch.com/$projectId",
+                type = "JWT",
+            )
         val coroutineScope = CoroutineScope(SupervisorJob())
         httpsJwks = HttpsJwks("$baseUrl/v1/sessions/jwks/$projectId")
         discovery = DiscoveryImpl(httpClient, coroutineScope)
@@ -85,14 +90,15 @@ public object StytchB2BClient {
         organizations = OrganizationsImpl(httpClient, coroutineScope)
         passwords = PasswordsImpl(httpClient, coroutineScope)
         sso = SSOImpl(httpClient, coroutineScope)
-        sessions = SessionsImpl(httpClient, coroutineScope)
+        sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
     }
 
     /**
      * Resolve the base URL for the Stytch API environment.
      */
-    private fun getBaseUrl(projectId: String): String = when (projectId.startsWith("project-test")) {
-        true -> BASE_TEST_URL
-        false -> BASE_LIVE_URL
-    }
+    private fun getBaseUrl(projectId: String): String =
+        when (projectId.startsWith("project-test")) {
+            true -> BASE_TEST_URL
+            false -> BASE_LIVE_URL
+        }
 }

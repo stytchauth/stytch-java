@@ -30,6 +30,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import org.jose4j.jwk.HttpsJwks
 import java.util.concurrent.CompletableFuture
+
 public interface M2M {
     public val clients: Clients
 
@@ -37,6 +38,7 @@ public interface M2M {
     // ADDIMPORT: import com.stytch.java.consumer.models.m2m.TokenRequest
     // ADDIMPORT: import com.stytch.java.consumer.models.m2m.TokenResponse
     // ADDIMPORT: import okhttp3.MediaType.Companion.toMediaType
+
     /**
      * Token retrieves an access token for the given M2M Client.
      * Access tokens are JWTs signed with the project's JWKs, and are valid for one hour after issuance.
@@ -83,7 +85,10 @@ public interface M2M {
      *
      * ```
      */
-    public fun token(data: TokenRequest, callback: (StytchResult<TokenResponse>) -> Unit)
+    public fun token(
+        data: TokenRequest,
+        callback: (StytchResult<TokenResponse>) -> Unit,
+    )
 
     /**
      * Token retrieves an access token for the given M2M Client.
@@ -117,6 +122,7 @@ public interface M2M {
     // ADDIMPORT: import com.stytch.java.common.parseJWTClaims
     // ADDIMPORT: import com.stytch.java.common.ParsedJWTClaims
     // ADDIMPORT: import com.stytch.java.common.JWTException
+
     /**
      * AuthenticateToken validates an access token issued by Stytch from the Token endpoint.
      * M2M access tokens are JWTs signed with the project's JWKs, and can be validated locally using any Stytch client library.
@@ -129,14 +135,19 @@ public interface M2M {
      * M2M access tokens are JWTs signed with the project's JWKs, and can be validated locally using any Stytch client library.
      * You may pass in an optional set of scopes that the JWT must contain in order to enforce permissions.
      */
-    public suspend fun authenticateToken(data: AuthenticateTokenRequest, callback: (StytchResult<AuthenticateTokenResponse>) -> Unit)
+    public suspend fun authenticateToken(
+        data: AuthenticateTokenRequest,
+        callback: (StytchResult<AuthenticateTokenResponse>) -> Unit,
+    )
 
     /**
      * AuthenticateToken validates an access token issued by Stytch from the Token endpoint.
      * M2M access tokens are JWTs signed with the project's JWKs, and can be validated locally using any Stytch client library.
      * You may pass in an optional set of scopes that the JWT must contain in order to enforce permissions.
      */
-    public suspend fun authenticateTokenCompletable(data: AuthenticateTokenRequest): CompletableFuture<StytchResult<AuthenticateTokenResponse>>
+    public suspend fun authenticateTokenCompletable(
+        data: AuthenticateTokenRequest,
+    ): CompletableFuture<StytchResult<AuthenticateTokenResponse>>
     // ENDMANUAL(AuthenticateM2MToken)
 }
 
@@ -146,30 +157,34 @@ internal class M2MImpl(
     private val jwksClient: HttpsJwks,
     private val jwtOptions: JwtOptions,
 ) : M2M {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val clients: Clients = ClientsImpl(httpClient, coroutineScope)
 
     // MANUAL(token_impl)(SERVICE_METHOD)
-    override suspend fun token(data: TokenRequest): StytchResult<TokenResponse> = withContext(Dispatchers.IO) {
-        val params = mutableMapOf(
-            "client_id" to data.clientId,
-            "client_secret" to data.clientSecret,
-            "grant_type" to "client_credentials",
-        )
-        if (!data.scopes.isNullOrEmpty()) {
-            params["scope"] = data.scopes.joinToString(" ")
+    override suspend fun token(data: TokenRequest): StytchResult<TokenResponse> =
+        withContext(Dispatchers.IO) {
+            val params =
+                mutableMapOf(
+                    "client_id" to data.clientId,
+                    "client_secret" to data.clientSecret,
+                    "grant_type" to "client_credentials",
+                )
+            if (!data.scopes.isNullOrEmpty()) {
+                params["scope"] = data.scopes.joinToString(" ")
+            }
+            val payload = moshi.adapter(Map::class.java).toJson(params)
+            httpClient.post(
+                path = "/v1/public/${jwtOptions.audience}/oauth2/token",
+                json = payload,
+                mediaType = "application/x-www-form-urlencoded".toMediaType(),
+            )
         }
-        val payload = moshi.adapter(Map::class.java).toJson(params)
-        httpClient.post(
-            path = "/v1/public/${jwtOptions.audience}/oauth2/token",
-            json = payload,
-            mediaType = "application/x-www-form-urlencoded".toMediaType(),
-        )
-    }
 
-    override fun token(data: TokenRequest, callback: (StytchResult<TokenResponse>) -> Unit) {
+    override fun token(
+        data: TokenRequest,
+        callback: (StytchResult<TokenResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(token(data))
         }
@@ -183,42 +198,46 @@ internal class M2MImpl(
     // ENDMANUAL(token_impl)
 
     // MANUAL(authenticateToken_impl)(SERVICE_METHOD)
-    override suspend fun authenticateToken(data: AuthenticateTokenRequest): StytchResult<AuthenticateTokenResponse> = withContext(Dispatchers.IO) {
-        return@withContext try {
-            val jwtClaims = parseJWTClaims(
-                jwt = data.accessToken,
-                jwtOptions = jwtOptions,
-                jwksClient = jwksClient,
-                options = ParseJWTClaimsOptions(
-                    leeway = 0,
-                    maxTokenAgeSeconds = data.maxTokenAgeSeconds,
-                ),
-            )
-            val scopeString = jwtClaims.customClaims["scope"] as? String
-            val scopes = scopeString?.split(" ") ?: emptyList()
-            if (!data.requiredScopes.isNullOrEmpty()) {
-                val missingScopes = data.requiredScopes.filter {
-                    !scopes.contains(it)
+    override suspend fun authenticateToken(data: AuthenticateTokenRequest): StytchResult<AuthenticateTokenResponse> =
+        withContext(Dispatchers.IO) {
+            return@withContext try {
+                val jwtClaims =
+                    parseJWTClaims(
+                        jwt = data.accessToken,
+                        jwtOptions = jwtOptions,
+                        jwksClient = jwksClient,
+                        options =
+                            ParseJWTClaimsOptions(
+                                leeway = 0,
+                                maxTokenAgeSeconds = data.maxTokenAgeSeconds,
+                            ),
+                    )
+                val scopeString = jwtClaims.customClaims["scope"] as? String
+                val scopes = scopeString?.split(" ") ?: emptyList()
+                if (!data.requiredScopes.isNullOrEmpty()) {
+                    val missingScopes =
+                        data.requiredScopes.filter {
+                            !scopes.contains(it)
+                        }
+                    if (missingScopes.isNotEmpty()) {
+                        throw JWTException.JwtMissingScopes(missingScopes)
+                    }
                 }
-                if (missingScopes.isNotEmpty()) {
-                    throw JWTException.JwtMissingScopes(missingScopes)
-                }
+                StytchResult.Success(
+                    AuthenticateTokenResponse(
+                        clientId = jwtClaims.payload.subject,
+                        scopes = scopes,
+                        customClaims = jwtClaims.customClaims,
+                    ),
+                )
+            } catch (e: JWTException.JwtTooOld) {
+                StytchResult.Error(StytchException.Critical(e))
+            } catch (e: JWTException.JwtMissingScopes) {
+                StytchResult.Error(StytchException.Critical(e))
+            } catch (e: Exception) {
+                StytchResult.Error(StytchException.Critical(JWTException.JwtError(e)))
             }
-            StytchResult.Success(
-                AuthenticateTokenResponse(
-                    clientId = jwtClaims.payload.subject,
-                    scopes = scopes,
-                    customClaims = jwtClaims.customClaims,
-                ),
-            )
-        } catch (e: JWTException.JwtTooOld) {
-            StytchResult.Error(StytchException.Critical(e))
-        } catch (e: JWTException.JwtMissingScopes) {
-            StytchResult.Error(StytchException.Critical(e))
-        } catch (e: Exception) {
-            StytchResult.Error(StytchException.Critical(JWTException.JwtError(e)))
         }
-    }
 
     override suspend fun authenticateToken(
         data: AuthenticateTokenRequest,
@@ -229,7 +248,9 @@ internal class M2MImpl(
         }
     }
 
-    override suspend fun authenticateTokenCompletable(data: AuthenticateTokenRequest): CompletableFuture<StytchResult<AuthenticateTokenResponse>> {
+    override suspend fun authenticateTokenCompletable(
+        data: AuthenticateTokenRequest,
+    ): CompletableFuture<StytchResult<AuthenticateTokenResponse>> {
         return coroutineScope.async {
             authenticateToken(data)
         }.asCompletableFuture()

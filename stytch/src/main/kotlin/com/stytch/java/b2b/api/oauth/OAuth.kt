@@ -21,6 +21,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface OAuth {
     public val discovery: Discovery
 
@@ -30,8 +31,8 @@ public interface OAuth {
      * the session. If the `session_duration_minutes` parameter is not specified, a Stytch session will be created with a 60
      * minute duration.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -51,8 +52,8 @@ public interface OAuth {
      * the session. If the `session_duration_minutes` parameter is not specified, a Stytch session will be created with a 60
      * minute duration.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -64,7 +65,10 @@ public interface OAuth {
      *
      * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
      */
-    public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+    public fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    )
 
     /**
      * Authenticate a Member given a `token`. This endpoint verifies that the member completed the OAuth flow by verifying
@@ -72,8 +76,8 @@ public interface OAuth {
      * the session. If the `session_duration_minutes` parameter is not specified, a Stytch session will be created with a 60
      * minute duration.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -92,17 +96,20 @@ internal class OAuthImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : OAuth {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val discovery: Discovery = DiscoveryImpl(httpClient, coroutineScope)
 
-    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/oauth/authenticate", asJson)
-    }
+    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/oauth/authenticate", asJson)
+        }
 
-    override fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit) {
+    override fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(authenticate(data))
         }

@@ -25,6 +25,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface OTPs {
     public val sms: Sms
 
@@ -46,7 +47,10 @@ public interface OTPs {
      * user agent match are satisfied. A given `method_id` may only have a single active OTP code at any given time, if a User
      * requests another OTP code before the first one has expired, the first one will be invalidated.
      */
-    public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+    public fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    )
 
     /**
      * Authenticate a User given a `method_id` (the associated `email_id` or `phone_id`) and a `code`. This endpoint verifies
@@ -61,19 +65,22 @@ internal class OTPsImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : OTPs {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val sms: Sms = SmsImpl(httpClient, coroutineScope)
     override val whatsapp: Whatsapp = WhatsappImpl(httpClient, coroutineScope)
     override val email: Email = EmailImpl(httpClient, coroutineScope)
 
-    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-        httpClient.post("/v1/otps/authenticate", asJson)
-    }
+    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/otps/authenticate", asJson)
+        }
 
-    override fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit) {
+    override fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(authenticate(data))
         }

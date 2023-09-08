@@ -31,6 +31,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface Organizations {
     public val members: Members
 
@@ -54,7 +55,10 @@ public interface Organizations {
      * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
      * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
      */
-    public fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit)
+    public fun create(
+        data: CreateRequest,
+        callback: (StytchResult<CreateResponse>) -> Unit,
+    )
 
     /**
      * Creates an Organization. An `organization_name` and a unique `organization_slug` are required.
@@ -75,7 +79,10 @@ public interface Organizations {
     /**
      * Returns an Organization specified by `organization_id`.
      */
-    public fun get(data: GetRequest, callback: (StytchResult<GetResponse>) -> Unit)
+    public fun get(
+        data: GetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
+    )
 
     /**
      * Returns an Organization specified by `organization_id`.
@@ -98,7 +105,10 @@ public interface Organizations {
      * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
      * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
      */
-    public fun update(data: UpdateRequest, callback: (StytchResult<UpdateResponse>) -> Unit)
+    public fun update(
+        data: UpdateRequest,
+        callback: (StytchResult<UpdateResponse>) -> Unit,
+    )
 
     /**
      * Updates an Organization specified by `organization_id`. An Organization must always have at least one auth setting set
@@ -117,7 +127,10 @@ public interface Organizations {
     /**
      * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted.
      */
-    public fun delete(data: DeleteRequest, callback: (StytchResult<DeleteResponse>) -> Unit)
+    public fun delete(
+        data: DeleteRequest,
+        callback: (StytchResult<DeleteResponse>) -> Unit,
+    )
 
     /**
      * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted.
@@ -134,7 +147,10 @@ public interface Organizations {
      * Search for Organizations. If you send a request with no body params, no filtering will be applied and the endpoint will
      * return all Organizations. All fuzzy search filters require a minimum of three characters.
      */
-    public fun search(data: SearchRequest, callback: (StytchResult<SearchResponse>) -> Unit)
+    public fun search(
+        data: SearchRequest,
+        callback: (StytchResult<SearchResponse>) -> Unit,
+    )
 
     /**
      * Search for Organizations. If you send a request with no body params, no filtering will be applied and the endpoint will
@@ -147,17 +163,20 @@ internal class OrganizationsImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : Organizations {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val members: Members = MembersImpl(httpClient, coroutineScope)
 
-    override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/organizations", asJson)
-    }
+    override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/organizations", asJson)
+        }
 
-    override fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit) {
+    override fun create(
+        data: CreateRequest,
+        callback: (StytchResult<CreateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(create(data))
         }
@@ -167,15 +186,20 @@ internal class OrganizationsImpl(
         coroutineScope.async {
             create(data)
         }.asCompletableFuture()
-    override suspend fun get(data: GetRequest): StytchResult<GetResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.get("/v1/b2b/organizations/${data.organizationId}", asMap)
-    }
 
-    override fun get(data: GetRequest, callback: (StytchResult<GetResponse>) -> Unit) {
+    override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/organizations/${data.organizationId}", asMap)
+        }
+
+    override fun get(
+        data: GetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(get(data))
         }
@@ -185,12 +209,17 @@ internal class OrganizationsImpl(
         coroutineScope.async {
             get(data)
         }.asCompletableFuture()
-    override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
-        httpClient.put("/v1/b2b/organizations/${data.organizationId}", asJson)
-    }
 
-    override fun update(data: UpdateRequest, callback: (StytchResult<UpdateResponse>) -> Unit) {
+    override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
+            httpClient.put("/v1/b2b/organizations/${data.organizationId}", asJson)
+        }
+
+    override fun update(
+        data: UpdateRequest,
+        callback: (StytchResult<UpdateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(update(data))
         }
@@ -200,11 +229,16 @@ internal class OrganizationsImpl(
         coroutineScope.async {
             update(data)
         }.asCompletableFuture()
-    override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> = withContext(Dispatchers.IO) {
-        httpClient.delete("/v1/b2b/organizations/${data.organizationId}")
-    }
 
-    override fun delete(data: DeleteRequest, callback: (StytchResult<DeleteResponse>) -> Unit) {
+    override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> =
+        withContext(Dispatchers.IO) {
+            httpClient.delete("/v1/b2b/organizations/${data.organizationId}")
+        }
+
+    override fun delete(
+        data: DeleteRequest,
+        callback: (StytchResult<DeleteResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(delete(data))
         }
@@ -214,12 +248,17 @@ internal class OrganizationsImpl(
         coroutineScope.async {
             delete(data)
         }.asCompletableFuture()
-    override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/organizations/search", asJson)
-    }
 
-    override fun search(data: SearchRequest, callback: (StytchResult<SearchResponse>) -> Unit) {
+    override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/organizations/search", asJson)
+        }
+
+    override fun search(
+        data: SearchRequest,
+        callback: (StytchResult<SearchResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(search(data))
         }

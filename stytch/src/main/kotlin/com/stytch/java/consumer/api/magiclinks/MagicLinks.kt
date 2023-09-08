@@ -23,6 +23,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface MagicLinks {
     public val email: Email
 
@@ -36,7 +37,10 @@ public interface MagicLinks {
      * Authenticate a User given a Magic Link. This endpoint verifies that the Magic Link token is valid, hasn't expired or
      * been previously used, and any optional security settings such as IP match or user agent match are satisfied.
      */
-    public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+    public fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    )
 
     /**
      * Authenticate a User given a Magic Link. This endpoint verifies that the Magic Link token is valid, hasn't expired or
@@ -64,7 +68,10 @@ public interface MagicLinks {
      * your link, collect the token, and call [Authenticate Magic Link](https://stytch.com/docs/api/authenticate-magic-link)
      * to complete authentication.
      */
-    public fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit)
+    public fun create(
+        data: CreateRequest,
+        callback: (StytchResult<CreateResponse>) -> Unit,
+    )
 
     /**
      * Create an embeddable Magic Link token for a User. Access to this endpoint is restricted. To enable it, please send us a
@@ -82,17 +89,20 @@ internal class MagicLinksImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : MagicLinks {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val email: Email = EmailImpl(httpClient, coroutineScope)
 
-    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-        httpClient.post("/v1/magic_links/authenticate", asJson)
-    }
+    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/magic_links/authenticate", asJson)
+        }
 
-    override fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit) {
+    override fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(authenticate(data))
         }
@@ -102,12 +112,17 @@ internal class MagicLinksImpl(
         coroutineScope.async {
             authenticate(data)
         }.asCompletableFuture()
-    override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-        httpClient.post("/v1/magic_links", asJson)
-    }
 
-    override fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit) {
+    override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
+            httpClient.post("/v1/magic_links", asJson)
+        }
+
+    override fun create(
+        data: CreateRequest,
+        callback: (StytchResult<CreateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(create(data))
         }

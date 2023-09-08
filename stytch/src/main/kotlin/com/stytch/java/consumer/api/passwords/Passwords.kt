@@ -31,6 +31,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface Passwords {
     public val email: Email
 
@@ -39,35 +40,56 @@ public interface Passwords {
     public val sessions: Sessions
 
     /**
-     * Create a new user with a password and an authenticated session for the user if requested. If a user with this email
-     * already exists in the project, this API will return an error.
+     * Create a new user with a password. If `session_duration_minutes` is specified, a new session will be started as well.
      *
-     * Existing passwordless users who wish to create a password need to go through the reset password flow.
+     * If a user with this email already exists in your Stytch project, this endpoint will return a `duplicate_email` error.
+     * To add a password to an existing passwordless user, you'll need to either call the
+     * [Migrate password endpoint](https://stytch.com/docs/api/password-migrate) or prompt the user to complete one of our
+     * password reset flows.
      *
      * This endpoint will return an error if the password provided does not meet our strength requirements, which you can
-     * check beforehand with the password strength endpoint.
+     * check beforehand via the [Password strength check endpoint](https://stytch.com/docs/api/password-strength-check).
+     *
+     * When creating new Passwords users, it's good practice to enforce an email verification flow. We'd recommend checking
+     * out our [Email verification guide](https://stytch.com/docs/guides/passwords/email-verification/overview) for more
+     * information.
      */
     public suspend fun create(data: CreateRequest): StytchResult<CreateResponse>
 
     /**
-     * Create a new user with a password and an authenticated session for the user if requested. If a user with this email
-     * already exists in the project, this API will return an error.
+     * Create a new user with a password. If `session_duration_minutes` is specified, a new session will be started as well.
      *
-     * Existing passwordless users who wish to create a password need to go through the reset password flow.
+     * If a user with this email already exists in your Stytch project, this endpoint will return a `duplicate_email` error.
+     * To add a password to an existing passwordless user, you'll need to either call the
+     * [Migrate password endpoint](https://stytch.com/docs/api/password-migrate) or prompt the user to complete one of our
+     * password reset flows.
      *
      * This endpoint will return an error if the password provided does not meet our strength requirements, which you can
-     * check beforehand with the password strength endpoint.
+     * check beforehand via the [Password strength check endpoint](https://stytch.com/docs/api/password-strength-check).
+     *
+     * When creating new Passwords users, it's good practice to enforce an email verification flow. We'd recommend checking
+     * out our [Email verification guide](https://stytch.com/docs/guides/passwords/email-verification/overview) for more
+     * information.
      */
-    public fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit)
+    public fun create(
+        data: CreateRequest,
+        callback: (StytchResult<CreateResponse>) -> Unit,
+    )
 
     /**
-     * Create a new user with a password and an authenticated session for the user if requested. If a user with this email
-     * already exists in the project, this API will return an error.
+     * Create a new user with a password. If `session_duration_minutes` is specified, a new session will be started as well.
      *
-     * Existing passwordless users who wish to create a password need to go through the reset password flow.
+     * If a user with this email already exists in your Stytch project, this endpoint will return a `duplicate_email` error.
+     * To add a password to an existing passwordless user, you'll need to either call the
+     * [Migrate password endpoint](https://stytch.com/docs/api/password-migrate) or prompt the user to complete one of our
+     * password reset flows.
      *
      * This endpoint will return an error if the password provided does not meet our strength requirements, which you can
-     * check beforehand with the password strength endpoint.
+     * check beforehand via the [Password strength check endpoint](https://stytch.com/docs/api/password-strength-check).
+     *
+     * When creating new Passwords users, it's good practice to enforce an email verification flow. We'd recommend checking
+     * out our [Email verification guide](https://stytch.com/docs/guides/passwords/email-verification/overview) for more
+     * information.
      */
     public fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>>
 
@@ -111,7 +133,10 @@ public interface Passwords {
      * login attempts first require a password reset which can only be accomplished by someone with access to the underlying
      * email address.
      */
-    public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+    public fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    )
 
     /**
      * Authenticate a user with their email address and password. This endpoint verifies that the user has a password
@@ -184,7 +209,10 @@ public interface Passwords {
      * of fields that the user failed or passed. You'll want to prompt the user to create a password that meets all of the
      * requirements that they failed.
      */
-    public fun strengthCheck(data: StrengthCheckRequest, callback: (StytchResult<StrengthCheckResponse>) -> Unit)
+    public fun strengthCheck(
+        data: StrengthCheckRequest,
+        callback: (StytchResult<StrengthCheckResponse>) -> Unit,
+    )
 
     /**
      * This API allows you to check whether or not the user’s provided password is valid, and to provide feedback to the user
@@ -224,7 +252,10 @@ public interface Passwords {
      * stored with `bcrypt`, `scrypt`, `argon2`, `MD-5`, `SHA-1`, or `PBKDF2`. This endpoint has a rate limit of 100 requests
      * per second.
      */
-    public fun migrate(data: MigrateRequest, callback: (StytchResult<MigrateResponse>) -> Unit)
+    public fun migrate(
+        data: MigrateRequest,
+        callback: (StytchResult<MigrateResponse>) -> Unit,
+    )
 
     /**
      * Adds an existing password to a User's email that doesn't have a password yet. We support migrating users from passwords
@@ -238,19 +269,22 @@ internal class PasswordsImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : Passwords {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val email: Email = EmailImpl(httpClient, coroutineScope)
     override val existingPassword: ExistingPassword = ExistingPasswordImpl(httpClient, coroutineScope)
     override val sessions: Sessions = SessionsImpl(httpClient, coroutineScope)
 
-    override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-        httpClient.post("/v1/passwords", asJson)
-    }
+    override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
+            httpClient.post("/v1/passwords", asJson)
+        }
 
-    override fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit) {
+    override fun create(
+        data: CreateRequest,
+        callback: (StytchResult<CreateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(create(data))
         }
@@ -260,12 +294,17 @@ internal class PasswordsImpl(
         coroutineScope.async {
             create(data)
         }.asCompletableFuture()
-    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-        httpClient.post("/v1/passwords/authenticate", asJson)
-    }
 
-    override fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit) {
+    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/passwords/authenticate", asJson)
+        }
+
+    override fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(authenticate(data))
         }
@@ -275,12 +314,17 @@ internal class PasswordsImpl(
         coroutineScope.async {
             authenticate(data)
         }.asCompletableFuture()
-    override suspend fun strengthCheck(data: StrengthCheckRequest): StytchResult<StrengthCheckResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(StrengthCheckRequest::class.java).toJson(data)
-        httpClient.post("/v1/passwords/strength_check", asJson)
-    }
 
-    override fun strengthCheck(data: StrengthCheckRequest, callback: (StytchResult<StrengthCheckResponse>) -> Unit) {
+    override suspend fun strengthCheck(data: StrengthCheckRequest): StytchResult<StrengthCheckResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(StrengthCheckRequest::class.java).toJson(data)
+            httpClient.post("/v1/passwords/strength_check", asJson)
+        }
+
+    override fun strengthCheck(
+        data: StrengthCheckRequest,
+        callback: (StytchResult<StrengthCheckResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(strengthCheck(data))
         }
@@ -290,12 +334,17 @@ internal class PasswordsImpl(
         coroutineScope.async {
             strengthCheck(data)
         }.asCompletableFuture()
-    override suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(MigrateRequest::class.java).toJson(data)
-        httpClient.post("/v1/passwords/migrate", asJson)
-    }
 
-    override fun migrate(data: MigrateRequest, callback: (StytchResult<MigrateResponse>) -> Unit) {
+    override suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(MigrateRequest::class.java).toJson(data)
+            httpClient.post("/v1/passwords/migrate", asJson)
+        }
+
+    override fun migrate(
+        data: MigrateRequest,
+        callback: (StytchResult<MigrateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(migrate(data))
         }

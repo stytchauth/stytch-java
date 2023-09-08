@@ -19,6 +19,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface ExistingPassword {
     /**
      * Reset the member’s password using their existing password.
@@ -32,8 +33,8 @@ public interface ExistingPassword {
      * You may update your password strength configuration in the
      * [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -55,8 +56,8 @@ public interface ExistingPassword {
      * You may update your password strength configuration in the
      * [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -64,7 +65,10 @@ public interface ExistingPassword {
      *
      * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
      */
-    public fun reset(data: ResetRequest, callback: (StytchResult<ResetResponse>) -> Unit)
+    public fun reset(
+        data: ResetRequest,
+        callback: (StytchResult<ResetResponse>) -> Unit,
+    )
 
     /**
      * Reset the member’s password using their existing password.
@@ -78,8 +82,8 @@ public interface ExistingPassword {
      * You may update your password strength configuration in the
      * [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -94,15 +98,18 @@ internal class ExistingPasswordImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : ExistingPassword {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override suspend fun reset(data: ResetRequest): StytchResult<ResetResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/passwords/existing_password/reset", asJson)
-    }
+    override suspend fun reset(data: ResetRequest): StytchResult<ResetResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/passwords/existing_password/reset", asJson)
+        }
 
-    override fun reset(data: ResetRequest, callback: (StytchResult<ResetResponse>) -> Unit) {
+    override fun reset(
+        data: ResetRequest,
+        callback: (StytchResult<ResetResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(reset(data))
         }

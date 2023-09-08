@@ -29,6 +29,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface Passwords {
     public val email: Email
 
@@ -84,7 +85,10 @@ public interface Passwords {
      * collection of fields that the user failed or passed. You'll want to prompt the user to create a password that meets all
      * requirements that they failed.
      */
-    public fun strengthCheck(data: StrengthCheckRequest, callback: (StytchResult<StrengthCheckResponse>) -> Unit)
+    public fun strengthCheck(
+        data: StrengthCheckRequest,
+        callback: (StytchResult<StrengthCheckResponse>) -> Unit,
+    )
 
     /**
      * This API allows you to check whether the user’s provided password is valid, and to provide feedback to the user on how
@@ -123,7 +127,10 @@ public interface Passwords {
      * passwords stored with bcrypt, scrypt, argon2, MD-5, SHA-1, and PBKDF2. This endpoint has a rate limit of 100 requests
      * per second.
      */
-    public fun migrate(data: MigrateRequest, callback: (StytchResult<MigrateResponse>) -> Unit)
+    public fun migrate(
+        data: MigrateRequest,
+        callback: (StytchResult<MigrateResponse>) -> Unit,
+    )
 
     /**
      * Adds an existing password to a member's email that doesn't have a password yet. We support migrating members from
@@ -150,8 +157,8 @@ public interface Passwords {
      * email/password login attempts first require a password reset which can only be accomplished by someone with access to
      * the underlying email address.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -179,8 +186,8 @@ public interface Passwords {
      * email/password login attempts first require a password reset which can only be accomplished by someone with access to
      * the underlying email address.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -188,7 +195,10 @@ public interface Passwords {
      *
      * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
      */
-    public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+    public fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    )
 
     /**
      * Authenticate a member with their email address and password. This endpoint verifies that the member has a password
@@ -208,8 +218,8 @@ public interface Passwords {
      * email/password login attempts first require a password reset which can only be accomplished by someone with access to
      * the underlying email address.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -224,19 +234,22 @@ internal class PasswordsImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : Passwords {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val email: Email = EmailImpl(httpClient, coroutineScope)
     override val sessions: Sessions = SessionsImpl(httpClient, coroutineScope)
     override val existingPassword: ExistingPassword = ExistingPasswordImpl(httpClient, coroutineScope)
 
-    override suspend fun strengthCheck(data: StrengthCheckRequest): StytchResult<StrengthCheckResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(StrengthCheckRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/passwords/strength_check", asJson)
-    }
+    override suspend fun strengthCheck(data: StrengthCheckRequest): StytchResult<StrengthCheckResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(StrengthCheckRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/passwords/strength_check", asJson)
+        }
 
-    override fun strengthCheck(data: StrengthCheckRequest, callback: (StytchResult<StrengthCheckResponse>) -> Unit) {
+    override fun strengthCheck(
+        data: StrengthCheckRequest,
+        callback: (StytchResult<StrengthCheckResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(strengthCheck(data))
         }
@@ -246,12 +259,17 @@ internal class PasswordsImpl(
         coroutineScope.async {
             strengthCheck(data)
         }.asCompletableFuture()
-    override suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(MigrateRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/passwords/migrate", asJson)
-    }
 
-    override fun migrate(data: MigrateRequest, callback: (StytchResult<MigrateResponse>) -> Unit) {
+    override suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(MigrateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/passwords/migrate", asJson)
+        }
+
+    override fun migrate(
+        data: MigrateRequest,
+        callback: (StytchResult<MigrateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(migrate(data))
         }
@@ -261,12 +279,17 @@ internal class PasswordsImpl(
         coroutineScope.async {
             migrate(data)
         }.asCompletableFuture()
-    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/passwords/authenticate", asJson)
-    }
 
-    override fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit) {
+    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/passwords/authenticate", asJson)
+        }
+
+    override fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(authenticate(data))
         }

@@ -21,6 +21,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface Email {
     /**
      * Initiates a password reset for the email address provided. This will trigger an email to be sent to the address,
@@ -50,7 +51,10 @@ public interface Email {
      * You may update your password strength configuration in the
      * [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
      */
-    public fun resetStart(data: ResetStartRequest, callback: (StytchResult<ResetStartResponse>) -> Unit)
+    public fun resetStart(
+        data: ResetStartRequest,
+        callback: (StytchResult<ResetStartResponse>) -> Unit,
+    )
 
     /**
      * Initiates a password reset for the email address provided. This will trigger an email to be sent to the address,
@@ -75,8 +79,8 @@ public interface Email {
      * password strength endpoint. If the token and password are accepted, the password is securely stored for future
      * authentication and the user is authenticated.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -94,8 +98,8 @@ public interface Email {
      * password strength endpoint. If the token and password are accepted, the password is securely stored for future
      * authentication and the user is authenticated.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -103,7 +107,10 @@ public interface Email {
      *
      * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
      */
-    public fun reset(data: ResetRequest, callback: (StytchResult<ResetResponse>) -> Unit)
+    public fun reset(
+        data: ResetRequest,
+        callback: (StytchResult<ResetResponse>) -> Unit,
+    )
 
     /**
      * Reset the member's password and authenticate them. This endpoint checks that the password reset token is valid, hasn’t
@@ -113,8 +120,8 @@ public interface Email {
      * password strength endpoint. If the token and password are accepted, the password is securely stored for future
      * authentication and the user is authenticated.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -129,15 +136,18 @@ internal class EmailImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : Email {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override suspend fun resetStart(data: ResetStartRequest): StytchResult<ResetStartResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(ResetStartRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/passwords/email/reset/start", asJson)
-    }
+    override suspend fun resetStart(data: ResetStartRequest): StytchResult<ResetStartResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(ResetStartRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/passwords/email/reset/start", asJson)
+        }
 
-    override fun resetStart(data: ResetStartRequest, callback: (StytchResult<ResetStartResponse>) -> Unit) {
+    override fun resetStart(
+        data: ResetStartRequest,
+        callback: (StytchResult<ResetStartResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(resetStart(data))
         }
@@ -147,12 +157,17 @@ internal class EmailImpl(
         coroutineScope.async {
             resetStart(data)
         }.asCompletableFuture()
-    override suspend fun reset(data: ResetRequest): StytchResult<ResetResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/passwords/email/reset", asJson)
-    }
 
-    override fun reset(data: ResetRequest, callback: (StytchResult<ResetResponse>) -> Unit) {
+    override suspend fun reset(data: ResetRequest): StytchResult<ResetResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/passwords/email/reset", asJson)
+        }
+
+    override fun reset(
+        data: ResetRequest,
+        callback: (StytchResult<ResetResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(reset(data))
         }

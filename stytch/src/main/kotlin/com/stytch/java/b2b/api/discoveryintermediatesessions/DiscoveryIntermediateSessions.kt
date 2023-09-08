@@ -19,6 +19,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface IntermediateSessions {
     /**
      * Exchange an Intermediate Session for a fully realized [Member Session](https://stytch.com/docs/b2b/api/session-object)
@@ -27,8 +28,8 @@ public interface IntermediateSessions {
      *
      * This endpoint can be used to accept invites and create new members via domain matching.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`.
      * The `intermediate_session_token` will not be consumed and instead will be returned in the response.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
@@ -48,8 +49,8 @@ public interface IntermediateSessions {
      *
      * This endpoint can be used to accept invites and create new members via domain matching.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`.
      * The `intermediate_session_token` will not be consumed and instead will be returned in the response.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
@@ -60,7 +61,10 @@ public interface IntermediateSessions {
      * a different Organization or create a new one.
      * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      */
-    public fun exchange(data: ExchangeRequest, callback: (StytchResult<ExchangeResponse>) -> Unit)
+    public fun exchange(
+        data: ExchangeRequest,
+        callback: (StytchResult<ExchangeResponse>) -> Unit,
+    )
 
     /**
      * Exchange an Intermediate Session for a fully realized [Member Session](https://stytch.com/docs/b2b/api/session-object)
@@ -69,8 +73,8 @@ public interface IntermediateSessions {
      *
      * This endpoint can be used to accept invites and create new members via domain matching.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`.
      * The `intermediate_session_token` will not be consumed and instead will be returned in the response.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
@@ -88,15 +92,18 @@ internal class IntermediateSessionsImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : IntermediateSessions {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override suspend fun exchange(data: ExchangeRequest): StytchResult<ExchangeResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(ExchangeRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/discovery/intermediate_sessions/exchange", asJson)
-    }
+    override suspend fun exchange(data: ExchangeRequest): StytchResult<ExchangeResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(ExchangeRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/discovery/intermediate_sessions/exchange", asJson)
+        }
 
-    override fun exchange(data: ExchangeRequest, callback: (StytchResult<ExchangeResponse>) -> Unit) {
+    override fun exchange(
+        data: ExchangeRequest,
+        callback: (StytchResult<ExchangeResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(exchange(data))
         }
