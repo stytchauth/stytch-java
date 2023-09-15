@@ -12,342 +12,360 @@ import com.stytch.java.consumer.models.sessions.Session
 import com.stytch.java.consumer.models.users.User
 
 @JsonClass(generateAdapter = true)
-public data class TOTP @JvmOverloads constructor(
-    /**
-     * The unique ID for a TOTP instance.
-     */
-    @Json(name = "totp_id")
-    val totpId: String,
-    /**
-     * The verified boolean denotes whether or not this send method, e.g. phone number, email address, etc., has been
-     * successfully authenticated by the User.
-     */
-    @Json(name = "verified")
-    val verified: Boolean,
-    /**
-     * The recovery codes used to authenticate the user without an authenticator app.
-     */
-    @Json(name = "recovery_codes")
-    val recoveryCodes: List<String>,
-)
+public data class TOTP
+    @JvmOverloads
+    constructor(
+        /**
+         * The unique ID for a TOTP instance.
+         */
+        @Json(name = "totp_id")
+        val totpId: String,
+        /**
+         * The verified boolean denotes whether or not this send method, e.g. phone number, email address, etc., has been
+         * successfully authenticated by the User.
+         */
+        @Json(name = "verified")
+        val verified: Boolean,
+        /**
+         * The recovery codes used to authenticate the user without an authenticator app.
+         */
+        @Json(name = "recovery_codes")
+        val recoveryCodes: List<String>,
+    )
 
 /**
 * Request type for `TOTPs.authenticate`.
 */
 @JsonClass(generateAdapter = true)
-public data class AuthenticateRequest @JvmOverloads constructor(
-    /**
-     * The `user_id` of an active user the TOTP registration should be tied to.
-     */
-    @Json(name = "user_id")
-    val userId: String,
-    /**
-     * The TOTP code to authenticate. The TOTP code should consist of 6 digits.
-     */
-    @Json(name = "totp_code")
-    val totpCode: String,
-    /**
-     * The `session_token` associated with a User's existing Session.
-     */
-    @Json(name = "session_token")
-    val sessionToken: String? = null,
-    /**
-     * Set the session lifetime to be this many minutes from now. This will start a new session if one doesn't already exist,
-     *   returning both an opaque `session_token` and `session_jwt` for this session. Remember that the `session_jwt` will
-     * have a fixed lifetime of
-     *   five minutes regardless of the underlying session duration, and will need to be refreshed over time.
-     *
-     *   This value must be a minimum of 5 and a maximum of 527040 minutes (366 days).
-     *
-     *   If a `session_token` or `session_jwt` is provided then a successful authentication will continue to extend the
-     * session this many minutes.
-     *
-     *   If the `session_duration_minutes` parameter is not specified, a Stytch session will not be created.
-     */
-    @Json(name = "session_duration_minutes")
-    val sessionDurationMinutes: Int? = null,
-    /**
-     * The `session_jwt` associated with a User's existing Session.
-     */
-    @Json(name = "session_jwt")
-    val sessionJwt: String? = null,
-    /**
-     * Add a custom claims map to the Session being authenticated. Claims are only created if a Session is initialized by
-     * providing a value in `session_duration_minutes`. Claims will be included on the Session object and in the JWT. To
-     * update a key in an existing Session, supply a new value. To delete a key, supply a null value.
-     *
-     *   Custom claims made with reserved claims ("iss", "sub", "aud", "exp", "nbf", "iat", "jti") will be ignored. Total
-     * custom claims size cannot exceed four kilobytes.
-     */
-    @Json(name = "session_custom_claims")
-    val sessionCustomClaims: Map<String, Any>? = null,
-)
+public data class AuthenticateRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * The `user_id` of an active user the TOTP registration should be tied to.
+         */
+        @Json(name = "user_id")
+        val userId: String,
+        /**
+         * The TOTP code to authenticate. The TOTP code should consist of 6 digits.
+         */
+        @Json(name = "totp_code")
+        val totpCode: String,
+        /**
+         * The `session_token` associated with a User's existing Session.
+         */
+        @Json(name = "session_token")
+        val sessionToken: String? = null,
+        /**
+         * Set the session lifetime to be this many minutes from now. This will start a new session if one doesn't already exist,
+         *   returning both an opaque `session_token` and `session_jwt` for this session. Remember that the `session_jwt` will
+         * have a fixed lifetime of
+         *   five minutes regardless of the underlying session duration, and will need to be refreshed over time.
+         *
+         *   This value must be a minimum of 5 and a maximum of 527040 minutes (366 days).
+         *
+         *   If a `session_token` or `session_jwt` is provided then a successful authentication will continue to extend the
+         * session this many minutes.
+         *
+         *   If the `session_duration_minutes` parameter is not specified, a Stytch session will not be created.
+         */
+        @Json(name = "session_duration_minutes")
+        val sessionDurationMinutes: Int? = null,
+        /**
+         * The `session_jwt` associated with a User's existing Session.
+         */
+        @Json(name = "session_jwt")
+        val sessionJwt: String? = null,
+        /**
+         * Add a custom claims map to the Session being authenticated. Claims are only created if a Session is initialized by
+         * providing a value in `session_duration_minutes`. Claims will be included on the Session object and in the JWT. To
+         * update a key in an existing Session, supply a new value. To delete a key, supply a null value.
+         *
+         *   Custom claims made with reserved claims ("iss", "sub", "aud", "exp", "nbf", "iat", "jti") will be ignored. Total
+         * custom claims size cannot exceed four kilobytes.
+         */
+        @Json(name = "session_custom_claims")
+        val sessionCustomClaims: Map<String, Any>? = null,
+    )
 
 /**
 * Response type for `TOTPs.authenticate`.
 */
 @JsonClass(generateAdapter = true)
-public data class AuthenticateResponse @JvmOverloads constructor(
-    /**
-     * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-     * may ask for this value to help identify a specific API call when helping you debug an issue.
-     */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-     * The unique ID of the affected User.
-     */
-    @Json(name = "user_id")
-    val userId: String,
-    /**
-     * A secret token for a given Stytch Session.
-     */
-    @Json(name = "session_token")
-    val sessionToken: String,
-    /**
-     * The unique ID for a TOTP instance.
-     */
-    @Json(name = "totp_id")
-    val totpId: String,
-    /**
-     * The JSON Web Token (JWT) for a given Stytch Session.
-     */
-    @Json(name = "session_jwt")
-    val sessionJwt: String,
-    /**
-     * The `user` object affected by this API call. See the [Get user endpoint](https://stytch.com/docs/api/get-user) for
-     * complete response field details.
-     */
-    @Json(name = "user")
-    val user: User,
-    /**
-     * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-     * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-     */
-    @Json(name = "status_code")
-    val statusCode: Int,
-    /**
-     * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
-     * Session object in the response.
-     *
-     *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
-     *
-     */
-    @Json(name = "session")
-    val session: Session? = null,
-)
+public data class AuthenticateResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The unique ID of the affected User.
+         */
+        @Json(name = "user_id")
+        val userId: String,
+        /**
+         * A secret token for a given Stytch Session.
+         */
+        @Json(name = "session_token")
+        val sessionToken: String,
+        /**
+         * The unique ID for a TOTP instance.
+         */
+        @Json(name = "totp_id")
+        val totpId: String,
+        /**
+         * The JSON Web Token (JWT) for a given Stytch Session.
+         */
+        @Json(name = "session_jwt")
+        val sessionJwt: String,
+        /**
+         * The `user` object affected by this API call. See the [Get user endpoint](https://stytch.com/docs/api/get-user) for
+         * complete response field details.
+         */
+        @Json(name = "user")
+        val user: User,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+        /**
+         * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
+         * Session object in the response.
+         *
+         *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
+         *
+         */
+        @Json(name = "session")
+        val session: Session? = null,
+    )
 
 /**
 * Request type for `TOTPs.create`.
 */
 @JsonClass(generateAdapter = true)
-public data class CreateRequest @JvmOverloads constructor(
-    /**
-     * The `user_id` of an active user the TOTP registration should be tied to.
-     */
-    @Json(name = "user_id")
-    val userId: String,
-    /**
-     * The expiration for the TOTP instance. If the newly created TOTP is not authenticated within this time frame the TOTP
-     * will be unusable. Defaults to 60 (1 hour) with a minimum of 5 and a maximum of 1440.
-     */
-    @Json(name = "expiration_minutes")
-    val expirationMinutes: Int? = null,
-)
+public data class CreateRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * The `user_id` of an active user the TOTP registration should be tied to.
+         */
+        @Json(name = "user_id")
+        val userId: String,
+        /**
+         * The expiration for the TOTP instance. If the newly created TOTP is not authenticated within this time frame the TOTP
+         * will be unusable. Defaults to 60 (1 hour) with a minimum of 5 and a maximum of 1440.
+         */
+        @Json(name = "expiration_minutes")
+        val expirationMinutes: Int? = null,
+    )
 
 /**
 * Response type for `TOTPs.create`.
 */
 @JsonClass(generateAdapter = true)
-public data class CreateResponse @JvmOverloads constructor(
-    /**
-     * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-     * may ask for this value to help identify a specific API call when helping you debug an issue.
-     */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-     * The unique ID for a TOTP instance.
-     */
-    @Json(name = "totp_id")
-    val totpId: String,
-    /**
-     * The TOTP secret key shared between the authenticator app and the server used to generate TOTP codes.
-     */
-    @Json(name = "secret")
-    val secret: String,
-    /**
-     * The QR code image encoded in base64.
-     */
-    @Json(name = "qr_code")
-    val qrCode: String,
-    /**
-     * The recovery codes used to authenticate the user without an authenticator app.
-     */
-    @Json(name = "recovery_codes")
-    val recoveryCodes: List<String>,
-    /**
-     * The `user` object affected by this API call. See the [Get user endpoint](https://stytch.com/docs/api/get-user) for
-     * complete response field details.
-     */
-    @Json(name = "user")
-    val user: User,
-    /**
-     * The unique ID of the affected User.
-     */
-    @Json(name = "user_id")
-    val userId: String,
-    /**
-     * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-     * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-     */
-    @Json(name = "status_code")
-    val statusCode: Int,
-)
+public data class CreateResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The unique ID for a TOTP instance.
+         */
+        @Json(name = "totp_id")
+        val totpId: String,
+        /**
+         * The TOTP secret key shared between the authenticator app and the server used to generate TOTP codes.
+         */
+        @Json(name = "secret")
+        val secret: String,
+        /**
+         * The QR code image encoded in base64.
+         */
+        @Json(name = "qr_code")
+        val qrCode: String,
+        /**
+         * The recovery codes used to authenticate the user without an authenticator app.
+         */
+        @Json(name = "recovery_codes")
+        val recoveryCodes: List<String>,
+        /**
+         * The `user` object affected by this API call. See the [Get user endpoint](https://stytch.com/docs/api/get-user) for
+         * complete response field details.
+         */
+        @Json(name = "user")
+        val user: User,
+        /**
+         * The unique ID of the affected User.
+         */
+        @Json(name = "user_id")
+        val userId: String,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
 
 /**
 * Request type for `TOTPs.recover`.
 */
 @JsonClass(generateAdapter = true)
-public data class RecoverRequest @JvmOverloads constructor(
-    /**
-     * The `user_id` of an active user the TOTP registration should be tied to.
-     */
-    @Json(name = "user_id")
-    val userId: String,
-    /**
-     * The recovery code to authenticate.
-     */
-    @Json(name = "recovery_code")
-    val recoveryCode: String,
-    /**
-     * The `session_token` associated with a User's existing Session.
-     */
-    @Json(name = "session_token")
-    val sessionToken: String? = null,
-    /**
-     * Set the session lifetime to be this many minutes from now. This will start a new session if one doesn't already exist,
-     *   returning both an opaque `session_token` and `session_jwt` for this session. Remember that the `session_jwt` will
-     * have a fixed lifetime of
-     *   five minutes regardless of the underlying session duration, and will need to be refreshed over time.
-     *
-     *   This value must be a minimum of 5 and a maximum of 527040 minutes (366 days).
-     *
-     *   If a `session_token` or `session_jwt` is provided then a successful authentication will continue to extend the
-     * session this many minutes.
-     *
-     *   If the `session_duration_minutes` parameter is not specified, a Stytch session will not be created.
-     */
-    @Json(name = "session_duration_minutes")
-    val sessionDurationMinutes: Int? = null,
-    /**
-     * The `session_jwt` associated with a User's existing Session.
-     */
-    @Json(name = "session_jwt")
-    val sessionJwt: String? = null,
-    /**
-     * Add a custom claims map to the Session being authenticated. Claims are only created if a Session is initialized by
-     * providing a value in `session_duration_minutes`. Claims will be included on the Session object and in the JWT. To
-     * update a key in an existing Session, supply a new value. To delete a key, supply a null value.
-     *
-     *   Custom claims made with reserved claims ("iss", "sub", "aud", "exp", "nbf", "iat", "jti") will be ignored. Total
-     * custom claims size cannot exceed four kilobytes.
-     */
-    @Json(name = "session_custom_claims")
-    val sessionCustomClaims: Map<String, Any>? = null,
-)
+public data class RecoverRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * The `user_id` of an active user the TOTP registration should be tied to.
+         */
+        @Json(name = "user_id")
+        val userId: String,
+        /**
+         * The recovery code to authenticate.
+         */
+        @Json(name = "recovery_code")
+        val recoveryCode: String,
+        /**
+         * The `session_token` associated with a User's existing Session.
+         */
+        @Json(name = "session_token")
+        val sessionToken: String? = null,
+        /**
+         * Set the session lifetime to be this many minutes from now. This will start a new session if one doesn't already exist,
+         *   returning both an opaque `session_token` and `session_jwt` for this session. Remember that the `session_jwt` will
+         * have a fixed lifetime of
+         *   five minutes regardless of the underlying session duration, and will need to be refreshed over time.
+         *
+         *   This value must be a minimum of 5 and a maximum of 527040 minutes (366 days).
+         *
+         *   If a `session_token` or `session_jwt` is provided then a successful authentication will continue to extend the
+         * session this many minutes.
+         *
+         *   If the `session_duration_minutes` parameter is not specified, a Stytch session will not be created.
+         */
+        @Json(name = "session_duration_minutes")
+        val sessionDurationMinutes: Int? = null,
+        /**
+         * The `session_jwt` associated with a User's existing Session.
+         */
+        @Json(name = "session_jwt")
+        val sessionJwt: String? = null,
+        /**
+         * Add a custom claims map to the Session being authenticated. Claims are only created if a Session is initialized by
+         * providing a value in `session_duration_minutes`. Claims will be included on the Session object and in the JWT. To
+         * update a key in an existing Session, supply a new value. To delete a key, supply a null value.
+         *
+         *   Custom claims made with reserved claims ("iss", "sub", "aud", "exp", "nbf", "iat", "jti") will be ignored. Total
+         * custom claims size cannot exceed four kilobytes.
+         */
+        @Json(name = "session_custom_claims")
+        val sessionCustomClaims: Map<String, Any>? = null,
+    )
 
 /**
 * Response type for `TOTPs.recover`.
 */
 @JsonClass(generateAdapter = true)
-public data class RecoverResponse @JvmOverloads constructor(
-    /**
-     * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-     * may ask for this value to help identify a specific API call when helping you debug an issue.
-     */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-     * The unique ID for a TOTP instance.
-     */
-    @Json(name = "totp_id")
-    val totpId: String,
-    /**
-     * The unique ID of the affected User.
-     */
-    @Json(name = "user_id")
-    val userId: String,
-    /**
-     * A secret token for a given Stytch Session.
-     */
-    @Json(name = "session_token")
-    val sessionToken: String,
-    /**
-     * The JSON Web Token (JWT) for a given Stytch Session.
-     */
-    @Json(name = "session_jwt")
-    val sessionJwt: String,
-    /**
-     * The `user` object affected by this API call. See the [Get user endpoint](https://stytch.com/docs/api/get-user) for
-     * complete response field details.
-     */
-    @Json(name = "user")
-    val user: User,
-    /**
-     * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-     * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-     */
-    @Json(name = "status_code")
-    val statusCode: Int,
-    /**
-     * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
-     * Session object in the response.
-     *
-     *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
-     *
-     */
-    @Json(name = "session")
-    val session: Session? = null,
-)
+public data class RecoverResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The unique ID for a TOTP instance.
+         */
+        @Json(name = "totp_id")
+        val totpId: String,
+        /**
+         * The unique ID of the affected User.
+         */
+        @Json(name = "user_id")
+        val userId: String,
+        /**
+         * A secret token for a given Stytch Session.
+         */
+        @Json(name = "session_token")
+        val sessionToken: String,
+        /**
+         * The JSON Web Token (JWT) for a given Stytch Session.
+         */
+        @Json(name = "session_jwt")
+        val sessionJwt: String,
+        /**
+         * The `user` object affected by this API call. See the [Get user endpoint](https://stytch.com/docs/api/get-user) for
+         * complete response field details.
+         */
+        @Json(name = "user")
+        val user: User,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+        /**
+         * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
+         * Session object in the response.
+         *
+         *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
+         *
+         */
+        @Json(name = "session")
+        val session: Session? = null,
+    )
 
 /**
 * Request type for `TOTPs.recoveryCodes`.
 */
 @JsonClass(generateAdapter = true)
-public data class RecoveryCodesRequest @JvmOverloads constructor(
-    /**
-     * The `user_id` of an active user the TOTP registration should be tied to.
-     */
-    @Json(name = "user_id")
-    val userId: String,
-)
+public data class RecoveryCodesRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * The `user_id` of an active user the TOTP registration should be tied to.
+         */
+        @Json(name = "user_id")
+        val userId: String,
+    )
 
 /**
 * Response type for `TOTPs.recoveryCodes`.
 */
 @JsonClass(generateAdapter = true)
-public data class RecoveryCodesResponse @JvmOverloads constructor(
-    /**
-     * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-     * may ask for this value to help identify a specific API call when helping you debug an issue.
-     */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-     * The unique ID of the affected User.
-     */
-    @Json(name = "user_id")
-    val userId: String,
-    /**
-     * An array containing a list of all TOTP instances (along with their recovery codes) for a given User in the Stytch API.
-     */
-    @Json(name = "totps")
-    val totps: List<TOTP>,
-    /**
-     * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-     * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-     */
-    @Json(name = "status_code")
-    val statusCode: Int,
-)
+public data class RecoveryCodesResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The unique ID of the affected User.
+         */
+        @Json(name = "user_id")
+        val userId: String,
+        /**
+         * An array containing a list of all TOTP instances (along with their recovery codes) for a given User in the Stytch API.
+         */
+        @Json(name = "totps")
+        val totps: List<TOTP>,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )

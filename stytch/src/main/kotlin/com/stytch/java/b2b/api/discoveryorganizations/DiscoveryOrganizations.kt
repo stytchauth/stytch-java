@@ -21,6 +21,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface Organizations {
     /**
      * If an end user does not want to join any already-existing organization, or has no possible organizations to join, this
@@ -32,8 +33,8 @@ public interface Organizations {
      *
      * This endpoint can also be used to start an initial session for the newly created member and organization.
      *
-     * (Coming Soon) If the new Organization is created with a `mfa_policy` of `REQUIRED_FOR_ALL`, the newly created Member
-     * will need to complete an MFA step to log in to the Organization.
+     * If the new Organization is created with a `mfa_policy` of `REQUIRED_FOR_ALL`, the newly created Member will need to
+     * complete an MFA step to log in to the Organization.
      * The `intermediate_session_token` will not be consumed and instead will be returned in the response.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
@@ -56,8 +57,8 @@ public interface Organizations {
      *
      * This endpoint can also be used to start an initial session for the newly created member and organization.
      *
-     * (Coming Soon) If the new Organization is created with a `mfa_policy` of `REQUIRED_FOR_ALL`, the newly created Member
-     * will need to complete an MFA step to log in to the Organization.
+     * If the new Organization is created with a `mfa_policy` of `REQUIRED_FOR_ALL`, the newly created Member will need to
+     * complete an MFA step to log in to the Organization.
      * The `intermediate_session_token` will not be consumed and instead will be returned in the response.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
@@ -68,7 +69,10 @@ public interface Organizations {
      * a different Organization or create a new one.
      * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      */
-    public fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit)
+    public fun create(
+        data: CreateRequest,
+        callback: (StytchResult<CreateResponse>) -> Unit,
+    )
 
     /**
      * If an end user does not want to join any already-existing organization, or has no possible organizations to join, this
@@ -80,8 +84,8 @@ public interface Organizations {
      *
      * This endpoint can also be used to start an initial session for the newly created member and organization.
      *
-     * (Coming Soon) If the new Organization is created with a `mfa_policy` of `REQUIRED_FOR_ALL`, the newly created Member
-     * will need to complete an MFA step to log in to the Organization.
+     * If the new Organization is created with a `mfa_policy` of `REQUIRED_FOR_ALL`, the newly created Member will need to
+     * complete an MFA step to log in to the Organization.
      * The `intermediate_session_token` will not be consumed and instead will be returned in the response.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
@@ -136,7 +140,10 @@ public interface Organizations {
      *
      * This operation does not consume the Intermediate Session or Session Token passed in.
      */
-    public fun list(data: ListRequest, callback: (StytchResult<ListResponse>) -> Unit)
+    public fun list(
+        data: ListRequest,
+        callback: (StytchResult<ListResponse>) -> Unit,
+    )
 
     /**
      * List all possible organization relationships connected to a
@@ -165,15 +172,18 @@ internal class OrganizationsImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : Organizations {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/discovery/organizations/create", asJson)
-    }
+    override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/discovery/organizations/create", asJson)
+        }
 
-    override fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit) {
+    override fun create(
+        data: CreateRequest,
+        callback: (StytchResult<CreateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(create(data))
         }
@@ -183,12 +193,17 @@ internal class OrganizationsImpl(
         coroutineScope.async {
             create(data)
         }.asCompletableFuture()
-    override suspend fun list(data: ListRequest): StytchResult<ListResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(ListRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/discovery/organizations", asJson)
-    }
 
-    override fun list(data: ListRequest, callback: (StytchResult<ListResponse>) -> Unit) {
+    override suspend fun list(data: ListRequest): StytchResult<ListResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(ListRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/discovery/organizations", asJson)
+        }
+
+    override fun list(
+        data: ListRequest,
+        callback: (StytchResult<ListResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(list(data))
         }

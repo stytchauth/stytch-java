@@ -68,18 +68,23 @@ public object StytchClient {
     public lateinit var webauthn: WebAuthn
 
     @JvmStatic
-    public fun configure(projectId: String, secret: String) {
+    public fun configure(
+        projectId: String,
+        secret: String,
+    ) {
         val baseUrl = getBaseUrl(projectId)
-        httpClient = HttpClient(
-            baseUrl = baseUrl,
-            projectId = projectId,
-            secret = secret,
-        )
-        jwtOptions = JwtOptions(
-            audience = projectId,
-            issuer = "stytch.com/$projectId",
-            type = "JWT",
-        )
+        httpClient =
+            HttpClient(
+                baseUrl = baseUrl,
+                projectId = projectId,
+                secret = secret,
+            )
+        jwtOptions =
+            JwtOptions(
+                audience = projectId,
+                issuer = "stytch.com/$projectId",
+                type = "JWT",
+            )
         val coroutineScope = CoroutineScope(SupervisorJob())
         httpsJwks = HttpsJwks("$baseUrl/v1/sessions/jwks/$projectId")
         cryptoWallets = CryptoWalletsImpl(httpClient, coroutineScope)
@@ -97,8 +102,9 @@ public object StytchClient {
     /**
      * Resolve the base URL for the Stytch API environment.
      */
-    private fun getBaseUrl(projectId: String): String = when (projectId.startsWith("project-test")) {
-        true -> BASE_TEST_URL
-        false -> BASE_LIVE_URL
-    }
+    private fun getBaseUrl(projectId: String): String =
+        when (projectId.startsWith("project-test")) {
+            true -> BASE_TEST_URL
+            false -> BASE_LIVE_URL
+        }
 }

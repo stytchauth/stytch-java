@@ -19,6 +19,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface Discovery {
     /**
      * Authenticates the Discovery OAuth token and exchanges it for an Intermediate Session Token. Intermediate Session Tokens
@@ -30,7 +31,10 @@ public interface Discovery {
      * Authenticates the Discovery OAuth token and exchanges it for an Intermediate Session Token. Intermediate Session Tokens
      * can be used for various Discovery login flows and are valid for 10 minutes.
      */
-    public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+    public fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    )
 
     /**
      * Authenticates the Discovery OAuth token and exchanges it for an Intermediate Session Token. Intermediate Session Tokens
@@ -43,15 +47,18 @@ internal class DiscoveryImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : Discovery {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/oauth/discovery/authenticate", asJson)
-    }
+    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/oauth/discovery/authenticate", asJson)
+        }
 
-    override fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit) {
+    override fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(authenticate(data))
         }

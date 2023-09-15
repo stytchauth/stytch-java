@@ -21,6 +21,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface OIDC {
     /**
      * Create a new OIDC Connection.
@@ -30,7 +31,10 @@ public interface OIDC {
     /**
      * Create a new OIDC Connection.
      */
-    public fun createConnection(data: CreateConnectionRequest, callback: (StytchResult<CreateConnectionResponse>) -> Unit)
+    public fun createConnection(
+        data: CreateConnectionRequest,
+        callback: (StytchResult<CreateConnectionResponse>) -> Unit,
+    )
 
     /**
      * Create a new OIDC Connection.
@@ -91,7 +95,10 @@ public interface OIDC {
      * * `userinfo_url`
      * * `jwks_url`
      */
-    public fun updateConnection(data: UpdateConnectionRequest, callback: (StytchResult<UpdateConnectionResponse>) -> Unit)
+    public fun updateConnection(
+        data: UpdateConnectionRequest,
+        callback: (StytchResult<UpdateConnectionResponse>) -> Unit,
+    )
 
     /**
      * Updates an existing OIDC connection.
@@ -126,15 +133,18 @@ internal class OIDCImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : OIDC {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override suspend fun createConnection(data: CreateConnectionRequest): StytchResult<CreateConnectionResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(CreateConnectionRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/sso/oidc/${data.organizationId}", asJson)
-    }
+    override suspend fun createConnection(data: CreateConnectionRequest): StytchResult<CreateConnectionResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(CreateConnectionRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/sso/oidc/${data.organizationId}", asJson)
+        }
 
-    override fun createConnection(data: CreateConnectionRequest, callback: (StytchResult<CreateConnectionResponse>) -> Unit) {
+    override fun createConnection(
+        data: CreateConnectionRequest,
+        callback: (StytchResult<CreateConnectionResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(createConnection(data))
         }
@@ -144,12 +154,17 @@ internal class OIDCImpl(
         coroutineScope.async {
             createConnection(data)
         }.asCompletableFuture()
-    override suspend fun updateConnection(data: UpdateConnectionRequest): StytchResult<UpdateConnectionResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(UpdateConnectionRequest::class.java).toJson(data)
-        httpClient.put("/v1/b2b/sso/oidc/${data.organizationId}/connections/${data.connectionId}", asJson)
-    }
 
-    override fun updateConnection(data: UpdateConnectionRequest, callback: (StytchResult<UpdateConnectionResponse>) -> Unit) {
+    override suspend fun updateConnection(data: UpdateConnectionRequest): StytchResult<UpdateConnectionResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(UpdateConnectionRequest::class.java).toJson(data)
+            httpClient.put("/v1/b2b/sso/oidc/${data.organizationId}/connections/${data.connectionId}", asJson)
+        }
+
+    override fun updateConnection(
+        data: UpdateConnectionRequest,
+        callback: (StytchResult<UpdateConnectionResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(updateConnection(data))
         }

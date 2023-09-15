@@ -20,14 +20,15 @@ internal fun parseJWTClaims(
     options: ParseJWTClaimsOptions,
 ): ParsedJWTClaims {
     val now = Date().time
-    val jwtConsumer = JwtConsumerBuilder().apply {
-        setRequireExpirationTime()
-        setAllowedClockSkewInSeconds(options.leeway)
-        setRequireSubject()
-        setExpectedAudience(jwtOptions.audience)
-        setExpectedIssuer(jwtOptions.issuer)
-        setVerificationKeyResolver(HttpsJwksVerificationKeyResolver(jwksClient))
-    }.build()
+    val jwtConsumer =
+        JwtConsumerBuilder().apply {
+            setRequireExpirationTime()
+            setAllowedClockSkewInSeconds(options.leeway)
+            setRequireSubject()
+            setExpectedAudience(jwtOptions.audience)
+            setExpectedIssuer(jwtOptions.issuer)
+            setVerificationKeyResolver(HttpsJwksVerificationKeyResolver(jwksClient))
+        }.build()
     val jwtClaims = jwtConsumer.processToClaims(jwt)
     if (options.maxTokenAgeSeconds != null) {
         val iat = jwtClaims.issuedAt
@@ -38,9 +39,10 @@ internal fun parseJWTClaims(
             )
         }
     }
-    val customClaims = jwtClaims.claimsMap.filterNot {
-        IGNORED_CLAIMS.contains(it.key)
-    }
+    val customClaims =
+        jwtClaims.claimsMap.filterNot {
+            IGNORED_CLAIMS.contains(it.key)
+        }
     return ParsedJWTClaims(
         payload = jwtClaims,
         customClaims = customClaims,

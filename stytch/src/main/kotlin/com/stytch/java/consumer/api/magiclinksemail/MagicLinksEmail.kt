@@ -25,6 +25,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface Email {
     /**
      * Send a magic link to an existing Stytch user using their email address. If you'd like to create a user and send them a
@@ -32,11 +33,9 @@ public interface Email {
      * [log in or create endpoint](https://stytch.com/docs/api/log-in-or-create-user-by-email).
      *
      * ### Add an email to an existing user
-     * This endpoint also allows you to add a new email to an existing Stytch User. Including a `user_id`, `session_token`, or
-     * `session_jwt` in the request will add the email to the pre-existing Stytch User upon successful authentication.
-     *
-     * Adding a new email to an existing Stytch User requires the user to be present and validate the email via magic link.
-     * This requirement is in place to prevent account takeover attacks.
+     * This endpoint also allows you to add a new email address to an existing Stytch User. Including a `user_id`,
+     * `session_token`, or `session_jwt` in your Send Magic Link by email request will add the new, unverified email address
+     * to the existing Stytch User. Upon successful authentication, the email address will be marked as verified.
      *
      * ### Next steps
      * The user is emailed a magic link which redirects them to the provided
@@ -52,11 +51,9 @@ public interface Email {
      * [log in or create endpoint](https://stytch.com/docs/api/log-in-or-create-user-by-email).
      *
      * ### Add an email to an existing user
-     * This endpoint also allows you to add a new email to an existing Stytch User. Including a `user_id`, `session_token`, or
-     * `session_jwt` in the request will add the email to the pre-existing Stytch User upon successful authentication.
-     *
-     * Adding a new email to an existing Stytch User requires the user to be present and validate the email via magic link.
-     * This requirement is in place to prevent account takeover attacks.
+     * This endpoint also allows you to add a new email address to an existing Stytch User. Including a `user_id`,
+     * `session_token`, or `session_jwt` in your Send Magic Link by email request will add the new, unverified email address
+     * to the existing Stytch User. Upon successful authentication, the email address will be marked as verified.
      *
      * ### Next steps
      * The user is emailed a magic link which redirects them to the provided
@@ -64,7 +61,10 @@ public interface Email {
      * the URL query parameters, and call [Authenticate magic link](https://stytch.com/docs/api/authenticate-magic-link) to
      * complete authentication.
      */
-    public fun send(data: SendRequest, callback: (StytchResult<SendResponse>) -> Unit)
+    public fun send(
+        data: SendRequest,
+        callback: (StytchResult<SendResponse>) -> Unit,
+    )
 
     /**
      * Send a magic link to an existing Stytch user using their email address. If you'd like to create a user and send them a
@@ -72,11 +72,9 @@ public interface Email {
      * [log in or create endpoint](https://stytch.com/docs/api/log-in-or-create-user-by-email).
      *
      * ### Add an email to an existing user
-     * This endpoint also allows you to add a new email to an existing Stytch User. Including a `user_id`, `session_token`, or
-     * `session_jwt` in the request will add the email to the pre-existing Stytch User upon successful authentication.
-     *
-     * Adding a new email to an existing Stytch User requires the user to be present and validate the email via magic link.
-     * This requirement is in place to prevent account takeover attacks.
+     * This endpoint also allows you to add a new email address to an existing Stytch User. Including a `user_id`,
+     * `session_token`, or `session_jwt` in your Send Magic Link by email request will add the new, unverified email address
+     * to the existing Stytch User. Upon successful authentication, the email address will be marked as verified.
      *
      * ### Next steps
      * The user is emailed a magic link which redirects them to the provided
@@ -110,7 +108,10 @@ public interface Email {
      * URL query parameters and call [Authenticate Magic Link](https://stytch.com/docs/api/authenticate-magic-link) to
      * complete authentication.
      */
-    public fun loginOrCreate(data: LoginOrCreateRequest, callback: (StytchResult<LoginOrCreateResponse>) -> Unit)
+    public fun loginOrCreate(
+        data: LoginOrCreateRequest,
+        callback: (StytchResult<LoginOrCreateResponse>) -> Unit,
+    )
 
     /**
      * Send either a login or signup Magic Link to the User based on if the email is associated with a User already. A new or
@@ -147,7 +148,10 @@ public interface Email {
      * URL query parameters and call [Authenticate Magic Link](https://stytch.com/docs/api/authenticate-magic-link) to
      * complete authentication.
      */
-    public fun invite(data: InviteRequest, callback: (StytchResult<InviteResponse>) -> Unit)
+    public fun invite(
+        data: InviteRequest,
+        callback: (StytchResult<InviteResponse>) -> Unit,
+    )
 
     /**
      * Create a User and send an invite Magic Link to the provided `email`. The User will be created with a `pending` status
@@ -169,7 +173,10 @@ public interface Email {
     /**
      * Revoke a pending invite based on the `email` provided.
      */
-    public fun revokeInvite(data: RevokeInviteRequest, callback: (StytchResult<RevokeInviteResponse>) -> Unit)
+    public fun revokeInvite(
+        data: RevokeInviteRequest,
+        callback: (StytchResult<RevokeInviteResponse>) -> Unit,
+    )
 
     /**
      * Revoke a pending invite based on the `email` provided.
@@ -181,15 +188,18 @@ internal class EmailImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : Email {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override suspend fun send(data: SendRequest): StytchResult<SendResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(SendRequest::class.java).toJson(data)
-        httpClient.post("/v1/magic_links/email/send", asJson)
-    }
+    override suspend fun send(data: SendRequest): StytchResult<SendResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(SendRequest::class.java).toJson(data)
+            httpClient.post("/v1/magic_links/email/send", asJson)
+        }
 
-    override fun send(data: SendRequest, callback: (StytchResult<SendResponse>) -> Unit) {
+    override fun send(
+        data: SendRequest,
+        callback: (StytchResult<SendResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(send(data))
         }
@@ -199,12 +209,17 @@ internal class EmailImpl(
         coroutineScope.async {
             send(data)
         }.asCompletableFuture()
-    override suspend fun loginOrCreate(data: LoginOrCreateRequest): StytchResult<LoginOrCreateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(LoginOrCreateRequest::class.java).toJson(data)
-        httpClient.post("/v1/magic_links/email/login_or_create", asJson)
-    }
 
-    override fun loginOrCreate(data: LoginOrCreateRequest, callback: (StytchResult<LoginOrCreateResponse>) -> Unit) {
+    override suspend fun loginOrCreate(data: LoginOrCreateRequest): StytchResult<LoginOrCreateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(LoginOrCreateRequest::class.java).toJson(data)
+            httpClient.post("/v1/magic_links/email/login_or_create", asJson)
+        }
+
+    override fun loginOrCreate(
+        data: LoginOrCreateRequest,
+        callback: (StytchResult<LoginOrCreateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(loginOrCreate(data))
         }
@@ -214,12 +229,17 @@ internal class EmailImpl(
         coroutineScope.async {
             loginOrCreate(data)
         }.asCompletableFuture()
-    override suspend fun invite(data: InviteRequest): StytchResult<InviteResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(InviteRequest::class.java).toJson(data)
-        httpClient.post("/v1/magic_links/email/invite", asJson)
-    }
 
-    override fun invite(data: InviteRequest, callback: (StytchResult<InviteResponse>) -> Unit) {
+    override suspend fun invite(data: InviteRequest): StytchResult<InviteResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(InviteRequest::class.java).toJson(data)
+            httpClient.post("/v1/magic_links/email/invite", asJson)
+        }
+
+    override fun invite(
+        data: InviteRequest,
+        callback: (StytchResult<InviteResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(invite(data))
         }
@@ -229,12 +249,17 @@ internal class EmailImpl(
         coroutineScope.async {
             invite(data)
         }.asCompletableFuture()
-    override suspend fun revokeInvite(data: RevokeInviteRequest): StytchResult<RevokeInviteResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(RevokeInviteRequest::class.java).toJson(data)
-        httpClient.post("/v1/magic_links/email/revoke_invite", asJson)
-    }
 
-    override fun revokeInvite(data: RevokeInviteRequest, callback: (StytchResult<RevokeInviteResponse>) -> Unit) {
+    override suspend fun revokeInvite(data: RevokeInviteRequest): StytchResult<RevokeInviteResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(RevokeInviteRequest::class.java).toJson(data)
+            httpClient.post("/v1/magic_links/email/revoke_invite", asJson)
+        }
+
+    override fun revokeInvite(
+        data: RevokeInviteRequest,
+        callback: (StytchResult<RevokeInviteResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(revokeInvite(data))
         }

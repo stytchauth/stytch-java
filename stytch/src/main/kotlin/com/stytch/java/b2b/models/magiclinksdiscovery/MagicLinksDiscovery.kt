@@ -14,71 +14,75 @@ import com.stytch.java.b2b.models.discovery.DiscoveredOrganization
 * Request type for `Discovery.authenticate`.
 */
 @JsonClass(generateAdapter = true)
-public data class AuthenticateRequest @JvmOverloads constructor(
-    /**
-     * The Discovery Email Magic Link token to authenticate.
-     */
-    @Json(name = "discovery_magic_links_token")
-    val discoveryMagicLinksToken: String,
-    /**
-     * A base64url encoded one time secret used to validate that the request starts and ends on the same device.
-     */
-    @Json(name = "pkce_code_verifier")
-    val pkceCodeVerifier: String? = null,
-)
+public data class AuthenticateRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * The Discovery Email Magic Link token to authenticate.
+         */
+        @Json(name = "discovery_magic_links_token")
+        val discoveryMagicLinksToken: String,
+        /**
+         * A base64url encoded one time secret used to validate that the request starts and ends on the same device.
+         */
+        @Json(name = "pkce_code_verifier")
+        val pkceCodeVerifier: String? = null,
+    )
 
 /**
 * Response type for `Discovery.authenticate`.
 */
 @JsonClass(generateAdapter = true)
-public data class AuthenticateResponse @JvmOverloads constructor(
-    /**
-     * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-     * may ask for this value to help identify a specific API call when helping you debug an issue.
-     */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-     * The Intermediate Session Token. This token does not necessarily belong to a specific instance of a Member, but
-     * represents a bag of factors that may be converted to a member session.
-     *     The token can be used with the
-     * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete an MFA flow;
-     *     the [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join
-     * a specific Organization that allows the factors represented by the intermediate session token;
-     *     or the
-     * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to
-     * create a new Organization and Member.
-     */
-    @Json(name = "intermediate_session_token")
-    val intermediateSessionToken: String,
-    /**
-     * The email address.
-     */
-    @Json(name = "email_address")
-    val emailAddress: String,
-    /**
-     * An array of `discovered_organization` objects tied to the `intermediate_session_token`, `session_token`, or
-     * `session_jwt`. See the [Discovered Organization Object](https://stytch.com/docs/b2b/api/discovered-organization-object)
-     * for complete details.
-     *
-     *   Note that Organizations will only appear here under any of the following conditions:
-     *   1. The end user is already a Member of the Organization.
-     *   2. The end user is invited to the Organization.
-     *   3. The end user can join the Organization because:
-     *
-     *       a) The Organization allows JIT provisioning.
-     *
-     *       b) The Organizations' allowed domains list contains the Member's email domain.
-     *
-     *       c) The Organization has at least one other Member with a verified email address with the same domain as the end
-     * user (to prevent phishing attacks).
-     */
-    @Json(name = "discovered_organizations")
-    val discoveredOrganizations: List<DiscoveredOrganization>,
-    /**
-     * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-     * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-     */
-    @Json(name = "status_code")
-    val statusCode: Int,
-)
+public data class AuthenticateResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The Intermediate Session Token. This token does not necessarily belong to a specific instance of a Member, but
+         * represents a bag of factors that may be converted to a member session.
+         *     The token can be used with the
+         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete an MFA flow;
+         *     the [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join
+         * a specific Organization that allows the factors represented by the intermediate session token;
+         *     or the
+         * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to
+         * create a new Organization and Member.
+         */
+        @Json(name = "intermediate_session_token")
+        val intermediateSessionToken: String,
+        /**
+         * The email address.
+         */
+        @Json(name = "email_address")
+        val emailAddress: String,
+        /**
+         * An array of `discovered_organization` objects tied to the `intermediate_session_token`, `session_token`, or
+         * `session_jwt`. See the [Discovered Organization Object](https://stytch.com/docs/b2b/api/discovered-organization-object)
+         * for complete details.
+         *
+         *   Note that Organizations will only appear here under any of the following conditions:
+         *   1. The end user is already a Member of the Organization.
+         *   2. The end user is invited to the Organization.
+         *   3. The end user can join the Organization because:
+         *
+         *       a) The Organization allows JIT provisioning.
+         *
+         *       b) The Organizations' allowed domains list contains the Member's email domain.
+         *
+         *       c) The Organization has at least one other Member with a verified email address with the same domain as the end
+         * user (to prevent phishing attacks).
+         */
+        @Json(name = "discovered_organizations")
+        val discoveredOrganizations: List<DiscoveredOrganization>,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )

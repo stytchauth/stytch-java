@@ -19,6 +19,8 @@ import com.stytch.java.b2b.models.organizationsmembers.DeleteRequest
 import com.stytch.java.b2b.models.organizationsmembers.DeleteResponse
 import com.stytch.java.b2b.models.organizationsmembers.GetRequest
 import com.stytch.java.b2b.models.organizationsmembers.GetResponse
+import com.stytch.java.b2b.models.organizationsmembers.ReactivateRequest
+import com.stytch.java.b2b.models.organizationsmembers.ReactivateResponse
 import com.stytch.java.b2b.models.organizationsmembers.SearchRequest
 import com.stytch.java.b2b.models.organizationsmembers.SearchResponse
 import com.stytch.java.b2b.models.organizationsmembers.UpdateRequest
@@ -33,6 +35,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface Members {
     /**
      * Updates a Member specified by `organization_id` and `member_id`.
@@ -42,7 +45,10 @@ public interface Members {
     /**
      * Updates a Member specified by `organization_id` and `member_id`.
      */
-    public fun update(data: UpdateRequest, callback: (StytchResult<UpdateResponse>) -> Unit)
+    public fun update(
+        data: UpdateRequest,
+        callback: (StytchResult<UpdateResponse>) -> Unit,
+    )
 
     /**
      * Updates a Member specified by `organization_id` and `member_id`.
@@ -57,7 +63,10 @@ public interface Members {
     /**
      * Deletes a Member specified by `organization_id` and `member_id`.
      */
-    public fun delete(data: DeleteRequest, callback: (StytchResult<DeleteResponse>) -> Unit)
+    public fun delete(
+        data: DeleteRequest,
+        callback: (StytchResult<DeleteResponse>) -> Unit,
+    )
 
     /**
      * Deletes a Member specified by `organization_id` and `member_id`.
@@ -65,23 +74,76 @@ public interface Members {
     public fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>>
 
     /**
+     * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
+     * `organization_id` and `member_id`.
+     */
+    public suspend fun reactivate(data: ReactivateRequest): StytchResult<ReactivateResponse>
+
+    /**
+     * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
+     * `organization_id` and `member_id`.
+     */
+    public fun reactivate(
+        data: ReactivateRequest,
+        callback: (StytchResult<ReactivateResponse>) -> Unit,
+    )
+
+    /**
+     * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
+     * `organization_id` and `member_id`.
+     */
+    public fun reactivateCompletable(data: ReactivateRequest): CompletableFuture<StytchResult<ReactivateResponse>>
+
+    /**
      * Delete a Member's MFA phone number.
+     *
+     * To change a Member's phone number, you must first call this endpoint to delete the existing phone number.
+     *
+     * Existing Member Sessions that include a phone number authentication factor will not be revoked if the phone number is
+     * deleted, and MFA will not be enforced until the Member logs in again.
+     * If you wish to enforce MFA immediately after a phone number is deleted, you can do so by prompting the Member to enter
+     * a new phone number
+     * and calling the [OTP SMS send](https://stytch.com/docs/b2b/api/otp-sms-send) endpoint, then calling the
+     * [OTP SMS Authenticate](https://stytch.com/docs/b2b/api/authenticate-otp-sms) endpoint.
      */
     public suspend fun deleteMFAPhoneNumber(data: DeleteMFAPhoneNumberRequest): StytchResult<DeleteMFAPhoneNumberResponse>
 
     /**
      * Delete a Member's MFA phone number.
+     *
+     * To change a Member's phone number, you must first call this endpoint to delete the existing phone number.
+     *
+     * Existing Member Sessions that include a phone number authentication factor will not be revoked if the phone number is
+     * deleted, and MFA will not be enforced until the Member logs in again.
+     * If you wish to enforce MFA immediately after a phone number is deleted, you can do so by prompting the Member to enter
+     * a new phone number
+     * and calling the [OTP SMS send](https://stytch.com/docs/b2b/api/otp-sms-send) endpoint, then calling the
+     * [OTP SMS Authenticate](https://stytch.com/docs/b2b/api/authenticate-otp-sms) endpoint.
      */
-    public fun deleteMFAPhoneNumber(data: DeleteMFAPhoneNumberRequest, callback: (StytchResult<DeleteMFAPhoneNumberResponse>) -> Unit)
+    public fun deleteMFAPhoneNumber(
+        data: DeleteMFAPhoneNumberRequest,
+        callback: (StytchResult<DeleteMFAPhoneNumberResponse>) -> Unit,
+    )
 
     /**
      * Delete a Member's MFA phone number.
+     *
+     * To change a Member's phone number, you must first call this endpoint to delete the existing phone number.
+     *
+     * Existing Member Sessions that include a phone number authentication factor will not be revoked if the phone number is
+     * deleted, and MFA will not be enforced until the Member logs in again.
+     * If you wish to enforce MFA immediately after a phone number is deleted, you can do so by prompting the Member to enter
+     * a new phone number
+     * and calling the [OTP SMS send](https://stytch.com/docs/b2b/api/otp-sms-send) endpoint, then calling the
+     * [OTP SMS Authenticate](https://stytch.com/docs/b2b/api/authenticate-otp-sms) endpoint.
      */
-    public fun deleteMFAPhoneNumberCompletable(data: DeleteMFAPhoneNumberRequest): CompletableFuture<StytchResult<DeleteMFAPhoneNumberResponse>>
+    public fun deleteMFAPhoneNumberCompletable(
+        data: DeleteMFAPhoneNumberRequest,
+    ): CompletableFuture<StytchResult<DeleteMFAPhoneNumberResponse>>
 
     /**
      * Search for Members within specified Organizations. An array with at least one `organization_id` is required. Submitting
-     * an empty `query` returns all Members within the specified Organizations.
+     * an empty `query` returns all non-deleted Members within the specified Organizations.
      *
      * *All fuzzy search filters require a minimum of three characters.
      */
@@ -89,15 +151,18 @@ public interface Members {
 
     /**
      * Search for Members within specified Organizations. An array with at least one `organization_id` is required. Submitting
-     * an empty `query` returns all Members within the specified Organizations.
+     * an empty `query` returns all non-deleted Members within the specified Organizations.
      *
      * *All fuzzy search filters require a minimum of three characters.
      */
-    public fun search(data: SearchRequest, callback: (StytchResult<SearchResponse>) -> Unit)
+    public fun search(
+        data: SearchRequest,
+        callback: (StytchResult<SearchResponse>) -> Unit,
+    )
 
     /**
      * Search for Members within specified Organizations. An array with at least one `organization_id` is required. Submitting
-     * an empty `query` returns all Members within the specified Organizations.
+     * an empty `query` returns all non-deleted Members within the specified Organizations.
      *
      * *All fuzzy search filters require a minimum of three characters.
      */
@@ -111,7 +176,10 @@ public interface Members {
     /**
      * Delete a Member's password.
      */
-    public fun deletePassword(data: DeletePasswordRequest, callback: (StytchResult<DeletePasswordResponse>) -> Unit)
+    public fun deletePassword(
+        data: DeletePasswordRequest,
+        callback: (StytchResult<DeletePasswordResponse>) -> Unit,
+    )
 
     /**
      * Delete a Member's password.
@@ -126,7 +194,10 @@ public interface Members {
     /**
      * Creates a Member. An `organization_id` and `email_address` are required.
      */
-    public fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit)
+    public fun create(
+        data: CreateRequest,
+        callback: (StytchResult<CreateResponse>) -> Unit,
+    )
 
     /**
      * Creates a Member. An `organization_id` and `email_address` are required.
@@ -141,7 +212,10 @@ public interface Members {
     /**
      * Get a Member by `member_id` or `email_address`.
      */
-    public fun get(data: GetRequest, callback: (StytchResult<GetResponse>) -> Unit)
+    public fun get(
+        data: GetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
+    )
 
     /**
      * Get a Member by `member_id` or `email_address`.
@@ -153,15 +227,18 @@ internal class MembersImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : Members {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
-        httpClient.put("/v1/b2b/organizations/${data.organizationId}/members/${data.memberId}", asJson)
-    }
+    override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
+            httpClient.put("/v1/b2b/organizations/${data.organizationId}/members/${data.memberId}", asJson)
+        }
 
-    override fun update(data: UpdateRequest, callback: (StytchResult<UpdateResponse>) -> Unit) {
+    override fun update(
+        data: UpdateRequest,
+        callback: (StytchResult<UpdateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(update(data))
         }
@@ -171,11 +248,16 @@ internal class MembersImpl(
         coroutineScope.async {
             update(data)
         }.asCompletableFuture()
-    override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> = withContext(Dispatchers.IO) {
-        httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/${data.memberId}")
-    }
 
-    override fun delete(data: DeleteRequest, callback: (StytchResult<DeleteResponse>) -> Unit) {
+    override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> =
+        withContext(Dispatchers.IO) {
+            httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/${data.memberId}")
+        }
+
+    override fun delete(
+        data: DeleteRequest,
+        callback: (StytchResult<DeleteResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(delete(data))
         }
@@ -185,26 +267,58 @@ internal class MembersImpl(
         coroutineScope.async {
             delete(data)
         }.asCompletableFuture()
-    override suspend fun deleteMFAPhoneNumber(data: DeleteMFAPhoneNumberRequest): StytchResult<DeleteMFAPhoneNumberResponse> = withContext(Dispatchers.IO) {
-        httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/mfa_phone_numbers/${data.memberId}")
+
+    override suspend fun reactivate(data: ReactivateRequest): StytchResult<ReactivateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(ReactivateRequest::class.java).toJson(data)
+            httpClient.put("/v1/b2b/organizations/${data.organizationId}/members/${data.memberId}/reactivate", asJson)
+        }
+
+    override fun reactivate(
+        data: ReactivateRequest,
+        callback: (StytchResult<ReactivateResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(reactivate(data))
+        }
     }
 
-    override fun deleteMFAPhoneNumber(data: DeleteMFAPhoneNumberRequest, callback: (StytchResult<DeleteMFAPhoneNumberResponse>) -> Unit) {
+    override fun reactivateCompletable(data: ReactivateRequest): CompletableFuture<StytchResult<ReactivateResponse>> =
+        coroutineScope.async {
+            reactivate(data)
+        }.asCompletableFuture()
+
+    override suspend fun deleteMFAPhoneNumber(data: DeleteMFAPhoneNumberRequest): StytchResult<DeleteMFAPhoneNumberResponse> =
+        withContext(Dispatchers.IO) {
+            httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/mfa_phone_numbers/${data.memberId}")
+        }
+
+    override fun deleteMFAPhoneNumber(
+        data: DeleteMFAPhoneNumberRequest,
+        callback: (StytchResult<DeleteMFAPhoneNumberResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(deleteMFAPhoneNumber(data))
         }
     }
 
-    override fun deleteMFAPhoneNumberCompletable(data: DeleteMFAPhoneNumberRequest): CompletableFuture<StytchResult<DeleteMFAPhoneNumberResponse>> =
+    override fun deleteMFAPhoneNumberCompletable(
+        data: DeleteMFAPhoneNumberRequest,
+    ): CompletableFuture<StytchResult<DeleteMFAPhoneNumberResponse>> =
         coroutineScope.async {
             deleteMFAPhoneNumber(data)
         }.asCompletableFuture()
-    override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/organizations/members/search", asJson)
-    }
 
-    override fun search(data: SearchRequest, callback: (StytchResult<SearchResponse>) -> Unit) {
+    override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/organizations/members/search", asJson)
+        }
+
+    override fun search(
+        data: SearchRequest,
+        callback: (StytchResult<SearchResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(search(data))
         }
@@ -214,11 +328,16 @@ internal class MembersImpl(
         coroutineScope.async {
             search(data)
         }.asCompletableFuture()
-    override suspend fun deletePassword(data: DeletePasswordRequest): StytchResult<DeletePasswordResponse> = withContext(Dispatchers.IO) {
-        httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/passwords/${data.memberPasswordId}")
-    }
 
-    override fun deletePassword(data: DeletePasswordRequest, callback: (StytchResult<DeletePasswordResponse>) -> Unit) {
+    override suspend fun deletePassword(data: DeletePasswordRequest): StytchResult<DeletePasswordResponse> =
+        withContext(Dispatchers.IO) {
+            httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/passwords/${data.memberPasswordId}")
+        }
+
+    override fun deletePassword(
+        data: DeletePasswordRequest,
+        callback: (StytchResult<DeletePasswordResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(deletePassword(data))
         }
@@ -228,12 +347,17 @@ internal class MembersImpl(
         coroutineScope.async {
             deletePassword(data)
         }.asCompletableFuture()
-    override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/organizations/${data.organizationId}/members", asJson)
-    }
 
-    override fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit) {
+    override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/organizations/${data.organizationId}/members", asJson)
+        }
+
+    override fun create(
+        data: CreateRequest,
+        callback: (StytchResult<CreateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(create(data))
         }
@@ -243,15 +367,20 @@ internal class MembersImpl(
         coroutineScope.async {
             create(data)
         }.asCompletableFuture()
-    override suspend fun get(data: GetRequest): StytchResult<GetResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.get("/v1/b2b/organizations/${data.organizationId}/member", asMap)
-    }
 
-    override fun get(data: GetRequest, callback: (StytchResult<GetResponse>) -> Unit) {
+    override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/organizations/${data.organizationId}/member", asMap)
+        }
+
+    override fun get(
+        data: GetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(get(data))
         }

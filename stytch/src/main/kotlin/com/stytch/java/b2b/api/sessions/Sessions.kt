@@ -20,6 +20,7 @@ import com.stytch.java.b2b.models.sessions.GetResponse
 import com.stytch.java.b2b.models.sessions.RevokeRequest
 import com.stytch.java.b2b.models.sessions.RevokeResponse
 import com.stytch.java.common.InstantAdapter
+import com.stytch.java.common.JwtOptions
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -28,7 +29,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jose4j.jwk.HttpsJwks
 import java.util.concurrent.CompletableFuture
+
 public interface Sessions {
     /**
      * Retrieves all active Sessions for a Member.
@@ -38,7 +41,10 @@ public interface Sessions {
     /**
      * Retrieves all active Sessions for a Member.
      */
-    public fun get(data: GetRequest, callback: (StytchResult<GetResponse>) -> Unit)
+    public fun get(
+        data: GetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
+    )
 
     /**
      * Retrieves all active Sessions for a Member.
@@ -63,7 +69,10 @@ public interface Sessions {
      * You may provide a JWT that needs to be refreshed and is expired according to its `exp` claim. A new JWT will be
      * returned if both the signature and the underlying Session are still valid.
      */
-    public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+    public fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    )
 
     /**
      * Authenticates a Session and updates its lifetime by the specified `session_duration_minutes`. If the
@@ -85,7 +94,10 @@ public interface Sessions {
      * Revoke a Session and immediately invalidate all its tokens. To revoke a specific Session, pass either the
      * `member_session_id`, `session_token`, or `session_jwt`. To revoke all Sessions for a Member, pass the `member_id`.
      */
-    public fun revoke(data: RevokeRequest, callback: (StytchResult<RevokeResponse>) -> Unit)
+    public fun revoke(
+        data: RevokeRequest,
+        callback: (StytchResult<RevokeResponse>) -> Unit,
+    )
 
     /**
      * Revoke a Session and immediately invalidate all its tokens. To revoke a specific Session, pass either the
@@ -105,8 +117,8 @@ public interface Sessions {
      * SMS OTP factors can be used to fulfill MFA requirements for the target Organization if both the original and target
      * Member have the same phone number and the phone number is verified for both Members.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -130,8 +142,8 @@ public interface Sessions {
      * SMS OTP factors can be used to fulfill MFA requirements for the target Organization if both the original and target
      * Member have the same phone number and the phone number is verified for both Members.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -141,7 +153,10 @@ public interface Sessions {
      * a different Organization or create a new one.
      * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      */
-    public fun exchange(data: ExchangeRequest, callback: (StytchResult<ExchangeResponse>) -> Unit)
+    public fun exchange(
+        data: ExchangeRequest,
+        callback: (StytchResult<ExchangeResponse>) -> Unit,
+    )
 
     /**
      * Use this endpoint to exchange a Member's existing session for another session in a different Organization. This can be
@@ -155,8 +170,8 @@ public interface Sessions {
      * SMS OTP factors can be used to fulfill MFA requirements for the target Organization if both the original and target
      * Member have the same phone number and the phone number is verified for both Members.
      *
-     * (Coming Soon) If the Member is required to complete MFA to log in to the Organization, the returned value of
-     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
+     * will be `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -176,7 +191,10 @@ public interface Sessions {
     /**
      * Get the JSON Web Key Set (JWKS) for a project.
      */
-    public fun getJWKS(data: GetJWKSRequest, callback: (StytchResult<GetJWKSResponse>) -> Unit)
+    public fun getJWKS(
+        data: GetJWKSRequest,
+        callback: (StytchResult<GetJWKSResponse>) -> Unit,
+    )
 
     /**
      * Get the JSON Web Key Set (JWKS) for a project.
@@ -187,19 +205,24 @@ public interface Sessions {
 internal class SessionsImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
+    private val jwksClient: HttpsJwks,
+    private val jwtOptions: JwtOptions,
 ) : Sessions {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override suspend fun get(data: GetRequest): StytchResult<GetResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.get("/v1/b2b/sessions", asMap)
-    }
+    override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/sessions", asMap)
+        }
 
-    override fun get(data: GetRequest, callback: (StytchResult<GetResponse>) -> Unit) {
+    override fun get(
+        data: GetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(get(data))
         }
@@ -209,12 +232,17 @@ internal class SessionsImpl(
         coroutineScope.async {
             get(data)
         }.asCompletableFuture()
-    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/sessions/authenticate", asJson)
-    }
 
-    override fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit) {
+    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/sessions/authenticate", asJson)
+        }
+
+    override fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(authenticate(data))
         }
@@ -224,12 +252,17 @@ internal class SessionsImpl(
         coroutineScope.async {
             authenticate(data)
         }.asCompletableFuture()
-    override suspend fun revoke(data: RevokeRequest): StytchResult<RevokeResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(RevokeRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/sessions/revoke", asJson)
-    }
 
-    override fun revoke(data: RevokeRequest, callback: (StytchResult<RevokeResponse>) -> Unit) {
+    override suspend fun revoke(data: RevokeRequest): StytchResult<RevokeResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(RevokeRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/sessions/revoke", asJson)
+        }
+
+    override fun revoke(
+        data: RevokeRequest,
+        callback: (StytchResult<RevokeResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(revoke(data))
         }
@@ -239,12 +272,17 @@ internal class SessionsImpl(
         coroutineScope.async {
             revoke(data)
         }.asCompletableFuture()
-    override suspend fun exchange(data: ExchangeRequest): StytchResult<ExchangeResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(ExchangeRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/sessions/exchange", asJson)
-    }
 
-    override fun exchange(data: ExchangeRequest, callback: (StytchResult<ExchangeResponse>) -> Unit) {
+    override suspend fun exchange(data: ExchangeRequest): StytchResult<ExchangeResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(ExchangeRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/sessions/exchange", asJson)
+        }
+
+    override fun exchange(
+        data: ExchangeRequest,
+        callback: (StytchResult<ExchangeResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(exchange(data))
         }
@@ -254,15 +292,20 @@ internal class SessionsImpl(
         coroutineScope.async {
             exchange(data)
         }.asCompletableFuture()
-    override suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(GetJWKSRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.get("/v1/b2b/sessions/jwks/${data.projectId}", asMap)
-    }
 
-    override fun getJWKS(data: GetJWKSRequest, callback: (StytchResult<GetJWKSResponse>) -> Unit) {
+    override suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(GetJWKSRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/sessions/jwks/${data.projectId}", asMap)
+        }
+
+    override fun getJWKS(
+        data: GetJWKSRequest,
+        callback: (StytchResult<GetJWKSResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(getJWKS(data))
         }

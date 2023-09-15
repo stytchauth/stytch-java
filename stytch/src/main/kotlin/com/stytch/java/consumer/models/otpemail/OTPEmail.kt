@@ -38,183 +38,191 @@ public enum class SendRequestLocale {
 * Request type for `Email.loginOrCreate`.
 */
 @JsonClass(generateAdapter = true)
-public data class LoginOrCreateRequest @JvmOverloads constructor(
-    /**
-     * The email address of the user to send the one-time passcode to. You may use sandbox@stytch.com to test this endpoint,
-     * see [Testing](https://stytch.com/docs/home#resources_testing) for more detail.
-     */
-    @Json(name = "email")
-    val email: String,
-    /**
-     * Set the expiration for the one-time passcode, in minutes. The minimum expiration is 1 minute and the maximum is 10
-     * minutes. The default expiration is 2 minutes.
-     */
-    @Json(name = "expiration_minutes")
-    val expirationMinutes: Int? = null,
-    /**
-     * Provided attributes help with fraud detection.
-     */
-    @Json(name = "attributes")
-    val attributes: Attributes? = null,
-    /**
-     * Flag for whether or not to save a user as pending vs active in Stytch. Defaults to false.
-     *         If true, users will be saved with status pending in Stytch's backend until authenticated.
-     *         If false, users will be created as active. An example usage of
-     *         a true flag would be to require users to verify their phone by entering the OTP code before creating
-     *         an account for them.
-     */
-    @Json(name = "create_user_as_pending")
-    val createUserAsPending: Boolean? = null,
-    /**
-     * Used to determine which language to use when sending the user this delivery method. Parameter is a
-     * [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
-     *
-     * Currently supported languages are English (`"en"`), Spanish (`"es"`), and Brazilian Portuguese (`"pt-br"`); if no value
-     * is provided, the copy defaults to English.
-     *
-     * Request support for additional languages
-     * [here](https://docs.google.com/forms/d/e/1FAIpQLScZSpAu_m2AmLXRT3F3kap-s_mcV6UTBitYn6CdyWP0-o7YjQ/viewform?usp=sf_link")!
-     *
-     */
-    @Json(name = "locale")
-    val locale: LoginOrCreateRequestLocale? = null,
-    /**
-     * Use a custom template for login emails. By default, it will use your default email template. The template must be a
-     * template using our built-in customizations or a custom HTML email for Magic links - Login.
-     */
-    @Json(name = "login_template_id")
-    val loginTemplateId: String? = null,
-    /**
-     * Use a custom template for sign-up emails. By default, it will use your default email template. The template must be a
-     * template using our built-in customizations or a custom HTML email for Magic links - Sign-up.
-     */
-    @Json(name = "signup_template_id")
-    val signupTemplateId: String? = null,
-)
+public data class LoginOrCreateRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * The email address of the user to send the one-time passcode to. You may use sandbox@stytch.com to test this endpoint,
+         * see [Testing](https://stytch.com/docs/home#resources_testing) for more detail.
+         */
+        @Json(name = "email")
+        val email: String,
+        /**
+         * Set the expiration for the one-time passcode, in minutes. The minimum expiration is 1 minute and the maximum is 10
+         * minutes. The default expiration is 2 minutes.
+         */
+        @Json(name = "expiration_minutes")
+        val expirationMinutes: Int? = null,
+        /**
+         * Provided attributes help with fraud detection.
+         */
+        @Json(name = "attributes")
+        val attributes: Attributes? = null,
+        /**
+         * Flag for whether or not to save a user as pending vs active in Stytch. Defaults to false.
+         *         If true, users will be saved with status pending in Stytch's backend until authenticated.
+         *         If false, users will be created as active. An example usage of
+         *         a true flag would be to require users to verify their phone by entering the OTP code before creating
+         *         an account for them.
+         */
+        @Json(name = "create_user_as_pending")
+        val createUserAsPending: Boolean? = null,
+        /**
+         * Used to determine which language to use when sending the user this delivery method. Parameter is a
+         * [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
+         *
+         * Currently supported languages are English (`"en"`), Spanish (`"es"`), and Brazilian Portuguese (`"pt-br"`); if no value
+         * is provided, the copy defaults to English.
+         *
+         * Request support for additional languages
+         * [here](https://docs.google.com/forms/d/e/1FAIpQLScZSpAu_m2AmLXRT3F3kap-s_mcV6UTBitYn6CdyWP0-o7YjQ/viewform?usp=sf_link")!
+         *
+         */
+        @Json(name = "locale")
+        val locale: LoginOrCreateRequestLocale? = null,
+        /**
+         * Use a custom template for login emails. By default, it will use your default email template. The template must be a
+         * template using our built-in customizations or a custom HTML email for Magic links - Login.
+         */
+        @Json(name = "login_template_id")
+        val loginTemplateId: String? = null,
+        /**
+         * Use a custom template for sign-up emails. By default, it will use your default email template. The template must be a
+         * template using our built-in customizations or a custom HTML email for Magic links - Sign-up.
+         */
+        @Json(name = "signup_template_id")
+        val signupTemplateId: String? = null,
+    )
 
 /**
 * Response type for `Email.loginOrCreate`.
 */
 @JsonClass(generateAdapter = true)
-public data class LoginOrCreateResponse @JvmOverloads constructor(
-    /**
-     * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-     * may ask for this value to help identify a specific API call when helping you debug an issue.
-     */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-     * The unique ID of the affected User.
-     */
-    @Json(name = "user_id")
-    val userId: String,
-    /**
-     * The unique ID of a specific email address.
-     */
-    @Json(name = "email_id")
-    val emailId: String,
-    /**
-     * In `login_or_create` endpoints, this field indicates whether or not a User was just created.
-     */
-    @Json(name = "user_created")
-    val userCreated: Boolean,
-    /**
-     * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-     * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-     */
-    @Json(name = "status_code")
-    val statusCode: Int,
-)
+public data class LoginOrCreateResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The unique ID of the affected User.
+         */
+        @Json(name = "user_id")
+        val userId: String,
+        /**
+         * The unique ID of a specific email address.
+         */
+        @Json(name = "email_id")
+        val emailId: String,
+        /**
+         * In `login_or_create` endpoints, this field indicates whether or not a User was just created.
+         */
+        @Json(name = "user_created")
+        val userCreated: Boolean,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
 
 /**
 * Request type for `Email.send`.
 */
 @JsonClass(generateAdapter = true)
-public data class SendRequest @JvmOverloads constructor(
-    /**
-     * The email address of the user to send the one-time passcode to. You may use sandbox@stytch.com to test this endpoint,
-     * see [Testing](https://stytch.com/docs/home#resources_testing) for more detail.
-     */
-    @Json(name = "email")
-    val email: String,
-    /**
-     * Set the expiration for the one-time passcode, in minutes. The minimum expiration is 1 minute and the maximum is 10
-     * minutes. The default expiration is 2 minutes.
-     */
-    @Json(name = "expiration_minutes")
-    val expirationMinutes: Int? = null,
-    /**
-     * Provided attributes help with fraud detection.
-     */
-    @Json(name = "attributes")
-    val attributes: Attributes? = null,
-    /**
-     * Used to determine which language to use when sending the user this delivery method. Parameter is a
-     * [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
-     *
-     * Currently supported languages are English (`"en"`), Spanish (`"es"`), and Brazilian Portuguese (`"pt-br"`); if no value
-     * is provided, the copy defaults to English.
-     *
-     * Request support for additional languages
-     * [here](https://docs.google.com/forms/d/e/1FAIpQLScZSpAu_m2AmLXRT3F3kap-s_mcV6UTBitYn6CdyWP0-o7YjQ/viewform?usp=sf_link")!
-     *
-     */
-    @Json(name = "locale")
-    val locale: SendRequestLocale? = null,
-    /**
-     * The unique ID of a specific User.
-     */
-    @Json(name = "user_id")
-    val userId: String? = null,
-    /**
-     * The `session_token` associated with a User's existing Session.
-     */
-    @Json(name = "session_token")
-    val sessionToken: String? = null,
-    /**
-     * The `session_jwt` associated with a User's existing Session.
-     */
-    @Json(name = "session_jwt")
-    val sessionJwt: String? = null,
-    /**
-     * Use a custom template for login emails. By default, it will use your default email template. The template must be a
-     * template using our built-in customizations or a custom HTML email for Magic links - Login.
-     */
-    @Json(name = "login_template_id")
-    val loginTemplateId: String? = null,
-    /**
-     * Use a custom template for sign-up emails. By default, it will use your default email template. The template must be a
-     * template using our built-in customizations or a custom HTML email for Magic links - Sign-up.
-     */
-    @Json(name = "signup_template_id")
-    val signupTemplateId: String? = null,
-)
+public data class SendRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * The email address of the user to send the one-time passcode to. You may use sandbox@stytch.com to test this endpoint,
+         * see [Testing](https://stytch.com/docs/home#resources_testing) for more detail.
+         */
+        @Json(name = "email")
+        val email: String,
+        /**
+         * Set the expiration for the one-time passcode, in minutes. The minimum expiration is 1 minute and the maximum is 10
+         * minutes. The default expiration is 2 minutes.
+         */
+        @Json(name = "expiration_minutes")
+        val expirationMinutes: Int? = null,
+        /**
+         * Provided attributes help with fraud detection.
+         */
+        @Json(name = "attributes")
+        val attributes: Attributes? = null,
+        /**
+         * Used to determine which language to use when sending the user this delivery method. Parameter is a
+         * [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
+         *
+         * Currently supported languages are English (`"en"`), Spanish (`"es"`), and Brazilian Portuguese (`"pt-br"`); if no value
+         * is provided, the copy defaults to English.
+         *
+         * Request support for additional languages
+         * [here](https://docs.google.com/forms/d/e/1FAIpQLScZSpAu_m2AmLXRT3F3kap-s_mcV6UTBitYn6CdyWP0-o7YjQ/viewform?usp=sf_link")!
+         *
+         */
+        @Json(name = "locale")
+        val locale: SendRequestLocale? = null,
+        /**
+         * The unique ID of a specific User.
+         */
+        @Json(name = "user_id")
+        val userId: String? = null,
+        /**
+         * The `session_token` associated with a User's existing Session.
+         */
+        @Json(name = "session_token")
+        val sessionToken: String? = null,
+        /**
+         * The `session_jwt` associated with a User's existing Session.
+         */
+        @Json(name = "session_jwt")
+        val sessionJwt: String? = null,
+        /**
+         * Use a custom template for login emails. By default, it will use your default email template. The template must be a
+         * template using our built-in customizations or a custom HTML email for Magic links - Login.
+         */
+        @Json(name = "login_template_id")
+        val loginTemplateId: String? = null,
+        /**
+         * Use a custom template for sign-up emails. By default, it will use your default email template. The template must be a
+         * template using our built-in customizations or a custom HTML email for Magic links - Sign-up.
+         */
+        @Json(name = "signup_template_id")
+        val signupTemplateId: String? = null,
+    )
 
 /**
 * Response type for `Email.send`.
 */
 @JsonClass(generateAdapter = true)
-public data class SendResponse @JvmOverloads constructor(
-    /**
-     * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-     * may ask for this value to help identify a specific API call when helping you debug an issue.
-     */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-     * The unique ID of the affected User.
-     */
-    @Json(name = "user_id")
-    val userId: String,
-    /**
-     * The unique ID of a specific email address.
-     */
-    @Json(name = "email_id")
-    val emailId: String,
-    /**
-     * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-     * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-     */
-    @Json(name = "status_code")
-    val statusCode: Int,
-)
+public data class SendResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The unique ID of the affected User.
+         */
+        @Json(name = "user_id")
+        val userId: String,
+        /**
+         * The unique ID of a specific email address.
+         */
+        @Json(name = "email_id")
+        val emailId: String,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )

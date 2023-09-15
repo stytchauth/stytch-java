@@ -19,6 +19,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface Sessions {
     /**
      * Reset the Member's password using their existing session. The endpoint will error if the session does not contain an
@@ -32,7 +33,10 @@ public interface Sessions {
      * authentication factor that has been issued within the last 5 minutes. Either `session_token` or `session_jwt` should be
      * provided.
      */
-    public fun reset(data: ResetRequest, callback: (StytchResult<ResetResponse>) -> Unit)
+    public fun reset(
+        data: ResetRequest,
+        callback: (StytchResult<ResetResponse>) -> Unit,
+    )
 
     /**
      * Reset the Member's password using their existing session. The endpoint will error if the session does not contain an
@@ -46,15 +50,18 @@ internal class SessionsImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : Sessions {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override suspend fun reset(data: ResetRequest): StytchResult<ResetResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
-        httpClient.post("/v1/b2b/passwords/session/reset", asJson)
-    }
+    override suspend fun reset(data: ResetRequest): StytchResult<ResetResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/passwords/session/reset", asJson)
+        }
 
-    override fun reset(data: ResetRequest, callback: (StytchResult<ResetResponse>) -> Unit) {
+    override fun reset(
+        data: ResetRequest,
+        callback: (StytchResult<ResetResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(reset(data))
         }

@@ -151,651 +151,834 @@ public enum class AuthenticationFactorType {
 }
 
 @JsonClass(generateAdapter = true)
-public data class AmazonOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class AmazonOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class AppleOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class AppleOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class AuthenticationFactor @JvmOverloads constructor(
-    @Json(name = "type")
-    val type: AuthenticationFactorType,
-    @Json(name = "delivery_method")
-    val deliveryMethod: AuthenticationFactorDeliveryMethod,
-    @Json(name = "last_authenticated_at")
-    val lastAuthenticatedAt: Instant? = null,
-    @Json(name = "created_at")
-    val createdAt: Instant? = null,
-    @Json(name = "updated_at")
-    val updatedAt: Instant? = null,
-    @Json(name = "email_factor")
-    val emailFactor: EmailFactor? = null,
-    @Json(name = "phone_number_factor")
-    val phoneNumberFactor: PhoneNumberFactor? = null,
-    @Json(name = "google_oauth_factor")
-    val googleOAuthFactor: GoogleOAuthFactor? = null,
-    @Json(name = "microsoft_oauth_factor")
-    val microsoftOAuthFactor: MicrosoftOAuthFactor? = null,
-    @Json(name = "apple_oauth_factor")
-    val appleOAuthFactor: AppleOAuthFactor? = null,
-    @Json(name = "webauthn_factor")
-    val webauthnFactor: WebAuthnFactor? = null,
-    @Json(name = "authenticator_app_factor")
-    val authenticatorAppFactor: AuthenticatorAppFactor? = null,
-    @Json(name = "github_oauth_factor")
-    val githubOAuthFactor: GithubOAuthFactor? = null,
-    @Json(name = "recovery_code_factor")
-    val recoveryCodeFactor: RecoveryCodeFactor? = null,
-    @Json(name = "facebook_oauth_factor")
-    val facebookOAuthFactor: FacebookOAuthFactor? = null,
-    @Json(name = "crypto_wallet_factor")
-    val cryptoWalletFactor: CryptoWalletFactor? = null,
-    @Json(name = "amazon_oauth_factor")
-    val amazonOAuthFactor: AmazonOAuthFactor? = null,
-    @Json(name = "bitbucket_oauth_factor")
-    val bitbucketOAuthFactor: BitbucketOAuthFactor? = null,
-    @Json(name = "coinbase_oauth_factor")
-    val coinbaseOAuthFactor: CoinbaseOAuthFactor? = null,
-    @Json(name = "discord_oauth_factor")
-    val discordOAuthFactor: DiscordOAuthFactor? = null,
-    @Json(name = "figma_oauth_factor")
-    val figmaOAuthFactor: FigmaOAuthFactor? = null,
-    @Json(name = "git_lab_oauth_factor")
-    val gitLabOAuthFactor: GitLabOAuthFactor? = null,
-    @Json(name = "instagram_oauth_factor")
-    val instagramOAuthFactor: InstagramOAuthFactor? = null,
-    @Json(name = "linked_in_oauth_factor")
-    val linkedInOAuthFactor: LinkedInOAuthFactor? = null,
-    @Json(name = "shopify_oauth_factor")
-    val shopifyOAuthFactor: ShopifyOAuthFactor? = null,
-    @Json(name = "slack_oauth_factor")
-    val slackOAuthFactor: SlackOAuthFactor? = null,
-    @Json(name = "snapchat_oauth_factor")
-    val snapchatOAuthFactor: SnapchatOAuthFactor? = null,
-    @Json(name = "spotify_oauth_factor")
-    val spotifyOAuthFactor: SpotifyOAuthFactor? = null,
-    @Json(name = "steam_oauth_factor")
-    val steamOAuthFactor: SteamOAuthFactor? = null,
-    @Json(name = "tik_tok_oauth_factor")
-    val tikTokOAuthFactor: TikTokOAuthFactor? = null,
-    @Json(name = "twitch_oauth_factor")
-    val twitchOAuthFactor: TwitchOAuthFactor? = null,
-    @Json(name = "twitter_oauth_factor")
-    val twitterOAuthFactor: TwitterOAuthFactor? = null,
-    @Json(name = "embeddable_magic_link_factor")
-    val embeddableMagicLinkFactor: EmbeddableMagicLinkFactor? = null,
-    @Json(name = "biometric_factor")
-    val biometricFactor: BiometricFactor? = null,
-    @Json(name = "saml_sso_factor")
-    val samlSSOFactor: SAMLSSOFactor? = null,
-    @Json(name = "oidc_sso_factor")
-    val oidcSSOFactor: OIDCSSOFactor? = null,
-    @Json(name = "salesforce_oauth_factor")
-    val salesforceOAuthFactor: SalesforceOAuthFactor? = null,
-    @Json(name = "yahoo_oauth_factor")
-    val yahooOAuthFactor: YahooOAuthFactor? = null,
-)
+public data class AuthenticationFactor
+    @JvmOverloads
+    constructor(
+        /**
+         * The type of authentication factor. The possible values are: `magic_link`, `otp`,
+         *        `oauth`, `password`, or `sso`.
+         */
+        @Json(name = "type")
+        val type: AuthenticationFactorType,
+        /**
+         * The method that was used to deliver the authentication factor. The possible values depend on the `type`:
+         *
+         *       `magic_link` – Only `email`.
+         *
+         *       `otp` – Only `sms`.
+         *
+         *       `oauth` – Either `oauth_google` or `oauth_microsoft`.
+         *
+         *       `password` – Only `knowledge`.
+         *
+         *       `sso` – Either `sso_saml` or `sso_oidc`.
+         *
+         */
+        @Json(name = "delivery_method")
+        val deliveryMethod: AuthenticationFactorDeliveryMethod,
+        /**
+         * The timestamp when the factor was last authenticated.
+         */
+        @Json(name = "last_authenticated_at")
+        val lastAuthenticatedAt: Instant? = null,
+        /**
+         * The timestamp when the factor was initially authenticated.
+         */
+        @Json(name = "created_at")
+        val createdAt: Instant? = null,
+        /**
+         * The timestamp when the factor was last updated.
+         */
+        @Json(name = "updated_at")
+        val updatedAt: Instant? = null,
+        /**
+         * Information about the email factor, if one is present.
+         */
+        @Json(name = "email_factor")
+        val emailFactor: EmailFactor? = null,
+        /**
+         * Information about the phone number factor, if one is present.
+         */
+        @Json(name = "phone_number_factor")
+        val phoneNumberFactor: PhoneNumberFactor? = null,
+        /**
+         * Information about the Google OAuth factor, if one is present.
+         */
+        @Json(name = "google_oauth_factor")
+        val googleOAuthFactor: GoogleOAuthFactor? = null,
+        /**
+         * Information about the Microsoft OAuth factor, if one is present.
+         */
+        @Json(name = "microsoft_oauth_factor")
+        val microsoftOAuthFactor: MicrosoftOAuthFactor? = null,
+        @Json(name = "apple_oauth_factor")
+        val appleOAuthFactor: AppleOAuthFactor? = null,
+        @Json(name = "webauthn_factor")
+        val webauthnFactor: WebAuthnFactor? = null,
+        @Json(name = "authenticator_app_factor")
+        val authenticatorAppFactor: AuthenticatorAppFactor? = null,
+        @Json(name = "github_oauth_factor")
+        val githubOAuthFactor: GithubOAuthFactor? = null,
+        @Json(name = "recovery_code_factor")
+        val recoveryCodeFactor: RecoveryCodeFactor? = null,
+        @Json(name = "facebook_oauth_factor")
+        val facebookOAuthFactor: FacebookOAuthFactor? = null,
+        @Json(name = "crypto_wallet_factor")
+        val cryptoWalletFactor: CryptoWalletFactor? = null,
+        @Json(name = "amazon_oauth_factor")
+        val amazonOAuthFactor: AmazonOAuthFactor? = null,
+        @Json(name = "bitbucket_oauth_factor")
+        val bitbucketOAuthFactor: BitbucketOAuthFactor? = null,
+        @Json(name = "coinbase_oauth_factor")
+        val coinbaseOAuthFactor: CoinbaseOAuthFactor? = null,
+        @Json(name = "discord_oauth_factor")
+        val discordOAuthFactor: DiscordOAuthFactor? = null,
+        @Json(name = "figma_oauth_factor")
+        val figmaOAuthFactor: FigmaOAuthFactor? = null,
+        @Json(name = "git_lab_oauth_factor")
+        val gitLabOAuthFactor: GitLabOAuthFactor? = null,
+        @Json(name = "instagram_oauth_factor")
+        val instagramOAuthFactor: InstagramOAuthFactor? = null,
+        @Json(name = "linked_in_oauth_factor")
+        val linkedInOAuthFactor: LinkedInOAuthFactor? = null,
+        @Json(name = "shopify_oauth_factor")
+        val shopifyOAuthFactor: ShopifyOAuthFactor? = null,
+        @Json(name = "slack_oauth_factor")
+        val slackOAuthFactor: SlackOAuthFactor? = null,
+        @Json(name = "snapchat_oauth_factor")
+        val snapchatOAuthFactor: SnapchatOAuthFactor? = null,
+        @Json(name = "spotify_oauth_factor")
+        val spotifyOAuthFactor: SpotifyOAuthFactor? = null,
+        @Json(name = "steam_oauth_factor")
+        val steamOAuthFactor: SteamOAuthFactor? = null,
+        @Json(name = "tik_tok_oauth_factor")
+        val tikTokOAuthFactor: TikTokOAuthFactor? = null,
+        @Json(name = "twitch_oauth_factor")
+        val twitchOAuthFactor: TwitchOAuthFactor? = null,
+        @Json(name = "twitter_oauth_factor")
+        val twitterOAuthFactor: TwitterOAuthFactor? = null,
+        @Json(name = "embeddable_magic_link_factor")
+        val embeddableMagicLinkFactor: EmbeddableMagicLinkFactor? = null,
+        @Json(name = "biometric_factor")
+        val biometricFactor: BiometricFactor? = null,
+        /**
+         * Information about the SAML SSO factor, if one is present.
+         */
+        @Json(name = "saml_sso_factor")
+        val samlSSOFactor: SAMLSSOFactor? = null,
+        /**
+         * Information about the OIDC SSO factor, if one is present.
+         */
+        @Json(name = "oidc_sso_factor")
+        val oidcSSOFactor: OIDCSSOFactor? = null,
+        @Json(name = "salesforce_oauth_factor")
+        val salesforceOAuthFactor: SalesforceOAuthFactor? = null,
+        @Json(name = "yahoo_oauth_factor")
+        val yahooOAuthFactor: YahooOAuthFactor? = null,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class AuthenticatorAppFactor @JvmOverloads constructor(
-    @Json(name = "totp_id")
-    val totpId: String,
-)
+public data class AuthenticatorAppFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "totp_id")
+        val totpId: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class BiometricFactor @JvmOverloads constructor(
-    @Json(name = "biometric_registration_id")
-    val biometricRegistrationId: String,
-)
+public data class BiometricFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "biometric_registration_id")
+        val biometricRegistrationId: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class BitbucketOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class BitbucketOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class CoinbaseOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class CoinbaseOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class CryptoWalletFactor @JvmOverloads constructor(
-    @Json(name = "crypto_wallet_id")
-    val cryptoWalletId: String,
-    @Json(name = "crypto_wallet_address")
-    val cryptoWalletAddress: String,
-    @Json(name = "crypto_wallet_type")
-    val cryptoWalletType: String,
-)
+public data class CryptoWalletFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "crypto_wallet_id")
+        val cryptoWalletId: String,
+        @Json(name = "crypto_wallet_address")
+        val cryptoWalletAddress: String,
+        @Json(name = "crypto_wallet_type")
+        val cryptoWalletType: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class DiscordOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class DiscordOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class EmailFactor @JvmOverloads constructor(
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "email_address")
-    val emailAddress: String,
-)
+public data class EmailFactor
+    @JvmOverloads
+    constructor(
+        /**
+         * The globally unique UUID of the Member's email.
+         */
+        @Json(name = "email_id")
+        val emailId: String,
+        /**
+         * The email address of the Member.
+         */
+        @Json(name = "email_address")
+        val emailAddress: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class EmbeddableMagicLinkFactor @JvmOverloads constructor(
-    @Json(name = "embedded_id")
-    val embeddedId: String,
-)
+public data class EmbeddableMagicLinkFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "embedded_id")
+        val embeddedId: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class FacebookOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class FacebookOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class FigmaOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class FigmaOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class GitLabOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class GitLabOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class GithubOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class GithubOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class GoogleOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class GoogleOAuthFactor
+    @JvmOverloads
+    constructor(
+        /**
+         * The unique ID of an OAuth registration.
+         */
+        @Json(name = "id")
+        val id: String,
+        /**
+         * The globally unique UUID of the Member's email.
+         */
+        @Json(name = "email_id")
+        val emailId: String,
+        /**
+         * The unique identifier for the User within a given OAuth provider. Also commonly called the `sub` or "Subject field" in
+         * OAuth protocols.
+         */
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class InstagramOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class InstagramOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class JWK @JvmOverloads constructor(
-    @Json(name = "kty")
-    val kty: String,
-    @Json(name = "use")
-    val use: String,
-    @Json(name = "key_ops")
-    val keyOps: List<String>,
-    @Json(name = "alg")
-    val alg: String,
-    @Json(name = "kid")
-    val kid: String,
-    @Json(name = "x5c")
-    val x5C: List<String>,
-    @Json(name = "x5tS256")
-    val x5TS256: String,
-    @Json(name = "n")
-    val n: String,
-    @Json(name = "e")
-    val e: String,
-)
+public data class JWK
+    @JvmOverloads
+    constructor(
+        @Json(name = "kty")
+        val kty: String,
+        @Json(name = "use")
+        val use: String,
+        @Json(name = "key_ops")
+        val keyOps: List<String>,
+        @Json(name = "alg")
+        val alg: String,
+        @Json(name = "kid")
+        val kid: String,
+        @Json(name = "x5c")
+        val x5C: List<String>,
+        @Json(name = "x5tS256")
+        val x5TS256: String,
+        @Json(name = "n")
+        val n: String,
+        @Json(name = "e")
+        val e: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class LinkedInOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class LinkedInOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class MicrosoftOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class MicrosoftOAuthFactor
+    @JvmOverloads
+    constructor(
+        /**
+         * The unique ID of an OAuth registration.
+         */
+        @Json(name = "id")
+        val id: String,
+        /**
+         * The globally unique UUID of the Member's email.
+         */
+        @Json(name = "email_id")
+        val emailId: String,
+        /**
+         * The unique identifier for the User within a given OAuth provider. Also commonly called the `sub` or "Subject field" in
+         * OAuth protocols.
+         */
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class OIDCSSOFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "provider_id")
-    val providerId: String,
-    @Json(name = "external_id")
-    val externalId: String,
-)
+public data class OIDCSSOFactor
+    @JvmOverloads
+    constructor(
+        /**
+         * The unique ID of an SSO Registration.
+         */
+        @Json(name = "id")
+        val id: String,
+        /**
+         * Globally unique UUID that identifies a specific OIDC Connection.
+         */
+        @Json(name = "provider_id")
+        val providerId: String,
+        /**
+         * The ID of the member given by the identity provider.
+         */
+        @Json(name = "external_id")
+        val externalId: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class PhoneNumberFactor @JvmOverloads constructor(
-    @Json(name = "phone_id")
-    val phoneId: String,
-    @Json(name = "phone_number")
-    val phoneNumber: String,
-)
+public data class PhoneNumberFactor
+    @JvmOverloads
+    constructor(
+        /**
+         * The globally unique UUID of the Member's phone number.
+         */
+        @Json(name = "phone_id")
+        val phoneId: String,
+        /**
+         * The phone number of the Member.
+         */
+        @Json(name = "phone_number")
+        val phoneNumber: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class RecoveryCodeFactor @JvmOverloads constructor(
-    @Json(name = "totp_recovery_code_id")
-    val totpRecoveryCodeId: String,
-)
+public data class RecoveryCodeFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "totp_recovery_code_id")
+        val totpRecoveryCodeId: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class SAMLSSOFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "provider_id")
-    val providerId: String,
-    @Json(name = "external_id")
-    val externalId: String,
-)
+public data class SAMLSSOFactor
+    @JvmOverloads
+    constructor(
+        /**
+         * The unique ID of an SSO Registration.
+         */
+        @Json(name = "id")
+        val id: String,
+        /**
+         * Globally unique UUID that identifies a specific SAML Connection.
+         */
+        @Json(name = "provider_id")
+        val providerId: String,
+        /**
+         * The ID of the member given by the identity provider.
+         */
+        @Json(name = "external_id")
+        val externalId: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class SalesforceOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class SalesforceOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class Session @JvmOverloads constructor(
-    /**
-     * A unique identifier for a specific Session.
-     */
-    @Json(name = "session_id")
-    val sessionId: String,
-    /**
-     * The unique ID of the affected User.
-     */
-    @Json(name = "user_id")
-    val userId: String,
-    /**
-     * An array of different authentication factors that have initiated a Session.
-     */
-    @Json(name = "authentication_factors")
-    val authenticationFactors: List<AuthenticationFactor>,
-    /**
-     * The timestamp when the Session was created. Values conform to the RFC 3339 standard and are expressed in UTC, e.g.
-     * `2021-12-29T12:33:09Z`.
-     */
-    @Json(name = "started_at")
-    val startedAt: Instant? = null,
-    /**
-     * The timestamp when the Session was last accessed. Values conform to the RFC 3339 standard and are expressed in UTC,
-     * e.g. `2021-12-29T12:33:09Z`.
-     */
-    @Json(name = "last_accessed_at")
-    val lastAccessedAt: Instant? = null,
-    /**
-     * The timestamp when the Session expires. Values conform to the RFC 3339 standard and are expressed in UTC, e.g.
-     * `2021-12-29T12:33:09Z`.
-     */
-    @Json(name = "expires_at")
-    val expiresAt: Instant? = null,
-    /**
-     * Provided attributes help with fraud detection.
-     */
-    @Json(name = "attributes")
-    val attributes: Attributes? = null,
-    /**
-     * The custom claims map for a Session. Claims can be added to a session during a Sessions authenticate call.
-     */
-    @Json(name = "custom_claims")
-    val customClaims: Map<String, Any>? = null,
-)
+public data class Session
+    @JvmOverloads
+    constructor(
+        /**
+         * A unique identifier for a specific Session.
+         */
+        @Json(name = "session_id")
+        val sessionId: String,
+        /**
+         * The unique ID of the affected User.
+         */
+        @Json(name = "user_id")
+        val userId: String,
+        /**
+         * An array of different authentication factors that have initiated a Session.
+         */
+        @Json(name = "authentication_factors")
+        val authenticationFactors: List<AuthenticationFactor>,
+        /**
+         * The timestamp when the Session was created. Values conform to the RFC 3339 standard and are expressed in UTC, e.g.
+         * `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "started_at")
+        val startedAt: Instant? = null,
+        /**
+         * The timestamp when the Session was last accessed. Values conform to the RFC 3339 standard and are expressed in UTC,
+         * e.g. `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "last_accessed_at")
+        val lastAccessedAt: Instant? = null,
+        /**
+         * The timestamp when the Session expires. Values conform to the RFC 3339 standard and are expressed in UTC, e.g.
+         * `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "expires_at")
+        val expiresAt: Instant? = null,
+        /**
+         * Provided attributes help with fraud detection.
+         */
+        @Json(name = "attributes")
+        val attributes: Attributes? = null,
+        /**
+         * The custom claims map for a Session. Claims can be added to a session during a Sessions authenticate call.
+         */
+        @Json(name = "custom_claims")
+        val customClaims: Map<String, Any>? = null,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class ShopifyOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class ShopifyOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class SlackOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class SlackOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class SnapchatOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class SnapchatOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class SpotifyOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class SpotifyOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class SteamOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class SteamOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class TikTokOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class TikTokOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class TwitchOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class TwitchOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class TwitterOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class TwitterOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class WebAuthnFactor @JvmOverloads constructor(
-    @Json(name = "webauthn_registration_id")
-    val webauthnRegistrationId: String,
-    @Json(name = "domain")
-    val domain: String,
-    @Json(name = "user_agent")
-    val userAgent: String,
-)
+public data class WebAuthnFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "webauthn_registration_id")
+        val webauthnRegistrationId: String,
+        @Json(name = "domain")
+        val domain: String,
+        @Json(name = "user_agent")
+        val userAgent: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class YahooOAuthFactor @JvmOverloads constructor(
-    @Json(name = "id")
-    val id: String,
-    @Json(name = "email_id")
-    val emailId: String,
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-)
+public data class YahooOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
 
 /**
 * Request type for `Sessions.authenticate`.
 */
 @JsonClass(generateAdapter = true)
-public data class AuthenticateRequest @JvmOverloads constructor(
-    /**
-     * The session token to authenticate.
-     */
-    @Json(name = "session_token")
-    val sessionToken: String? = null,
-    /**
-     * Set the session lifetime to be this many minutes from now; minimum of 5 and a maximum of 527040 minutes (366 days).
-     * Note that a successful authentication will continue to extend the session this many minutes.
-     */
-    @Json(name = "session_duration_minutes")
-    val sessionDurationMinutes: Int? = null,
-    /**
-     * The JWT to authenticate. You may provide a JWT that has expired according to its `exp` claim and needs to be refreshed.
-     * If the signature is valid and the underlying session is still active then Stytch will return a new JWT.
-     */
-    @Json(name = "session_jwt")
-    val sessionJwt: String? = null,
-    /**
-     * Add a custom claims map to the Session being authenticated. Claims are only created if a Session is initialized by
-     * providing a value in `session_duration_minutes`. Claims will be included on the Session object and in the JWT. To
-     * update a key in an existing Session, supply a new value. To delete a key, supply a null value.
-     *
-     *   Custom claims made with reserved claims ("iss", "sub", "aud", "exp", "nbf", "iat", "jti") will be ignored. Total
-     * custom claims size cannot exceed four kilobytes.
-     */
-    @Json(name = "session_custom_claims")
-    val sessionCustomClaims: Map<String, Any>? = null,
-)
+public data class AuthenticateRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * The session token to authenticate.
+         */
+        @Json(name = "session_token")
+        val sessionToken: String? = null,
+        /**
+         * Set the session lifetime to be this many minutes from now; minimum of 5 and a maximum of 527040 minutes (366 days).
+         * Note that a successful authentication will continue to extend the session this many minutes.
+         */
+        @Json(name = "session_duration_minutes")
+        val sessionDurationMinutes: Int? = null,
+        /**
+         * The JWT to authenticate. You may provide a JWT that has expired according to its `exp` claim and needs to be refreshed.
+         * If the signature is valid and the underlying session is still active then Stytch will return a new JWT.
+         */
+        @Json(name = "session_jwt")
+        val sessionJwt: String? = null,
+        /**
+         * Add a custom claims map to the Session being authenticated. Claims are only created if a Session is initialized by
+         * providing a value in `session_duration_minutes`. Claims will be included on the Session object and in the JWT. To
+         * update a key in an existing Session, supply a new value. To delete a key, supply a null value.
+         *
+         *   Custom claims made with reserved claims ("iss", "sub", "aud", "exp", "nbf", "iat", "jti") will be ignored. Total
+         * custom claims size cannot exceed four kilobytes.
+         */
+        @Json(name = "session_custom_claims")
+        val sessionCustomClaims: Map<String, Any>? = null,
+    )
 
 /**
 * Response type for `Sessions.authenticate`.
 */
 @JsonClass(generateAdapter = true)
-public data class AuthenticateResponse @JvmOverloads constructor(
-    /**
-     * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-     * may ask for this value to help identify a specific API call when helping you debug an issue.
-     */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-     * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
-     * Session object in the response.
-     *
-     *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
-     *
-     */
-    @Json(name = "session")
-    val session: Session,
-    /**
-     * A secret token for a given Stytch Session.
-     */
-    @Json(name = "session_token")
-    val sessionToken: String,
-    /**
-     * The JSON Web Token (JWT) for a given Stytch Session.
-     */
-    @Json(name = "session_jwt")
-    val sessionJwt: String,
-    /**
-     * The `user` object affected by this API call. See the [Get user endpoint](https://stytch.com/docs/api/get-user) for
-     * complete response field details.
-     */
-    @Json(name = "user")
-    val user: User,
-    /**
-     * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-     * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-     */
-    @Json(name = "status_code")
-    val statusCode: Int,
-)
+public data class AuthenticateResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
+         * Session object in the response.
+         *
+         *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
+         *
+         */
+        @Json(name = "session")
+        val session: Session,
+        /**
+         * A secret token for a given Stytch Session.
+         */
+        @Json(name = "session_token")
+        val sessionToken: String,
+        /**
+         * The JSON Web Token (JWT) for a given Stytch Session.
+         */
+        @Json(name = "session_jwt")
+        val sessionJwt: String,
+        /**
+         * The `user` object affected by this API call. See the [Get user endpoint](https://stytch.com/docs/api/get-user) for
+         * complete response field details.
+         */
+        @Json(name = "user")
+        val user: User,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
 
 /**
 * Request type for `Sessions.getJWKS`.
 */
 @JsonClass(generateAdapter = true)
-public data class GetJWKSRequest @JvmOverloads constructor(
-    /**
-     * The `project_id` to get the JWKS for.
-     */
-    @Json(name = "project_id")
-    val projectId: String,
-)
+public data class GetJWKSRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * The `project_id` to get the JWKS for.
+         */
+        @Json(name = "project_id")
+        val projectId: String,
+    )
 
 /**
 * Response type for `Sessions.getJWKS`.
 */
 @JsonClass(generateAdapter = true)
-public data class GetJWKSResponse @JvmOverloads constructor(
-    /**
-     * The JWK
-     */
-    @Json(name = "keys")
-    val keys: List<JWK>,
-    /**
-     * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-     * may ask for this value to help identify a specific API call when helping you debug an issue.
-     */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-     * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-     * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-     */
-    @Json(name = "status_code")
-    val statusCode: Int,
-)
+public data class GetJWKSResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * The JWK
+         */
+        @Json(name = "keys")
+        val keys: List<JWK>,
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
 
 /**
 * Request type for `Sessions.get`.
 */
 @JsonClass(generateAdapter = true)
-public data class GetRequest @JvmOverloads constructor(
-    /**
-     * The `user_id` to get active Sessions for.
-     */
-    @Json(name = "user_id")
-    val userId: String,
-)
+public data class GetRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * The `user_id` to get active Sessions for.
+         */
+        @Json(name = "user_id")
+        val userId: String,
+    )
 
 /**
 * Response type for `Sessions.get`.
 */
 @JsonClass(generateAdapter = true)
-public data class GetResponse @JvmOverloads constructor(
-    /**
-     * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-     * may ask for this value to help identify a specific API call when helping you debug an issue.
-     */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-     * An array of Session objects.
-     */
-    @Json(name = "sessions")
-    val sessions: List<Session>,
-    /**
-     * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-     * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-     */
-    @Json(name = "status_code")
-    val statusCode: Int,
-)
+public data class GetResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * An array of Session objects.
+         */
+        @Json(name = "sessions")
+        val sessions: List<Session>,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
 
 /**
 * Request type for `Sessions.revoke`.
 */
 @JsonClass(generateAdapter = true)
-public data class RevokeRequest @JvmOverloads constructor(
-    /**
-     * The `session_id` to revoke.
-     */
-    @Json(name = "session_id")
-    val sessionId: String? = null,
-    /**
-     * The session token to revoke.
-     */
-    @Json(name = "session_token")
-    val sessionToken: String? = null,
-    /**
-     * A JWT for the session to revoke.
-     */
-    @Json(name = "session_jwt")
-    val sessionJwt: String? = null,
-)
+public data class RevokeRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * The `session_id` to revoke.
+         */
+        @Json(name = "session_id")
+        val sessionId: String? = null,
+        /**
+         * The session token to revoke.
+         */
+        @Json(name = "session_token")
+        val sessionToken: String? = null,
+        /**
+         * A JWT for the session to revoke.
+         */
+        @Json(name = "session_jwt")
+        val sessionJwt: String? = null,
+    )
 
 /**
 * Response type for `Sessions.revoke`.
 */
 @JsonClass(generateAdapter = true)
-public data class RevokeResponse @JvmOverloads constructor(
-    /**
-     * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-     * may ask for this value to help identify a specific API call when helping you debug an issue.
-     */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-     * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-     * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-     */
-    @Json(name = "status_code")
-    val statusCode: Int,
-)
+public data class RevokeResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )

@@ -10,27 +10,31 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-public data class MemberOptions @JvmOverloads constructor(
-    /**
-     * The Member's MFA phone number.
-     */
-    @Json(name = "mfa_phone_number")
-    val mfaPhoneNumber: String,
-)
+public data class MemberOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * The Member's MFA phone number.
+         */
+        @Json(name = "mfa_phone_number")
+        val mfaPhoneNumber: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class MfaRequired @JvmOverloads constructor(
-    /**
-     * Information about the Member's options for completing MFA.
-     */
-    @Json(name = "member_options")
-    val memberOptions: MemberOptions? = null,
-    /**
-     * If null, indicates that no secondary authentication has been initiated. If equal to "sms_otp", indicates that the
-     * Member has a phone number, and a one time passcode has been sent to the Member's phone number. No secondary
-     * authentication will be initiated during calls to the discovery authenticate or list organizations endpoints, even if
-     * the Member has a phone number.
-     */
-    @Json(name = "secondary_auth_initiated")
-    val secondaryAuthInitiated: String? = null,
-)
+public data class MfaRequired
+    @JvmOverloads
+    constructor(
+        /**
+         * Information about the Member's options for completing MFA.
+         */
+        @Json(name = "member_options")
+        val memberOptions: MemberOptions? = null,
+        /**
+         * If null, indicates that no secondary authentication has been initiated. If equal to "sms_otp", indicates that the
+         * Member has a phone number, and a one time passcode has been sent to the Member's phone number. No secondary
+         * authentication will be initiated during calls to the discovery authenticate or list organizations endpoints, even if
+         * the Member has a phone number.
+         */
+        @Json(name = "secondary_auth_initiated")
+        val secondaryAuthInitiated: String? = null,
+    )

@@ -38,85 +38,98 @@ internal class SessionsTest {
         val rsaJsonWebKey = RsaJwkGenerator.generateJwk(2048)
         val jsonWebKey = JsonWebKey.Factory.newJwk(rsaJsonWebKey.publicKey)
         jsonWebKey.keyId = "k1"
-        jwksClient = mockk {
-            every { location } returns ""
-            every { jsonWebKeys } returns listOf(jsonWebKey)
-        }
+        jwksClient =
+            mockk {
+                every { location } returns ""
+                every { jsonWebKeys } returns listOf(jsonWebKey)
+            }
         val now = Instant.now()
         val startedAt = DateTimeFormatter.ISO_INSTANT.format(now)
         val expiresAt = DateTimeFormatter.ISO_INSTANT.format(now.plusSeconds(5 * 60))
-        val sessionClaim = mapOf(
-            "started_at" to startedAt,
-            "last_accessed_at" to startedAt,
-            "expires_at" to expiresAt,
-            "attributes" to mapOf(
-                "user_agent" to "",
-                "ip_address" to "",
-            ),
-            "id" to "session-live-e26a0ccb-0dc0-4edb-a4bb-e70210f43555",
-            "authentication_factors" to listOf(
-                mapOf(
-                    "delivery_method" to "email",
-                    "email_factor" to mapOf(
-                        "email_address" to "sandbox@stytch.com",
-                        "email_id" to "email-live-cca9d7d0-11b6-4167-9385-d7e0c9a77418",
+        val sessionClaim =
+            mapOf(
+                "started_at" to startedAt,
+                "last_accessed_at" to startedAt,
+                "expires_at" to expiresAt,
+                "attributes" to
+                    mapOf(
+                        "user_agent" to "",
+                        "ip_address" to "",
                     ),
-                    "last_authenticated_at" to startedAt,
-                    "type" to "magic_link",
-                ),
-            ),
-        )
-        jwtNoClaims = JsonWebSignature().apply {
-            payload = JwtClaims().apply {
-                issuer = "stytch.com/$projectId"
-                audience = listOf(projectId)
-                subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
-                setExpirationTimeMinutesInTheFuture(5F)
-                setGeneratedJwtId()
-                setIssuedAtToNow()
-                setNotBeforeMinutesInThePast(0F)
-            }.toJson()
-            key = rsaJsonWebKey.privateKey
-            keyIdHeaderValue = rsaJsonWebKey.keyId
-            algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
-        }.compactSerialization
-        jwtWithClaims = JsonWebSignature().apply {
-            payload = JwtClaims().apply {
-                issuer = "stytch.com/$projectId"
-                audience = listOf(projectId)
-                subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
-                setClaim("https://stytch.com/session", sessionClaim)
-                setExpirationTimeMinutesInTheFuture(5F)
-                setGeneratedJwtId()
-                setIssuedAtToNow()
-                setNotBeforeMinutesInThePast(0F)
-            }.toJson()
-            key = rsaJsonWebKey.privateKey
-            keyIdHeaderValue = rsaJsonWebKey.keyId
-            algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
-        }.compactSerialization
-        sessions = SessionsImpl(
-            httpClient = mockk(relaxed = true, relaxUnitFun = true),
-            coroutineScope = CoroutineScope(mainThreadSurrogate),
-            jwksClient = jwksClient,
-            jwtOptions = JwtOptions(
-                audience = projectId,
-                issuer = "stytch.com/$projectId",
-                type = "JWT",
-            ),
-        )
+                "id" to "session-live-e26a0ccb-0dc0-4edb-a4bb-e70210f43555",
+                "authentication_factors" to
+                    listOf(
+                        mapOf(
+                            "delivery_method" to "email",
+                            "email_factor" to
+                                mapOf(
+                                    "email_address" to "sandbox@stytch.com",
+                                    "email_id" to "email-live-cca9d7d0-11b6-4167-9385-d7e0c9a77418",
+                                ),
+                            "last_authenticated_at" to startedAt,
+                            "type" to "magic_link",
+                        ),
+                    ),
+            )
+        jwtNoClaims =
+            JsonWebSignature().apply {
+                payload =
+                    JwtClaims().apply {
+                        issuer = "stytch.com/$projectId"
+                        audience = listOf(projectId)
+                        subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
+                        setExpirationTimeMinutesInTheFuture(5F)
+                        setGeneratedJwtId()
+                        setIssuedAtToNow()
+                        setNotBeforeMinutesInThePast(0F)
+                    }.toJson()
+                key = rsaJsonWebKey.privateKey
+                keyIdHeaderValue = rsaJsonWebKey.keyId
+                algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
+            }.compactSerialization
+        jwtWithClaims =
+            JsonWebSignature().apply {
+                payload =
+                    JwtClaims().apply {
+                        issuer = "stytch.com/$projectId"
+                        audience = listOf(projectId)
+                        subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
+                        setClaim("https://stytch.com/session", sessionClaim)
+                        setExpirationTimeMinutesInTheFuture(5F)
+                        setGeneratedJwtId()
+                        setIssuedAtToNow()
+                        setNotBeforeMinutesInThePast(0F)
+                    }.toJson()
+                key = rsaJsonWebKey.privateKey
+                keyIdHeaderValue = rsaJsonWebKey.keyId
+                algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
+            }.compactSerialization
+        sessions =
+            SessionsImpl(
+                httpClient = mockk(relaxed = true, relaxUnitFun = true),
+                coroutineScope = CoroutineScope(mainThreadSurrogate),
+                jwksClient = jwksClient,
+                jwtOptions =
+                    JwtOptions(
+                        audience = projectId,
+                        issuer = "stytch.com/$projectId",
+                        type = "JWT",
+                    ),
+            )
     }
 
     @Test
-    fun `authenticateJwtLocal returns JwtMissingClaims exception when session claim is missing`() = runTest {
-        val result = sessions.authenticateJwtLocal(jwtNoClaims, 50000)
-        require(result is StytchResult.Error)
-        assert(result.exception.reason is JWTException.JwtMissingClaims)
-    }
+    fun `authenticateJwtLocal returns JwtMissingClaims exception when session claim is missing`() =
+        runTest {
+            val result = sessions.authenticateJwtLocal(jwtNoClaims, 50000)
+            require(result is StytchResult.Error)
+            assert(result.exception.reason is JWTException.JwtMissingClaims)
+        }
 
     @Test
-    fun `authenticateJwtLocal returns expected Session data when successful`() = runTest {
-        val result = sessions.authenticateJwtLocal(jwtWithClaims, 50000)
-        require(result is StytchResult.Success)
-    }
+    fun `authenticateJwtLocal returns expected Session data when successful`() =
+        runTest {
+            val result = sessions.authenticateJwtLocal(jwtWithClaims, 50000)
+            require(result is StytchResult.Success)
+        }
 }

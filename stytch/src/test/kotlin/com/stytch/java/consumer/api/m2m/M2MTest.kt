@@ -54,110 +54,127 @@ internal class M2MTest {
         val rsaJsonWebKey = RsaJwkGenerator.generateJwk(2048)
         val jsonWebKey = JsonWebKey.Factory.newJwk(rsaJsonWebKey.publicKey)
         jsonWebKey.keyId = "k1"
-        jwksClient = mockk {
-            every { location } returns ""
-            every { jsonWebKeys } returns listOf(jsonWebKey)
-        }
-        jwtNoScopes = JsonWebSignature().apply {
-            payload = JwtClaims().apply {
-                issuer = "stytch.com/$projectId"
-                audience = listOf(projectId)
-                subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
-                setExpirationTimeMinutesInTheFuture(5F)
-                setGeneratedJwtId()
-                setIssuedAtToNow()
-                setNotBeforeMinutesInThePast(0F)
-            }.toJson()
-            key = rsaJsonWebKey.privateKey
-            keyIdHeaderValue = rsaJsonWebKey.keyId
-            algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
-        }.compactSerialization
-        jwtWithScopes = JsonWebSignature().apply {
-            payload = JwtClaims().apply {
-                issuer = "stytch.com/$projectId"
-                audience = listOf(projectId)
-                subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
-                setClaim("scope", "user:read user:write")
-                setExpirationTimeMinutesInTheFuture(5F)
-                setGeneratedJwtId()
-                setIssuedAtToNow()
-                setNotBeforeMinutesInThePast(0F)
-            }.toJson()
-            key = rsaJsonWebKey.privateKey
-            keyIdHeaderValue = rsaJsonWebKey.keyId
-            algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
-        }.compactSerialization
-        m2m = M2MImpl(
-            httpClient = HttpClient(
-                baseUrl = "http://test",
-                projectId = "",
-                secret = "",
-                client = mockOkhttpClient,
-            ),
-            coroutineScope = CoroutineScope(mainThreadSurrogate),
-            jwksClient = jwksClient,
-            jwtOptions = JwtOptions(
-                audience = projectId,
-                issuer = "stytch.com/$projectId",
-                type = "JWT",
-            ),
-        )
-    }
-
-    @Test
-    fun `authenticateToken returns JwtMissingScopes exception when required scopes are missing`() = runTest {
-        val result = m2m.authenticateToken(
-            AuthenticateTokenRequest(
-                accessToken = jwtNoScopes,
-                requiredScopes = listOf("user:read", "user:write"),
-                maxTokenAgeSeconds = 5000,
-            ),
-        )
-        require(result is StytchResult.Error)
-        assert(result.exception.reason is JWTException.JwtMissingScopes)
-    }
-
-    @Test
-    fun `authenticateToken returns expected AuthenticateTokenResponse data when successful`() = runTest {
-        val result = m2m.authenticateToken(
-            AuthenticateTokenRequest(
-                accessToken = jwtWithScopes,
-                requiredScopes = listOf("user:read", "user:write"),
-                maxTokenAgeSeconds = 5000,
-            ),
-        )
-        require(result is StytchResult.Success)
-    }
-
-    @Test
-    fun `token makes correct call to httpClient`() = runTest {
-        val moshi = Moshi.Builder().add(InstantAdapter()).build()
-        val callbackSlot = slot<Callback>()
-        val requestSlot = slot<Request>()
-        val mockCall: Call = mockk {
-            every { enqueue(capture(callbackSlot)) } answers {
-                callbackSlot.captured.onResponse(mockk(), mockk())
+        jwksClient =
+            mockk {
+                every { location } returns ""
+                every { jsonWebKeys } returns listOf(jsonWebKey)
             }
-        }
-        every { mockOkhttpClient.newCall(capture(requestSlot)) } returns mockCall
-        val params = TokenRequest(
-            clientId = "client-id",
-            clientSecret = "client-secret",
-            scopes = listOf("user:read", "user:write"),
-        )
-        val expectedMediaType = "application/x-www-form-urlencoded; charset=utf-8".toMediaType()
-        val expectedPayload = mapOf(
-            "client_id" to params.clientId,
-            "client_secret" to params.clientSecret,
-            "grant_type" to "client_credentials",
-            "scope" to params.scopes?.joinToString(" "),
-        )
-        val payload = moshi.adapter(Map::class.java).toJson(expectedPayload)
-        val expectedRequest = Request.Builder()
-            .url("http://test/v1/public/$projectId/oauth2/token")
-            .post(payload.toRequestBody(expectedMediaType))
-            .build()
-        m2m.token(params)
-        assert(requestSlot.captured.toString() == expectedRequest.toString())
+        jwtNoScopes =
+            JsonWebSignature().apply {
+                payload =
+                    JwtClaims().apply {
+                        issuer = "stytch.com/$projectId"
+                        audience = listOf(projectId)
+                        subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
+                        setExpirationTimeMinutesInTheFuture(5F)
+                        setGeneratedJwtId()
+                        setIssuedAtToNow()
+                        setNotBeforeMinutesInThePast(0F)
+                    }.toJson()
+                key = rsaJsonWebKey.privateKey
+                keyIdHeaderValue = rsaJsonWebKey.keyId
+                algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
+            }.compactSerialization
+        jwtWithScopes =
+            JsonWebSignature().apply {
+                payload =
+                    JwtClaims().apply {
+                        issuer = "stytch.com/$projectId"
+                        audience = listOf(projectId)
+                        subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
+                        setClaim("scope", "user:read user:write")
+                        setExpirationTimeMinutesInTheFuture(5F)
+                        setGeneratedJwtId()
+                        setIssuedAtToNow()
+                        setNotBeforeMinutesInThePast(0F)
+                    }.toJson()
+                key = rsaJsonWebKey.privateKey
+                keyIdHeaderValue = rsaJsonWebKey.keyId
+                algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
+            }.compactSerialization
+        m2m =
+            M2MImpl(
+                httpClient =
+                    HttpClient(
+                        baseUrl = "http://test",
+                        projectId = "",
+                        secret = "",
+                        client = mockOkhttpClient,
+                    ),
+                coroutineScope = CoroutineScope(mainThreadSurrogate),
+                jwksClient = jwksClient,
+                jwtOptions =
+                    JwtOptions(
+                        audience = projectId,
+                        issuer = "stytch.com/$projectId",
+                        type = "JWT",
+                    ),
+            )
     }
+
+    @Test
+    fun `authenticateToken returns JwtMissingScopes exception when required scopes are missing`() =
+        runTest {
+            val result =
+                m2m.authenticateToken(
+                    AuthenticateTokenRequest(
+                        accessToken = jwtNoScopes,
+                        requiredScopes = listOf("user:read", "user:write"),
+                        maxTokenAgeSeconds = 5000,
+                    ),
+                )
+            require(result is StytchResult.Error)
+            assert(result.exception.reason is JWTException.JwtMissingScopes)
+        }
+
+    @Test
+    fun `authenticateToken returns expected AuthenticateTokenResponse data when successful`() =
+        runTest {
+            val result =
+                m2m.authenticateToken(
+                    AuthenticateTokenRequest(
+                        accessToken = jwtWithScopes,
+                        requiredScopes = listOf("user:read", "user:write"),
+                        maxTokenAgeSeconds = 5000,
+                    ),
+                )
+            require(result is StytchResult.Success)
+        }
+
+    @Test
+    fun `token makes correct call to httpClient`() =
+        runTest {
+            val moshi = Moshi.Builder().add(InstantAdapter()).build()
+            val callbackSlot = slot<Callback>()
+            val requestSlot = slot<Request>()
+            val mockCall: Call =
+                mockk {
+                    every { enqueue(capture(callbackSlot)) } answers {
+                        callbackSlot.captured.onResponse(mockk(), mockk())
+                    }
+                }
+            every { mockOkhttpClient.newCall(capture(requestSlot)) } returns mockCall
+            val params =
+                TokenRequest(
+                    clientId = "client-id",
+                    clientSecret = "client-secret",
+                    scopes = listOf("user:read", "user:write"),
+                )
+            val expectedMediaType = "application/x-www-form-urlencoded; charset=utf-8".toMediaType()
+            val expectedPayload =
+                mapOf(
+                    "client_id" to params.clientId,
+                    "client_secret" to params.clientSecret,
+                    "grant_type" to "client_credentials",
+                    "scope" to params.scopes?.joinToString(" "),
+                )
+            val payload = moshi.adapter(Map::class.java).toJson(expectedPayload)
+            val expectedRequest =
+                Request.Builder()
+                    .url("http://test/v1/public/$projectId/oauth2/token")
+                    .post(payload.toRequestBody(expectedMediaType))
+                    .build()
+            m2m.token(params)
+            assert(requestSlot.captured.toString() == expectedRequest.toString())
+        }
 }

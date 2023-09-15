@@ -36,6 +36,7 @@ import kotlinx.coroutines.withContext
 import org.jose4j.jwk.HttpsJwks
 import java.time.Instant
 import java.util.concurrent.CompletableFuture
+
 public interface Sessions {
     /**
      * List all active Sessions for a given `user_id`. All timestamps are formatted according to the RFC 3339 standard and are
@@ -47,7 +48,10 @@ public interface Sessions {
      * List all active Sessions for a given `user_id`. All timestamps are formatted according to the RFC 3339 standard and are
      * expressed in UTC, e.g. `2021-12-29T12:33:09Z`.
      */
-    public fun get(data: GetRequest, callback: (StytchResult<GetResponse>) -> Unit)
+    public fun get(
+        data: GetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
+    )
 
     /**
      * List all active Sessions for a given `user_id`. All timestamps are formatted according to the RFC 3339 standard and are
@@ -69,7 +73,10 @@ public interface Sessions {
      * standard and are expressed in UTC, e.g. `2021-12-29T12:33:09Z`. This endpoint requires exactly one `session_jwt` or
      * `session_token` as part of the request. If both are included you will receive a `too_many_session_arguments` error.
      */
-    public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+    public fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    )
 
     /**
      * Authenticate a session token and retrieve associated session data. If `session_duration_minutes` is included, update
@@ -91,7 +98,10 @@ public interface Sessions {
      * ID, or using one of its session tokens, or one of its JWTs. This endpoint requires exactly one of those to be included
      * in the request. It will return an error if multiple are present.
      */
-    public fun revoke(data: RevokeRequest, callback: (StytchResult<RevokeResponse>) -> Unit)
+    public fun revoke(
+        data: RevokeRequest,
+        callback: (StytchResult<RevokeResponse>) -> Unit,
+    )
 
     /**
      * Revoke a Session, immediately invalidating all of its session tokens. You can revoke a session in three ways: using its
@@ -108,7 +118,10 @@ public interface Sessions {
     /**
      * Get the JSON Web Key Set (JWKS) for a Stytch Project.
      */
-    public fun getJWKS(data: GetJWKSRequest, callback: (StytchResult<GetJWKSResponse>) -> Unit)
+    public fun getJWKS(
+        data: GetJWKSRequest,
+        callback: (StytchResult<GetJWKSResponse>) -> Unit,
+    )
 
     /**
      * Get the JSON Web Key Set (JWKS) for a Stytch Project.
@@ -121,15 +134,6 @@ public interface Sessions {
     // ADDIMPORT: import com.stytch.java.common.ParseJWTClaimsOptions
     // ADDIMPORT: import com.stytch.java.common.parseJWTClaims
     // ADDIMPORT: import com.stytch.java.common.ParsedJWTClaims
-    /** Parse a JWT and verify the signature, preferring local verification over remote.
-     *
-     * If maxTokenAgeSeconds is set, remote verification will be forced if the JWT was issued at
-     * (based on the "iat" claim) more than that many seconds ago.
-     *
-     * To force remote validation for all tokens, set max_token_age_seconds to zero or use the
-     * authenticate method instead.
-     */
-    public suspend fun authenticateJwt(jwt: String, maxTokenAgeSeconds: Int?): StytchResult<Session?>
 
     /** Parse a JWT and verify the signature, preferring local verification over remote.
      *
@@ -139,7 +143,10 @@ public interface Sessions {
      * To force remote validation for all tokens, set max_token_age_seconds to zero or use the
      * authenticate method instead.
      */
-    public fun authenticateJwt(jwt: String, maxTokenAgeSeconds: Int?, callback: (StytchResult<Session?>) -> Unit)
+    public suspend fun authenticateJwt(
+        jwt: String,
+        maxTokenAgeSeconds: Int?,
+    ): StytchResult<Session?>
 
     /** Parse a JWT and verify the signature, preferring local verification over remote.
      *
@@ -149,7 +156,24 @@ public interface Sessions {
      * To force remote validation for all tokens, set max_token_age_seconds to zero or use the
      * authenticate method instead.
      */
-    public fun authenticateJwtCompletable(jwt: String, maxTokenAgeSeconds: Int?): CompletableFuture<StytchResult<Session?>>
+    public fun authenticateJwt(
+        jwt: String,
+        maxTokenAgeSeconds: Int?,
+        callback: (StytchResult<Session?>) -> Unit,
+    )
+
+    /** Parse a JWT and verify the signature, preferring local verification over remote.
+     *
+     * If maxTokenAgeSeconds is set, remote verification will be forced if the JWT was issued at
+     * (based on the "iat" claim) more than that many seconds ago.
+     *
+     * To force remote validation for all tokens, set max_token_age_seconds to zero or use the
+     * authenticate method instead.
+     */
+    public fun authenticateJwtCompletable(
+        jwt: String,
+        maxTokenAgeSeconds: Int?,
+    ): CompletableFuture<StytchResult<Session?>>
 
     /** Parse a JWT and verify the signature locally (without calling /authenticate in the API).
      *
@@ -162,7 +186,11 @@ public interface Sessions {
      * The value for leeway is the maximum allowable difference when comparing
      * timestamps. It defaults to zero.
      */
-    public suspend fun authenticateJwtLocal(jwt: String, maxTokenAgeSeconds: Int?, leeway: Int = 0): StytchResult<Session?>
+    public suspend fun authenticateJwtLocal(
+        jwt: String,
+        maxTokenAgeSeconds: Int?,
+        leeway: Int = 0,
+    ): StytchResult<Session?>
 
     /** Parse a JWT and verify the signature locally (without calling /authenticate in the API).
      *
@@ -175,7 +203,12 @@ public interface Sessions {
      * The value for leeway is the maximum allowable difference when comparing
      * timestamps. It defaults to zero.
      */
-    public fun authenticateJwtLocal(jwt: String, maxTokenAgeSeconds: Int?, leeway: Int = 0, callback: (StytchResult<Session?>) -> Unit)
+    public fun authenticateJwtLocal(
+        jwt: String,
+        maxTokenAgeSeconds: Int?,
+        leeway: Int = 0,
+        callback: (StytchResult<Session?>) -> Unit,
+    )
 
     /** Parse a JWT and verify the signature locally (without calling /authenticate in the API).
      *
@@ -188,7 +221,11 @@ public interface Sessions {
      * The value for leeway is the maximum allowable difference when comparing
      * timestamps. It defaults to zero.
      */
-    public suspend fun authenticateJwtLocalCompletable(jwt: String, maxTokenAgeSeconds: Int?, leeway: Int = 0): CompletableFuture<StytchResult<Session?>>
+    public suspend fun authenticateJwtLocalCompletable(
+        jwt: String,
+        maxTokenAgeSeconds: Int?,
+        leeway: Int = 0,
+    ): CompletableFuture<StytchResult<Session?>>
     // ENDMANUAL(authenticateJWT_interface)
 }
 
@@ -198,18 +235,21 @@ internal class SessionsImpl(
     private val jwksClient: HttpsJwks,
     private val jwtOptions: JwtOptions,
 ) : Sessions {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override suspend fun get(data: GetRequest): StytchResult<GetResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.get("/v1/sessions", asMap)
-    }
+    override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/sessions", asMap)
+        }
 
-    override fun get(data: GetRequest, callback: (StytchResult<GetResponse>) -> Unit) {
+    override fun get(
+        data: GetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(get(data))
         }
@@ -219,12 +259,17 @@ internal class SessionsImpl(
         coroutineScope.async {
             get(data)
         }.asCompletableFuture()
-    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-        httpClient.post("/v1/sessions/authenticate", asJson)
-    }
 
-    override fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit) {
+    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/sessions/authenticate", asJson)
+        }
+
+    override fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(authenticate(data))
         }
@@ -234,12 +279,17 @@ internal class SessionsImpl(
         coroutineScope.async {
             authenticate(data)
         }.asCompletableFuture()
-    override suspend fun revoke(data: RevokeRequest): StytchResult<RevokeResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(RevokeRequest::class.java).toJson(data)
-        httpClient.post("/v1/sessions/revoke", asJson)
-    }
 
-    override fun revoke(data: RevokeRequest, callback: (StytchResult<RevokeResponse>) -> Unit) {
+    override suspend fun revoke(data: RevokeRequest): StytchResult<RevokeResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(RevokeRequest::class.java).toJson(data)
+            httpClient.post("/v1/sessions/revoke", asJson)
+        }
+
+    override fun revoke(
+        data: RevokeRequest,
+        callback: (StytchResult<RevokeResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(revoke(data))
         }
@@ -249,15 +299,20 @@ internal class SessionsImpl(
         coroutineScope.async {
             revoke(data)
         }.asCompletableFuture()
-    override suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(GetJWKSRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.get("/v1/sessions/jwks/${data.projectId}", asMap)
-    }
 
-    override fun getJWKS(data: GetJWKSRequest, callback: (StytchResult<GetJWKSResponse>) -> Unit) {
+    override suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(GetJWKSRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/sessions/jwks/${data.projectId}", asMap)
+        }
+
+    override fun getJWKS(
+        data: GetJWKSRequest,
+        callback: (StytchResult<GetJWKSResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(getJWKS(data))
         }
@@ -272,16 +327,17 @@ internal class SessionsImpl(
     override suspend fun authenticateJwt(
         jwt: String,
         maxTokenAgeSeconds: Int?,
-    ): StytchResult<Session?> = withContext(Dispatchers.IO) {
-        try {
-            authenticateJwtLocal(jwt = jwt, maxTokenAgeSeconds = maxTokenAgeSeconds)
-        } catch (e: JWTException) {
-            when (val result = authenticate(AuthenticateRequest(sessionJwt = jwt))) {
-                is StytchResult.Success -> StytchResult.Success(result.value.session)
-                else -> StytchResult.Success(null)
+    ): StytchResult<Session?> =
+        withContext(Dispatchers.IO) {
+            try {
+                authenticateJwtLocal(jwt = jwt, maxTokenAgeSeconds = maxTokenAgeSeconds)
+            } catch (e: JWTException) {
+                when (val result = authenticate(AuthenticateRequest(sessionJwt = jwt))) {
+                    is StytchResult.Success -> StytchResult.Success(result.value.session)
+                    else -> StytchResult.Success(null)
+                }
             }
         }
-    }
 
     override fun authenticateJwt(
         jwt: String,
@@ -307,21 +363,24 @@ internal class SessionsImpl(
         leeway: Int,
     ): StytchResult<Session?> {
         return try {
-            val jwtClaims = parseJWTClaims(
-                jwt = jwt,
-                jwtOptions = jwtOptions,
-                jwksClient = jwksClient,
-                options = ParseJWTClaimsOptions(
-                    leeway = leeway,
-                    maxTokenAgeSeconds = maxTokenAgeSeconds,
-                ),
-            )
+            val jwtClaims =
+                parseJWTClaims(
+                    jwt = jwt,
+                    jwtOptions = jwtOptions,
+                    jwksClient = jwksClient,
+                    options =
+                        ParseJWTClaimsOptions(
+                            leeway = leeway,
+                            maxTokenAgeSeconds = maxTokenAgeSeconds,
+                        ),
+                )
             val stytchSessionClaims = jwtClaims.payload.claimsMap["https://stytch.com/session"] as? Map<*, *>
-            val stytchSessionClaim = stytchSessionClaims?.let {
-                val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-                val adapter: JsonAdapter<Map<*, *>> = moshi.adapter(type)
-                moshi.adapter(StytchSessionClaim::class.java).fromJson(adapter.toJson(it))
-            } ?: throw JWTException.JwtMissingClaims
+            val stytchSessionClaim =
+                stytchSessionClaims?.let {
+                    val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+                    val adapter: JsonAdapter<Map<*, *>> = moshi.adapter(type)
+                    moshi.adapter(StytchSessionClaim::class.java).fromJson(adapter.toJson(it))
+                } ?: throw JWTException.JwtMissingClaims
             return StytchResult.Success(
                 Session(
                     sessionId = stytchSessionClaim.id,

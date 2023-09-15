@@ -25,6 +25,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface WebAuthn {
     /**
      * Initiate the process of creating a new WebAuthn registration. After calling this endpoint, the browser will need to
@@ -50,7 +51,10 @@ public interface WebAuthn {
      * `public_key_credential_creation_options` will need to be converted to a suitable public key by unmarshalling the JSON,
      * base64 decoding the user ID field, and converting user ID and the challenge fields into an array buffer.
      */
-    public fun registerStart(data: RegisterStartRequest, callback: (StytchResult<RegisterStartResponse>) -> Unit)
+    public fun registerStart(
+        data: RegisterStartRequest,
+        callback: (StytchResult<RegisterStartResponse>) -> Unit,
+    )
 
     /**
      * Initiate the process of creating a new WebAuthn registration. After calling this endpoint, the browser will need to
@@ -89,7 +93,10 @@ public interface WebAuthn {
      * [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) response will need to be
      * converted from array buffers to strings and marshalled into JSON.
      */
-    public fun register(data: RegisterRequest, callback: (StytchResult<RegisterResponse>) -> Unit)
+    public fun register(
+        data: RegisterRequest,
+        callback: (StytchResult<RegisterResponse>) -> Unit,
+    )
 
     /**
      * Complete the creation of a WebAuthn registration by passing the response from the
@@ -128,7 +135,10 @@ public interface WebAuthn {
      * public_key_credential_request_options` will need to be converted to a suitable public key by unmarshalling the JSON and
      * converting some the fields to array buffers.
      */
-    public fun authenticateStart(data: AuthenticateStartRequest, callback: (StytchResult<AuthenticateStartResponse>) -> Unit)
+    public fun authenticateStart(
+        data: AuthenticateStartRequest,
+        callback: (StytchResult<AuthenticateStartResponse>) -> Unit,
+    )
 
     /**
      * Initiate the authentication of a WebAuthn registration. After calling this endpoint, the browser will need to call
@@ -165,7 +175,10 @@ public interface WebAuthn {
      * from the [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) response will need to be
      * converted from array buffers to strings and marshalled into JSON.
      */
-    public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+    public fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    )
 
     /**
      * Complete the authentication of a WebAuthn registration by passing the response from the
@@ -184,15 +197,18 @@ internal class WebAuthnImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : WebAuthn {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override suspend fun registerStart(data: RegisterStartRequest): StytchResult<RegisterStartResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(RegisterStartRequest::class.java).toJson(data)
-        httpClient.post("/v1/webauthn/register/start", asJson)
-    }
+    override suspend fun registerStart(data: RegisterStartRequest): StytchResult<RegisterStartResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(RegisterStartRequest::class.java).toJson(data)
+            httpClient.post("/v1/webauthn/register/start", asJson)
+        }
 
-    override fun registerStart(data: RegisterStartRequest, callback: (StytchResult<RegisterStartResponse>) -> Unit) {
+    override fun registerStart(
+        data: RegisterStartRequest,
+        callback: (StytchResult<RegisterStartResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(registerStart(data))
         }
@@ -202,12 +218,17 @@ internal class WebAuthnImpl(
         coroutineScope.async {
             registerStart(data)
         }.asCompletableFuture()
-    override suspend fun register(data: RegisterRequest): StytchResult<RegisterResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(RegisterRequest::class.java).toJson(data)
-        httpClient.post("/v1/webauthn/register", asJson)
-    }
 
-    override fun register(data: RegisterRequest, callback: (StytchResult<RegisterResponse>) -> Unit) {
+    override suspend fun register(data: RegisterRequest): StytchResult<RegisterResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(RegisterRequest::class.java).toJson(data)
+            httpClient.post("/v1/webauthn/register", asJson)
+        }
+
+    override fun register(
+        data: RegisterRequest,
+        callback: (StytchResult<RegisterResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(register(data))
         }
@@ -217,12 +238,17 @@ internal class WebAuthnImpl(
         coroutineScope.async {
             register(data)
         }.asCompletableFuture()
-    override suspend fun authenticateStart(data: AuthenticateStartRequest): StytchResult<AuthenticateStartResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(AuthenticateStartRequest::class.java).toJson(data)
-        httpClient.post("/v1/webauthn/authenticate/start", asJson)
-    }
 
-    override fun authenticateStart(data: AuthenticateStartRequest, callback: (StytchResult<AuthenticateStartResponse>) -> Unit) {
+    override suspend fun authenticateStart(data: AuthenticateStartRequest): StytchResult<AuthenticateStartResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(AuthenticateStartRequest::class.java).toJson(data)
+            httpClient.post("/v1/webauthn/authenticate/start", asJson)
+        }
+
+    override fun authenticateStart(
+        data: AuthenticateStartRequest,
+        callback: (StytchResult<AuthenticateStartResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(authenticateStart(data))
         }
@@ -232,12 +258,17 @@ internal class WebAuthnImpl(
         coroutineScope.async {
             authenticateStart(data)
         }.asCompletableFuture()
-    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-        httpClient.post("/v1/webauthn/authenticate", asJson)
-    }
 
-    override fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit) {
+    override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
+            httpClient.post("/v1/webauthn/authenticate", asJson)
+        }
+
+    override fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(authenticate(data))
         }

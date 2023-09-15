@@ -31,6 +31,7 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
+
 public interface Clients {
     public val secrets: Secrets
 
@@ -42,7 +43,10 @@ public interface Clients {
     /**
      * Gets information about an existing M2M Client.
      */
-    public fun get(data: GetRequest, callback: (StytchResult<GetResponse>) -> Unit)
+    public fun get(
+        data: GetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
+    )
 
     /**
      * Gets information about an existing M2M Client.
@@ -67,7 +71,10 @@ public interface Clients {
      * - `client_name`: Search for clients by exact match on client name
      * - `scopes`: Search for clients assigned a specific scope
      */
-    public fun search(data: SearchRequest, callback: (StytchResult<SearchResponse>) -> Unit)
+    public fun search(
+        data: SearchRequest,
+        callback: (StytchResult<SearchResponse>) -> Unit,
+    )
 
     /**
      * Search for M2M Clients within your Stytch Project. Submit an empty `query` in the request to return all M2M Clients.
@@ -99,7 +106,10 @@ public interface Clients {
      * To protect more-sensitive routes, pass a lower `max_token_age` value
      * when[authenticating the token](https://stytch.com/docs/b2b/api/authenticate-m2m-token)[authenticating the token](https://stytch.com/docs/api/authenticate-m2m-token).
      */
-    public fun update(data: UpdateRequest, callback: (StytchResult<UpdateResponse>) -> Unit)
+    public fun update(
+        data: UpdateRequest,
+        callback: (StytchResult<UpdateResponse>) -> Unit,
+    )
 
     /**
      * Updates an existing M2M Client. You can use this endpoint to activate or deactivate a M2M Client by changing its
@@ -130,7 +140,10 @@ public interface Clients {
      * To protect more-sensitive routes, pass a lower `max_token_age` value
      * when[authenticating the token](https://stytch.com/docs/b2b/api/authenticate-m2m-token)[authenticating the token](https://stytch.com/docs/api/authenticate-m2m-token).
      */
-    public fun delete(data: DeleteRequest, callback: (StytchResult<DeleteResponse>) -> Unit)
+    public fun delete(
+        data: DeleteRequest,
+        callback: (StytchResult<DeleteResponse>) -> Unit,
+    )
 
     /**
      * Deletes the M2M Client.
@@ -162,7 +175,10 @@ public interface Clients {
      * stores a hash of the `client_secret` and cannot recover the value if lost. Be sure to persist the `client_secret` in a
      * secure location. If the `client_secret` is lost, you will need to trigger a secret rotation flow to receive another one.
      */
-    public fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit)
+    public fun create(
+        data: CreateRequest,
+        callback: (StytchResult<CreateResponse>) -> Unit,
+    )
 
     /**
      * Creates a new M2M Client. On initial client creation, you may pass in a custom `client_id` or `client_secret` to import
@@ -180,20 +196,23 @@ internal class ClientsImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
 ) : Clients {
-
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val secrets: Secrets = SecretsImpl(httpClient, coroutineScope)
 
-    override suspend fun get(data: GetRequest): StytchResult<GetResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
-        val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
-        val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
-        val asMap = adapter.fromJson(asJson) ?: emptyMap()
-        httpClient.get("/v1/m2m/clients/${data.clientId}", asMap)
-    }
+    override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/m2m/clients/${data.clientId}", asMap)
+        }
 
-    override fun get(data: GetRequest, callback: (StytchResult<GetResponse>) -> Unit) {
+    override fun get(
+        data: GetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(get(data))
         }
@@ -203,12 +222,17 @@ internal class ClientsImpl(
         coroutineScope.async {
             get(data)
         }.asCompletableFuture()
-    override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)
-        httpClient.post("/v1/m2m/clients/search", asJson)
-    }
 
-    override fun search(data: SearchRequest, callback: (StytchResult<SearchResponse>) -> Unit) {
+    override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)
+            httpClient.post("/v1/m2m/clients/search", asJson)
+        }
+
+    override fun search(
+        data: SearchRequest,
+        callback: (StytchResult<SearchResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(search(data))
         }
@@ -218,12 +242,17 @@ internal class ClientsImpl(
         coroutineScope.async {
             search(data)
         }.asCompletableFuture()
-    override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
-        httpClient.put("/v1/m2m/clients/${data.clientId}", asJson)
-    }
 
-    override fun update(data: UpdateRequest, callback: (StytchResult<UpdateResponse>) -> Unit) {
+    override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
+            httpClient.put("/v1/m2m/clients/${data.clientId}", asJson)
+        }
+
+    override fun update(
+        data: UpdateRequest,
+        callback: (StytchResult<UpdateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(update(data))
         }
@@ -233,11 +262,16 @@ internal class ClientsImpl(
         coroutineScope.async {
             update(data)
         }.asCompletableFuture()
-    override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> = withContext(Dispatchers.IO) {
-        httpClient.delete("/v1/m2m/clients/${data.clientId}")
-    }
 
-    override fun delete(data: DeleteRequest, callback: (StytchResult<DeleteResponse>) -> Unit) {
+    override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> =
+        withContext(Dispatchers.IO) {
+            httpClient.delete("/v1/m2m/clients/${data.clientId}")
+        }
+
+    override fun delete(
+        data: DeleteRequest,
+        callback: (StytchResult<DeleteResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(delete(data))
         }
@@ -247,12 +281,17 @@ internal class ClientsImpl(
         coroutineScope.async {
             delete(data)
         }.asCompletableFuture()
-    override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> = withContext(Dispatchers.IO) {
-        val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-        httpClient.post("/v1/m2m/clients", asJson)
-    }
 
-    override fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit) {
+    override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
+            httpClient.post("/v1/m2m/clients", asJson)
+        }
+
+    override fun create(
+        data: CreateRequest,
+        callback: (StytchResult<CreateResponse>) -> Unit,
+    ) {
         coroutineScope.launch {
             callback(create(data))
         }
