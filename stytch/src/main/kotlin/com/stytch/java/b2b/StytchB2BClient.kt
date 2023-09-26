@@ -81,7 +81,7 @@ public object StytchB2BClient {
                 type = "JWT",
             )
         val coroutineScope = CoroutineScope(SupervisorJob())
-        httpsJwks = HttpsJwks("$baseUrl/v1/sessions/jwks/$projectId")
+        httpsJwks = HttpsJwks("$baseUrl/v1/b2b/sessions/jwks/$projectId")
         discovery = DiscoveryImpl(httpClient, coroutineScope)
         m2m = M2MImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
         magicLinks = MagicLinksImpl(httpClient, coroutineScope)
