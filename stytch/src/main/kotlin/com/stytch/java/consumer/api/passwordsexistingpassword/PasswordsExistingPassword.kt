@@ -23,11 +23,15 @@ import java.util.concurrent.CompletableFuture
 public interface ExistingPassword {
     /**
      * Reset the User’s password using their existing password.
+     *
+     * Note that a successful password reset via an existing password will revoke all active sessions for the `user_id`.
      */
     public suspend fun reset(data: ResetRequest): StytchResult<ResetResponse>
 
     /**
      * Reset the User’s password using their existing password.
+     *
+     * Note that a successful password reset via an existing password will revoke all active sessions for the `user_id`.
      */
     public fun reset(
         data: ResetRequest,
@@ -36,6 +40,8 @@ public interface ExistingPassword {
 
     /**
      * Reset the User’s password using their existing password.
+     *
+     * Note that a successful password reset via an existing password will revoke all active sessions for the `user_id`.
      */
     public fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>>
 }
