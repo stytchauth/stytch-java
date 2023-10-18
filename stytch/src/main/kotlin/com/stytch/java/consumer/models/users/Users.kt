@@ -316,9 +316,6 @@ public data class User
 public data class WebAuthnRegistration
     @JvmOverloads
     constructor(
-        /**
-         * The unique ID for the WebAuthn registration.
-         */
         @Json(name = "webauthn_registration_id")
         val webauthnRegistrationId: String,
         /**
@@ -331,17 +328,8 @@ public data class WebAuthnRegistration
          */
         @Json(name = "user_agent")
         val userAgent: String,
-        /**
-         * The verified boolean denotes whether or not this send method, e.g. phone number, email address, etc., has been
-         * successfully authenticated by the User.
-         */
         @Json(name = "verified")
         val verified: Boolean,
-        /**
-         * The `authenticator_type` string displays the requested authenticator type of the WebAuthn device. The two valid types
-         * are "platform" and "cross-platform". If no value is present, the WebAuthn device was created without an authenticator
-         * type preference.
-         */
         @Json(name = "authenticator_type")
         val authenticatorType: String,
     )

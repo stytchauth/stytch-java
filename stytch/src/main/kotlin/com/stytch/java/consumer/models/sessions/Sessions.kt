@@ -622,7 +622,7 @@ public data class Session
         @Json(name = "user_id")
         val userId: String,
         /**
-         * An array of different authentication factors that have initiated a Session.
+         * An array of different authentication factors that comprise a Session.
          */
         @Json(name = "authentication_factors")
         val authenticationFactors: List<AuthenticationFactor>,

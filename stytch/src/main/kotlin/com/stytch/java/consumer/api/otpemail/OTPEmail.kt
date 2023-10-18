@@ -30,7 +30,9 @@ public interface Email {
      * ### Add an email to an existing user
      * This endpoint also allows you to add a new email address to an existing Stytch User. Including a `user_id`,
      * `session_token`, or `session_jwt` in your Send one-time passcode by email request will add the new, unverified email
-     * address to the existing Stytch User. Upon successful authentication, the email address will be marked as verified.
+     * address to the existing Stytch User. If the user successfully authenticates within 5 minutes, the new email address
+     * will be marked as verified and remain permanently on the existing Stytch User. Otherwise, it will be removed from the
+     * User object, and any subsequent login requests using that email address will create a new User.
      *
      * ### Next steps
      * Collect the OTP which was delivered to the user. Call [Authenticate OTP](https://stytch.com/docs/api/authenticate-otp)
@@ -45,7 +47,9 @@ public interface Email {
      * ### Add an email to an existing user
      * This endpoint also allows you to add a new email address to an existing Stytch User. Including a `user_id`,
      * `session_token`, or `session_jwt` in your Send one-time passcode by email request will add the new, unverified email
-     * address to the existing Stytch User. Upon successful authentication, the email address will be marked as verified.
+     * address to the existing Stytch User. If the user successfully authenticates within 5 minutes, the new email address
+     * will be marked as verified and remain permanently on the existing Stytch User. Otherwise, it will be removed from the
+     * User object, and any subsequent login requests using that email address will create a new User.
      *
      * ### Next steps
      * Collect the OTP which was delivered to the user. Call [Authenticate OTP](https://stytch.com/docs/api/authenticate-otp)
@@ -63,7 +67,9 @@ public interface Email {
      * ### Add an email to an existing user
      * This endpoint also allows you to add a new email address to an existing Stytch User. Including a `user_id`,
      * `session_token`, or `session_jwt` in your Send one-time passcode by email request will add the new, unverified email
-     * address to the existing Stytch User. Upon successful authentication, the email address will be marked as verified.
+     * address to the existing Stytch User. If the user successfully authenticates within 5 minutes, the new email address
+     * will be marked as verified and remain permanently on the existing Stytch User. Otherwise, it will be removed from the
+     * User object, and any subsequent login requests using that email address will create a new User.
      *
      * ### Next steps
      * Collect the OTP which was delivered to the user. Call [Authenticate OTP](https://stytch.com/docs/api/authenticate-otp)

@@ -33,7 +33,11 @@ public data class ResetRequest
     @JvmOverloads
     constructor(
         /**
-         * The token to authenticate.
+         * The Passwords `token` from the `?token=` query parameter in the URL.
+         *
+         *       In the redirect URL, the `stytch_token_type` will be `login` or `reset_password`.
+         *
+         *       See examples and read more about redirect URLs [here](https://stytch.com/docs/guides/dashboard/redirect-urls).
          */
         @Json(name = "token")
         val token: String,
