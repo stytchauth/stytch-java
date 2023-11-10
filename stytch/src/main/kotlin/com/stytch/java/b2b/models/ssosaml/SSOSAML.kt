@@ -108,6 +108,58 @@ public data class DeleteVerificationCertificateResponse
     )
 
 /**
+* Request type for `SAML.updateByURL`.
+*/
+@JsonClass(generateAdapter = true)
+public data class UpdateByURLRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String,
+        /**
+         * Globally unique UUID that identifies a specific SSO `connection_id` for a Member.
+         */
+        @Json(name = "connection_id")
+        val connectionId: String,
+        /**
+         * A URL that points to the IdP metadata. This will be provided by the IdP.
+         */
+        @Json(name = "metadata_url")
+        val metadataURL: String,
+    )
+
+/**
+* Response type for `SAML.updateByURL`.
+*/
+@JsonClass(generateAdapter = true)
+public data class UpdateByURLResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+        /**
+         * The `SAML Connection` object affected by this API call. See the
+         * [SAML Connection Object](https://stytch.com/docs/b2b/api/saml-connection-object) for complete response field details.
+         */
+        @Json(name = "connection")
+        val connection: SAMLConnection? = null,
+    )
+
+/**
 * Request type for `SAML.updateConnection`.
 */
 @JsonClass(generateAdapter = true)
@@ -154,31 +206,4 @@ public data class UpdateConnectionRequest
          */
         @Json(name = "idp_sso_url")
         val idpSSOURL: String? = null,
-    )
-
-/**
-* Response type for `SAML.updateConnection`.
-*/
-@JsonClass(generateAdapter = true)
-public data class UpdateConnectionResponse
-    @JvmOverloads
-    constructor(
-        /**
-         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-         * may ask for this value to help identify a specific API call when helping you debug an issue.
-         */
-        @Json(name = "request_id")
-        val requestId: String,
-        /**
-         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-         */
-        @Json(name = "status_code")
-        val statusCode: Int,
-        /**
-         * The `SAML Connection` object affected by this API call. See the
-         * [SAML Connection Object](https://stytch.com/docs/b2b/api/saml-connection-object) for complete response field details.
-         */
-        @Json(name = "connection")
-        val connection: SAMLConnection? = null,
     )

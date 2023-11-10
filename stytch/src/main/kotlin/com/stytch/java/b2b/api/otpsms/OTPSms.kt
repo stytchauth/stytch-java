@@ -46,6 +46,10 @@ public interface Sms {
      * Before configuring SMS or WhatsApp OTPs, please review how Stytch
      * [bills the costs of international OTPs](https://stytch.com/pricing) and understand how to protect your app against
      * [toll fraud](https://stytch.com/docs/guides/passcodes/toll-fraud/overview).
+     *
+     * __Note:__ SMS to phone numbers outside of the US and Canada is disabled by default for customers who did not use SMS
+     * prior to October 2023. If you're interested in sending international SMS, please reach out to
+     * [support@stytch.com](mailto:support@stytch.com?subject=Enable%20international%20SMS).
      */
     public suspend fun send(data: SendRequest): StytchResult<SendResponse>
 
@@ -72,6 +76,10 @@ public interface Sms {
      * Before configuring SMS or WhatsApp OTPs, please review how Stytch
      * [bills the costs of international OTPs](https://stytch.com/pricing) and understand how to protect your app against
      * [toll fraud](https://stytch.com/docs/guides/passcodes/toll-fraud/overview).
+     *
+     * __Note:__ SMS to phone numbers outside of the US and Canada is disabled by default for customers who did not use SMS
+     * prior to October 2023. If you're interested in sending international SMS, please reach out to
+     * [support@stytch.com](mailto:support@stytch.com?subject=Enable%20international%20SMS).
      */
     public fun send(
         data: SendRequest,
@@ -101,6 +109,10 @@ public interface Sms {
      * Before configuring SMS or WhatsApp OTPs, please review how Stytch
      * [bills the costs of international OTPs](https://stytch.com/pricing) and understand how to protect your app against
      * [toll fraud](https://stytch.com/docs/guides/passcodes/toll-fraud/overview).
+     *
+     * __Note:__ SMS to phone numbers outside of the US and Canada is disabled by default for customers who did not use SMS
+     * prior to October 2023. If you're interested in sending international SMS, please reach out to
+     * [support@stytch.com](mailto:support@stytch.com?subject=Enable%20international%20SMS).
      */
     public fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>>
 

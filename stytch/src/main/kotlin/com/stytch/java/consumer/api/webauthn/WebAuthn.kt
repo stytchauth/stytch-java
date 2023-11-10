@@ -17,6 +17,8 @@ import com.stytch.java.consumer.models.webauthn.RegisterRequest
 import com.stytch.java.consumer.models.webauthn.RegisterResponse
 import com.stytch.java.consumer.models.webauthn.RegisterStartRequest
 import com.stytch.java.consumer.models.webauthn.RegisterStartResponse
+import com.stytch.java.consumer.models.webauthn.UpdateRequest
+import com.stytch.java.consumer.models.webauthn.UpdateResponse
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -191,6 +193,15 @@ public interface WebAuthn {
      * converted from array buffers to strings and marshalled into JSON.
      */
     public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
+
+    public suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse>
+
+    public fun update(
+        data: UpdateRequest,
+        callback: (StytchResult<UpdateResponse>) -> Unit,
+    )
+
+    public fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>>
 }
 
 internal class WebAuthnImpl(
@@ -277,5 +288,25 @@ internal class WebAuthnImpl(
     override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
         coroutineScope.async {
             authenticate(data)
+        }.asCompletableFuture()
+
+    override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
+            httpClient.put("/v1/webauthn/${data.webauthnRegistrationId}", asJson)
+        }
+
+    override fun update(
+        data: UpdateRequest,
+        callback: (StytchResult<UpdateResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(update(data))
+        }
+    }
+
+    override fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>> =
+        coroutineScope.async {
+            update(data)
         }.asCompletableFuture()
 }

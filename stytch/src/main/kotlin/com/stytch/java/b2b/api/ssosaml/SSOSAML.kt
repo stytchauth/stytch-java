@@ -11,8 +11,9 @@ import com.stytch.java.b2b.models.ssosaml.CreateConnectionRequest
 import com.stytch.java.b2b.models.ssosaml.CreateConnectionResponse
 import com.stytch.java.b2b.models.ssosaml.DeleteVerificationCertificateRequest
 import com.stytch.java.b2b.models.ssosaml.DeleteVerificationCertificateResponse
+import com.stytch.java.b2b.models.ssosaml.UpdateByURLRequest
+import com.stytch.java.b2b.models.ssosaml.UpdateByURLResponse
 import com.stytch.java.b2b.models.ssosaml.UpdateConnectionRequest
-import com.stytch.java.b2b.models.ssosaml.UpdateConnectionResponse
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
@@ -52,7 +53,7 @@ public interface SAML {
      * * `idp_entity_id`
      * * `x509_certificate`
      */
-    public suspend fun updateConnection(data: UpdateConnectionRequest): StytchResult<UpdateConnectionResponse>
+    public suspend fun updateConnection(data: UpdateConnectionRequest): StytchResult<UpdateByURLResponse>
 
     /**
      * Updates an existing SAML connection.
@@ -65,7 +66,7 @@ public interface SAML {
      */
     public fun updateConnection(
         data: UpdateConnectionRequest,
-        callback: (StytchResult<UpdateConnectionResponse>) -> Unit,
+        callback: (StytchResult<UpdateByURLResponse>) -> Unit,
     )
 
     /**
@@ -77,7 +78,43 @@ public interface SAML {
      * * `idp_entity_id`
      * * `x509_certificate`
      */
-    public fun updateConnectionCompletable(data: UpdateConnectionRequest): CompletableFuture<StytchResult<UpdateConnectionResponse>>
+    public fun updateConnectionCompletable(data: UpdateConnectionRequest): CompletableFuture<StytchResult<UpdateByURLResponse>>
+
+    /**
+     * Used to update an existing SAML connection using an IDP metadata URL.
+     *
+     * A newly created connection will not become active until all the following are provided:
+     * * `idp_sso_url`
+     * * `idp_entity_id`
+     * * `x509_certificate`
+     * * `attribute_mapping` (must be supplied using [Update SAML Connection](update-saml-connection))
+     */
+    public suspend fun updateByURL(data: UpdateByURLRequest): StytchResult<UpdateByURLResponse>
+
+    /**
+     * Used to update an existing SAML connection using an IDP metadata URL.
+     *
+     * A newly created connection will not become active until all the following are provided:
+     * * `idp_sso_url`
+     * * `idp_entity_id`
+     * * `x509_certificate`
+     * * `attribute_mapping` (must be supplied using [Update SAML Connection](update-saml-connection))
+     */
+    public fun updateByURL(
+        data: UpdateByURLRequest,
+        callback: (StytchResult<UpdateByURLResponse>) -> Unit,
+    )
+
+    /**
+     * Used to update an existing SAML connection using an IDP metadata URL.
+     *
+     * A newly created connection will not become active until all the following are provided:
+     * * `idp_sso_url`
+     * * `idp_entity_id`
+     * * `x509_certificate`
+     * * `attribute_mapping` (must be supplied using [Update SAML Connection](update-saml-connection))
+     */
+    public fun updateByURLCompletable(data: UpdateByURLRequest): CompletableFuture<StytchResult<UpdateByURLResponse>>
 
     /**
      * Delete a SAML verification certificate.
@@ -137,7 +174,7 @@ internal class SAMLImpl(
             createConnection(data)
         }.asCompletableFuture()
 
-    override suspend fun updateConnection(data: UpdateConnectionRequest): StytchResult<UpdateConnectionResponse> =
+    override suspend fun updateConnection(data: UpdateConnectionRequest): StytchResult<UpdateByURLResponse> =
         withContext(Dispatchers.IO) {
             val asJson = moshi.adapter(UpdateConnectionRequest::class.java).toJson(data)
             httpClient.put("/v1/b2b/sso/saml/${data.organizationId}/connections/${data.connectionId}", asJson)
@@ -145,16 +182,36 @@ internal class SAMLImpl(
 
     override fun updateConnection(
         data: UpdateConnectionRequest,
-        callback: (StytchResult<UpdateConnectionResponse>) -> Unit,
+        callback: (StytchResult<UpdateByURLResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(updateConnection(data))
         }
     }
 
-    override fun updateConnectionCompletable(data: UpdateConnectionRequest): CompletableFuture<StytchResult<UpdateConnectionResponse>> =
+    override fun updateConnectionCompletable(data: UpdateConnectionRequest): CompletableFuture<StytchResult<UpdateByURLResponse>> =
         coroutineScope.async {
             updateConnection(data)
+        }.asCompletableFuture()
+
+    override suspend fun updateByURL(data: UpdateByURLRequest): StytchResult<UpdateByURLResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(UpdateByURLRequest::class.java).toJson(data)
+            httpClient.put("/v1/b2b/sso/saml/${data.organizationId}/connections/${data.connectionId}/url", asJson)
+        }
+
+    override fun updateByURL(
+        data: UpdateByURLRequest,
+        callback: (StytchResult<UpdateByURLResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(updateByURL(data))
+        }
+    }
+
+    override fun updateByURLCompletable(data: UpdateByURLRequest): CompletableFuture<StytchResult<UpdateByURLResponse>> =
+        coroutineScope.async {
+            updateByURL(data)
         }.asCompletableFuture()
 
     override suspend fun deleteVerificationCertificate(
