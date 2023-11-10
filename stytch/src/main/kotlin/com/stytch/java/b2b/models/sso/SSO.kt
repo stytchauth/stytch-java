@@ -80,6 +80,8 @@ public data class SAMLConnection
         val signingCertificates: List<X509Certificate>,
         @Json(name = "verification_certificates")
         val verificationCertificates: List<X509Certificate>,
+        @Json(name = "alternative_audience_uri")
+        val alternativeAudienceUri: String,
         @Json(name = "attribute_mapping")
         val attributeMapping: Map<String, Any>? = null,
     )
