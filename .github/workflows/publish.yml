@@ -1,8 +1,8 @@
 name: Publish
 
 on:
-  release:
-    types: [released]
+  push:
+    branches: [main]
 
 jobs:
   publish:
@@ -15,11 +15,37 @@ jobs:
           distribution: zulu
           java-version: 11
 
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(./gradlew -q printVersion)
+          echo "release_tag=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Get changed files
+        id: files
+        uses: jitterbit/get-changed-files@v1
+
+      - name: Check for version.gradle.kts diff
+        id: diff
+        run: |
+          FOUND=0
+          for changed_file in ${{ steps.files.outputs.all }}; do
+            if [[ $changed_file == "version.gradle.kts" ]]; then
+              FOUND=1
+            fi
+          done
+          echo "diff=$FOUND" >> $GITHUB_OUTPUT
+
       - name: Release build
+        if: steps.diff.outputs.diff != 0
         run: ./gradlew assemble
+
       - name: Source jar
+        if: steps.diff.outputs.diff != 0
         run: ./gradlew kotlinSourcesJar
+
       - name: Publish to Maven Central
+        if: steps.diff.outputs.diff != 0
         run: ./gradlew --info publishReleasePublicationToSonatypeRepository --max-workers 1 closeAndReleaseSonatypeStagingRepository
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
@@ -28,3 +54,9 @@ jobs:
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
+
+      - name: Create release
+        if: steps.diff.outputs.diff != 0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "${{ steps.version.outputs.release_tag }}" --generate-notes
