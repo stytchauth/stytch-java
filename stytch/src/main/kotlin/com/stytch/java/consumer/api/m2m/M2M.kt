@@ -151,12 +151,7 @@ public interface M2M {
     // ENDMANUAL(AuthenticateM2MToken)
 }
 
-internal class M2MImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-    private val jwksClient: HttpsJwks,
-    private val jwtOptions: JwtOptions,
-) : M2M {
+internal class M2MImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope, private val jwksClient: HttpsJwks, private val jwtOptions: JwtOptions) : M2M {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val clients: Clients = ClientsImpl(httpClient, coroutineScope)

@@ -10,6 +10,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.stytch.java.b2b.models.discovery.DiscoveredOrganization
 import com.stytch.java.b2b.models.mfa.MfaRequired
+import com.stytch.java.b2b.models.organizations.EmailImplicitRoleAssignment
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
@@ -115,13 +116,13 @@ public data class CreateRequest
         @Json(name = "email_allowed_domains")
         val emailAllowedDomains: List<String>? = null,
         /**
-         * The authentication setting that controls how a new Member can be provisioned by authenticating via Email Magic Link.
-         * The accepted values are:
+         * The authentication setting that controls how a new Member can be provisioned by authenticating via Email Magic Link or
+         * OAuth. The accepted values are:
          *
          *   `RESTRICTED` – only new Members with verified emails that comply with `email_allowed_domains` can be provisioned upon
-         * authentication via Email Magic Link.
+         * authentication via Email Magic Link or OAuth.
          *
-         *   `NOT_ALLOWED` – disable JIT provisioning via Email Magic Link.
+         *   `NOT_ALLOWED` – disable JIT provisioning via Email Magic Link and OAuth.
          *
          */
         @Json(name = "email_jit_provisioning")
@@ -153,8 +154,7 @@ public data class CreateRequest
         @Json(name = "auth_methods")
         val authMethods: String? = null,
         /**
-         *
-         *   An array of allowed authentication methods. This list is enforced when `auth_methods` is set to `RESTRICTED`.
+         * An array of allowed authentication methods. This list is enforced when `auth_methods` is set to `RESTRICTED`.
          *   The list's accepted values are: `sso`, `magic_link`, `password`, `google_oauth`, and `microsoft_oauth`.
          *
          */
@@ -164,7 +164,7 @@ public data class CreateRequest
          * The setting that controls the MFA policy for all Members in the Organization. The accepted values are:
          *
          *   `REQUIRED_FOR_ALL` – All Members within the Organization will be required to complete MFA every time they wish to log
-         * in.
+         * in. However, any active Session that existed prior to this setting change will remain valid.
          *
          *   `OPTIONAL` – The default value. The Organization does not require MFA by default for all Members. Members will be
          * required to complete MFA only if their `mfa_enrolled` status is set to true.
@@ -172,6 +172,15 @@ public data class CreateRequest
          */
         @Json(name = "mfa_policy")
         val mfaPolicy: String? = null,
+        /**
+         * Implicit role assignments based off of email domains.
+         *   For each domain-Role pair, all Members whose email addresses have the specified email domain will be granted the
+         *   associated Role, regardless of their login method. See the
+         * [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment)
+         *   for more information about role assignment.
+         */
+        @Json(name = "rbac_email_implicit_role_assignments")
+        val rbacEmailImplicitRoleAssignments: List<EmailImplicitRoleAssignment>? = null,
     )
 
 /**

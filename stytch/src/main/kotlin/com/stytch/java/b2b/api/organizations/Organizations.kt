@@ -91,19 +91,43 @@ public interface Organizations {
 
     /**
      * Updates an Organization specified by `organization_id`. An Organization must always have at least one auth setting set
-     * to either `RESTRICTED` or `ALL_ALLOWED` in order to provision new Members. test
+     * to either `RESTRICTED` or `ALL_ALLOWED` in order to provision new Members.
      *
      * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
      * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
+     *
+     * Our RBAC implementation offers out-of-the-box handling of authorization checks for this endpoint. If you pass in
+     * a header containing a `session_token` or a `session_jwt` for an unexpired Member Session, we will check that the
+     * Member Session has the necessary permissions. The specific permissions needed depend on which of the optional fields
+     * are passed in the request. For example, if the `organization_name` argument is provided, the Member Session must have
+     * permission to perform the `update.info.name` action on the `stytch.organization` Resource.
+     *
+     * If the Member Session does not contain a Role that satisfies the requested permissions, or if the Member's Organization
+     * does not match the `organization_id` passed in the request, a 403 error will be thrown. Otherwise, the request will
+     * proceed as normal.
+     *
+     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
      */
     public suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse>
 
     /**
      * Updates an Organization specified by `organization_id`. An Organization must always have at least one auth setting set
-     * to either `RESTRICTED` or `ALL_ALLOWED` in order to provision new Members. test
+     * to either `RESTRICTED` or `ALL_ALLOWED` in order to provision new Members.
      *
      * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
      * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
+     *
+     * Our RBAC implementation offers out-of-the-box handling of authorization checks for this endpoint. If you pass in
+     * a header containing a `session_token` or a `session_jwt` for an unexpired Member Session, we will check that the
+     * Member Session has the necessary permissions. The specific permissions needed depend on which of the optional fields
+     * are passed in the request. For example, if the `organization_name` argument is provided, the Member Session must have
+     * permission to perform the `update.info.name` action on the `stytch.organization` Resource.
+     *
+     * If the Member Session does not contain a Role that satisfies the requested permissions, or if the Member's Organization
+     * does not match the `organization_id` passed in the request, a 403 error will be thrown. Otherwise, the request will
+     * proceed as normal.
+     *
+     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
      */
     public fun update(
         data: UpdateRequest,
@@ -112,20 +136,32 @@ public interface Organizations {
 
     /**
      * Updates an Organization specified by `organization_id`. An Organization must always have at least one auth setting set
-     * to either `RESTRICTED` or `ALL_ALLOWED` in order to provision new Members. test
+     * to either `RESTRICTED` or `ALL_ALLOWED` in order to provision new Members.
      *
      * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
      * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
+     *
+     * Our RBAC implementation offers out-of-the-box handling of authorization checks for this endpoint. If you pass in
+     * a header containing a `session_token` or a `session_jwt` for an unexpired Member Session, we will check that the
+     * Member Session has the necessary permissions. The specific permissions needed depend on which of the optional fields
+     * are passed in the request. For example, if the `organization_name` argument is provided, the Member Session must have
+     * permission to perform the `update.info.name` action on the `stytch.organization` Resource.
+     *
+     * If the Member Session does not contain a Role that satisfies the requested permissions, or if the Member's Organization
+     * does not match the `organization_id` passed in the request, a 403 error will be thrown. Otherwise, the request will
+     * proceed as normal.
+     *
+     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
      */
     public fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>>
 
     /**
-     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted.
+     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted. /%}
      */
     public suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse>
 
     /**
-     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted.
+     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted. /%}
      */
     public fun delete(
         data: DeleteRequest,
@@ -133,7 +169,7 @@ public interface Organizations {
     )
 
     /**
-     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted.
+     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted. /%}
      */
     public fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>>
 
@@ -159,10 +195,7 @@ public interface Organizations {
     public fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>>
 }
 
-internal class OrganizationsImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : Organizations {
+internal class OrganizationsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Organizations {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val members: Members = MembersImpl(httpClient, coroutineScope)

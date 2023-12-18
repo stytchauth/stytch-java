@@ -17,6 +17,8 @@ import com.stytch.java.consumer.models.webauthn.RegisterRequest
 import com.stytch.java.consumer.models.webauthn.RegisterResponse
 import com.stytch.java.consumer.models.webauthn.RegisterStartRequest
 import com.stytch.java.consumer.models.webauthn.RegisterStartResponse
+import com.stytch.java.consumer.models.webauthn.UpdateRequest
+import com.stytch.java.consumer.models.webauthn.UpdateResponse
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,8 +30,12 @@ import java.util.concurrent.CompletableFuture
 
 public interface WebAuthn {
     /**
-     * Initiate the process of creating a new WebAuthn registration. After calling this endpoint, the browser will need to
-     * call [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) with the data from
+     * Initiate the process of creating a new Passkey or WebAuthn registration.
+     *
+     * To optimize for Passkeys, set the `return_passkey_credential_options` field to `true`.
+     *
+     * After calling this endpoint, the browser will need to call
+     * [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) with the data from
      * [public_key_credential_creation_options](https://w3c.github.io/webauthn/#dictionary-makecredentialoptions) passed to
      * the [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) request via the public
      * key argument. We recommend using the `create()` wrapper provided by the webauthn-json library.
@@ -41,8 +47,12 @@ public interface WebAuthn {
     public suspend fun registerStart(data: RegisterStartRequest): StytchResult<RegisterStartResponse>
 
     /**
-     * Initiate the process of creating a new WebAuthn registration. After calling this endpoint, the browser will need to
-     * call [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) with the data from
+     * Initiate the process of creating a new Passkey or WebAuthn registration.
+     *
+     * To optimize for Passkeys, set the `return_passkey_credential_options` field to `true`.
+     *
+     * After calling this endpoint, the browser will need to call
+     * [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) with the data from
      * [public_key_credential_creation_options](https://w3c.github.io/webauthn/#dictionary-makecredentialoptions) passed to
      * the [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) request via the public
      * key argument. We recommend using the `create()` wrapper provided by the webauthn-json library.
@@ -57,8 +67,12 @@ public interface WebAuthn {
     )
 
     /**
-     * Initiate the process of creating a new WebAuthn registration. After calling this endpoint, the browser will need to
-     * call [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) with the data from
+     * Initiate the process of creating a new Passkey or WebAuthn registration.
+     *
+     * To optimize for Passkeys, set the `return_passkey_credential_options` field to `true`.
+     *
+     * After calling this endpoint, the browser will need to call
+     * [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) with the data from
      * [public_key_credential_creation_options](https://w3c.github.io/webauthn/#dictionary-makecredentialoptions) passed to
      * the [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) request via the public
      * key argument. We recommend using the `create()` wrapper provided by the webauthn-json library.
@@ -112,7 +126,11 @@ public interface WebAuthn {
     public fun registerCompletable(data: RegisterRequest): CompletableFuture<StytchResult<RegisterResponse>>
 
     /**
-     * Initiate the authentication of a WebAuthn registration. After calling this endpoint, the browser will need to call
+     * Initiate the authentication of a Passkey or WebAuthn registration.
+     *
+     * To optimize for Passkeys, set the `return_passkey_credential_options` field to `true`.
+     *
+     * After calling this endpoint, the browser will need to call
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) with the data from
      * `public_key_credential_request_options` passed to the
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) request via the public key argument.
@@ -125,7 +143,11 @@ public interface WebAuthn {
     public suspend fun authenticateStart(data: AuthenticateStartRequest): StytchResult<AuthenticateStartResponse>
 
     /**
-     * Initiate the authentication of a WebAuthn registration. After calling this endpoint, the browser will need to call
+     * Initiate the authentication of a Passkey or WebAuthn registration.
+     *
+     * To optimize for Passkeys, set the `return_passkey_credential_options` field to `true`.
+     *
+     * After calling this endpoint, the browser will need to call
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) with the data from
      * `public_key_credential_request_options` passed to the
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) request via the public key argument.
@@ -141,7 +163,11 @@ public interface WebAuthn {
     )
 
     /**
-     * Initiate the authentication of a WebAuthn registration. After calling this endpoint, the browser will need to call
+     * Initiate the authentication of a Passkey or WebAuthn registration.
+     *
+     * To optimize for Passkeys, set the `return_passkey_credential_options` field to `true`.
+     *
+     * After calling this endpoint, the browser will need to call
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) with the data from
      * `public_key_credential_request_options` passed to the
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) request via the public key argument.
@@ -154,7 +180,7 @@ public interface WebAuthn {
     public fun authenticateStartCompletable(data: AuthenticateStartRequest): CompletableFuture<StytchResult<AuthenticateStartResponse>>
 
     /**
-     * Complete the authentication of a WebAuthn registration by passing the response from the
+     * Complete the authentication of a Passkey or WebAuthn registration by passing the response from the
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) request to the authenticate
      * endpoint.
      *
@@ -166,7 +192,7 @@ public interface WebAuthn {
     public suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse>
 
     /**
-     * Complete the authentication of a WebAuthn registration by passing the response from the
+     * Complete the authentication of a Passkey or WebAuthn registration by passing the response from the
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) request to the authenticate
      * endpoint.
      *
@@ -181,7 +207,7 @@ public interface WebAuthn {
     )
 
     /**
-     * Complete the authentication of a WebAuthn registration by passing the response from the
+     * Complete the authentication of a Passkey or WebAuthn registration by passing the response from the
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) request to the authenticate
      * endpoint.
      *
@@ -191,12 +217,27 @@ public interface WebAuthn {
      * converted from array buffers to strings and marshalled into JSON.
      */
     public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
+
+    /**
+     * Updates a Passkey or WebAuthn registration.
+     */
+    public suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse>
+
+    /**
+     * Updates a Passkey or WebAuthn registration.
+     */
+    public fun update(
+        data: UpdateRequest,
+        callback: (StytchResult<UpdateResponse>) -> Unit,
+    )
+
+    /**
+     * Updates a Passkey or WebAuthn registration.
+     */
+    public fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>>
 }
 
-internal class WebAuthnImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : WebAuthn {
+internal class WebAuthnImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : WebAuthn {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun registerStart(data: RegisterStartRequest): StytchResult<RegisterStartResponse> =
@@ -277,5 +318,25 @@ internal class WebAuthnImpl(
     override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
         coroutineScope.async {
             authenticate(data)
+        }.asCompletableFuture()
+
+    override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
+            httpClient.put("/v1/webauthn/${data.webauthnRegistrationId}", asJson)
+        }
+
+    override fun update(
+        data: UpdateRequest,
+        callback: (StytchResult<UpdateResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(update(data))
+        }
+    }
+
+    override fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>> =
+        coroutineScope.async {
+            update(data)
         }.asCompletableFuture()
 }

@@ -46,10 +46,7 @@ public interface ExistingPassword {
     public fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>>
 }
 
-internal class ExistingPasswordImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : ExistingPassword {
+internal class ExistingPasswordImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : ExistingPassword {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun reset(data: ResetRequest): StytchResult<ResetResponse> =

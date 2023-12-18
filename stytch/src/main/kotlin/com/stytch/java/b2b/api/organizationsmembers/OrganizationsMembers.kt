@@ -11,6 +11,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.stytch.java.b2b.models.organizationsmembers.CreateRequest
 import com.stytch.java.b2b.models.organizationsmembers.CreateResponse
+import com.stytch.java.b2b.models.organizationsmembers.DangerouslyGetRequest
 import com.stytch.java.b2b.models.organizationsmembers.DeleteMFAPhoneNumberRequest
 import com.stytch.java.b2b.models.organizationsmembers.DeleteMFAPhoneNumberResponse
 import com.stytch.java.b2b.models.organizationsmembers.DeletePasswordRequest
@@ -39,11 +40,35 @@ import java.util.concurrent.CompletableFuture
 public interface Members {
     /**
      * Updates a Member specified by `organization_id` and `member_id`.
+     *
+     * Our RBAC implementation offers out-of-the-box handling of authorization checks for this endpoint. If you pass in
+     * a header containing a `session_token` or a `session_jwt` for an unexpired Member Session, we will check that the
+     * Member Session has the necessary permissions. The specific permissions needed depend on which of the optional fields
+     * are passed in the request. For example, if the `organization_name` argument is provided, the Member Session must have
+     * permission to perform the `update.info.name` action on the `stytch.organization` Resource.
+     *
+     * If the Member Session does not contain a Role that satisfies the requested permissions, or if the Member's Organization
+     * does not match the `organization_id` passed in the request, a 403 error will be thrown. Otherwise, the request will
+     * proceed as normal.
+     *
+     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
      */
     public suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse>
 
     /**
      * Updates a Member specified by `organization_id` and `member_id`.
+     *
+     * Our RBAC implementation offers out-of-the-box handling of authorization checks for this endpoint. If you pass in
+     * a header containing a `session_token` or a `session_jwt` for an unexpired Member Session, we will check that the
+     * Member Session has the necessary permissions. The specific permissions needed depend on which of the optional fields
+     * are passed in the request. For example, if the `organization_name` argument is provided, the Member Session must have
+     * permission to perform the `update.info.name` action on the `stytch.organization` Resource.
+     *
+     * If the Member Session does not contain a Role that satisfies the requested permissions, or if the Member's Organization
+     * does not match the `organization_id` passed in the request, a 403 error will be thrown. Otherwise, the request will
+     * proceed as normal.
+     *
+     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
      */
     public fun update(
         data: UpdateRequest,
@@ -52,16 +77,28 @@ public interface Members {
 
     /**
      * Updates a Member specified by `organization_id` and `member_id`.
+     *
+     * Our RBAC implementation offers out-of-the-box handling of authorization checks for this endpoint. If you pass in
+     * a header containing a `session_token` or a `session_jwt` for an unexpired Member Session, we will check that the
+     * Member Session has the necessary permissions. The specific permissions needed depend on which of the optional fields
+     * are passed in the request. For example, if the `organization_name` argument is provided, the Member Session must have
+     * permission to perform the `update.info.name` action on the `stytch.organization` Resource.
+     *
+     * If the Member Session does not contain a Role that satisfies the requested permissions, or if the Member's Organization
+     * does not match the `organization_id` passed in the request, a 403 error will be thrown. Otherwise, the request will
+     * proceed as normal.
+     *
+     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
      */
     public fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>>
 
     /**
-     * Deletes a Member specified by `organization_id` and `member_id`.
+     * Deletes a Member specified by `organization_id` and `member_id`. /%}
      */
     public suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse>
 
     /**
-     * Deletes a Member specified by `organization_id` and `member_id`.
+     * Deletes a Member specified by `organization_id` and `member_id`. /%}
      */
     public fun delete(
         data: DeleteRequest,
@@ -69,19 +106,19 @@ public interface Members {
     )
 
     /**
-     * Deletes a Member specified by `organization_id` and `member_id`.
+     * Deletes a Member specified by `organization_id` and `member_id`. /%}
      */
     public fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>>
 
     /**
      * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
-     * `organization_id` and `member_id`.
+     * `organization_id` and `member_id`. /%}
      */
     public suspend fun reactivate(data: ReactivateRequest): StytchResult<ReactivateResponse>
 
     /**
      * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
-     * `organization_id` and `member_id`.
+     * `organization_id` and `member_id`. /%}
      */
     public fun reactivate(
         data: ReactivateRequest,
@@ -90,7 +127,7 @@ public interface Members {
 
     /**
      * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
-     * `organization_id` and `member_id`.
+     * `organization_id` and `member_id`. /%}
      */
     public fun reactivateCompletable(data: ReactivateRequest): CompletableFuture<StytchResult<ReactivateResponse>>
 
@@ -105,6 +142,7 @@ public interface Members {
      * a new phone number
      * and calling the [OTP SMS send](https://stytch.com/docs/b2b/api/otp-sms-send) endpoint, then calling the
      * [OTP SMS Authenticate](https://stytch.com/docs/b2b/api/authenticate-otp-sms) endpoint.
+     *  /%}
      */
     public suspend fun deleteMFAPhoneNumber(data: DeleteMFAPhoneNumberRequest): StytchResult<DeleteMFAPhoneNumberResponse>
 
@@ -119,6 +157,7 @@ public interface Members {
      * a new phone number
      * and calling the [OTP SMS send](https://stytch.com/docs/b2b/api/otp-sms-send) endpoint, then calling the
      * [OTP SMS Authenticate](https://stytch.com/docs/b2b/api/authenticate-otp-sms) endpoint.
+     *  /%}
      */
     public fun deleteMFAPhoneNumber(
         data: DeleteMFAPhoneNumberRequest,
@@ -136,6 +175,7 @@ public interface Members {
      * a new phone number
      * and calling the [OTP SMS send](https://stytch.com/docs/b2b/api/otp-sms-send) endpoint, then calling the
      * [OTP SMS Authenticate](https://stytch.com/docs/b2b/api/authenticate-otp-sms) endpoint.
+     *  /%}
      */
     public fun deleteMFAPhoneNumberCompletable(
         data: DeleteMFAPhoneNumberRequest,
@@ -146,6 +186,18 @@ public interface Members {
      * an empty `query` returns all non-deleted Members within the specified Organizations.
      *
      * *All fuzzy search filters require a minimum of three characters.
+     *
+     * Our RBAC implementation offers out-of-the-box handling of authorization checks for this endpoint. If you pass in
+     * a header containing a `session_token` or a `session_jwt` for an unexpired Member Session, we will check that the
+     * Member Session has permission to perform the `search` action on the `stytch.member` Resource. In addition, enforcing
+     * RBAC on this endpoint means that you may only search for Members within the calling Member's Organization, so the
+     * `organization_ids` argument may only contain the `organization_id` of the Member Session passed in the header.
+     *
+     * If the Member Session does not contain a Role that satisfies the requested permission, or if the `organization_ids`
+     * argument contains an `organization_id` that the Member Session does not belong to, a 403 error will be thrown.
+     * Otherwise, the request will proceed as normal.
+     *
+     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
      */
     public suspend fun search(data: SearchRequest): StytchResult<SearchResponse>
 
@@ -154,6 +206,18 @@ public interface Members {
      * an empty `query` returns all non-deleted Members within the specified Organizations.
      *
      * *All fuzzy search filters require a minimum of three characters.
+     *
+     * Our RBAC implementation offers out-of-the-box handling of authorization checks for this endpoint. If you pass in
+     * a header containing a `session_token` or a `session_jwt` for an unexpired Member Session, we will check that the
+     * Member Session has permission to perform the `search` action on the `stytch.member` Resource. In addition, enforcing
+     * RBAC on this endpoint means that you may only search for Members within the calling Member's Organization, so the
+     * `organization_ids` argument may only contain the `organization_id` of the Member Session passed in the header.
+     *
+     * If the Member Session does not contain a Role that satisfies the requested permission, or if the `organization_ids`
+     * argument contains an `organization_id` that the Member Session does not belong to, a 403 error will be thrown.
+     * Otherwise, the request will proceed as normal.
+     *
+     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
      */
     public fun search(
         data: SearchRequest,
@@ -165,16 +229,28 @@ public interface Members {
      * an empty `query` returns all non-deleted Members within the specified Organizations.
      *
      * *All fuzzy search filters require a minimum of three characters.
+     *
+     * Our RBAC implementation offers out-of-the-box handling of authorization checks for this endpoint. If you pass in
+     * a header containing a `session_token` or a `session_jwt` for an unexpired Member Session, we will check that the
+     * Member Session has permission to perform the `search` action on the `stytch.member` Resource. In addition, enforcing
+     * RBAC on this endpoint means that you may only search for Members within the calling Member's Organization, so the
+     * `organization_ids` argument may only contain the `organization_id` of the Member Session passed in the header.
+     *
+     * If the Member Session does not contain a Role that satisfies the requested permission, or if the `organization_ids`
+     * argument contains an `organization_id` that the Member Session does not belong to, a 403 error will be thrown.
+     * Otherwise, the request will proceed as normal.
+     *
+     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
      */
     public fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>>
 
     /**
-     * Delete a Member's password.
+     * Delete a Member's password. /%}
      */
     public suspend fun deletePassword(data: DeletePasswordRequest): StytchResult<DeletePasswordResponse>
 
     /**
-     * Delete a Member's password.
+     * Delete a Member's password. /%}
      */
     public fun deletePassword(
         data: DeletePasswordRequest,
@@ -182,17 +258,41 @@ public interface Members {
     )
 
     /**
-     * Delete a Member's password.
+     * Delete a Member's password. /%}
      */
     public fun deletePasswordCompletable(data: DeletePasswordRequest): CompletableFuture<StytchResult<DeletePasswordResponse>>
 
     /**
-     * Creates a Member. An `organization_id` and `email_address` are required.
+     * Get a Member by `member_id`. This endpoint does not require an `organization_id`, enabling you to get members across
+     * organizations. This is a dangerous operation. Incorrect use may open you up to indirect object reference (IDOR)
+     * attacks. We recommend using the [Get Member](https://stytch.com/docs/b2b/api/get-member) API instead.
+     */
+    public suspend fun dangerouslyGet(data: DangerouslyGetRequest): StytchResult<GetResponse>
+
+    /**
+     * Get a Member by `member_id`. This endpoint does not require an `organization_id`, enabling you to get members across
+     * organizations. This is a dangerous operation. Incorrect use may open you up to indirect object reference (IDOR)
+     * attacks. We recommend using the [Get Member](https://stytch.com/docs/b2b/api/get-member) API instead.
+     */
+    public fun dangerouslyGet(
+        data: DangerouslyGetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
+    )
+
+    /**
+     * Get a Member by `member_id`. This endpoint does not require an `organization_id`, enabling you to get members across
+     * organizations. This is a dangerous operation. Incorrect use may open you up to indirect object reference (IDOR)
+     * attacks. We recommend using the [Get Member](https://stytch.com/docs/b2b/api/get-member) API instead.
+     */
+    public fun dangerouslyGetCompletable(data: DangerouslyGetRequest): CompletableFuture<StytchResult<GetResponse>>
+
+    /**
+     * Creates a Member. An `organization_id` and `email_address` are required. /%}
      */
     public suspend fun create(data: CreateRequest): StytchResult<CreateResponse>
 
     /**
-     * Creates a Member. An `organization_id` and `email_address` are required.
+     * Creates a Member. An `organization_id` and `email_address` are required. /%}
      */
     public fun create(
         data: CreateRequest,
@@ -200,7 +300,7 @@ public interface Members {
     )
 
     /**
-     * Creates a Member. An `organization_id` and `email_address` are required.
+     * Creates a Member. An `organization_id` and `email_address` are required. /%}
      */
     public fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>>
 
@@ -223,10 +323,7 @@ public interface Members {
     public fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>>
 }
 
-internal class MembersImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : Members {
+internal class MembersImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Members {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> =
@@ -346,6 +443,29 @@ internal class MembersImpl(
     override fun deletePasswordCompletable(data: DeletePasswordRequest): CompletableFuture<StytchResult<DeletePasswordResponse>> =
         coroutineScope.async {
             deletePassword(data)
+        }.asCompletableFuture()
+
+    override suspend fun dangerouslyGet(data: DangerouslyGetRequest): StytchResult<GetResponse> =
+        withContext(Dispatchers.IO) {
+            val asJson = moshi.adapter(DangerouslyGetRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/organizations/members/dangerously_get/${data.memberId}", asMap)
+        }
+
+    override fun dangerouslyGet(
+        data: DangerouslyGetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(dangerouslyGet(data))
+        }
+    }
+
+    override fun dangerouslyGetCompletable(data: DangerouslyGetRequest): CompletableFuture<StytchResult<GetResponse>> =
+        coroutineScope.async {
+            dangerouslyGet(data)
         }.asCompletableFuture()
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =

@@ -85,10 +85,7 @@ public interface MagicLinks {
     public fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>>
 }
 
-internal class MagicLinksImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : MagicLinks {
+internal class MagicLinksImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : MagicLinks {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val email: Email = EmailImpl(httpClient, coroutineScope)

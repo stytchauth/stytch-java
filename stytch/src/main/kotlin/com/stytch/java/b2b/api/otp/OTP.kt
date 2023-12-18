@@ -17,10 +17,7 @@ public interface OTPs {
     public val sms: Sms
 }
 
-internal class OTPsImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : OTPs {
+internal class OTPsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : OTPs {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val sms: Sms = SmsImpl(httpClient, coroutineScope)

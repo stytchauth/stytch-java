@@ -21,6 +21,7 @@ import com.stytch.java.b2b.models.sessions.RevokeRequest
 import com.stytch.java.b2b.models.sessions.RevokeResponse
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.JwtOptions
+import com.stytch.java.common.PolicyCache
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -58,6 +59,16 @@ public interface Sessions {
      *
      * You may provide a JWT that needs to be refreshed and is expired according to its `exp` claim. A new JWT will be
      * returned if both the signature and the underlying Session are still valid.
+     *
+     * If an `authorization_check` object is passed in, this method will also check if the Member is authorized to perform the
+     * given action on the given Resource in the specified Organization. A Member is authorized if their Member Session
+     * contains a Role, assigned [explicitly or implicitly](https://github.com/docs/b2b/guides/rbac/role-assignment), with
+     * adequate permissions.
+     * In addition, the `organization_id` passed in the authorization check must match the Member's Organization.
+     *
+     * If the Member is not authorized to perform the specified action on the specified Resource, or if the
+     * `organization_id` does not match the Member's Organization, a 403 error will be thrown.
+     * Otherwise, the response will contain a list of Roles that satisfied the authorization check.
      */
     public suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse>
 
@@ -68,6 +79,16 @@ public interface Sessions {
      *
      * You may provide a JWT that needs to be refreshed and is expired according to its `exp` claim. A new JWT will be
      * returned if both the signature and the underlying Session are still valid.
+     *
+     * If an `authorization_check` object is passed in, this method will also check if the Member is authorized to perform the
+     * given action on the given Resource in the specified Organization. A Member is authorized if their Member Session
+     * contains a Role, assigned [explicitly or implicitly](https://github.com/docs/b2b/guides/rbac/role-assignment), with
+     * adequate permissions.
+     * In addition, the `organization_id` passed in the authorization check must match the Member's Organization.
+     *
+     * If the Member is not authorized to perform the specified action on the specified Resource, or if the
+     * `organization_id` does not match the Member's Organization, a 403 error will be thrown.
+     * Otherwise, the response will contain a list of Roles that satisfied the authorization check.
      */
     public fun authenticate(
         data: AuthenticateRequest,
@@ -81,6 +102,16 @@ public interface Sessions {
      *
      * You may provide a JWT that needs to be refreshed and is expired according to its `exp` claim. A new JWT will be
      * returned if both the signature and the underlying Session are still valid.
+     *
+     * If an `authorization_check` object is passed in, this method will also check if the Member is authorized to perform the
+     * given action on the given Resource in the specified Organization. A Member is authorized if their Member Session
+     * contains a Role, assigned [explicitly or implicitly](https://github.com/docs/b2b/guides/rbac/role-assignment), with
+     * adequate permissions.
+     * In addition, the `organization_id` passed in the authorization check must match the Member's Organization.
+     *
+     * If the Member is not authorized to perform the specified action on the specified Resource, or if the
+     * `organization_id` does not match the Member's Organization, a 403 error will be thrown.
+     * Otherwise, the response will contain a list of Roles that satisfied the authorization check.
      */
     public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 
@@ -185,11 +216,37 @@ public interface Sessions {
 
     /**
      * Get the JSON Web Key Set (JWKS) for a project.
+     *
+     * JWKS are rotated every ~6 months. Upon rotation, new JWTs will be signed using the new key set, and both key sets will
+     * be returned by this endpoint for a period of 1 month.
+     *
+     * JWTs have a set lifetime of 5 minutes, so there will be a 5 minute period where some JWTs will be signed by the old
+     * JWKS, and some JWTs will be signed by the new JWKS. The correct JWKS to use for validation is determined by matching
+     * the `kid` value of the JWT and JWKS.
+     *
+     * If you're using one of our [backend SDKs](https://stytch.com/docs/b2b/sdks), the JWKS roll will be handled for you.
+     *
+     * If you're using your own JWT validation library, many have built-in support for JWKS rotation, and you'll just need to
+     * supply this API endpoint. If not, your application should decide which JWKS to use for validation by inspecting the
+     * `kid` value.
      */
     public suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse>
 
     /**
      * Get the JSON Web Key Set (JWKS) for a project.
+     *
+     * JWKS are rotated every ~6 months. Upon rotation, new JWTs will be signed using the new key set, and both key sets will
+     * be returned by this endpoint for a period of 1 month.
+     *
+     * JWTs have a set lifetime of 5 minutes, so there will be a 5 minute period where some JWTs will be signed by the old
+     * JWKS, and some JWTs will be signed by the new JWKS. The correct JWKS to use for validation is determined by matching
+     * the `kid` value of the JWT and JWKS.
+     *
+     * If you're using one of our [backend SDKs](https://stytch.com/docs/b2b/sdks), the JWKS roll will be handled for you.
+     *
+     * If you're using your own JWT validation library, many have built-in support for JWKS rotation, and you'll just need to
+     * supply this API endpoint. If not, your application should decide which JWKS to use for validation by inspecting the
+     * `kid` value.
      */
     public fun getJWKS(
         data: GetJWKSRequest,
@@ -198,16 +255,24 @@ public interface Sessions {
 
     /**
      * Get the JSON Web Key Set (JWKS) for a project.
+     *
+     * JWKS are rotated every ~6 months. Upon rotation, new JWTs will be signed using the new key set, and both key sets will
+     * be returned by this endpoint for a period of 1 month.
+     *
+     * JWTs have a set lifetime of 5 minutes, so there will be a 5 minute period where some JWTs will be signed by the old
+     * JWKS, and some JWTs will be signed by the new JWKS. The correct JWKS to use for validation is determined by matching
+     * the `kid` value of the JWT and JWKS.
+     *
+     * If you're using one of our [backend SDKs](https://stytch.com/docs/b2b/sdks), the JWKS roll will be handled for you.
+     *
+     * If you're using your own JWT validation library, many have built-in support for JWKS rotation, and you'll just need to
+     * supply this API endpoint. If not, your application should decide which JWKS to use for validation by inspecting the
+     * `kid` value.
      */
     public fun getJWKSCompletable(data: GetJWKSRequest): CompletableFuture<StytchResult<GetJWKSResponse>>
 }
 
-internal class SessionsImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-    private val jwksClient: HttpsJwks,
-    private val jwtOptions: JwtOptions,
-) : Sessions {
+internal class SessionsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope, private val jwksClient: HttpsJwks, private val jwtOptions: JwtOptions, private val policyCache: PolicyCache) : Sessions {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> =

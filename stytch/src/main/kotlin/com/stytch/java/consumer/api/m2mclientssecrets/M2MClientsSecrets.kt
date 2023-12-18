@@ -134,10 +134,7 @@ public interface Secrets {
     public fun rotateCompletable(data: RotateRequest): CompletableFuture<StytchResult<RotateResponse>>
 }
 
-internal class SecretsImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : Secrets {
+internal class SecretsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Secrets {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun rotateStart(data: RotateStartRequest): StytchResult<RotateStartResponse> =

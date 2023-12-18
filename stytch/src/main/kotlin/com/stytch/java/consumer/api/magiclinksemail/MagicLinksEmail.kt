@@ -190,10 +190,7 @@ public interface Email {
     public fun revokeInviteCompletable(data: RevokeInviteRequest): CompletableFuture<StytchResult<RevokeInviteResponse>>
 }
 
-internal class EmailImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : Email {
+internal class EmailImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Email {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun send(data: SendRequest): StytchResult<SendResponse> =

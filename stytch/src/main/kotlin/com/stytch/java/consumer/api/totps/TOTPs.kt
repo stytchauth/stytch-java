@@ -103,10 +103,7 @@ public interface TOTPs {
     public fun recoverCompletable(data: RecoverRequest): CompletableFuture<StytchResult<RecoverResponse>>
 }
 
-internal class TOTPsImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : TOTPs {
+internal class TOTPsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : TOTPs {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =

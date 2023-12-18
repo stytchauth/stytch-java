@@ -63,10 +63,7 @@ public interface CryptoWallets {
     public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
-internal class CryptoWalletsImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : CryptoWallets {
+internal class CryptoWalletsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : CryptoWallets {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun authenticateStart(data: AuthenticateStartRequest): StytchResult<AuthenticateStartResponse> =

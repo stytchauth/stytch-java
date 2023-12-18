@@ -80,8 +80,32 @@ public data class SAMLConnection
         val signingCertificates: List<X509Certificate>,
         @Json(name = "verification_certificates")
         val verificationCertificates: List<X509Certificate>,
+        @Json(name = "saml_connection_implicit_role_assignments")
+        val samlConnectionImplicitRoleAssignments: List<SAMLConnectionImplicitRoleAssignment>,
+        @Json(name = "saml_group_implicit_role_assignments")
+        val samlGroupImplicitRoleAssignments: List<SAMLGroupImplicitRoleAssignment>,
+        @Json(name = "alternative_audience_uri")
+        val alternativeAudienceUri: String,
         @Json(name = "attribute_mapping")
         val attributeMapping: Map<String, Any>? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class SAMLConnectionImplicitRoleAssignment
+    @JvmOverloads
+    constructor(
+        @Json(name = "role_id")
+        val roleId: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class SAMLGroupImplicitRoleAssignment
+    @JvmOverloads
+    constructor(
+        @Json(name = "role_id")
+        val roleId: String,
+        @Json(name = "group")
+        val group: String,
     )
 
 @JsonClass(generateAdapter = true)

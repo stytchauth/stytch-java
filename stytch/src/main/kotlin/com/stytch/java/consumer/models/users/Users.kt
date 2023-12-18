@@ -257,7 +257,7 @@ public data class User
         @Json(name = "phone_numbers")
         val phoneNumbers: List<PhoneNumber>,
         /**
-         * An array that contains a list of all WebAuthn registrations for a given User in the Stytch API.
+         * An array that contains a list of all Passkey or WebAuthn registrations for a given User in the Stytch API.
          */
         @Json(name = "webauthn_registrations")
         val webauthnRegistrations: List<WebAuthnRegistration>,
@@ -316,10 +316,13 @@ public data class User
 public data class WebAuthnRegistration
     @JvmOverloads
     constructor(
+        /**
+         * The unique ID for the Passkey or WebAuthn registration.
+         */
         @Json(name = "webauthn_registration_id")
         val webauthnRegistrationId: String,
         /**
-         * The `domain` on which a WebAuthn registration was started. This will be the domain of your app.
+         * The `domain` on which Passkey or WebAuthn registration was started. This will be the domain of your app.
          */
         @Json(name = "domain")
         val domain: String,
@@ -328,10 +331,24 @@ public data class WebAuthnRegistration
          */
         @Json(name = "user_agent")
         val userAgent: String,
+        /**
+         * The verified boolean denotes whether or not this send method, e.g. phone number, email address, etc., has been
+         * successfully authenticated by the User.
+         */
         @Json(name = "verified")
         val verified: Boolean,
+        /**
+         * The `authenticator_type` string displays the requested authenticator type of the Passkey or WebAuthn device. The two
+         * valid types are "platform" and "cross-platform". If no value is present, the Passkey or WebAuthn device was created
+         * without an authenticator type preference.
+         */
         @Json(name = "authenticator_type")
         val authenticatorType: String,
+        /**
+         * The `name` of the Passkey or WebAuthn registration.
+         */
+        @Json(name = "name")
+        val name: String,
     )
 
 /**
@@ -945,7 +962,7 @@ public data class GetResponse
         @Json(name = "phone_numbers")
         val phoneNumbers: List<PhoneNumber>,
         /**
-         * An array that contains a list of all WebAuthn registrations for a given User in the Stytch API.
+         * An array that contains a list of all Passkey or WebAuthn registrations for a given User in the Stytch API.
          */
         @Json(name = "webauthn_registrations")
         val webauthnRegistrations: List<WebAuthnRegistration>,

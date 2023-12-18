@@ -36,12 +36,12 @@ public interface SSO {
     public val saml: SAML
 
     /**
-     * Get all SSO Connections owned by the organization.
+     * Get all SSO Connections owned by the organization. /%}
      */
     public suspend fun getConnections(data: GetConnectionsRequest): StytchResult<GetConnectionsResponse>
 
     /**
-     * Get all SSO Connections owned by the organization.
+     * Get all SSO Connections owned by the organization. /%}
      */
     public fun getConnections(
         data: GetConnectionsRequest,
@@ -49,17 +49,17 @@ public interface SSO {
     )
 
     /**
-     * Get all SSO Connections owned by the organization.
+     * Get all SSO Connections owned by the organization. /%}
      */
     public fun getConnectionsCompletable(data: GetConnectionsRequest): CompletableFuture<StytchResult<GetConnectionsResponse>>
 
     /**
-     * Delete an existing SSO connection.
+     * Delete an existing SSO connection. /%}
      */
     public suspend fun deleteConnection(data: DeleteConnectionRequest): StytchResult<DeleteConnectionResponse>
 
     /**
-     * Delete an existing SSO connection.
+     * Delete an existing SSO connection. /%}
      */
     public fun deleteConnection(
         data: DeleteConnectionRequest,
@@ -67,7 +67,7 @@ public interface SSO {
     )
 
     /**
-     * Delete an existing SSO connection.
+     * Delete an existing SSO connection. /%}
      */
     public fun deleteConnectionCompletable(data: DeleteConnectionRequest): CompletableFuture<StytchResult<DeleteConnectionResponse>>
 
@@ -138,10 +138,7 @@ public interface SSO {
     public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
-internal class SSOImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : SSO {
+internal class SSOImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : SSO {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val oidc: OIDC = OIDCImpl(httpClient, coroutineScope)

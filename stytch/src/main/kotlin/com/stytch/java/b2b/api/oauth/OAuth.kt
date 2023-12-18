@@ -43,6 +43,10 @@ public interface OAuth {
      * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      *
      * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
+     *
+     * We’re actively accepting requests for new OAuth providers! Please [email us](mailto:support@stytch.com) or
+     * [post in our community](https://stytch.com/docs/b2b/resources) if you are looking for an OAuth provider that is not
+     * currently supported.
      */
     public suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse>
 
@@ -64,6 +68,10 @@ public interface OAuth {
      * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      *
      * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
+     *
+     * We’re actively accepting requests for new OAuth providers! Please [email us](mailto:support@stytch.com) or
+     * [post in our community](https://stytch.com/docs/b2b/resources) if you are looking for an OAuth provider that is not
+     * currently supported.
      */
     public fun authenticate(
         data: AuthenticateRequest,
@@ -88,14 +96,15 @@ public interface OAuth {
      * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      *
      * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
+     *
+     * We’re actively accepting requests for new OAuth providers! Please [email us](mailto:support@stytch.com) or
+     * [post in our community](https://stytch.com/docs/b2b/resources) if you are looking for an OAuth provider that is not
+     * currently supported.
      */
     public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
-internal class OAuthImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : OAuth {
+internal class OAuthImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : OAuth {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val discovery: Discovery = DiscoveryImpl(httpClient, coroutineScope)

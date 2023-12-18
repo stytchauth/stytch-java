@@ -54,14 +54,14 @@ public interface Email {
     /**
      * Send an invite email to a new Member to join an Organization. The Member will be created with an `invited` status until
      * they successfully authenticate. Sending invites to `pending` Members will update their status to `invited`. Sending
-     * invites to already `active` Members will return an error.
+     * invites to already `active` Members will return an error. /%}
      */
     public suspend fun invite(data: InviteRequest): StytchResult<InviteResponse>
 
     /**
      * Send an invite email to a new Member to join an Organization. The Member will be created with an `invited` status until
      * they successfully authenticate. Sending invites to `pending` Members will update their status to `invited`. Sending
-     * invites to already `active` Members will return an error.
+     * invites to already `active` Members will return an error. /%}
      */
     public fun invite(
         data: InviteRequest,
@@ -71,15 +71,12 @@ public interface Email {
     /**
      * Send an invite email to a new Member to join an Organization. The Member will be created with an `invited` status until
      * they successfully authenticate. Sending invites to `pending` Members will update their status to `invited`. Sending
-     * invites to already `active` Members will return an error.
+     * invites to already `active` Members will return an error. /%}
      */
     public fun inviteCompletable(data: InviteRequest): CompletableFuture<StytchResult<InviteResponse>>
 }
 
-internal class EmailImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : Email {
+internal class EmailImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Email {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val discovery: Discovery = DiscoveryImpl(httpClient, coroutineScope)

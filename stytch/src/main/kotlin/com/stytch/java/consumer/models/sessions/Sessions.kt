@@ -118,6 +118,9 @@ public enum class AuthenticationFactorDeliveryMethod {
 
     @Json(name = "oauth_yahoo")
     OAUTH_YAHOO,
+
+    @Json(name = "oauth_hubspot")
+    OAUTH_HUBSPOT,
 }
 
 @JsonClass(generateAdapter = false)
@@ -299,6 +302,8 @@ public data class AuthenticationFactor
         val salesforceOAuthFactor: SalesforceOAuthFactor? = null,
         @Json(name = "yahoo_oauth_factor")
         val yahooOAuthFactor: YahooOAuthFactor? = null,
+        @Json(name = "hubspot_oauth_factor")
+        val hubspotOAuthFactor: HubspotOAuthFactor? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -455,6 +460,18 @@ public data class GoogleOAuthFactor
          * The unique identifier for the User within a given OAuth provider. Also commonly called the `sub` or "Subject field" in
          * OAuth protocols.
          */
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class HubspotOAuthFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "email_id")
+        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
     )

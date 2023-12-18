@@ -24,14 +24,17 @@ import java.util.concurrent.CompletableFuture
 
 public interface Organizations {
     /**
-     * If an end user does not want to join any already-existing organization, or has no possible organizations to join, this
+     * If an end user does not want to join any already-existing Organization, or has no possible Organizations to join, this
      * endpoint can be used to create a new
      * [Organization](https://stytch.com/docs/b2b/api/organization-object) and
      * [Member](https://stytch.com/docs/b2b/api/member-object).
      *
      * This operation consumes the Intermediate Session.
      *
-     * This endpoint can also be used to start an initial session for the newly created member and organization.
+     * This endpoint will also create an initial Member Session for the newly created Member.
+     *
+     * The Member created by this endpoint will automatically be granted the `stytch_admin` Role. See the
+     * [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/stytch-defaults) for more details on this Role.
      *
      * If the new Organization is created with a `mfa_policy` of `REQUIRED_FOR_ALL`, the newly created Member will need to
      * complete an MFA step to log in to the Organization.
@@ -48,14 +51,17 @@ public interface Organizations {
     public suspend fun create(data: CreateRequest): StytchResult<CreateResponse>
 
     /**
-     * If an end user does not want to join any already-existing organization, or has no possible organizations to join, this
+     * If an end user does not want to join any already-existing Organization, or has no possible Organizations to join, this
      * endpoint can be used to create a new
      * [Organization](https://stytch.com/docs/b2b/api/organization-object) and
      * [Member](https://stytch.com/docs/b2b/api/member-object).
      *
      * This operation consumes the Intermediate Session.
      *
-     * This endpoint can also be used to start an initial session for the newly created member and organization.
+     * This endpoint will also create an initial Member Session for the newly created Member.
+     *
+     * The Member created by this endpoint will automatically be granted the `stytch_admin` Role. See the
+     * [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/stytch-defaults) for more details on this Role.
      *
      * If the new Organization is created with a `mfa_policy` of `REQUIRED_FOR_ALL`, the newly created Member will need to
      * complete an MFA step to log in to the Organization.
@@ -75,14 +81,17 @@ public interface Organizations {
     )
 
     /**
-     * If an end user does not want to join any already-existing organization, or has no possible organizations to join, this
+     * If an end user does not want to join any already-existing Organization, or has no possible Organizations to join, this
      * endpoint can be used to create a new
      * [Organization](https://stytch.com/docs/b2b/api/organization-object) and
      * [Member](https://stytch.com/docs/b2b/api/member-object).
      *
      * This operation consumes the Intermediate Session.
      *
-     * This endpoint can also be used to start an initial session for the newly created member and organization.
+     * This endpoint will also create an initial Member Session for the newly created Member.
+     *
+     * The Member created by this endpoint will automatically be granted the `stytch_admin` Role. See the
+     * [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/stytch-defaults) for more details on this Role.
      *
      * If the new Organization is created with a `mfa_policy` of `REQUIRED_FOR_ALL`, the newly created Member will need to
      * complete an MFA step to log in to the Organization.
@@ -168,10 +177,7 @@ public interface Organizations {
     public fun listCompletable(data: ListRequest): CompletableFuture<StytchResult<ListResponse>>
 }
 
-internal class OrganizationsImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : Organizations {
+internal class OrganizationsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Organizations {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =

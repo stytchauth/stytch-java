@@ -192,10 +192,7 @@ public interface Clients {
     public fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>>
 }
 
-internal class ClientsImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : Clients {
+internal class ClientsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Clients {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val secrets: Secrets = SecretsImpl(httpClient, coroutineScope)

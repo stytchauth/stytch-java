@@ -61,10 +61,7 @@ public interface OTPs {
     public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
-internal class OTPsImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : OTPs {
+internal class OTPsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : OTPs {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val sms: Sms = SmsImpl(httpClient, coroutineScope)

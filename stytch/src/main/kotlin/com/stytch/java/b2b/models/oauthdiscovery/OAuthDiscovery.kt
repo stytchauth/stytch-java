@@ -87,6 +87,10 @@ public data class AuthenticateResponse
          */
         @Json(name = "discovered_organizations")
         val discoveredOrganizations: List<DiscoveredOrganization>,
+        @Json(name = "provider_type")
+        val providerType: String,
+        @Json(name = "provider_tenant_id")
+        val providerTenantId: String,
         /**
          * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
          * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.

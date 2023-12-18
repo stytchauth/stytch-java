@@ -77,6 +77,12 @@ public data class CreateRequest
          */
         @Json(name = "mfa_enrolled")
         val mfaEnrolled: Boolean? = null,
+        /**
+         * Roles to explicitly assign to this Member. See the [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment)
+         *    for more information about role assignment.
+         */
+        @Json(name = "roles")
+        val roles: List<String>? = null,
     )
 
 /**
@@ -113,6 +119,21 @@ public data class CreateResponse
          */
         @Json(name = "status_code")
         val statusCode: Int,
+    )
+
+/**
+* Request type for `Members.dangerouslyGet`.
+*/
+@JsonClass(generateAdapter = true)
+public data class DangerouslyGetRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
+         * so be sure to preserve this value.
+         */
+        @Json(name = "member_id")
+        val memberId: String,
     )
 
 /**
@@ -302,7 +323,7 @@ public data class GetRequest
     )
 
 /**
-* Response type for `Members.get`.
+* Response type for `Members.dangerouslyGet`, `Members.get`.
 */
 @JsonClass(generateAdapter = true)
 public data class GetResponse
@@ -489,11 +510,19 @@ public data class UpdateRequest
         val memberId: String,
         /**
          * The name of the Member.
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.info.name` action on the `stytch.member` Resource.
+         *   Alternatively, if the Member Session matches the Member associated with the `member_id` passed in the request, the
+         * authorization check will also allow a Member Session that has permission to perform the `update.info.name` action on
+         * the `stytch.self` Resource.
          */
         @Json(name = "name")
         val name: String? = null,
         /**
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
+         *           If a session header is passed into the request, this field may **not** be passed into the request. You cannot
+         *           update trusted metadata when acting as a Member.
          */
         @Json(name = "trusted_metadata")
         val trustedMetadata: Map<String, Any>? = null,
@@ -502,6 +531,12 @@ public data class UpdateRequest
          *   frontend SDK, and should not be used to store critical information. See the
          * [Metadata resource](https://stytch.com/docs/b2b/api/metadata)
          *   for complete field behavior details.
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.info.untrusted-metadata` action on the `stytch.member` Resource.
+         *   Alternatively, if the Member Session matches the Member associated with the `member_id` passed in the request, the
+         * authorization check will also allow a Member Session that has permission to perform the
+         * `update.info.untrusted-metadata` action on the `stytch.self` Resource.
          */
         @Json(name = "untrusted_metadata")
         val untrustedMetadata: Map<String, Any>? = null,
@@ -510,6 +545,9 @@ public data class UpdateRequest
          * bypassing the Organization's settings. A break glass account is typically used for emergency purposes to gain access
          * outside of normal authentication procedures. Refer to the [Organization object](organization-object) and its
          * `auth_methods` and `allowed_auth_methods` fields for more details.
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.info.is-breakglass` action on the `stytch.member` Resource.
          */
         @Json(name = "is_breakglass")
         val isBreakglass: Boolean? = null,
@@ -517,6 +555,12 @@ public data class UpdateRequest
          * Sets the Member's phone number. Throws an error if the Member already has a phone number. To change the Member's phone
          * number, use the [Delete member phone number endpoint](https://stytch.com/docs/b2b/api/delete-member-mfa-phone-number)
          * to delete the Member's existing phone number first.
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.info.mfa-phone` action on the `stytch.member` Resource.
+         *   Alternatively, if the Member Session matches the Member associated with the `member_id` passed in the request, the
+         * authorization check will also allow a Member Session that has permission to perform the `update.info.mfa-phone` action
+         * on the `stytch.self` Resource.
          */
         @Json(name = "mfa_phone_number")
         val mfaPhoneNumber: String? = null,
@@ -524,9 +568,37 @@ public data class UpdateRequest
          * Sets whether the Member is enrolled in MFA. If true, the Member must complete an MFA step whenever they wish to log in
          * to their Organization. If false, the Member only needs to complete an MFA step if the Organization's MFA policy is set
          * to `REQUIRED_FOR_ALL`.
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.mfa-enrolled` action on the `stytch.member` Resource.
+         *   Alternatively, if the Member Session matches the Member associated with the `member_id` passed in the request, the
+         * authorization check will also allow a Member Session that has permission to perform the `update.settings.mfa-enrolled`
+         * action on the `stytch.self` Resource.
          */
         @Json(name = "mfa_enrolled")
         val mfaEnrolled: Boolean? = null,
+        /**
+         * Roles to explicitly assign to this Member.
+         *  Will completely replace any existing explicitly assigned roles. See the
+         *  [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment) for more information about role assignment.
+         *
+         *    If a Role is removed from a Member, and the Member is also implicitly assigned this Role from an SSO connection
+         *    or an SSO group, we will by default revoke any existing sessions for the Member that contain any SSO
+         *    authentication factors with the affected connection ID. You can preserve these sessions by passing in the
+         *    `preserve_existing_sessions` parameter with a value of `true`.
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.roles` action on the `stytch.member` Resource.
+         */
+        @Json(name = "roles")
+        val roles: List<String>? = null,
+        /**
+         * Whether to preserve existing sessions when explicit Roles that are revoked are also implicitly assigned
+         *   by SSO connection or SSO group. Defaults to `false` - that is, existing Member Sessions that contain SSO
+         *   authentication factors with the affected SSO connection IDs will be revoked.
+         */
+        @Json(name = "preserve_existing_sessions")
+        val preserveExistingSessions: Boolean? = null,
     )
 
 /**

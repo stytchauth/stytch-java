@@ -40,10 +40,7 @@ public interface Discovery {
     public fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>>
 }
 
-internal class DiscoveryImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : Discovery {
+internal class DiscoveryImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Discovery {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun send(data: SendRequest): StytchResult<SendResponse> =

@@ -55,10 +55,7 @@ public interface Sessions {
     public fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>>
 }
 
-internal class SessionsImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : Sessions {
+internal class SessionsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Sessions {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun reset(data: ResetRequest): StytchResult<ResetResponse> =

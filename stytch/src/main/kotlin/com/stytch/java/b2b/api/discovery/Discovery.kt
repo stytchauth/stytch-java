@@ -21,10 +21,7 @@ public interface Discovery {
     public val organizations: Organizations
 }
 
-internal class DiscoveryImpl(
-    private val httpClient: HttpClient,
-    private val coroutineScope: CoroutineScope,
-) : Discovery {
+internal class DiscoveryImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Discovery {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val intermediateSessions: IntermediateSessions = IntermediateSessionsImpl(httpClient, coroutineScope)
