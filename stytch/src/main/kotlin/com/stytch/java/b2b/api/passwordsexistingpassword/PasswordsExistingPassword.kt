@@ -99,8 +99,10 @@ internal class ExistingPasswordImpl(private val httpClient: HttpClient, private 
 
     override suspend fun reset(data: ResetRequest): StytchResult<ResetResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/passwords/existing_password/reset", asJson)
+            httpClient.post("/v1/b2b/passwords/existing_password/reset", asJson, headers)
         }
 
     override fun reset(

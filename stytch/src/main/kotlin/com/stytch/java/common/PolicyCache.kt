@@ -1,3 +1,5 @@
+package com.stytch.java.common
+
 import com.stytch.java.b2b.api.rbac.RBAC
 import com.stytch.java.b2b.models.rbac.Policy
 import com.stytch.java.b2b.models.sessions.AuthorizationCheck

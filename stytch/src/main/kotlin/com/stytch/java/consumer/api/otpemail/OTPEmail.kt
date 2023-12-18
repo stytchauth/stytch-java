@@ -119,8 +119,10 @@ internal class EmailImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun send(data: SendRequest): StytchResult<SendResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(SendRequest::class.java).toJson(data)
-            httpClient.post("/v1/otps/email/send", asJson)
+            httpClient.post("/v1/otps/email/send", asJson, headers)
         }
 
     override fun send(
@@ -139,8 +141,10 @@ internal class EmailImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun loginOrCreate(data: LoginOrCreateRequest): StytchResult<LoginOrCreateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(LoginOrCreateRequest::class.java).toJson(data)
-            httpClient.post("/v1/otps/email/login_or_create", asJson)
+            httpClient.post("/v1/otps/email/login_or_create", asJson, headers)
         }
 
     override fun loginOrCreate(

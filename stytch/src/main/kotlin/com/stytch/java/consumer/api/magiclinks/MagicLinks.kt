@@ -92,8 +92,10 @@ internal class MagicLinksImpl(private val httpClient: HttpClient, private val co
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-            httpClient.post("/v1/magic_links/authenticate", asJson)
+            httpClient.post("/v1/magic_links/authenticate", asJson, headers)
         }
 
     override fun authenticate(
@@ -112,8 +114,10 @@ internal class MagicLinksImpl(private val httpClient: HttpClient, private val co
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-            httpClient.post("/v1/magic_links", asJson)
+            httpClient.post("/v1/magic_links", asJson, headers)
         }
 
     override fun create(

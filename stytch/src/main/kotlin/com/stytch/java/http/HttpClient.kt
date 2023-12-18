@@ -10,6 +10,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Credentials
+import okhttp3.Headers
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType
@@ -128,10 +129,12 @@ internal class HttpClient(
     suspend inline fun <reified T> get(
         path: String,
         params: Map<String, Any> = emptyMap(),
+        headers: Map<String, String> = emptyMap(),
     ): StytchResult<T> {
         val request =
             Request.Builder()
                 .url(buildUrl(path, params))
+                .headers(Headers.of(headers))
                 .build()
         return try {
             makeRequest(request, T::class.java)
@@ -144,11 +147,13 @@ internal class HttpClient(
         path: String,
         json: String,
         mediaType: MediaType = "application/json".toMediaType(),
+        headers: Map<String, String> = emptyMap(),
     ): StytchResult<T> {
         val request =
             Request.Builder()
                 .url(buildUrl(path))
                 .post(json.toRequestBody(mediaType))
+                .headers(Headers.of(headers))
                 .build()
         return try {
             makeRequest(request, T::class.java)
@@ -161,11 +166,13 @@ internal class HttpClient(
         path: String,
         json: String,
         mediaType: MediaType = "application/json".toMediaType(),
+        headers: Map<String, String> = emptyMap(),
     ): StytchResult<T> {
         val request =
             Request.Builder()
                 .url(buildUrl(path))
                 .put(json.toRequestBody(mediaType))
+                .headers(Headers.of(headers))
                 .build()
         return try {
             makeRequest(request, T::class.java)
@@ -174,11 +181,15 @@ internal class HttpClient(
         }
     }
 
-    suspend inline fun <reified T> delete(path: String): StytchResult<T> {
+    suspend inline fun <reified T> delete(
+        path: String
+        headers: Map<String, String> = emptyMap(),
+    ): StytchResult<T> {
         val request =
             Request.Builder()
                 .url(buildUrl(path, emptyMap()))
                 .delete()
+                .headers(Headers.of(headers))
                 .build()
         return try {
             makeRequest(request, T::class.java)

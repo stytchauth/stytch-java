@@ -365,8 +365,10 @@ internal class UsersImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-            httpClient.post("/v1/users", asJson)
+            httpClient.post("/v1/users", asJson, headers)
         }
 
     override fun create(
@@ -385,11 +387,13 @@ internal class UsersImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
             val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
             val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
             val asMap = adapter.fromJson(asJson) ?: emptyMap()
-            httpClient.get("/v1/users/${data.userId}", asMap)
+            httpClient.get("/v1/users/${data.userId}", asMap, headers)
         }
 
     override fun get(
@@ -408,8 +412,10 @@ internal class UsersImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)
-            httpClient.post("/v1/users/search", asJson)
+            httpClient.post("/v1/users/search", asJson, headers)
         }
 
     override fun search(
@@ -428,8 +434,10 @@ internal class UsersImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
-            httpClient.put("/v1/users/${data.userId}", asJson)
+            httpClient.put("/v1/users/${data.userId}", asJson, headers)
         }
 
     override fun update(
@@ -448,8 +456,10 @@ internal class UsersImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun exchangePrimaryFactor(data: ExchangePrimaryFactorRequest): StytchResult<ExchangePrimaryFactorResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(ExchangePrimaryFactorRequest::class.java).toJson(data)
-            httpClient.put("/v1/users/${data.userId}/exchange_primary_factor", asJson)
+            httpClient.put("/v1/users/${data.userId}/exchange_primary_factor", asJson, headers)
         }
 
     override fun exchangePrimaryFactor(
@@ -470,7 +480,9 @@ internal class UsersImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> =
         withContext(Dispatchers.IO) {
-            httpClient.delete("/v1/users/${data.userId}")
+            var headers = emptyMap()
+
+            httpClient.delete("/v1/users/${data.userId}", headers)
         }
 
     override fun delete(
@@ -489,7 +501,9 @@ internal class UsersImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun deleteEmail(data: DeleteEmailRequest): StytchResult<DeleteEmailResponse> =
         withContext(Dispatchers.IO) {
-            httpClient.delete("/v1/users/emails/${data.emailId}")
+            var headers = emptyMap()
+
+            httpClient.delete("/v1/users/emails/${data.emailId}", headers)
         }
 
     override fun deleteEmail(
@@ -508,7 +522,9 @@ internal class UsersImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun deletePhoneNumber(data: DeletePhoneNumberRequest): StytchResult<DeletePhoneNumberResponse> =
         withContext(Dispatchers.IO) {
-            httpClient.delete("/v1/users/phone_numbers/${data.phoneId}")
+            var headers = emptyMap()
+
+            httpClient.delete("/v1/users/phone_numbers/${data.phoneId}", headers)
         }
 
     override fun deletePhoneNumber(
@@ -529,7 +545,9 @@ internal class UsersImpl(private val httpClient: HttpClient, private val corouti
         data: DeleteWebAuthnRegistrationRequest,
     ): StytchResult<DeleteWebAuthnRegistrationResponse> =
         withContext(Dispatchers.IO) {
-            httpClient.delete("/v1/users/webauthn_registrations/${data.webauthnRegistrationId}")
+            var headers = emptyMap()
+
+            httpClient.delete("/v1/users/webauthn_registrations/${data.webauthnRegistrationId}", headers)
         }
 
     override fun deleteWebAuthnRegistration(
@@ -552,7 +570,9 @@ internal class UsersImpl(private val httpClient: HttpClient, private val corouti
         data: DeleteBiometricRegistrationRequest,
     ): StytchResult<DeleteBiometricRegistrationResponse> =
         withContext(Dispatchers.IO) {
-            httpClient.delete("/v1/users/biometric_registrations/${data.biometricRegistrationId}")
+            var headers = emptyMap()
+
+            httpClient.delete("/v1/users/biometric_registrations/${data.biometricRegistrationId}", headers)
         }
 
     override fun deleteBiometricRegistration(
@@ -573,7 +593,9 @@ internal class UsersImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun deleteTOTP(data: DeleteTOTPRequest): StytchResult<DeleteTOTPResponse> =
         withContext(Dispatchers.IO) {
-            httpClient.delete("/v1/users/totps/${data.totpId}")
+            var headers = emptyMap()
+
+            httpClient.delete("/v1/users/totps/${data.totpId}", headers)
         }
 
     override fun deleteTOTP(
@@ -592,7 +614,9 @@ internal class UsersImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun deleteCryptoWallet(data: DeleteCryptoWalletRequest): StytchResult<DeleteCryptoWalletResponse> =
         withContext(Dispatchers.IO) {
-            httpClient.delete("/v1/users/crypto_wallets/${data.cryptoWalletId}")
+            var headers = emptyMap()
+
+            httpClient.delete("/v1/users/crypto_wallets/${data.cryptoWalletId}", headers)
         }
 
     override fun deleteCryptoWallet(
@@ -613,7 +637,9 @@ internal class UsersImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun deletePassword(data: DeletePasswordRequest): StytchResult<DeletePasswordResponse> =
         withContext(Dispatchers.IO) {
-            httpClient.delete("/v1/users/passwords/${data.passwordId}")
+            var headers = emptyMap()
+
+            httpClient.delete("/v1/users/passwords/${data.passwordId}", headers)
         }
 
     override fun deletePassword(
@@ -632,7 +658,9 @@ internal class UsersImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun deleteOAuthRegistration(data: DeleteOAuthRegistrationRequest): StytchResult<DeleteOAuthRegistrationResponse> =
         withContext(Dispatchers.IO) {
-            httpClient.delete("/v1/users/oauth/${data.oauthUserRegistrationId}")
+            var headers = emptyMap()
+
+            httpClient.delete("/v1/users/oauth/${data.oauthUserRegistrationId}", headers)
         }
 
     override fun deleteOAuthRegistration(

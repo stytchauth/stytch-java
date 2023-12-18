@@ -195,8 +195,10 @@ internal class EmailImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun send(data: SendRequest): StytchResult<SendResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(SendRequest::class.java).toJson(data)
-            httpClient.post("/v1/magic_links/email/send", asJson)
+            httpClient.post("/v1/magic_links/email/send", asJson, headers)
         }
 
     override fun send(
@@ -215,8 +217,10 @@ internal class EmailImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun loginOrCreate(data: LoginOrCreateRequest): StytchResult<LoginOrCreateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(LoginOrCreateRequest::class.java).toJson(data)
-            httpClient.post("/v1/magic_links/email/login_or_create", asJson)
+            httpClient.post("/v1/magic_links/email/login_or_create", asJson, headers)
         }
 
     override fun loginOrCreate(
@@ -235,8 +239,10 @@ internal class EmailImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun invite(data: InviteRequest): StytchResult<InviteResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(InviteRequest::class.java).toJson(data)
-            httpClient.post("/v1/magic_links/email/invite", asJson)
+            httpClient.post("/v1/magic_links/email/invite", asJson, headers)
         }
 
     override fun invite(
@@ -255,8 +261,10 @@ internal class EmailImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun revokeInvite(data: RevokeInviteRequest): StytchResult<RevokeInviteResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(RevokeInviteRequest::class.java).toJson(data)
-            httpClient.post("/v1/magic_links/email/revoke_invite", asJson)
+            httpClient.post("/v1/magic_links/email/revoke_invite", asJson, headers)
         }
 
     override fun revokeInvite(

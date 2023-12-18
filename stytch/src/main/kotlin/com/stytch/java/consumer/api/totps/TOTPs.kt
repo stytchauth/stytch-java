@@ -108,8 +108,10 @@ internal class TOTPsImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-            httpClient.post("/v1/totps", asJson)
+            httpClient.post("/v1/totps", asJson, headers)
         }
 
     override fun create(
@@ -128,8 +130,10 @@ internal class TOTPsImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-            httpClient.post("/v1/totps/authenticate", asJson)
+            httpClient.post("/v1/totps/authenticate", asJson, headers)
         }
 
     override fun authenticate(
@@ -148,8 +152,10 @@ internal class TOTPsImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun recoveryCodes(data: RecoveryCodesRequest): StytchResult<RecoveryCodesResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(RecoveryCodesRequest::class.java).toJson(data)
-            httpClient.post("/v1/totps/recovery_codes", asJson)
+            httpClient.post("/v1/totps/recovery_codes", asJson, headers)
         }
 
     override fun recoveryCodes(
@@ -168,8 +174,10 @@ internal class TOTPsImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun recover(data: RecoverRequest): StytchResult<RecoverResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap()
+
             val asJson = moshi.adapter(RecoverRequest::class.java).toJson(data)
-            httpClient.post("/v1/totps/recover", asJson)
+            httpClient.post("/v1/totps/recover", asJson, headers)
         }
 
     override fun recover(
