@@ -34,7 +34,7 @@ public data class ActiveSSOConnection @JvmOverloads constructor(
 )
 
 
-public class DeleteRequestOptions(
+public data class DeleteRequestOptions @JvmOverloads constructor(
     /**
     * Optional authorization object.
     * Pass in an active Stytch Member session token or session JWT and the request
@@ -42,7 +42,6 @@ public class DeleteRequestOptions(
     */
     val authorization: Authorization? = null,
 ) {
-
     fun addHeaders(headers: Map<String, String>): Map<String, String> {
         if (authorization != null) {
           headers = authorization.addHeaders(headers)
@@ -492,7 +491,7 @@ public data class SearchQuery @JvmOverloads constructor(
 )
 
 
-public class UpdateRequestOptions(
+public data class UpdateRequestOptions @JvmOverloads constructor(
     /**
     * Optional authorization object.
     * Pass in an active Stytch Member session token or session JWT and the request
@@ -500,7 +499,6 @@ public class UpdateRequestOptions(
     */
     val authorization: Authorization? = null,
 ) {
-
     fun addHeaders(headers: Map<String, String>): Map<String, String> {
         if (authorization != null) {
           headers = authorization.addHeaders(headers)

@@ -39,17 +39,27 @@ public interface OIDC {
     /**
     * Create a new OIDC Connection. /%}
     */
-    public suspend fun createConnection(data: CreateConnectionRequest): StytchResult<CreateConnectionResponse>
+    public suspend fun createConnection(
+        data: CreateConnectionRequest,
+        methodOptions: CreateConnectionRequestOptions? = null,
+    ): StytchResult<CreateConnectionResponse>
     
     /**
     * Create a new OIDC Connection. /%}
     */
-    public fun createConnection(data: CreateConnectionRequest, callback: (StytchResult<CreateConnectionResponse>) -> Unit)
+    public fun createConnection(
+        data: CreateConnectionRequest,
+        methodOptions: CreateConnectionRequestOptions? = null,
+        callback: (StytchResult<CreateConnectionResponse>) -> Unit,
+    )
 
     /**
     * Create a new OIDC Connection. /%}
     */
-    public fun createConnectionCompletable(data: CreateConnectionRequest): CompletableFuture<StytchResult<CreateConnectionResponse>>
+    public fun createConnectionCompletable(
+        data: CreateConnectionRequest,
+        methodOptions: CreateConnectionRequestOptions? = null,
+    ): CompletableFuture<StytchResult<CreateConnectionResponse>>
 
     /**
     * Updates an existing OIDC connection.
@@ -78,7 +88,10 @@ public interface OIDC {
     * * `jwks_url`
     *  /%}
     */
-    public suspend fun updateConnection(data: UpdateConnectionRequest): StytchResult<UpdateConnectionResponse>
+    public suspend fun updateConnection(
+        data: UpdateConnectionRequest,
+        methodOptions: UpdateConnectionRequestOptions? = null,
+    ): StytchResult<UpdateConnectionResponse>
     
     /**
     * Updates an existing OIDC connection.
@@ -107,7 +120,11 @@ public interface OIDC {
     * * `jwks_url`
     *  /%}
     */
-    public fun updateConnection(data: UpdateConnectionRequest, callback: (StytchResult<UpdateConnectionResponse>) -> Unit)
+    public fun updateConnection(
+        data: UpdateConnectionRequest,
+        methodOptions: UpdateConnectionRequestOptions? = null,
+        callback: (StytchResult<UpdateConnectionResponse>) -> Unit,
+    )
 
     /**
     * Updates an existing OIDC connection.
@@ -136,7 +153,10 @@ public interface OIDC {
     * * `jwks_url`
     *  /%}
     */
-    public fun updateConnectionCompletable(data: UpdateConnectionRequest): CompletableFuture<StytchResult<UpdateConnectionResponse>>
+    public fun updateConnectionCompletable(
+        data: UpdateConnectionRequest,
+        methodOptions: UpdateConnectionRequestOptions? = null,
+    ): CompletableFuture<StytchResult<UpdateConnectionResponse>>
 
 
 }
@@ -161,8 +181,8 @@ internal class OIDCImpl (private val httpClient: HttpClient, private val corouti
 
     override fun createConnection(
         data: CreateConnectionRequest,
-        callback: (StytchResult<CreateConnectionResponse>) -> Unit
         methodOptions: CreateConnectionRequestOptions? = null,
+        callback: (StytchResult<CreateConnectionResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(createConnection(data, methodOptions)))
@@ -191,8 +211,8 @@ internal class OIDCImpl (private val httpClient: HttpClient, private val corouti
 
     override fun updateConnection(
         data: UpdateConnectionRequest,
-        callback: (StytchResult<UpdateConnectionResponse>) -> Unit
         methodOptions: UpdateConnectionRequestOptions? = null,
+        callback: (StytchResult<UpdateConnectionResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(updateConnection(data, methodOptions)))

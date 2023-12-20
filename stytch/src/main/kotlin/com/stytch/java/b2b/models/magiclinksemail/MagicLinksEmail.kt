@@ -33,7 +33,7 @@ public enum class LoginOrSignupRequestLocale {
     }
 
 
-public class InviteRequestOptions(
+public data class InviteRequestOptions @JvmOverloads constructor(
     /**
     * Optional authorization object.
     * Pass in an active Stytch Member session token or session JWT and the request
@@ -41,7 +41,6 @@ public class InviteRequestOptions(
     */
     val authorization: Authorization? = null,
 ) {
-
     fun addHeaders(headers: Map<String, String>): Map<String, String> {
         if (authorization != null) {
           headers = authorization.addHeaders(headers)

@@ -246,7 +246,9 @@ public interface Users {
     /**
      * Delete a WebAuthn registration from a User.
      */
-    public suspend fun deleteWebAuthnRegistration(data: DeleteWebAuthnRegistrationRequest): StytchResult<DeleteWebAuthnRegistrationResponse>
+    public suspend fun deleteWebAuthnRegistration(
+        data: DeleteWebAuthnRegistrationRequest,
+    ): StytchResult<DeleteWebAuthnRegistrationResponse>
 
     /**
      * Delete a WebAuthn registration from a User.

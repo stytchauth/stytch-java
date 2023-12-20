@@ -47,42 +47,59 @@ public interface Email {
     * Magic Link. Members will have a `pending` status until they successfully authenticate. An active Member will receive a
     * login Email Magic Link.
     */
-    public suspend fun loginOrSignup(data: LoginOrSignupRequest): StytchResult<LoginOrSignupResponse>
+    public suspend fun loginOrSignup(
+        data: LoginOrSignupRequest,
+    ): StytchResult<LoginOrSignupResponse>
     
     /**
     * Send either a login or signup magic link to a Member. A new, pending, or invited Member will receive a signup Email
     * Magic Link. Members will have a `pending` status until they successfully authenticate. An active Member will receive a
     * login Email Magic Link.
     */
-    public fun loginOrSignup(data: LoginOrSignupRequest, callback: (StytchResult<LoginOrSignupResponse>) -> Unit)
+    public fun loginOrSignup(
+        data: LoginOrSignupRequest,
+        callback: (StytchResult<LoginOrSignupResponse>) -> Unit,
+    )
 
     /**
     * Send either a login or signup magic link to a Member. A new, pending, or invited Member will receive a signup Email
     * Magic Link. Members will have a `pending` status until they successfully authenticate. An active Member will receive a
     * login Email Magic Link.
     */
-    public fun loginOrSignupCompletable(data: LoginOrSignupRequest): CompletableFuture<StytchResult<LoginOrSignupResponse>>
+    public fun loginOrSignupCompletable(
+        data: LoginOrSignupRequest,
+    ): CompletableFuture<StytchResult<LoginOrSignupResponse>>
 
     /**
     * Send an invite email to a new Member to join an Organization. The Member will be created with an `invited` status until
     * they successfully authenticate. Sending invites to `pending` Members will update their status to `invited`. Sending
     * invites to already `active` Members will return an error. /%}
     */
-    public suspend fun invite(data: InviteRequest): StytchResult<InviteResponse>
+    public suspend fun invite(
+        data: InviteRequest,
+        methodOptions: InviteRequestOptions? = null,
+    ): StytchResult<InviteResponse>
     
     /**
     * Send an invite email to a new Member to join an Organization. The Member will be created with an `invited` status until
     * they successfully authenticate. Sending invites to `pending` Members will update their status to `invited`. Sending
     * invites to already `active` Members will return an error. /%}
     */
-    public fun invite(data: InviteRequest, callback: (StytchResult<InviteResponse>) -> Unit)
+    public fun invite(
+        data: InviteRequest,
+        methodOptions: InviteRequestOptions? = null,
+        callback: (StytchResult<InviteResponse>) -> Unit,
+    )
 
     /**
     * Send an invite email to a new Member to join an Organization. The Member will be created with an `invited` status until
     * they successfully authenticate. Sending invites to `pending` Members will update their status to `invited`. Sending
     * invites to already `active` Members will return an error. /%}
     */
-    public fun inviteCompletable(data: InviteRequest): CompletableFuture<StytchResult<InviteResponse>>
+    public fun inviteCompletable(
+        data: InviteRequest,
+        methodOptions: InviteRequestOptions? = null,
+    ): CompletableFuture<StytchResult<InviteResponse>>
 
 
 }
@@ -104,7 +121,7 @@ internal class EmailImpl (private val httpClient: HttpClient, private val corout
 
     override fun loginOrSignup(
         data: LoginOrSignupRequest,
-        callback: (StytchResult<LoginOrSignupResponse>) -> Unit
+        callback: (StytchResult<LoginOrSignupResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(loginOrSignup(data))
@@ -132,8 +149,8 @@ internal class EmailImpl (private val httpClient: HttpClient, private val corout
 
     override fun invite(
         data: InviteRequest,
-        callback: (StytchResult<InviteResponse>) -> Unit
         methodOptions: InviteRequestOptions? = null,
+        callback: (StytchResult<InviteResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(invite(data, methodOptions)))

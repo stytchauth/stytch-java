@@ -65,7 +65,10 @@ public interface Members {
     * 
     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
     */
-    public suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse>
+    public suspend fun update(
+        data: UpdateRequest,
+        methodOptions: UpdateRequestOptions? = null,
+    ): StytchResult<UpdateResponse>
     
     /**
     * Updates a Member specified by `organization_id` and `member_id`.
@@ -82,7 +85,11 @@ public interface Members {
     * 
     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
     */
-    public fun update(data: UpdateRequest, callback: (StytchResult<UpdateResponse>) -> Unit)
+    public fun update(
+        data: UpdateRequest,
+        methodOptions: UpdateRequestOptions? = null,
+        callback: (StytchResult<UpdateResponse>) -> Unit,
+    )
 
     /**
     * Updates a Member specified by `organization_id` and `member_id`.
@@ -99,40 +106,63 @@ public interface Members {
     * 
     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
     */
-    public fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>>
+    public fun updateCompletable(
+        data: UpdateRequest,
+        methodOptions: UpdateRequestOptions? = null,
+    ): CompletableFuture<StytchResult<UpdateResponse>>
 
     /**
     * Deletes a Member specified by `organization_id` and `member_id`. /%}
     */
-    public suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse>
+    public suspend fun delete(
+        data: DeleteRequest,
+        methodOptions: DeleteRequestOptions? = null,
+    ): StytchResult<DeleteResponse>
     
     /**
     * Deletes a Member specified by `organization_id` and `member_id`. /%}
     */
-    public fun delete(data: DeleteRequest, callback: (StytchResult<DeleteResponse>) -> Unit)
+    public fun delete(
+        data: DeleteRequest,
+        methodOptions: DeleteRequestOptions? = null,
+        callback: (StytchResult<DeleteResponse>) -> Unit,
+    )
 
     /**
     * Deletes a Member specified by `organization_id` and `member_id`. /%}
     */
-    public fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>>
+    public fun deleteCompletable(
+        data: DeleteRequest,
+        methodOptions: DeleteRequestOptions? = null,
+    ): CompletableFuture<StytchResult<DeleteResponse>>
 
     /**
     * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
     * `organization_id` and `member_id`. /%}
     */
-    public suspend fun reactivate(data: ReactivateRequest): StytchResult<ReactivateResponse>
+    public suspend fun reactivate(
+        data: ReactivateRequest,
+        methodOptions: ReactivateRequestOptions? = null,
+    ): StytchResult<ReactivateResponse>
     
     /**
     * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
     * `organization_id` and `member_id`. /%}
     */
-    public fun reactivate(data: ReactivateRequest, callback: (StytchResult<ReactivateResponse>) -> Unit)
+    public fun reactivate(
+        data: ReactivateRequest,
+        methodOptions: ReactivateRequestOptions? = null,
+        callback: (StytchResult<ReactivateResponse>) -> Unit,
+    )
 
     /**
     * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
     * `organization_id` and `member_id`. /%}
     */
-    public fun reactivateCompletable(data: ReactivateRequest): CompletableFuture<StytchResult<ReactivateResponse>>
+    public fun reactivateCompletable(
+        data: ReactivateRequest,
+        methodOptions: ReactivateRequestOptions? = null,
+    ): CompletableFuture<StytchResult<ReactivateResponse>>
 
     /**
     * Delete a Member's MFA phone number. 
@@ -147,7 +177,10 @@ public interface Members {
     * [OTP SMS Authenticate](https://stytch.com/docs/b2b/api/authenticate-otp-sms) endpoint.
     *  /%}
     */
-    public suspend fun deleteMFAPhoneNumber(data: DeleteMFAPhoneNumberRequest): StytchResult<DeleteMFAPhoneNumberResponse>
+    public suspend fun deleteMFAPhoneNumber(
+        data: DeleteMFAPhoneNumberRequest,
+        methodOptions: DeleteMFAPhoneNumberRequestOptions? = null,
+    ): StytchResult<DeleteMFAPhoneNumberResponse>
     
     /**
     * Delete a Member's MFA phone number. 
@@ -162,7 +195,11 @@ public interface Members {
     * [OTP SMS Authenticate](https://stytch.com/docs/b2b/api/authenticate-otp-sms) endpoint.
     *  /%}
     */
-    public fun deleteMFAPhoneNumber(data: DeleteMFAPhoneNumberRequest, callback: (StytchResult<DeleteMFAPhoneNumberResponse>) -> Unit)
+    public fun deleteMFAPhoneNumber(
+        data: DeleteMFAPhoneNumberRequest,
+        methodOptions: DeleteMFAPhoneNumberRequestOptions? = null,
+        callback: (StytchResult<DeleteMFAPhoneNumberResponse>) -> Unit,
+    )
 
     /**
     * Delete a Member's MFA phone number. 
@@ -177,7 +214,10 @@ public interface Members {
     * [OTP SMS Authenticate](https://stytch.com/docs/b2b/api/authenticate-otp-sms) endpoint.
     *  /%}
     */
-    public fun deleteMFAPhoneNumberCompletable(data: DeleteMFAPhoneNumberRequest): CompletableFuture<StytchResult<DeleteMFAPhoneNumberResponse>>
+    public fun deleteMFAPhoneNumberCompletable(
+        data: DeleteMFAPhoneNumberRequest,
+        methodOptions: DeleteMFAPhoneNumberRequestOptions? = null,
+    ): CompletableFuture<StytchResult<DeleteMFAPhoneNumberResponse>>
 
     /**
     * Search for Members within specified Organizations. An array with at least one `organization_id` is required. Submitting
@@ -197,7 +237,10 @@ public interface Members {
     * 
     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
     */
-    public suspend fun search(data: SearchRequest): StytchResult<SearchResponse>
+    public suspend fun search(
+        data: SearchRequest,
+        methodOptions: SearchRequestOptions? = null,
+    ): StytchResult<SearchResponse>
     
     /**
     * Search for Members within specified Organizations. An array with at least one `organization_id` is required. Submitting
@@ -217,7 +260,11 @@ public interface Members {
     * 
     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
     */
-    public fun search(data: SearchRequest, callback: (StytchResult<SearchResponse>) -> Unit)
+    public fun search(
+        data: SearchRequest,
+        methodOptions: SearchRequestOptions? = null,
+        callback: (StytchResult<SearchResponse>) -> Unit,
+    )
 
     /**
     * Search for Members within specified Organizations. An array with at least one `organization_id` is required. Submitting
@@ -237,73 +284,110 @@ public interface Members {
     * 
     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
     */
-    public fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>>
+    public fun searchCompletable(
+        data: SearchRequest,
+        methodOptions: SearchRequestOptions? = null,
+    ): CompletableFuture<StytchResult<SearchResponse>>
 
     /**
     * Delete a Member's password. /%}
     */
-    public suspend fun deletePassword(data: DeletePasswordRequest): StytchResult<DeletePasswordResponse>
+    public suspend fun deletePassword(
+        data: DeletePasswordRequest,
+        methodOptions: DeletePasswordRequestOptions? = null,
+    ): StytchResult<DeletePasswordResponse>
     
     /**
     * Delete a Member's password. /%}
     */
-    public fun deletePassword(data: DeletePasswordRequest, callback: (StytchResult<DeletePasswordResponse>) -> Unit)
+    public fun deletePassword(
+        data: DeletePasswordRequest,
+        methodOptions: DeletePasswordRequestOptions? = null,
+        callback: (StytchResult<DeletePasswordResponse>) -> Unit,
+    )
 
     /**
     * Delete a Member's password. /%}
     */
-    public fun deletePasswordCompletable(data: DeletePasswordRequest): CompletableFuture<StytchResult<DeletePasswordResponse>>
+    public fun deletePasswordCompletable(
+        data: DeletePasswordRequest,
+        methodOptions: DeletePasswordRequestOptions? = null,
+    ): CompletableFuture<StytchResult<DeletePasswordResponse>>
 
     /**
     * Get a Member by `member_id`. This endpoint does not require an `organization_id`, enabling you to get members across
     * organizations. This is a dangerous operation. Incorrect use may open you up to indirect object reference (IDOR)
     * attacks. We recommend using the [Get Member](https://stytch.com/docs/b2b/api/get-member) API instead.
     */
-    public suspend fun dangerouslyGet(data: DangerouslyGetRequest): StytchResult<GetResponse>
+    public suspend fun dangerouslyGet(
+        data: DangerouslyGetRequest,
+    ): StytchResult<GetResponse>
     
     /**
     * Get a Member by `member_id`. This endpoint does not require an `organization_id`, enabling you to get members across
     * organizations. This is a dangerous operation. Incorrect use may open you up to indirect object reference (IDOR)
     * attacks. We recommend using the [Get Member](https://stytch.com/docs/b2b/api/get-member) API instead.
     */
-    public fun dangerouslyGet(data: DangerouslyGetRequest, callback: (StytchResult<GetResponse>) -> Unit)
+    public fun dangerouslyGet(
+        data: DangerouslyGetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
+    )
 
     /**
     * Get a Member by `member_id`. This endpoint does not require an `organization_id`, enabling you to get members across
     * organizations. This is a dangerous operation. Incorrect use may open you up to indirect object reference (IDOR)
     * attacks. We recommend using the [Get Member](https://stytch.com/docs/b2b/api/get-member) API instead.
     */
-    public fun dangerouslyGetCompletable(data: DangerouslyGetRequest): CompletableFuture<StytchResult<GetResponse>>
+    public fun dangerouslyGetCompletable(
+        data: DangerouslyGetRequest,
+    ): CompletableFuture<StytchResult<GetResponse>>
 
     /**
     * Creates a Member. An `organization_id` and `email_address` are required. /%}
     */
-    public suspend fun create(data: CreateRequest): StytchResult<CreateResponse>
+    public suspend fun create(
+        data: CreateRequest,
+        methodOptions: CreateRequestOptions? = null,
+    ): StytchResult<CreateResponse>
     
     /**
     * Creates a Member. An `organization_id` and `email_address` are required. /%}
     */
-    public fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit)
+    public fun create(
+        data: CreateRequest,
+        methodOptions: CreateRequestOptions? = null,
+        callback: (StytchResult<CreateResponse>) -> Unit,
+    )
 
     /**
     * Creates a Member. An `organization_id` and `email_address` are required. /%}
     */
-    public fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>>
+    public fun createCompletable(
+        data: CreateRequest,
+        methodOptions: CreateRequestOptions? = null,
+    ): CompletableFuture<StytchResult<CreateResponse>>
 
     /**
     * Get a Member by `member_id` or `email_address`.
     */
-    public suspend fun get(data: GetRequest): StytchResult<GetResponse>
+    public suspend fun get(
+        data: GetRequest,
+    ): StytchResult<GetResponse>
     
     /**
     * Get a Member by `member_id` or `email_address`.
     */
-    public fun get(data: GetRequest, callback: (StytchResult<GetResponse>) -> Unit)
+    public fun get(
+        data: GetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
+    )
 
     /**
     * Get a Member by `member_id` or `email_address`.
     */
-    public fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>>
+    public fun getCompletable(
+        data: GetRequest,
+    ): CompletableFuture<StytchResult<GetResponse>>
 
 
 }
@@ -328,8 +412,8 @@ internal class MembersImpl (private val httpClient: HttpClient, private val coro
 
     override fun update(
         data: UpdateRequest,
-        callback: (StytchResult<UpdateResponse>) -> Unit
         methodOptions: UpdateRequestOptions? = null,
+        callback: (StytchResult<UpdateResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(update(data, methodOptions)))
@@ -357,8 +441,8 @@ internal class MembersImpl (private val httpClient: HttpClient, private val coro
 
     override fun delete(
         data: DeleteRequest,
-        callback: (StytchResult<DeleteResponse>) -> Unit
         methodOptions: DeleteRequestOptions? = null,
+        callback: (StytchResult<DeleteResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(delete(data, methodOptions)))
@@ -387,8 +471,8 @@ internal class MembersImpl (private val httpClient: HttpClient, private val coro
 
     override fun reactivate(
         data: ReactivateRequest,
-        callback: (StytchResult<ReactivateResponse>) -> Unit
         methodOptions: ReactivateRequestOptions? = null,
+        callback: (StytchResult<ReactivateResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(reactivate(data, methodOptions)))
@@ -416,8 +500,8 @@ internal class MembersImpl (private val httpClient: HttpClient, private val coro
 
     override fun deleteMFAPhoneNumber(
         data: DeleteMFAPhoneNumberRequest,
-        callback: (StytchResult<DeleteMFAPhoneNumberResponse>) -> Unit
         methodOptions: DeleteMFAPhoneNumberRequestOptions? = null,
+        callback: (StytchResult<DeleteMFAPhoneNumberResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(deleteMFAPhoneNumber(data, methodOptions)))
@@ -446,8 +530,8 @@ internal class MembersImpl (private val httpClient: HttpClient, private val coro
 
     override fun search(
         data: SearchRequest,
-        callback: (StytchResult<SearchResponse>) -> Unit
         methodOptions: SearchRequestOptions? = null,
+        callback: (StytchResult<SearchResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(search(data, methodOptions)))
@@ -475,8 +559,8 @@ internal class MembersImpl (private val httpClient: HttpClient, private val coro
 
     override fun deletePassword(
         data: DeletePasswordRequest,
-        callback: (StytchResult<DeletePasswordResponse>) -> Unit
         methodOptions: DeletePasswordRequestOptions? = null,
+        callback: (StytchResult<DeletePasswordResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(deletePassword(data, methodOptions)))
@@ -504,7 +588,7 @@ internal class MembersImpl (private val httpClient: HttpClient, private val coro
 
     override fun dangerouslyGet(
         data: DangerouslyGetRequest,
-        callback: (StytchResult<GetResponse>) -> Unit
+        callback: (StytchResult<GetResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(dangerouslyGet(data))
@@ -532,8 +616,8 @@ internal class MembersImpl (private val httpClient: HttpClient, private val coro
 
     override fun create(
         data: CreateRequest,
-        callback: (StytchResult<CreateResponse>) -> Unit
         methodOptions: CreateRequestOptions? = null,
+        callback: (StytchResult<CreateResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(create(data, methodOptions)))
@@ -561,7 +645,7 @@ internal class MembersImpl (private val httpClient: HttpClient, private val coro
 
     override fun get(
         data: GetRequest,
-        callback: (StytchResult<GetResponse>) -> Unit
+        callback: (StytchResult<GetResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(get(data))

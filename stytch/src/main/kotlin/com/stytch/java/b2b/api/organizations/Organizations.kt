@@ -57,7 +57,9 @@ public interface Organizations {
     * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
     * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
     */
-    public suspend fun create(data: CreateRequest): StytchResult<CreateResponse>
+    public suspend fun create(
+        data: CreateRequest,
+    ): StytchResult<CreateResponse>
     
     /**
     * Creates an Organization. An `organization_name` and a unique `organization_slug` are required.
@@ -68,7 +70,10 @@ public interface Organizations {
     * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
     * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
     */
-    public fun create(data: CreateRequest, callback: (StytchResult<CreateResponse>) -> Unit)
+    public fun create(
+        data: CreateRequest,
+        callback: (StytchResult<CreateResponse>) -> Unit,
+    )
 
     /**
     * Creates an Organization. An `organization_name` and a unique `organization_slug` are required.
@@ -79,22 +84,31 @@ public interface Organizations {
     * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
     * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
     */
-    public fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>>
+    public fun createCompletable(
+        data: CreateRequest,
+    ): CompletableFuture<StytchResult<CreateResponse>>
 
     /**
     * Returns an Organization specified by `organization_id`.
     */
-    public suspend fun get(data: GetRequest): StytchResult<GetResponse>
+    public suspend fun get(
+        data: GetRequest,
+    ): StytchResult<GetResponse>
     
     /**
     * Returns an Organization specified by `organization_id`.
     */
-    public fun get(data: GetRequest, callback: (StytchResult<GetResponse>) -> Unit)
+    public fun get(
+        data: GetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
+    )
 
     /**
     * Returns an Organization specified by `organization_id`.
     */
-    public fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>>
+    public fun getCompletable(
+        data: GetRequest,
+    ): CompletableFuture<StytchResult<GetResponse>>
 
     /**
     * Updates an Organization specified by `organization_id`. An Organization must always have at least one auth setting set
@@ -115,7 +129,10 @@ public interface Organizations {
     * 
     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
     */
-    public suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse>
+    public suspend fun update(
+        data: UpdateRequest,
+        methodOptions: UpdateRequestOptions? = null,
+    ): StytchResult<UpdateResponse>
     
     /**
     * Updates an Organization specified by `organization_id`. An Organization must always have at least one auth setting set
@@ -136,7 +153,11 @@ public interface Organizations {
     * 
     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
     */
-    public fun update(data: UpdateRequest, callback: (StytchResult<UpdateResponse>) -> Unit)
+    public fun update(
+        data: UpdateRequest,
+        methodOptions: UpdateRequestOptions? = null,
+        callback: (StytchResult<UpdateResponse>) -> Unit,
+    )
 
     /**
     * Updates an Organization specified by `organization_id`. An Organization must always have at least one auth setting set
@@ -157,40 +178,60 @@ public interface Organizations {
     * 
     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
     */
-    public fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>>
+    public fun updateCompletable(
+        data: UpdateRequest,
+        methodOptions: UpdateRequestOptions? = null,
+    ): CompletableFuture<StytchResult<UpdateResponse>>
 
     /**
     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted. /%}
     */
-    public suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse>
+    public suspend fun delete(
+        data: DeleteRequest,
+        methodOptions: DeleteRequestOptions? = null,
+    ): StytchResult<DeleteResponse>
     
     /**
     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted. /%}
     */
-    public fun delete(data: DeleteRequest, callback: (StytchResult<DeleteResponse>) -> Unit)
+    public fun delete(
+        data: DeleteRequest,
+        methodOptions: DeleteRequestOptions? = null,
+        callback: (StytchResult<DeleteResponse>) -> Unit,
+    )
 
     /**
     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted. /%}
     */
-    public fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>>
+    public fun deleteCompletable(
+        data: DeleteRequest,
+        methodOptions: DeleteRequestOptions? = null,
+    ): CompletableFuture<StytchResult<DeleteResponse>>
 
     /**
     * Search for Organizations. If you send a request with no body params, no filtering will be applied and the endpoint will
     * return all Organizations. All fuzzy search filters require a minimum of three characters.
     */
-    public suspend fun search(data: SearchRequest): StytchResult<SearchResponse>
+    public suspend fun search(
+        data: SearchRequest,
+    ): StytchResult<SearchResponse>
     
     /**
     * Search for Organizations. If you send a request with no body params, no filtering will be applied and the endpoint will
     * return all Organizations. All fuzzy search filters require a minimum of three characters.
     */
-    public fun search(data: SearchRequest, callback: (StytchResult<SearchResponse>) -> Unit)
+    public fun search(
+        data: SearchRequest,
+        callback: (StytchResult<SearchResponse>) -> Unit,
+    )
 
     /**
     * Search for Organizations. If you send a request with no body params, no filtering will be applied and the endpoint will
     * return all Organizations. All fuzzy search filters require a minimum of three characters.
     */
-    public fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>>
+    public fun searchCompletable(
+        data: SearchRequest,
+    ): CompletableFuture<StytchResult<SearchResponse>>
 
 
 }
@@ -212,7 +253,7 @@ internal class OrganizationsImpl (private val httpClient: HttpClient, private va
 
     override fun create(
         data: CreateRequest,
-        callback: (StytchResult<CreateResponse>) -> Unit
+        callback: (StytchResult<CreateResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(create(data))
@@ -239,7 +280,7 @@ internal class OrganizationsImpl (private val httpClient: HttpClient, private va
 
     override fun get(
         data: GetRequest,
-        callback: (StytchResult<GetResponse>) -> Unit
+        callback: (StytchResult<GetResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(get(data))
@@ -267,8 +308,8 @@ internal class OrganizationsImpl (private val httpClient: HttpClient, private va
 
     override fun update(
         data: UpdateRequest,
-        callback: (StytchResult<UpdateResponse>) -> Unit
         methodOptions: UpdateRequestOptions? = null,
+        callback: (StytchResult<UpdateResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(update(data, methodOptions)))
@@ -296,8 +337,8 @@ internal class OrganizationsImpl (private val httpClient: HttpClient, private va
 
     override fun delete(
         data: DeleteRequest,
-        callback: (StytchResult<DeleteResponse>) -> Unit
         methodOptions: DeleteRequestOptions? = null,
+        callback: (StytchResult<DeleteResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(delete(data, methodOptions)))
@@ -322,7 +363,7 @@ internal class OrganizationsImpl (private val httpClient: HttpClient, private va
 
     override fun search(
         data: SearchRequest,
-        callback: (StytchResult<SearchResponse>) -> Unit
+        callback: (StytchResult<SearchResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(search(data))

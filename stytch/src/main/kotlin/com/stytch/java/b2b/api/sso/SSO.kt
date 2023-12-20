@@ -50,32 +50,52 @@ public interface SSO {
     /**
     * Get all SSO Connections owned by the organization. /%}
     */
-    public suspend fun getConnections(data: GetConnectionsRequest): StytchResult<GetConnectionsResponse>
+    public suspend fun getConnections(
+        data: GetConnectionsRequest,
+        methodOptions: GetConnectionsRequestOptions? = null,
+    ): StytchResult<GetConnectionsResponse>
     
     /**
     * Get all SSO Connections owned by the organization. /%}
     */
-    public fun getConnections(data: GetConnectionsRequest, callback: (StytchResult<GetConnectionsResponse>) -> Unit)
+    public fun getConnections(
+        data: GetConnectionsRequest,
+        methodOptions: GetConnectionsRequestOptions? = null,
+        callback: (StytchResult<GetConnectionsResponse>) -> Unit,
+    )
 
     /**
     * Get all SSO Connections owned by the organization. /%}
     */
-    public fun getConnectionsCompletable(data: GetConnectionsRequest): CompletableFuture<StytchResult<GetConnectionsResponse>>
+    public fun getConnectionsCompletable(
+        data: GetConnectionsRequest,
+        methodOptions: GetConnectionsRequestOptions? = null,
+    ): CompletableFuture<StytchResult<GetConnectionsResponse>>
 
     /**
     * Delete an existing SSO connection. /%}
     */
-    public suspend fun deleteConnection(data: DeleteConnectionRequest): StytchResult<DeleteConnectionResponse>
+    public suspend fun deleteConnection(
+        data: DeleteConnectionRequest,
+        methodOptions: DeleteConnectionRequestOptions? = null,
+    ): StytchResult<DeleteConnectionResponse>
     
     /**
     * Delete an existing SSO connection. /%}
     */
-    public fun deleteConnection(data: DeleteConnectionRequest, callback: (StytchResult<DeleteConnectionResponse>) -> Unit)
+    public fun deleteConnection(
+        data: DeleteConnectionRequest,
+        methodOptions: DeleteConnectionRequestOptions? = null,
+        callback: (StytchResult<DeleteConnectionResponse>) -> Unit,
+    )
 
     /**
     * Delete an existing SSO connection. /%}
     */
-    public fun deleteConnectionCompletable(data: DeleteConnectionRequest): CompletableFuture<StytchResult<DeleteConnectionResponse>>
+    public fun deleteConnectionCompletable(
+        data: DeleteConnectionRequest,
+        methodOptions: DeleteConnectionRequestOptions? = null,
+    ): CompletableFuture<StytchResult<DeleteConnectionResponse>>
 
     /**
     * Authenticate a user given a token. 
@@ -96,7 +116,9 @@ public interface SSO {
     * 
     * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
     */
-    public suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse>
+    public suspend fun authenticate(
+        data: AuthenticateRequest,
+    ): StytchResult<AuthenticateResponse>
     
     /**
     * Authenticate a user given a token. 
@@ -117,7 +139,10 @@ public interface SSO {
     * 
     * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
     */
-    public fun authenticate(data: AuthenticateRequest, callback: (StytchResult<AuthenticateResponse>) -> Unit)
+    public fun authenticate(
+        data: AuthenticateRequest,
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
+    )
 
     /**
     * Authenticate a user given a token. 
@@ -138,7 +163,9 @@ public interface SSO {
     * 
     * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
     */
-    public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
+    public fun authenticateCompletable(
+        data: AuthenticateRequest,
+    ): CompletableFuture<StytchResult<AuthenticateResponse>>
 
 
 }
@@ -168,8 +195,8 @@ internal class SSOImpl (private val httpClient: HttpClient, private val coroutin
 
     override fun getConnections(
         data: GetConnectionsRequest,
-        callback: (StytchResult<GetConnectionsResponse>) -> Unit
         methodOptions: GetConnectionsRequestOptions? = null,
+        callback: (StytchResult<GetConnectionsResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(getConnections(data, methodOptions)))
@@ -197,8 +224,8 @@ internal class SSOImpl (private val httpClient: HttpClient, private val coroutin
 
     override fun deleteConnection(
         data: DeleteConnectionRequest,
-        callback: (StytchResult<DeleteConnectionResponse>) -> Unit
         methodOptions: DeleteConnectionRequestOptions? = null,
+        callback: (StytchResult<DeleteConnectionResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(deleteConnection(data, methodOptions)))
@@ -223,7 +250,7 @@ internal class SSOImpl (private val httpClient: HttpClient, private val coroutin
 
     override fun authenticate(
         data: AuthenticateRequest,
-        callback: (StytchResult<AuthenticateResponse>) -> Unit
+        callback: (StytchResult<AuthenticateResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(authenticate(data))

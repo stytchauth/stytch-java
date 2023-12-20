@@ -43,17 +43,27 @@ public interface SAML {
     /**
     * Create a new SAML Connection. /%}
     */
-    public suspend fun createConnection(data: CreateConnectionRequest): StytchResult<CreateConnectionResponse>
+    public suspend fun createConnection(
+        data: CreateConnectionRequest,
+        methodOptions: CreateConnectionRequestOptions? = null,
+    ): StytchResult<CreateConnectionResponse>
     
     /**
     * Create a new SAML Connection. /%}
     */
-    public fun createConnection(data: CreateConnectionRequest, callback: (StytchResult<CreateConnectionResponse>) -> Unit)
+    public fun createConnection(
+        data: CreateConnectionRequest,
+        methodOptions: CreateConnectionRequestOptions? = null,
+        callback: (StytchResult<CreateConnectionResponse>) -> Unit,
+    )
 
     /**
     * Create a new SAML Connection. /%}
     */
-    public fun createConnectionCompletable(data: CreateConnectionRequest): CompletableFuture<StytchResult<CreateConnectionResponse>>
+    public fun createConnectionCompletable(
+        data: CreateConnectionRequest,
+        methodOptions: CreateConnectionRequestOptions? = null,
+    ): CompletableFuture<StytchResult<CreateConnectionResponse>>
 
     /**
     * Updates an existing SAML connection.
@@ -65,7 +75,10 @@ public interface SAML {
     * * `x509_certificate`
     *  /%}
     */
-    public suspend fun updateConnection(data: UpdateConnectionRequest): StytchResult<UpdateConnectionResponse>
+    public suspend fun updateConnection(
+        data: UpdateConnectionRequest,
+        methodOptions: UpdateConnectionRequestOptions? = null,
+    ): StytchResult<UpdateConnectionResponse>
     
     /**
     * Updates an existing SAML connection.
@@ -77,7 +90,11 @@ public interface SAML {
     * * `x509_certificate`
     *  /%}
     */
-    public fun updateConnection(data: UpdateConnectionRequest, callback: (StytchResult<UpdateConnectionResponse>) -> Unit)
+    public fun updateConnection(
+        data: UpdateConnectionRequest,
+        methodOptions: UpdateConnectionRequestOptions? = null,
+        callback: (StytchResult<UpdateConnectionResponse>) -> Unit,
+    )
 
     /**
     * Updates an existing SAML connection.
@@ -89,7 +106,10 @@ public interface SAML {
     * * `x509_certificate`
     *  /%}
     */
-    public fun updateConnectionCompletable(data: UpdateConnectionRequest): CompletableFuture<StytchResult<UpdateConnectionResponse>>
+    public fun updateConnectionCompletable(
+        data: UpdateConnectionRequest,
+        methodOptions: UpdateConnectionRequestOptions? = null,
+    ): CompletableFuture<StytchResult<UpdateConnectionResponse>>
 
     /**
     * Used to update an existing SAML connection using an IDP metadata URL.
@@ -101,7 +121,10 @@ public interface SAML {
     * * `attribute_mapping` (must be supplied using [Update SAML Connection](update-saml-connection))
     *  /%}
     */
-    public suspend fun updateByURL(data: UpdateByURLRequest): StytchResult<UpdateByURLResponse>
+    public suspend fun updateByURL(
+        data: UpdateByURLRequest,
+        methodOptions: UpdateByURLRequestOptions? = null,
+    ): StytchResult<UpdateByURLResponse>
     
     /**
     * Used to update an existing SAML connection using an IDP metadata URL.
@@ -113,7 +136,11 @@ public interface SAML {
     * * `attribute_mapping` (must be supplied using [Update SAML Connection](update-saml-connection))
     *  /%}
     */
-    public fun updateByURL(data: UpdateByURLRequest, callback: (StytchResult<UpdateByURLResponse>) -> Unit)
+    public fun updateByURL(
+        data: UpdateByURLRequest,
+        methodOptions: UpdateByURLRequestOptions? = null,
+        callback: (StytchResult<UpdateByURLResponse>) -> Unit,
+    )
 
     /**
     * Used to update an existing SAML connection using an IDP metadata URL.
@@ -125,7 +152,10 @@ public interface SAML {
     * * `attribute_mapping` (must be supplied using [Update SAML Connection](update-saml-connection))
     *  /%}
     */
-    public fun updateByURLCompletable(data: UpdateByURLRequest): CompletableFuture<StytchResult<UpdateByURLResponse>>
+    public fun updateByURLCompletable(
+        data: UpdateByURLRequest,
+        methodOptions: UpdateByURLRequestOptions? = null,
+    ): CompletableFuture<StytchResult<UpdateByURLResponse>>
 
     /**
     * Delete a SAML verification certificate.
@@ -134,7 +164,10 @@ public interface SAML {
     * connection. There must always be at least one certificate per active connection.
     *  /%}
     */
-    public suspend fun deleteVerificationCertificate(data: DeleteVerificationCertificateRequest): StytchResult<DeleteVerificationCertificateResponse>
+    public suspend fun deleteVerificationCertificate(
+        data: DeleteVerificationCertificateRequest,
+        methodOptions: DeleteVerificationCertificateRequestOptions? = null,
+    ): StytchResult<DeleteVerificationCertificateResponse>
     
     /**
     * Delete a SAML verification certificate.
@@ -143,7 +176,11 @@ public interface SAML {
     * connection. There must always be at least one certificate per active connection.
     *  /%}
     */
-    public fun deleteVerificationCertificate(data: DeleteVerificationCertificateRequest, callback: (StytchResult<DeleteVerificationCertificateResponse>) -> Unit)
+    public fun deleteVerificationCertificate(
+        data: DeleteVerificationCertificateRequest,
+        methodOptions: DeleteVerificationCertificateRequestOptions? = null,
+        callback: (StytchResult<DeleteVerificationCertificateResponse>) -> Unit,
+    )
 
     /**
     * Delete a SAML verification certificate.
@@ -152,7 +189,10 @@ public interface SAML {
     * connection. There must always be at least one certificate per active connection.
     *  /%}
     */
-    public fun deleteVerificationCertificateCompletable(data: DeleteVerificationCertificateRequest): CompletableFuture<StytchResult<DeleteVerificationCertificateResponse>>
+    public fun deleteVerificationCertificateCompletable(
+        data: DeleteVerificationCertificateRequest,
+        methodOptions: DeleteVerificationCertificateRequestOptions? = null,
+    ): CompletableFuture<StytchResult<DeleteVerificationCertificateResponse>>
 
 
 }
@@ -177,8 +217,8 @@ internal class SAMLImpl (private val httpClient: HttpClient, private val corouti
 
     override fun createConnection(
         data: CreateConnectionRequest,
-        callback: (StytchResult<CreateConnectionResponse>) -> Unit
         methodOptions: CreateConnectionRequestOptions? = null,
+        callback: (StytchResult<CreateConnectionResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(createConnection(data, methodOptions)))
@@ -207,8 +247,8 @@ internal class SAMLImpl (private val httpClient: HttpClient, private val corouti
 
     override fun updateConnection(
         data: UpdateConnectionRequest,
-        callback: (StytchResult<UpdateConnectionResponse>) -> Unit
         methodOptions: UpdateConnectionRequestOptions? = null,
+        callback: (StytchResult<UpdateConnectionResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(updateConnection(data, methodOptions)))
@@ -237,8 +277,8 @@ internal class SAMLImpl (private val httpClient: HttpClient, private val corouti
 
     override fun updateByURL(
         data: UpdateByURLRequest,
-        callback: (StytchResult<UpdateByURLResponse>) -> Unit
         methodOptions: UpdateByURLRequestOptions? = null,
+        callback: (StytchResult<UpdateByURLResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(updateByURL(data, methodOptions)))
@@ -266,8 +306,8 @@ internal class SAMLImpl (private val httpClient: HttpClient, private val corouti
 
     override fun deleteVerificationCertificate(
         data: DeleteVerificationCertificateRequest,
-        callback: (StytchResult<DeleteVerificationCertificateResponse>) -> Unit
         methodOptions: DeleteVerificationCertificateRequestOptions? = null,
+        callback: (StytchResult<DeleteVerificationCertificateResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(deleteVerificationCertificate(data, methodOptions)))

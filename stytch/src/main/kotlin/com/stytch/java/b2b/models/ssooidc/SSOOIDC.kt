@@ -12,7 +12,7 @@ import com.stytch.java.b2b.models.sso.OIDCConnection
 import com.stytch.java.common.methodoptions.Authorization
 
 
-public class CreateConnectionRequestOptions(
+public data class CreateConnectionRequestOptions @JvmOverloads constructor(
     /**
     * Optional authorization object.
     * Pass in an active Stytch Member session token or session JWT and the request
@@ -20,7 +20,6 @@ public class CreateConnectionRequestOptions(
     */
     val authorization: Authorization? = null,
 ) {
-
     fun addHeaders(headers: Map<String, String>): Map<String, String> {
         if (authorization != null) {
           headers = authorization.addHeaders(headers)
@@ -30,7 +29,7 @@ public class CreateConnectionRequestOptions(
 )
 
 
-public class UpdateConnectionRequestOptions(
+public data class UpdateConnectionRequestOptions @JvmOverloads constructor(
     /**
     * Optional authorization object.
     * Pass in an active Stytch Member session token or session JWT and the request
@@ -38,7 +37,6 @@ public class UpdateConnectionRequestOptions(
     */
     val authorization: Authorization? = null,
 ) {
-
     fun addHeaders(headers: Map<String, String>): Map<String, String> {
         if (authorization != null) {
           headers = authorization.addHeaders(headers)

@@ -17,7 +17,7 @@ import com.stytch.java.common.methodoptions.Authorization
 
 
 
-public class CreateRequestOptions(
+public data class CreateRequestOptions @JvmOverloads constructor(
     /**
     * Optional authorization object.
     * Pass in an active Stytch Member session token or session JWT and the request
@@ -25,7 +25,6 @@ public class CreateRequestOptions(
     */
     val authorization: Authorization? = null,
 ) {
-
     fun addHeaders(headers: Map<String, String>): Map<String, String> {
         if (authorization != null) {
           headers = authorization.addHeaders(headers)
@@ -35,7 +34,7 @@ public class CreateRequestOptions(
 )
 
 
-public class DeleteMFAPhoneNumberRequestOptions(
+public data class DeleteMFAPhoneNumberRequestOptions @JvmOverloads constructor(
     /**
     * Optional authorization object.
     * Pass in an active Stytch Member session token or session JWT and the request
@@ -43,7 +42,6 @@ public class DeleteMFAPhoneNumberRequestOptions(
     */
     val authorization: Authorization? = null,
 ) {
-
     fun addHeaders(headers: Map<String, String>): Map<String, String> {
         if (authorization != null) {
           headers = authorization.addHeaders(headers)
@@ -53,7 +51,7 @@ public class DeleteMFAPhoneNumberRequestOptions(
 )
 
 
-public class DeletePasswordRequestOptions(
+public data class DeletePasswordRequestOptions @JvmOverloads constructor(
     /**
     * Optional authorization object.
     * Pass in an active Stytch Member session token or session JWT and the request
@@ -61,7 +59,6 @@ public class DeletePasswordRequestOptions(
     */
     val authorization: Authorization? = null,
 ) {
-
     fun addHeaders(headers: Map<String, String>): Map<String, String> {
         if (authorization != null) {
           headers = authorization.addHeaders(headers)
@@ -71,7 +68,7 @@ public class DeletePasswordRequestOptions(
 )
 
 
-public class DeleteRequestOptions(
+public data class DeleteRequestOptions @JvmOverloads constructor(
     /**
     * Optional authorization object.
     * Pass in an active Stytch Member session token or session JWT and the request
@@ -79,7 +76,6 @@ public class DeleteRequestOptions(
     */
     val authorization: Authorization? = null,
 ) {
-
     fun addHeaders(headers: Map<String, String>): Map<String, String> {
         if (authorization != null) {
           headers = authorization.addHeaders(headers)
@@ -89,7 +85,7 @@ public class DeleteRequestOptions(
 )
 
 
-public class ReactivateRequestOptions(
+public data class ReactivateRequestOptions @JvmOverloads constructor(
     /**
     * Optional authorization object.
     * Pass in an active Stytch Member session token or session JWT and the request
@@ -97,7 +93,6 @@ public class ReactivateRequestOptions(
     */
     val authorization: Authorization? = null,
 ) {
-
     fun addHeaders(headers: Map<String, String>): Map<String, String> {
         if (authorization != null) {
           headers = authorization.addHeaders(headers)
@@ -107,7 +102,7 @@ public class ReactivateRequestOptions(
 )
 
 
-public class SearchRequestOptions(
+public data class SearchRequestOptions @JvmOverloads constructor(
     /**
     * Optional authorization object.
     * Pass in an active Stytch Member session token or session JWT and the request
@@ -115,7 +110,6 @@ public class SearchRequestOptions(
     */
     val authorization: Authorization? = null,
 ) {
-
     fun addHeaders(headers: Map<String, String>): Map<String, String> {
         if (authorization != null) {
           headers = authorization.addHeaders(headers)
@@ -125,7 +119,7 @@ public class SearchRequestOptions(
 )
 
 
-public class UpdateRequestOptions(
+public data class UpdateRequestOptions @JvmOverloads constructor(
     /**
     * Optional authorization object.
     * Pass in an active Stytch Member session token or session JWT and the request
@@ -133,7 +127,6 @@ public class UpdateRequestOptions(
     */
     val authorization: Authorization? = null,
 ) {
-
     fun addHeaders(headers: Map<String, String>): Map<String, String> {
         if (authorization != null) {
           headers = authorization.addHeaders(headers)
