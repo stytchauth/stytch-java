@@ -1,13 +1,19 @@
 package com.stytch.java.common.methodoptions
 
-class Authorization(private val sessionToken: String? = null, private val sessionJwt: String? = null) {
-    fun addHeaders(headers: Map<String, String>): Map<String, String> {
-        if (sessionToken != null) {
-            headers["X-Stytch-Member-Session"] = sessionToken
-        }
-        if (sessionJwt != null) {
-            headers["X-Stytch-Member-SessionJWT"] = sessionJwt
-        }
-        return headers
+data class Authorization(
+    private val sessionToken: String? = null,
+    private val sessionJwt: String? = null,
+) {
+    fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+        val authHeaders =
+            mutableMapOf<String, String>().apply {
+                if (sessionToken != null) {
+                    put("X-Stytch-Member-Session", sessionToken)
+                }
+                if (sessionJwt != null) {
+                    put("X-Stytch-Member-SessionJWT", sessionJwt)
+                }
+            }
+        return authHeaders + headers
     }
 }

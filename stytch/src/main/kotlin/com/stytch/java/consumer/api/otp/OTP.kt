@@ -70,7 +70,7 @@ internal class OTPsImpl(private val httpClient: HttpClient, private val coroutin
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
             httpClient.post("/v1/otps/authenticate", asJson, headers)

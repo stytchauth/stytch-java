@@ -161,7 +161,7 @@ internal class WhatsappImpl(private val httpClient: HttpClient, private val coro
 
     override suspend fun send(data: SendRequest): StytchResult<SendResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(SendRequest::class.java).toJson(data)
             httpClient.post("/v1/otps/whatsapp/send", asJson, headers)
@@ -183,7 +183,7 @@ internal class WhatsappImpl(private val httpClient: HttpClient, private val coro
 
     override suspend fun loginOrCreate(data: LoginOrCreateRequest): StytchResult<LoginOrCreateResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(LoginOrCreateRequest::class.java).toJson(data)
             httpClient.post("/v1/otps/whatsapp/login_or_create", asJson, headers)

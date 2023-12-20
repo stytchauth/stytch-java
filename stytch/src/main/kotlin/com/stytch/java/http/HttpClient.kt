@@ -182,7 +182,7 @@ internal class HttpClient(
     }
 
     suspend inline fun <reified T> delete(
-        path: String
+        path: String,
         headers: Map<String, String> = emptyMap(),
     ): StytchResult<T> {
         val request =

@@ -139,7 +139,7 @@ internal class SecretsImpl(private val httpClient: HttpClient, private val corou
 
     override suspend fun rotateStart(data: RotateStartRequest): StytchResult<RotateStartResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(RotateStartRequest::class.java).toJson(data)
             httpClient.post("/v1/m2m/clients/${data.clientId}/secrets/rotate/start", asJson, headers)
@@ -161,7 +161,7 @@ internal class SecretsImpl(private val httpClient: HttpClient, private val corou
 
     override suspend fun rotateCancel(data: RotateCancelRequest): StytchResult<RotateCancelResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(RotateCancelRequest::class.java).toJson(data)
             httpClient.post("/v1/m2m/clients/${data.clientId}/secrets/rotate/cancel", asJson, headers)
@@ -183,7 +183,7 @@ internal class SecretsImpl(private val httpClient: HttpClient, private val corou
 
     override suspend fun rotate(data: RotateRequest): StytchResult<RotateResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(RotateRequest::class.java).toJson(data)
             httpClient.post("/v1/m2m/clients/${data.clientId}/secrets/rotate", asJson, headers)

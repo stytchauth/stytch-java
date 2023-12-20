@@ -199,7 +199,7 @@ internal class ClientsImpl(private val httpClient: HttpClient, private val corou
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
             val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
@@ -224,7 +224,7 @@ internal class ClientsImpl(private val httpClient: HttpClient, private val corou
 
     override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)
             httpClient.post("/v1/m2m/clients/search", asJson, headers)
@@ -246,7 +246,7 @@ internal class ClientsImpl(private val httpClient: HttpClient, private val corou
 
     override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
             httpClient.put("/v1/m2m/clients/${data.clientId}", asJson, headers)
@@ -268,7 +268,7 @@ internal class ClientsImpl(private val httpClient: HttpClient, private val corou
 
     override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             httpClient.delete("/v1/m2m/clients/${data.clientId}", headers)
         }
@@ -289,7 +289,7 @@ internal class ClientsImpl(private val httpClient: HttpClient, private val corou
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
             httpClient.post("/v1/m2m/clients", asJson, headers)

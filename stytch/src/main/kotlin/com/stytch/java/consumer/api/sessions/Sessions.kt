@@ -171,15 +171,15 @@ public interface Sessions {
     // ADDIMPORT: import com.stytch.java.consumer.models.sessions.Session
     // ADDIMPORT: import com.stytch.java.common.JWTException
     // ADDIMPORT: import com.stytch.java.common.ParseJWTClaimsOptions
+    // ADDIMPORT: import com.stytch.java.common.StytchSessionClaim
     // ADDIMPORT: import com.stytch.java.common.parseJWTClaims
-    // ADDIMPORT: import com.stytch.java.common.ParsedJWTClaims
 
     /** Parse a JWT and verify the signature, preferring local verification over remote.
      *
      * If maxTokenAgeSeconds is set, remote verification will be forced if the JWT was issued at
      * (based on the "iat" claim) more than that many seconds ago.
      *
-     * To force remote validation for all tokens, set max_token_age_seconds to zero or use the
+     * To force remote validation for all tokens, set maxTokenAgeSeconds to zero or use the
      * authenticate method instead.
      */
     public suspend fun authenticateJwt(
@@ -192,7 +192,7 @@ public interface Sessions {
      * If maxTokenAgeSeconds is set, remote verification will be forced if the JWT was issued at
      * (based on the "iat" claim) more than that many seconds ago.
      *
-     * To force remote validation for all tokens, set max_token_age_seconds to zero or use the
+     * To force remote validation for all tokens, set maxTokenAgeSeconds to zero or use the
      * authenticate method instead.
      */
     public fun authenticateJwt(
@@ -206,7 +206,7 @@ public interface Sessions {
      * If maxTokenAgeSeconds is set, remote verification will be forced if the JWT was issued at
      * (based on the "iat" claim) more than that many seconds ago.
      *
-     * To force remote validation for all tokens, set max_token_age_seconds to zero or use the
+     * To force remote validation for all tokens, set maxTokenAgeSeconds to zero or use the
      * authenticate method instead.
      */
     public fun authenticateJwtCompletable(
@@ -273,7 +273,7 @@ internal class SessionsImpl(private val httpClient: HttpClient, private val coro
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
             val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
@@ -298,7 +298,7 @@ internal class SessionsImpl(private val httpClient: HttpClient, private val coro
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
             httpClient.post("/v1/sessions/authenticate", asJson, headers)
@@ -320,7 +320,7 @@ internal class SessionsImpl(private val httpClient: HttpClient, private val coro
 
     override suspend fun revoke(data: RevokeRequest): StytchResult<RevokeResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(RevokeRequest::class.java).toJson(data)
             httpClient.post("/v1/sessions/revoke", asJson, headers)
@@ -342,7 +342,7 @@ internal class SessionsImpl(private val httpClient: HttpClient, private val coro
 
     override suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(GetJWKSRequest::class.java).toJson(data)
             val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)

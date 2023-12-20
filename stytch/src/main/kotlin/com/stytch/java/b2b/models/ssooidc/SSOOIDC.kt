@@ -11,178 +11,183 @@ import com.squareup.moshi.JsonClass
 import com.stytch.java.b2b.models.sso.OIDCConnection
 import com.stytch.java.common.methodoptions.Authorization
 
-
-public data class CreateConnectionRequestOptions @JvmOverloads constructor(
-    /**
-    * Optional authorization object.
-    * Pass in an active Stytch Member session token or session JWT and the request
-    * will be run using that member's permissions.
-    */
-    val authorization: Authorization? = null,
-) {
-    fun addHeaders(headers: Map<String, String>): Map<String, String> {
-        if (authorization != null) {
-          headers = authorization.addHeaders(headers)
+public data class CreateConnectionRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mutableMapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
         }
-        return headers
     }
-)
 
-
-public data class UpdateConnectionRequestOptions @JvmOverloads constructor(
-    /**
-    * Optional authorization object.
-    * Pass in an active Stytch Member session token or session JWT and the request
-    * will be run using that member's permissions.
-    */
-    val authorization: Authorization? = null,
-) {
-    fun addHeaders(headers: Map<String, String>): Map<String, String> {
-        if (authorization != null) {
-          headers = authorization.addHeaders(headers)
+public data class UpdateConnectionRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mutableMapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
         }
-        return headers
     }
-)
-
 
 /**
 * Request type for `OIDC.createConnection`.
 */
 @JsonClass(generateAdapter = true)
-public data class CreateConnectionRequest @JvmOverloads constructor(
-    /**
-    * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-    * on an Organization, so be sure to preserve this value.
-    */
-    @Json(name = "organization_id")
-    val organizationId: String,
-    /**
-    * A human-readable display name for the connection.
-    */
-    @Json(name = "display_name")
-    val displayName: String? = null,
-)
-
+public data class CreateConnectionRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String,
+        /**
+         * A human-readable display name for the connection.
+         */
+        @Json(name = "display_name")
+        val displayName: String? = null,
+    )
 
 /**
 * Response type for `OIDC.createConnection`.
 */
 @JsonClass(generateAdapter = true)
-public data class CreateConnectionResponse @JvmOverloads constructor(
-    /**
-    * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-    * may ask for this value to help identify a specific API call when helping you debug an issue.
-    */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-    * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-    * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-    */
-    @Json(name = "status_code")
-    val statusCode: Int,
-    /**
-    * The `OIDC Connection` object affected by this API call. See the
-    * [OIDC Connection Object](https://stytch.com/docs/b2b/api/oidc-connection-object) for complete response field details.
-    */
-    @Json(name = "connection")
-    val connection: OIDCConnection? = null,
-)
-
+public data class CreateConnectionResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+        /**
+         * The `OIDC Connection` object affected by this API call. See the
+         * [OIDC Connection Object](https://stytch.com/docs/b2b/api/oidc-connection-object) for complete response field details.
+         */
+        @Json(name = "connection")
+        val connection: OIDCConnection? = null,
+    )
 
 /**
 * Request type for `OIDC.updateConnection`.
 */
 @JsonClass(generateAdapter = true)
-public data class UpdateConnectionRequest @JvmOverloads constructor(
-    /**
-    * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-    * on an Organization, so be sure to preserve this value.
-    */
-    @Json(name = "organization_id")
-    val organizationId: String,
-    /**
-    * Globally unique UUID that identifies a specific SSO `connection_id` for a Member.
-    */
-    @Json(name = "connection_id")
-    val connectionId: String,
-    /**
-    * A human-readable display name for the connection.
-    */
-    @Json(name = "display_name")
-    val displayName: String? = null,
-    /**
-    * The OAuth2.0 client ID used to authenticate login attempts. This will be provided by the IdP.
-    */
-    @Json(name = "client_id")
-    val clientId: String? = null,
-    /**
-    * The secret belonging to the OAuth2.0 client used to authenticate login attempts. This will be provided by the IdP.
-    */
-    @Json(name = "client_secret")
-    val clientSecret: String? = null,
-    /**
-    * A case-sensitive `https://` URL that uniquely identifies the IdP. This will be provided by the IdP.
-    */
-    @Json(name = "issuer")
-    val issuer: String? = null,
-    /**
-    * The location of the URL that starts an OAuth login at the IdP. This will be provided by the IdP.
-    */
-    @Json(name = "authorization_url")
-    val authorizationURL: String? = null,
-    /**
-    * The location of the URL that issues OAuth2.0 access tokens and OIDC ID tokens. This will be provided by the IdP.
-    */
-    @Json(name = "token_url")
-    val tokenURL: String? = null,
-    /**
-    * The location of the IDP's [UserInfo Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo). This
-    * will be provided by the IdP.
-    */
-    @Json(name = "userinfo_url")
-    val userinfoURL: String? = null,
-    /**
-    * The location of the IdP's JSON Web Key Set, used to verify credentials issued by the IdP. This will be provided by the
-    * IdP.
-    */
-    @Json(name = "jwks_url")
-    val jwksURL: String? = null,
-)
-
+public data class UpdateConnectionRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String,
+        /**
+         * Globally unique UUID that identifies a specific SSO `connection_id` for a Member.
+         */
+        @Json(name = "connection_id")
+        val connectionId: String,
+        /**
+         * A human-readable display name for the connection.
+         */
+        @Json(name = "display_name")
+        val displayName: String? = null,
+        /**
+         * The OAuth2.0 client ID used to authenticate login attempts. This will be provided by the IdP.
+         */
+        @Json(name = "client_id")
+        val clientId: String? = null,
+        /**
+         * The secret belonging to the OAuth2.0 client used to authenticate login attempts. This will be provided by the IdP.
+         */
+        @Json(name = "client_secret")
+        val clientSecret: String? = null,
+        /**
+         * A case-sensitive `https://` URL that uniquely identifies the IdP. This will be provided by the IdP.
+         */
+        @Json(name = "issuer")
+        val issuer: String? = null,
+        /**
+         * The location of the URL that starts an OAuth login at the IdP. This will be provided by the IdP.
+         */
+        @Json(name = "authorization_url")
+        val authorizationURL: String? = null,
+        /**
+         * The location of the URL that issues OAuth2.0 access tokens and OIDC ID tokens. This will be provided by the IdP.
+         */
+        @Json(name = "token_url")
+        val tokenURL: String? = null,
+        /**
+         * The location of the IDP's [UserInfo Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo). This
+         * will be provided by the IdP.
+         */
+        @Json(name = "userinfo_url")
+        val userinfoURL: String? = null,
+        /**
+         * The location of the IdP's JSON Web Key Set, used to verify credentials issued by the IdP. This will be provided by the
+         * IdP.
+         */
+        @Json(name = "jwks_url")
+        val jwksURL: String? = null,
+    )
 
 /**
 * Response type for `OIDC.updateConnection`.
 */
 @JsonClass(generateAdapter = true)
-public data class UpdateConnectionResponse @JvmOverloads constructor(
-    /**
-    * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-    * may ask for this value to help identify a specific API call when helping you debug an issue.
-    */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-    * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-    * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-    */
-    @Json(name = "status_code")
-    val statusCode: Int,
-    /**
-    * The `OIDC Connection` object affected by this API call. See the
-    * [OIDC Connection Object](https://stytch.com/docs/b2b/api/oidc-connection-object) for complete response field details.
-    */
-    @Json(name = "connection")
-    val connection: OIDCConnection? = null,
-    /**
-    * If it is not possible to resolve the well-known metadata document from the OIDC issuer, this field will explain what
-    * went wrong if the request is successful otherwise. In other words, even if the overall request succeeds, there could be
-    * relevant warnings related to the connection update.
-    */
-    @Json(name = "warning")
-    val warning: String? = null,
-)
-
-
-
+public data class UpdateConnectionResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+        /**
+         * The `OIDC Connection` object affected by this API call. See the
+         * [OIDC Connection Object](https://stytch.com/docs/b2b/api/oidc-connection-object) for complete response field details.
+         */
+        @Json(name = "connection")
+        val connection: OIDCConnection? = null,
+        /**
+         * If it is not possible to resolve the well-known metadata document from the OIDC issuer, this field will explain what
+         * went wrong if the request is successful otherwise. In other words, even if the overall request succeeds, there could be
+         * relevant warnings related to the connection update.
+         */
+        @Json(name = "warning")
+        val warning: String? = null,
+    )

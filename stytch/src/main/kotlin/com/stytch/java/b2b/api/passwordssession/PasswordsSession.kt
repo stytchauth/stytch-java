@@ -51,7 +51,7 @@ internal class SessionsImpl(private val httpClient: HttpClient, private val coro
 
     override suspend fun reset(data: ResetRequest): StytchResult<ResetResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
             httpClient.post("/v1/b2b/passwords/session/reset", asJson, headers)

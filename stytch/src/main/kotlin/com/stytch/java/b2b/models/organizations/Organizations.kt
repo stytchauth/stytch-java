@@ -14,988 +14,1038 @@ import com.stytch.java.common.methodoptions.Authorization
 public enum class SearchQueryOperator {
     @Json(name = "OR")
     OR,
-        @Json(name = "AND")
-    AND;
-    }
 
+    @Json(name = "AND")
+    AND,
+}
 
 @JsonClass(generateAdapter = true)
-public data class ActiveSSOConnection @JvmOverloads constructor(
-    /**
-    * Globally unique UUID that identifies a specific SSO `connection_id` for a Member.
-    */
-    @Json(name = "connection_id")
-    val connectionId: String,
-    /**
-    * A human-readable display name for the connection.
-    */
-    @Json(name = "display_name")
-    val displayName: String,
-)
+public data class ActiveSSOConnection
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific SSO `connection_id` for a Member.
+         */
+        @Json(name = "connection_id")
+        val connectionId: String,
+        /**
+         * A human-readable display name for the connection.
+         */
+        @Json(name = "display_name")
+        val displayName: String,
+    )
 
-
-public data class DeleteRequestOptions @JvmOverloads constructor(
-    /**
-    * Optional authorization object.
-    * Pass in an active Stytch Member session token or session JWT and the request
-    * will be run using that member's permissions.
-    */
-    val authorization: Authorization? = null,
-) {
-    fun addHeaders(headers: Map<String, String>): Map<String, String> {
-        if (authorization != null) {
-          headers = authorization.addHeaders(headers)
+public data class DeleteRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mutableMapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
         }
-        return headers
     }
-)
-
 
 @JsonClass(generateAdapter = true)
-public data class EmailImplicitRoleAssignment @JvmOverloads constructor(
-    /**
-    * Email domain that grants the specified Role.
-    */
-    @Json(name = "domain")
-    val domain: String,
-    /**
-    * The unique identifier of the RBAC Role, provided by the developer and intended to be human-readable.  
-    *   
-    *   Reserved `role_id`s that are predefined by Stytch include: 
-    *   
-    *   * `stytch_member`
-    *   * `stytch_admin`
-    *   
-    *   Check out the [guide on Stytch default Roles](https://stytch.com/docs/b2b/guides/rbac/stytch-defaults) for a more
-    * detailed explanation.
-    * 
-    *   
-    */
-    @Json(name = "role_id")
-    val roleId: String,
-)
-
-
-@JsonClass(generateAdapter = true)
-public data class Member @JvmOverloads constructor(
-    /**
-    * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-    * on an Organization, so be sure to preserve this value.
-    */
-    @Json(name = "organization_id")
-    val organizationId: String,
-    /**
-    * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
-    * so be sure to preserve this value.
-    */
-    @Json(name = "member_id")
-    val memberId: String,
-    /**
-    * The email address of the Member.
-    */
-    @Json(name = "email_address")
-    val emailAddress: String,
-    /**
-    * The status of the Member. The possible values are: `pending`, `invited`, `active`, or `deleted`.
-    */
-    @Json(name = "status")
-    val status: String,
-    /**
-    * The name of the Member.
-    */
-    @Json(name = "name")
-    val name: String,
-    /**
-    * An array of registered [SAML Connection](saml-connection-object) objects the Member has authenticated with.
-    */
-    @Json(name = "sso_registrations")
-    val ssoRegistrations: List<SSORegistration>,
-    /**
-    * Identifies the Member as a break glass user - someone who has permissions to authenticate into an Organization by
-    * bypassing the Organization's settings. A break glass account is typically used for emergency purposes to gain access
-    * outside of normal authentication procedures. Refer to the [Organization object](organization-object) and its
-    * `auth_methods` and `allowed_auth_methods` fields for more details.
-    */
-    @Json(name = "is_breakglass")
-    val isBreakglass: Boolean,
-    /**
-    * Globally unique UUID that identifies a Member's password.
-    */
-    @Json(name = "member_password_id")
-    val memberPasswordId: String,
-    /**
-    * A list of OAuth registrations for this member.
-    */
-    @Json(name = "oauth_registrations")
-    val oauthRegistrations: List<OAuthRegistration>,
-    /**
-    * Whether or not the Member's email address is verified.
-    */
-    @Json(name = "email_address_verified")
-    val emailAddressVerified: Boolean,
-    /**
-    * Whether or not the Member's phone number is verified.
-    */
-    @Json(name = "mfa_phone_number_verified")
-    val mfaPhoneNumberVerified: Boolean,
-    /**
-    * Whether or not the Member has the `stytch_admin` Role. This Role is automatically granted to Members 
-    *   who create an Organization through the
-    * [discovery flow](https://stytch.com/docs/b2b/api/create-organization-via-discovery). See the
-    *   [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/stytch-defaults) for more details on this Role.
-    */
-    @Json(name = "is_admin")
-    val isAdmin: Boolean,
-    /**
-    * Sets whether the Member is enrolled in MFA. If true, the Member must complete an MFA step whenever they wish to log in
-    * to their Organization. If false, the Member only needs to complete an MFA step if the Organization's MFA policy is set
-    * to `REQUIRED_FOR_ALL`.
-    */
-    @Json(name = "mfa_enrolled")
-    val mfaEnrolled: Boolean,
-    /**
-    * The Member's phone number. A Member may only have one phone number.
-    */
-    @Json(name = "mfa_phone_number")
-    val mfaPhoneNumber: String,
-    /**
-    * Explicit or implicit Roles assigned to this Member, along with details about the role assignment source.
-    *    See the [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment) for more information about role
-    * assignment.
-    */
-    @Json(name = "roles")
-    val roles: List<MemberRole>,
-    /**
-    * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
-    */
-    @Json(name = "trusted_metadata")
-    val trustedMetadata: Map<String, Any>? = null,
-    /**
-    * An arbitrary JSON object of application-specific data. These fields can be edited directly by the
-    *   frontend SDK, and should not be used to store critical information. See the
-    * [Metadata resource](https://stytch.com/docs/b2b/api/metadata)
-    *   for complete field behavior details.
-    */
-    @Json(name = "untrusted_metadata")
-    val untrustedMetadata: Map<String, Any>? = null,
-)
-
+public data class EmailImplicitRoleAssignment
+    @JvmOverloads
+    constructor(
+        /**
+         * Email domain that grants the specified Role.
+         */
+        @Json(name = "domain")
+        val domain: String,
+        /**
+         * The unique identifier of the RBAC Role, provided by the developer and intended to be human-readable.
+         *
+         *   Reserved `role_id`s that are predefined by Stytch include:
+         *
+         *   * `stytch_member`
+         *   * `stytch_admin`
+         *
+         *   Check out the [guide on Stytch default Roles](https://stytch.com/docs/b2b/guides/rbac/stytch-defaults) for a more
+         * detailed explanation.
+         *
+         *
+         */
+        @Json(name = "role_id")
+        val roleId: String,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class MemberRole @JvmOverloads constructor(
-    /**
-    * The unique identifier of the RBAC Role, provided by the developer and intended to be human-readable.  
-    *   
-    *   Reserved `role_id`s that are predefined by Stytch include: 
-    *   
-    *   * `stytch_member`
-    *   * `stytch_admin`
-    *   
-    *   Check out the [guide on Stytch default Roles](https://stytch.com/docs/b2b/guides/rbac/stytch-defaults) for a more
-    * detailed explanation.
-    * 
-    *   
-    */
-    @Json(name = "role_id")
-    val roleId: String,
-    /**
-    * A list of sources for this role assignment. A role assignment can come from multiple sources - for example, the Role
-    * could be both explicitly assigned and implicitly granted from the Member's email domain.
-    */
-    @Json(name = "sources")
-    val sources: List<MemberRoleSource>,
-)
-
-
-@JsonClass(generateAdapter = true)
-public data class MemberRoleSource @JvmOverloads constructor(
-    /**
-    * The type of role assignment. The possible values are: 
-    *  
-    *   `direct_assignment` – an explicitly assigned Role.
-    *    
-    *   Directly assigned roles can be updated by passing in the `roles` argument to the
-    *   [Update Member](https://stytch.com/docs/b2b/api/update-member) endpoint.
-    *  
-    *   `email_assignment` – an implicit Role granted by the Member's email domain, regardless of their login method.
-    *   
-    *   Email implicit role assignments can be updated by passing in the `rbac_email_implicit_role_assignments` argument to
-    *   the [Update Organization](https://stytch.com/docs/b2b/api/update-organization) endpoint.
-    *  
-    *   `sso_connection` – an implicit Role granted by the Member's SSO connection. This is currently only available
-    *   for SAML connections and not for OIDC. If the Member has a SAML Member registration with the given connection, this
-    *   role assignment will appear in the list. However, for authorization check purposes (in
-    *   [sessions authenticate](https://stytch.com/docs/b2b/api/authenticate-session) or in any endpoint that enforces RBAC
-    * with session
-    *   headers), the Member will only be granted the Role if their session contains an authentication factor with the
-    *   specified SAML connection.
-    *   
-    *   SAML connection implicit role assignments can be updated by passing in the
-    *   `saml_connection_implicit_role_assignments` argument to the
-    *   [Update SAML connection](https://stytch.com/docs/b2b/api/update-saml-connection) endpoint.
-    *  
-    *   `sso_connection_group` – an implicit Role granted by the Member's SSO connection and group. This is currently only
-    *   available for SAML connections and not for OIDC. If the Member has a SAML Member registration with the given
-    *   connection, and belongs to a specific group within the IdP, this role assignment will appear in the list. However,
-    *   for authorization check purposes (in [sessions authenticate](https://stytch.com/docs/b2b/api/authenticate-session) or
-    * in any endpoint
-    *   that enforces RBAC with session headers), the Member will only be granted the role if their session contains an
-    *   authentication factor with the specified SAML connection.
-    *   
-    *   SAML group implicit role assignments can be updated by passing in the `saml_group_implicit_role_assignments`
-    *   argument to the [Update SAML connection](https://stytch.com/docs/b2b/api/update-saml-connection) endpoint.
-    *   
-    */
-    @Json(name = "type")
-    val type: String,
-    /**
-    * An object containing additional metadata about the source assignment. The fields will vary depending
-    *   on the role assignment type as follows:
-    *  
-    *   `direct_assignment` – no additional details.
-    *  
-    *   `email_assignment` – will contain the email domain that granted the assignment.
-    *   
-    *   `sso_connection` – will contain the `connection_id` of the SAML connection that granted the assignment.
-    *  
-    *   `sso_connection_group` – will contain the `connection_id` of the SAML connection and the name of the `group`
-    *   that granted the assignment.
-    *   
-    */
-    @Json(name = "details")
-    val details: Map<String, Any>? = null,
-)
-
-
-@JsonClass(generateAdapter = true)
-public data class OAuthRegistration @JvmOverloads constructor(
-    /**
-    * Denotes the OAuth identity provider that the user has authenticated with, e.g. Google, Microsoft, GitHub etc.
-    */
-    @Json(name = "provider_type")
-    val providerType: String,
-    /**
-    * The unique identifier for the User within a given OAuth provider. Also commonly called the `sub` or "Subject field" in
-    * OAuth protocols.
-    */
-    @Json(name = "provider_subject")
-    val providerSubject: String,
-    /**
-    * The unique ID of an OAuth registration.
-    */
-    @Json(name = "member_oauth_registration_id")
-    val memberOAuthRegistrationId: String,
-    /**
-    * If available, the `profile_picture_url` is a URL of the User's profile picture set in OAuth identity the provider that
-    * the User has authenticated with, e.g. Google profile picture.
-    */
-    @Json(name = "profile_picture_url")
-    val profilePictureURL: String? = null,
-    /**
-    * If available, the `locale` is the Member's locale set in the OAuth identity provider that the user has authenticated
-    * with.
-    */
-    @Json(name = "locale")
-    val locale: String? = null,
-)
-
+public data class Member
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String,
+        /**
+         * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
+         * so be sure to preserve this value.
+         */
+        @Json(name = "member_id")
+        val memberId: String,
+        /**
+         * The email address of the Member.
+         */
+        @Json(name = "email_address")
+        val emailAddress: String,
+        /**
+         * The status of the Member. The possible values are: `pending`, `invited`, `active`, or `deleted`.
+         */
+        @Json(name = "status")
+        val status: String,
+        /**
+         * The name of the Member.
+         */
+        @Json(name = "name")
+        val name: String,
+        /**
+         * An array of registered [SAML Connection](saml-connection-object) objects the Member has authenticated with.
+         */
+        @Json(name = "sso_registrations")
+        val ssoRegistrations: List<SSORegistration>,
+        /**
+         * Identifies the Member as a break glass user - someone who has permissions to authenticate into an Organization by
+         * bypassing the Organization's settings. A break glass account is typically used for emergency purposes to gain access
+         * outside of normal authentication procedures. Refer to the [Organization object](organization-object) and its
+         * `auth_methods` and `allowed_auth_methods` fields for more details.
+         */
+        @Json(name = "is_breakglass")
+        val isBreakglass: Boolean,
+        /**
+         * Globally unique UUID that identifies a Member's password.
+         */
+        @Json(name = "member_password_id")
+        val memberPasswordId: String,
+        /**
+         * A list of OAuth registrations for this member.
+         */
+        @Json(name = "oauth_registrations")
+        val oauthRegistrations: List<OAuthRegistration>,
+        /**
+         * Whether or not the Member's email address is verified.
+         */
+        @Json(name = "email_address_verified")
+        val emailAddressVerified: Boolean,
+        /**
+         * Whether or not the Member's phone number is verified.
+         */
+        @Json(name = "mfa_phone_number_verified")
+        val mfaPhoneNumberVerified: Boolean,
+        /**
+         * Whether or not the Member has the `stytch_admin` Role. This Role is automatically granted to Members
+         *   who create an Organization through the
+         * [discovery flow](https://stytch.com/docs/b2b/api/create-organization-via-discovery). See the
+         *   [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/stytch-defaults) for more details on this Role.
+         */
+        @Json(name = "is_admin")
+        val isAdmin: Boolean,
+        /**
+         * Sets whether the Member is enrolled in MFA. If true, the Member must complete an MFA step whenever they wish to log in
+         * to their Organization. If false, the Member only needs to complete an MFA step if the Organization's MFA policy is set
+         * to `REQUIRED_FOR_ALL`.
+         */
+        @Json(name = "mfa_enrolled")
+        val mfaEnrolled: Boolean,
+        /**
+         * The Member's phone number. A Member may only have one phone number.
+         */
+        @Json(name = "mfa_phone_number")
+        val mfaPhoneNumber: String,
+        @Json(name = "default_mfa_method")
+        val defaultMfaMethod: String,
+        /**
+         * Explicit or implicit Roles assigned to this Member, along with details about the role assignment source.
+         *    See the [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment) for more information about role
+         * assignment.
+         */
+        @Json(name = "roles")
+        val roles: List<MemberRole>,
+        /**
+         * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
+         */
+        @Json(name = "trusted_metadata")
+        val trustedMetadata: Map<String, Any>? = null,
+        /**
+         * An arbitrary JSON object of application-specific data. These fields can be edited directly by the
+         *   frontend SDK, and should not be used to store critical information. See the
+         * [Metadata resource](https://stytch.com/docs/b2b/api/metadata)
+         *   for complete field behavior details.
+         */
+        @Json(name = "untrusted_metadata")
+        val untrustedMetadata: Map<String, Any>? = null,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class Organization @JvmOverloads constructor(
-    /**
-    * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-    * on an Organization, so be sure to preserve this value.
-    */
-    @Json(name = "organization_id")
-    val organizationId: String,
-    /**
-    * The name of the Organization. Must be between 1 and 128 characters in length.
-    */
-    @Json(name = "organization_name")
-    val organizationName: String,
-    /**
-    * The image URL of the Organization logo.
-    */
-    @Json(name = "organization_logo_url")
-    val organizationLogoURL: String,
-    /**
-    * The unique URL slug of the Organization. The slug only accepts alphanumeric characters and the following reserved
-    * characters: `-` `.` `_` `~`. Must be between 2 and 128 characters in length.
-    */
-    @Json(name = "organization_slug")
-    val organizationSlug: String,
-    /**
-    * The authentication setting that controls the JIT provisioning of Members when authenticating via SSO. The accepted
-    * values are:
-    *  
-    *   `ALL_ALLOWED` – new Members will be automatically provisioned upon successful authentication via any of the
-    * Organization's `sso_active_connections`.
-    *  
-    *   `RESTRICTED` – only new Members with SSO logins that comply with `sso_jit_provisioning_allowed_connections` can be
-    * provisioned upon authentication.
-    *  
-    *   `NOT_ALLOWED` – disable JIT provisioning via SSO.
-    *   
-    */
-    @Json(name = "sso_jit_provisioning")
-    val ssoJITProvisioning: String,
-    /**
-    * An array of `connection_id`s that reference
-    * [SAML Connection objects](https://stytch.com/docs/b2b/api/saml-connection-object). 
-    *   Only these connections will be allowed to JIT provision Members via SSO when `sso_jit_provisioning` is set to
-    * `RESTRICTED`.
-    */
-    @Json(name = "sso_jit_provisioning_allowed_connections")
-    val ssoJITProvisioningAllowedConnections: List<String>,
-    /**
-    * An array of active [SAML Connection references](https://stytch.com/docs/b2b/api/saml-connection-object).
-    */
-    @Json(name = "sso_active_connections")
-    val ssoActiveConnections: List<ActiveSSOConnection>,
-    /**
-    * An array of email domains that allow invites or JIT provisioning for new Members. This list is enforced when either
-    * `email_invites` or `email_jit_provisioning` is set to `RESTRICTED`. 
-    *     
-    *     
-    *     Common domains such as `gmail.com` are not allowed. See the
-    * [common email domains resource](https://stytch.com/docs/b2b/api/common-email-domains) for the full list.
-    */
-    @Json(name = "email_allowed_domains")
-    val emailAllowedDomains: List<String>,
-    /**
-    * The authentication setting that controls how a new Member can be provisioned by authenticating via Email Magic Link or
-    * OAuth. The accepted values are: 
-    *  
-    *   `RESTRICTED` – only new Members with verified emails that comply with `email_allowed_domains` can be provisioned upon
-    * authentication via Email Magic Link or OAuth.
-    *  
-    *   `NOT_ALLOWED` – disable JIT provisioning via Email Magic Link and OAuth.
-    *   
-    */
-    @Json(name = "email_jit_provisioning")
-    val emailJITProvisioning: String,
-    /**
-    * The authentication setting that controls how a new Member can be invited to an organization by email. The accepted
-    * values are: 
-    *  
-    *   `ALL_ALLOWED` – any new Member can be invited to join via email. 
-    *  
-    *   `RESTRICTED` – only new Members with verified emails that comply with `email_allowed_domains` can be invited via
-    * email.
-    *  
-    *   `NOT_ALLOWED` – disable email invites.
-    *   
-    */
-    @Json(name = "email_invites")
-    val emailInvites: String,
-    /**
-    * The setting that controls which authentication methods can be used by Members of an Organization. The accepted values
-    * are:
-    *  
-    *   `ALL_ALLOWED` – the default setting which allows all authentication methods to be used.
-    *  
-    *   `RESTRICTED` – only methods that comply with `allowed_auth_methods` can be used for authentication. This setting does
-    * not apply to Members with `is_breakglass` set to `true`.
-    *   
-    */
-    @Json(name = "auth_methods")
-    val authMethods: String,
-    /**
-    * An array of allowed authentication methods. This list is enforced when `auth_methods` is set to `RESTRICTED`. 
-    *   The list's accepted values are: `sso`, `magic_link`, `password`, `google_oauth`, and `microsoft_oauth`.
-    *   
-    */
-    @Json(name = "allowed_auth_methods")
-    val allowedAuthMethods: List<String>,
-    @Json(name = "mfa_policy")
-    val mfaPolicy: String,
-    /**
-    * Implicit role assignments based off of email domains. 
-    *   For each domain-Role pair, all Members whose email addresses have the specified email domain will be granted the
-    *   associated Role, regardless of their login method. See the
-    * [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment)
-    *   for more information about role assignment.
-    */
-    @Json(name = "rbac_email_implicit_role_assignments")
-    val rbacEmailImplicitRoleAssignments: List<EmailImplicitRoleAssignment>,
-    /**
-    * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
-    */
-    @Json(name = "trusted_metadata")
-    val trustedMetadata: Map<String, Any>? = null,
-    /**
-    * The default connection used for SSO when there are multiple active connections.
-    */
-    @Json(name = "sso_default_connection_id")
-    val ssoDefaultConnectionId: String? = null,
-)
-
+public data class MemberRole
+    @JvmOverloads
+    constructor(
+        /**
+         * The unique identifier of the RBAC Role, provided by the developer and intended to be human-readable.
+         *
+         *   Reserved `role_id`s that are predefined by Stytch include:
+         *
+         *   * `stytch_member`
+         *   * `stytch_admin`
+         *
+         *   Check out the [guide on Stytch default Roles](https://stytch.com/docs/b2b/guides/rbac/stytch-defaults) for a more
+         * detailed explanation.
+         *
+         *
+         */
+        @Json(name = "role_id")
+        val roleId: String,
+        /**
+         * A list of sources for this role assignment. A role assignment can come from multiple sources - for example, the Role
+         * could be both explicitly assigned and implicitly granted from the Member's email domain.
+         */
+        @Json(name = "sources")
+        val sources: List<MemberRoleSource>,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class ResultsMetadata @JvmOverloads constructor(
-    /**
-    * The total number of results returned by your search query.
-    */
-    @Json(name = "total")
-    val total: Int,
-    /**
-    * The `next_cursor` string is returned when your search result contains more than one page of results. This value is
-    * passed into your next search call in the `cursor` field.
-    */
-    @Json(name = "next_cursor")
-    val nextCursor: String? = null,
-)
-
+public data class MemberRoleSource
+    @JvmOverloads
+    constructor(
+        /**
+         * The type of role assignment. The possible values are:
+         *
+         *   `direct_assignment` – an explicitly assigned Role.
+         *
+         *   Directly assigned roles can be updated by passing in the `roles` argument to the
+         *   [Update Member](https://stytch.com/docs/b2b/api/update-member) endpoint.
+         *
+         *   `email_assignment` – an implicit Role granted by the Member's email domain, regardless of their login method.
+         *
+         *   Email implicit role assignments can be updated by passing in the `rbac_email_implicit_role_assignments` argument to
+         *   the [Update Organization](https://stytch.com/docs/b2b/api/update-organization) endpoint.
+         *
+         *   `sso_connection` – an implicit Role granted by the Member's SSO connection. This is currently only available
+         *   for SAML connections and not for OIDC. If the Member has a SAML Member registration with the given connection, this
+         *   role assignment will appear in the list. However, for authorization check purposes (in
+         *   [sessions authenticate](https://stytch.com/docs/b2b/api/authenticate-session) or in any endpoint that enforces RBAC
+         * with session
+         *   headers), the Member will only be granted the Role if their session contains an authentication factor with the
+         *   specified SAML connection.
+         *
+         *   SAML connection implicit role assignments can be updated by passing in the
+         *   `saml_connection_implicit_role_assignments` argument to the
+         *   [Update SAML connection](https://stytch.com/docs/b2b/api/update-saml-connection) endpoint.
+         *
+         *   `sso_connection_group` – an implicit Role granted by the Member's SSO connection and group. This is currently only
+         *   available for SAML connections and not for OIDC. If the Member has a SAML Member registration with the given
+         *   connection, and belongs to a specific group within the IdP, this role assignment will appear in the list. However,
+         *   for authorization check purposes (in [sessions authenticate](https://stytch.com/docs/b2b/api/authenticate-session) or
+         * in any endpoint
+         *   that enforces RBAC with session headers), the Member will only be granted the role if their session contains an
+         *   authentication factor with the specified SAML connection.
+         *
+         *   SAML group implicit role assignments can be updated by passing in the `saml_group_implicit_role_assignments`
+         *   argument to the [Update SAML connection](https://stytch.com/docs/b2b/api/update-saml-connection) endpoint.
+         *
+         */
+        @Json(name = "type")
+        val type: String,
+        /**
+         * An object containing additional metadata about the source assignment. The fields will vary depending
+         *   on the role assignment type as follows:
+         *
+         *   `direct_assignment` – no additional details.
+         *
+         *   `email_assignment` – will contain the email domain that granted the assignment.
+         *
+         *   `sso_connection` – will contain the `connection_id` of the SAML connection that granted the assignment.
+         *
+         *   `sso_connection_group` – will contain the `connection_id` of the SAML connection and the name of the `group`
+         *   that granted the assignment.
+         *
+         */
+        @Json(name = "details")
+        val details: Map<String, Any>? = null,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class SSORegistration @JvmOverloads constructor(
-    /**
-    * Globally unique UUID that identifies a specific SSO `connection_id` for a Member.
-    */
-    @Json(name = "connection_id")
-    val connectionId: String,
-    /**
-    * The ID of the member given by the identity provider.
-    */
-    @Json(name = "external_id")
-    val externalId: String,
-    /**
-    * The unique ID of an SSO Registration.
-    */
-    @Json(name = "registration_id")
-    val registrationId: String,
-    /**
-    * An object for storing SSO attributes brought over from the identity provider.
-    */
-    @Json(name = "sso_attributes")
-    val ssoAttributes: Map<String, Any>? = null,
-)
-
+public data class OAuthRegistration
+    @JvmOverloads
+    constructor(
+        /**
+         * Denotes the OAuth identity provider that the user has authenticated with, e.g. Google, Microsoft, GitHub etc.
+         */
+        @Json(name = "provider_type")
+        val providerType: String,
+        /**
+         * The unique identifier for the User within a given OAuth provider. Also commonly called the `sub` or "Subject field" in
+         * OAuth protocols.
+         */
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+        /**
+         * The unique ID of an OAuth registration.
+         */
+        @Json(name = "member_oauth_registration_id")
+        val memberOAuthRegistrationId: String,
+        /**
+         * If available, the `profile_picture_url` is a URL of the User's profile picture set in OAuth identity the provider that
+         * the User has authenticated with, e.g. Google profile picture.
+         */
+        @Json(name = "profile_picture_url")
+        val profilePictureURL: String? = null,
+        /**
+         * If available, the `locale` is the Member's locale set in the OAuth identity provider that the user has authenticated
+         * with.
+         */
+        @Json(name = "locale")
+        val locale: String? = null,
+    )
 
 @JsonClass(generateAdapter = true)
-public data class SearchQuery @JvmOverloads constructor(
-    /**
-    * The action to perform on the operands. The accepted value are:
-    * 
-    *   `AND` – all the operand values provided must match.
-    *   
-    *   `OR` – the operator will return any matches to at least one of the operand values you supply.
-    */
-    @Json(name = "operator")
-    val operator: SearchQueryOperator,
-    /**
-    * An array of operand objects that contains all of the filters and values to apply to your search query.
-    */
-    @Json(name = "operands")
-    val operands: List<Map<String, Any>>,
-)
+public data class Organization
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String,
+        /**
+         * The name of the Organization. Must be between 1 and 128 characters in length.
+         */
+        @Json(name = "organization_name")
+        val organizationName: String,
+        /**
+         * The image URL of the Organization logo.
+         */
+        @Json(name = "organization_logo_url")
+        val organizationLogoURL: String,
+        /**
+         * The unique URL slug of the Organization. The slug only accepts alphanumeric characters and the following reserved
+         * characters: `-` `.` `_` `~`. Must be between 2 and 128 characters in length.
+         */
+        @Json(name = "organization_slug")
+        val organizationSlug: String,
+        /**
+         * The authentication setting that controls the JIT provisioning of Members when authenticating via SSO. The accepted
+         * values are:
+         *
+         *   `ALL_ALLOWED` – new Members will be automatically provisioned upon successful authentication via any of the
+         * Organization's `sso_active_connections`.
+         *
+         *   `RESTRICTED` – only new Members with SSO logins that comply with `sso_jit_provisioning_allowed_connections` can be
+         * provisioned upon authentication.
+         *
+         *   `NOT_ALLOWED` – disable JIT provisioning via SSO.
+         *
+         */
+        @Json(name = "sso_jit_provisioning")
+        val ssoJITProvisioning: String,
+        /**
+         * An array of `connection_id`s that reference
+         * [SAML Connection objects](https://stytch.com/docs/b2b/api/saml-connection-object).
+         *   Only these connections will be allowed to JIT provision Members via SSO when `sso_jit_provisioning` is set to
+         * `RESTRICTED`.
+         */
+        @Json(name = "sso_jit_provisioning_allowed_connections")
+        val ssoJITProvisioningAllowedConnections: List<String>,
+        /**
+         * An array of active [SAML Connection references](https://stytch.com/docs/b2b/api/saml-connection-object).
+         */
+        @Json(name = "sso_active_connections")
+        val ssoActiveConnections: List<ActiveSSOConnection>,
+        /**
+         * An array of email domains that allow invites or JIT provisioning for new Members. This list is enforced when either
+         * `email_invites` or `email_jit_provisioning` is set to `RESTRICTED`.
+         *
+         *
+         *     Common domains such as `gmail.com` are not allowed. See the
+         * [common email domains resource](https://stytch.com/docs/b2b/api/common-email-domains) for the full list.
+         */
+        @Json(name = "email_allowed_domains")
+        val emailAllowedDomains: List<String>,
+        /**
+         * The authentication setting that controls how a new Member can be provisioned by authenticating via Email Magic Link or
+         * OAuth. The accepted values are:
+         *
+         *   `RESTRICTED` – only new Members with verified emails that comply with `email_allowed_domains` can be provisioned upon
+         * authentication via Email Magic Link or OAuth.
+         *
+         *   `NOT_ALLOWED` – disable JIT provisioning via Email Magic Link and OAuth.
+         *
+         */
+        @Json(name = "email_jit_provisioning")
+        val emailJITProvisioning: String,
+        /**
+         * The authentication setting that controls how a new Member can be invited to an organization by email. The accepted
+         * values are:
+         *
+         *   `ALL_ALLOWED` – any new Member can be invited to join via email.
+         *
+         *   `RESTRICTED` – only new Members with verified emails that comply with `email_allowed_domains` can be invited via
+         * email.
+         *
+         *   `NOT_ALLOWED` – disable email invites.
+         *
+         */
+        @Json(name = "email_invites")
+        val emailInvites: String,
+        /**
+         * The setting that controls which authentication methods can be used by Members of an Organization. The accepted values
+         * are:
+         *
+         *   `ALL_ALLOWED` – the default setting which allows all authentication methods to be used.
+         *
+         *   `RESTRICTED` – only methods that comply with `allowed_auth_methods` can be used for authentication. This setting does
+         * not apply to Members with `is_breakglass` set to `true`.
+         *
+         */
+        @Json(name = "auth_methods")
+        val authMethods: String,
+        /**
+         * An array of allowed authentication methods. This list is enforced when `auth_methods` is set to `RESTRICTED`.
+         *   The list's accepted values are: `sso`, `magic_link`, `password`, `google_oauth`, and `microsoft_oauth`.
+         *
+         */
+        @Json(name = "allowed_auth_methods")
+        val allowedAuthMethods: List<String>,
+        @Json(name = "mfa_policy")
+        val mfaPolicy: String,
+        /**
+         * Implicit role assignments based off of email domains.
+         *   For each domain-Role pair, all Members whose email addresses have the specified email domain will be granted the
+         *   associated Role, regardless of their login method. See the
+         * [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment)
+         *   for more information about role assignment.
+         */
+        @Json(name = "rbac_email_implicit_role_assignments")
+        val rbacEmailImplicitRoleAssignments: List<EmailImplicitRoleAssignment>,
+        /**
+         * The setting that controls which mfa methods can be used by Members of an Organization. The accepted values are:
+         *
+         *   `ALL_ALLOWED` – the default setting which allows all authentication methods to be used.
+         *
+         *   `RESTRICTED` – only methods that comply with `allowed_auth_methods` can be used for authentication. This setting does
+         * not apply to Members with `is_breakglass` set to `true`.
+         *
+         */
+        @Json(name = "mfa_methods")
+        val mfaMethods: String,
+        /**
+         * An array of allowed mfa authentication methods. This list is enforced when `mfa_methods` is set to `RESTRICTED`.
+         *   The list's accepted values are: `sms_otp` and `totp`.
+         *
+         */
+        @Json(name = "allowed_mfa_methods")
+        val allowedMfaMethods: List<String>,
+        /**
+         * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
+         */
+        @Json(name = "trusted_metadata")
+        val trustedMetadata: Map<String, Any>? = null,
+        /**
+         * The default connection used for SSO when there are multiple active connections.
+         */
+        @Json(name = "sso_default_connection_id")
+        val ssoDefaultConnectionId: String? = null,
+    )
 
+@JsonClass(generateAdapter = true)
+public data class ResultsMetadata
+    @JvmOverloads
+    constructor(
+        /**
+         * The total number of results returned by your search query.
+         */
+        @Json(name = "total")
+        val total: Int,
+        /**
+         * The `next_cursor` string is returned when your search result contains more than one page of results. This value is
+         * passed into your next search call in the `cursor` field.
+         */
+        @Json(name = "next_cursor")
+        val nextCursor: String? = null,
+    )
 
-public data class UpdateRequestOptions @JvmOverloads constructor(
-    /**
-    * Optional authorization object.
-    * Pass in an active Stytch Member session token or session JWT and the request
-    * will be run using that member's permissions.
-    */
-    val authorization: Authorization? = null,
-) {
-    fun addHeaders(headers: Map<String, String>): Map<String, String> {
-        if (authorization != null) {
-          headers = authorization.addHeaders(headers)
+@JsonClass(generateAdapter = true)
+public data class SSORegistration
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific SSO `connection_id` for a Member.
+         */
+        @Json(name = "connection_id")
+        val connectionId: String,
+        /**
+         * The ID of the member given by the identity provider.
+         */
+        @Json(name = "external_id")
+        val externalId: String,
+        /**
+         * The unique ID of an SSO Registration.
+         */
+        @Json(name = "registration_id")
+        val registrationId: String,
+        /**
+         * An object for storing SSO attributes brought over from the identity provider.
+         */
+        @Json(name = "sso_attributes")
+        val ssoAttributes: Map<String, Any>? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class SearchQuery
+    @JvmOverloads
+    constructor(
+        /**
+         * The action to perform on the operands. The accepted value are:
+         *
+         *   `AND` – all the operand values provided must match.
+         *
+         *   `OR` – the operator will return any matches to at least one of the operand values you supply.
+         */
+        @Json(name = "operator")
+        val operator: SearchQueryOperator,
+        /**
+         * An array of operand objects that contains all of the filters and values to apply to your search query.
+         */
+        @Json(name = "operands")
+        val operands: List<Map<String, Any>>,
+    )
+
+public data class UpdateRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mutableMapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
         }
-        return headers
     }
-)
-
 
 /**
 * Request type for `Organizations.create`.
 */
 @JsonClass(generateAdapter = true)
-public data class CreateRequest @JvmOverloads constructor(
-    /**
-    * The name of the Organization. Must be between 1 and 128 characters in length.
-    */
-    @Json(name = "organization_name")
-    val organizationName: String,
-    /**
-    * The unique URL slug of the Organization. The slug only accepts alphanumeric characters and the following reserved
-    * characters: `-` `.` `_` `~`. Must be between 2 and 128 characters in length.
-    */
-    @Json(name = "organization_slug")
-    val organizationSlug: String? = null,
-    /**
-    * The image URL of the Organization logo.
-    */
-    @Json(name = "organization_logo_url")
-    val organizationLogoURL: String? = null,
-    /**
-    * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
-    */
-    @Json(name = "trusted_metadata")
-    val trustedMetadata: Map<String, Any>? = null,
-    /**
-    * The authentication setting that controls the JIT provisioning of Members when authenticating via SSO. The accepted
-    * values are:
-    *  
-    *   `ALL_ALLOWED` – new Members will be automatically provisioned upon successful authentication via any of the
-    * Organization's `sso_active_connections`.
-    *  
-    *   `RESTRICTED` – only new Members with SSO logins that comply with `sso_jit_provisioning_allowed_connections` can be
-    * provisioned upon authentication.
-    *  
-    *   `NOT_ALLOWED` – disable JIT provisioning via SSO.
-    *   
-    */
-    @Json(name = "sso_jit_provisioning")
-    val ssoJITProvisioning: String? = null,
-    /**
-    * An array of email domains that allow invites or JIT provisioning for new Members. This list is enforced when either
-    * `email_invites` or `email_jit_provisioning` is set to `RESTRICTED`. 
-    *     
-    *     
-    *     Common domains such as `gmail.com` are not allowed. See the
-    * [common email domains resource](https://stytch.com/docs/b2b/api/common-email-domains) for the full list.
-    */
-    @Json(name = "email_allowed_domains")
-    val emailAllowedDomains: List<String>? = null,
-    /**
-    * The authentication setting that controls how a new Member can be provisioned by authenticating via Email Magic Link or
-    * OAuth. The accepted values are: 
-    *  
-    *   `RESTRICTED` – only new Members with verified emails that comply with `email_allowed_domains` can be provisioned upon
-    * authentication via Email Magic Link or OAuth.
-    *  
-    *   `NOT_ALLOWED` – disable JIT provisioning via Email Magic Link and OAuth.
-    *   
-    */
-    @Json(name = "email_jit_provisioning")
-    val emailJITProvisioning: String? = null,
-    /**
-    * The authentication setting that controls how a new Member can be invited to an organization by email. The accepted
-    * values are: 
-    *  
-    *   `ALL_ALLOWED` – any new Member can be invited to join via email. 
-    *  
-    *   `RESTRICTED` – only new Members with verified emails that comply with `email_allowed_domains` can be invited via
-    * email.
-    *  
-    *   `NOT_ALLOWED` – disable email invites.
-    *   
-    */
-    @Json(name = "email_invites")
-    val emailInvites: String? = null,
-    /**
-    * The setting that controls which authentication methods can be used by Members of an Organization. The accepted values
-    * are:
-    *  
-    *   `ALL_ALLOWED` – the default setting which allows all authentication methods to be used.
-    *  
-    *   `RESTRICTED` – only methods that comply with `allowed_auth_methods` can be used for authentication. This setting does
-    * not apply to Members with `is_breakglass` set to `true`.
-    *   
-    */
-    @Json(name = "auth_methods")
-    val authMethods: String? = null,
-    /**
-    * An array of allowed authentication methods. This list is enforced when `auth_methods` is set to `RESTRICTED`. 
-    *   The list's accepted values are: `sso`, `magic_link`, `password`, `google_oauth`, and `microsoft_oauth`.
-    *   
-    */
-    @Json(name = "allowed_auth_methods")
-    val allowedAuthMethods: List<String>? = null,
-    /**
-    * The setting that controls the MFA policy for all Members in the Organization. The accepted values are:
-    *  
-    *   `REQUIRED_FOR_ALL` – All Members within the Organization will be required to complete MFA every time they wish to log
-    * in. However, any active Session that existed prior to this setting change will remain valid. 
-    *  
-    *   `OPTIONAL` – The default value. The Organization does not require MFA by default for all Members. Members will be
-    * required to complete MFA only if their `mfa_enrolled` status is set to true.
-    *   
-    */
-    @Json(name = "mfa_policy")
-    val mfaPolicy: String? = null,
-    /**
-    * Implicit role assignments based off of email domains. 
-    *   For each domain-Role pair, all Members whose email addresses have the specified email domain will be granted the
-    *   associated Role, regardless of their login method. See the
-    * [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment)
-    *   for more information about role assignment.
-    */
-    @Json(name = "rbac_email_implicit_role_assignments")
-    val rbacEmailImplicitRoleAssignments: List<EmailImplicitRoleAssignment>? = null,
-)
-
+public data class CreateRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * The name of the Organization. Must be between 1 and 128 characters in length.
+         */
+        @Json(name = "organization_name")
+        val organizationName: String,
+        /**
+         * The unique URL slug of the Organization. The slug only accepts alphanumeric characters and the following reserved
+         * characters: `-` `.` `_` `~`. Must be between 2 and 128 characters in length.
+         */
+        @Json(name = "organization_slug")
+        val organizationSlug: String? = null,
+        /**
+         * The image URL of the Organization logo.
+         */
+        @Json(name = "organization_logo_url")
+        val organizationLogoURL: String? = null,
+        /**
+         * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
+         */
+        @Json(name = "trusted_metadata")
+        val trustedMetadata: Map<String, Any>? = null,
+        /**
+         * The authentication setting that controls the JIT provisioning of Members when authenticating via SSO. The accepted
+         * values are:
+         *
+         *   `ALL_ALLOWED` – new Members will be automatically provisioned upon successful authentication via any of the
+         * Organization's `sso_active_connections`.
+         *
+         *   `RESTRICTED` – only new Members with SSO logins that comply with `sso_jit_provisioning_allowed_connections` can be
+         * provisioned upon authentication.
+         *
+         *   `NOT_ALLOWED` – disable JIT provisioning via SSO.
+         *
+         */
+        @Json(name = "sso_jit_provisioning")
+        val ssoJITProvisioning: String? = null,
+        /**
+         * An array of email domains that allow invites or JIT provisioning for new Members. This list is enforced when either
+         * `email_invites` or `email_jit_provisioning` is set to `RESTRICTED`.
+         *
+         *
+         *     Common domains such as `gmail.com` are not allowed. See the
+         * [common email domains resource](https://stytch.com/docs/b2b/api/common-email-domains) for the full list.
+         */
+        @Json(name = "email_allowed_domains")
+        val emailAllowedDomains: List<String>? = null,
+        /**
+         * The authentication setting that controls how a new Member can be provisioned by authenticating via Email Magic Link or
+         * OAuth. The accepted values are:
+         *
+         *   `RESTRICTED` – only new Members with verified emails that comply with `email_allowed_domains` can be provisioned upon
+         * authentication via Email Magic Link or OAuth.
+         *
+         *   `NOT_ALLOWED` – disable JIT provisioning via Email Magic Link and OAuth.
+         *
+         */
+        @Json(name = "email_jit_provisioning")
+        val emailJITProvisioning: String? = null,
+        /**
+         * The authentication setting that controls how a new Member can be invited to an organization by email. The accepted
+         * values are:
+         *
+         *   `ALL_ALLOWED` – any new Member can be invited to join via email.
+         *
+         *   `RESTRICTED` – only new Members with verified emails that comply with `email_allowed_domains` can be invited via
+         * email.
+         *
+         *   `NOT_ALLOWED` – disable email invites.
+         *
+         */
+        @Json(name = "email_invites")
+        val emailInvites: String? = null,
+        /**
+         * The setting that controls which authentication methods can be used by Members of an Organization. The accepted values
+         * are:
+         *
+         *   `ALL_ALLOWED` – the default setting which allows all authentication methods to be used.
+         *
+         *   `RESTRICTED` – only methods that comply with `allowed_auth_methods` can be used for authentication. This setting does
+         * not apply to Members with `is_breakglass` set to `true`.
+         *
+         */
+        @Json(name = "auth_methods")
+        val authMethods: String? = null,
+        /**
+         * An array of allowed authentication methods. This list is enforced when `auth_methods` is set to `RESTRICTED`.
+         *   The list's accepted values are: `sso`, `magic_link`, `password`, `google_oauth`, and `microsoft_oauth`.
+         *
+         */
+        @Json(name = "allowed_auth_methods")
+        val allowedAuthMethods: List<String>? = null,
+        /**
+         * The setting that controls the MFA policy for all Members in the Organization. The accepted values are:
+         *
+         *   `REQUIRED_FOR_ALL` – All Members within the Organization will be required to complete MFA every time they wish to log
+         * in. However, any active Session that existed prior to this setting change will remain valid.
+         *
+         *   `OPTIONAL` – The default value. The Organization does not require MFA by default for all Members. Members will be
+         * required to complete MFA only if their `mfa_enrolled` status is set to true.
+         *
+         */
+        @Json(name = "mfa_policy")
+        val mfaPolicy: String? = null,
+        /**
+         * Implicit role assignments based off of email domains.
+         *   For each domain-Role pair, all Members whose email addresses have the specified email domain will be granted the
+         *   associated Role, regardless of their login method. See the
+         * [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment)
+         *   for more information about role assignment.
+         */
+        @Json(name = "rbac_email_implicit_role_assignments")
+        val rbacEmailImplicitRoleAssignments: List<EmailImplicitRoleAssignment>? = null,
+        @Json(name = "mfa_methods")
+        val mfaMethods: String? = null,
+        @Json(name = "allowed_mfa_methods")
+        val allowedMfaMethods: List<String>? = null,
+    )
 
 /**
 * Response type for `Organizations.create`.
 */
 @JsonClass(generateAdapter = true)
-public data class CreateResponse @JvmOverloads constructor(
-    /**
-    * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-    * may ask for this value to help identify a specific API call when helping you debug an issue.
-    */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-    * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
-    */
-    @Json(name = "organization")
-    val organization: Organization,
-    /**
-    * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-    * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-    */
-    @Json(name = "status_code")
-    val statusCode: Int,
-)
-
+public data class CreateResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
+         */
+        @Json(name = "organization")
+        val organization: Organization,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
 
 /**
 * Request type for `Organizations.delete`.
 */
 @JsonClass(generateAdapter = true)
-public data class DeleteRequest @JvmOverloads constructor(
-    /**
-    * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-    * on an Organization, so be sure to preserve this value.
-    */
-    @Json(name = "organization_id")
-    val organizationId: String,
-)
-
+public data class DeleteRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String,
+    )
 
 /**
 * Response type for `Organizations.delete`.
 */
 @JsonClass(generateAdapter = true)
-public data class DeleteResponse @JvmOverloads constructor(
-    /**
-    * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-    * may ask for this value to help identify a specific API call when helping you debug an issue.
-    */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-    * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-    * on an Organization, so be sure to preserve this value.
-    */
-    @Json(name = "organization_id")
-    val organizationId: String,
-    /**
-    * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-    * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-    */
-    @Json(name = "status_code")
-    val statusCode: Int,
-)
-
+public data class DeleteResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
 
 /**
 * Request type for `Organizations.get`.
 */
 @JsonClass(generateAdapter = true)
-public data class GetRequest @JvmOverloads constructor(
-    /**
-    * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-    * on an Organization, so be sure to preserve this value.
-    */
-    @Json(name = "organization_id")
-    val organizationId: String,
-)
-
+public data class GetRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String,
+    )
 
 /**
 * Response type for `Organizations.get`.
 */
 @JsonClass(generateAdapter = true)
-public data class GetResponse @JvmOverloads constructor(
-    /**
-    * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-    * may ask for this value to help identify a specific API call when helping you debug an issue.
-    */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-    * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
-    */
-    @Json(name = "organization")
-    val organization: Organization,
-    /**
-    * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-    * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-    */
-    @Json(name = "status_code")
-    val statusCode: Int,
-)
-
+public data class GetResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
+         */
+        @Json(name = "organization")
+        val organization: Organization,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
 
 /**
 * Request type for `Organizations.search`.
 */
 @JsonClass(generateAdapter = true)
-public data class SearchRequest @JvmOverloads constructor(
-    /**
-    * The `cursor` field allows you to paginate through your results. Each result array is limited to 1000 results. If your
-    * query returns more than 1000 results, you will need to paginate the responses using the `cursor`. If you receive a
-    * response that includes a non-null `next_cursor` in the `results_metadata` object, repeat the search call with the
-    * `next_cursor` value set to the `cursor` field to retrieve the next page of results. Continue to make search calls until
-    * the `next_cursor` in the response is null.
-    */
-    @Json(name = "cursor")
-    val cursor: String? = null,
-    /**
-    * The number of search results to return per page. The default limit is 100. A maximum of 1000 results can be returned by
-    * a single search request. If the total size of your result set is greater than one page size, you must paginate the
-    * response. See the `cursor` field.
-    */
-    @Json(name = "limit")
-    val limit: Long? = null,
-    /**
-    * The optional query object contains the operator, i.e. `AND` or `OR`, and the operands that will filter your results.
-    * Only an operator is required. If you include no operands, no filtering will be applied. If you include no query object,
-    * it will return all Organizations with no filtering applied.
-    */
-    @Json(name = "query")
-    val query: SearchQuery? = null,
-)
-
+public data class SearchRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * The `cursor` field allows you to paginate through your results. Each result array is limited to 1000 results. If your
+         * query returns more than 1000 results, you will need to paginate the responses using the `cursor`. If you receive a
+         * response that includes a non-null `next_cursor` in the `results_metadata` object, repeat the search call with the
+         * `next_cursor` value set to the `cursor` field to retrieve the next page of results. Continue to make search calls until
+         * the `next_cursor` in the response is null.
+         */
+        @Json(name = "cursor")
+        val cursor: String? = null,
+        /**
+         * The number of search results to return per page. The default limit is 100. A maximum of 1000 results can be returned by
+         * a single search request. If the total size of your result set is greater than one page size, you must paginate the
+         * response. See the `cursor` field.
+         */
+        @Json(name = "limit")
+        val limit: Long? = null,
+        /**
+         * The optional query object contains the operator, i.e. `AND` or `OR`, and the operands that will filter your results.
+         * Only an operator is required. If you include no operands, no filtering will be applied. If you include no query object,
+         * it will return all Organizations with no filtering applied.
+         */
+        @Json(name = "query")
+        val query: SearchQuery? = null,
+    )
 
 /**
 * Response type for `Organizations.search`.
 */
 @JsonClass(generateAdapter = true)
-public data class SearchResponse @JvmOverloads constructor(
-    /**
-    * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-    * may ask for this value to help identify a specific API call when helping you debug an issue.
-    */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-    * An array of [Organization objects](https://stytch.com/docs/b2b/api/organization-object).
-    */
-    @Json(name = "organizations")
-    val organizations: List<Organization>,
-    /**
-    * The search `results_metadata` object contains metadata relevant to your specific query like `total` and `next_cursor`.
-    */
-    @Json(name = "results_metadata")
-    val resultsMetadata: ResultsMetadata,
-    /**
-    * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-    * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-    */
-    @Json(name = "status_code")
-    val statusCode: Int,
-)
-
+public data class SearchResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * An array of [Organization objects](https://stytch.com/docs/b2b/api/organization-object).
+         */
+        @Json(name = "organizations")
+        val organizations: List<Organization>,
+        /**
+         * The search `results_metadata` object contains metadata relevant to your specific query like `total` and `next_cursor`.
+         */
+        @Json(name = "results_metadata")
+        val resultsMetadata: ResultsMetadata,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
 
 /**
 * Request type for `Organizations.update`.
 */
 @JsonClass(generateAdapter = true)
-public data class UpdateRequest @JvmOverloads constructor(
-    /**
-    * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-    * on an Organization, so be sure to preserve this value.
-    */
-    @Json(name = "organization_id")
-    val organizationId: String,
-    /**
-    * The name of the Organization. Must be between 1 and 128 characters in length.
-    * 
-    * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-    * perform the `update.info.name` action on the `stytch.organization` Resource.
-    */
-    @Json(name = "organization_name")
-    val organizationName: String? = null,
-    /**
-    * The unique URL slug of the Organization. The slug only accepts alphanumeric characters and the following reserved
-    * characters: `-` `.` `_` `~`. Must be between 2 and 128 characters in length.
-    * 
-    * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-    * perform the `update.info.slug` action on the `stytch.organization` Resource.
-    */
-    @Json(name = "organization_slug")
-    val organizationSlug: String? = null,
-    /**
-    * The image URL of the Organization logo.
-    * 
-    * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-    * perform the `update.info.logo-url` action on the `stytch.organization` Resource.
-    */
-    @Json(name = "organization_logo_url")
-    val organizationLogoURL: String? = null,
-    /**
-    * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
-    *           If a session header is passed into the request, this field may **not** be passed into the request. You cannot 
-    *           update trusted metadata when acting as a Member.
-    */
-    @Json(name = "trusted_metadata")
-    val trustedMetadata: Map<String, Any>? = null,
-    /**
-    * The default connection used for SSO when there are multiple active connections.
-    * 
-    * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-    * perform the `update.settings.default-sso-connection` action on the `stytch.organization` Resource.
-    */
-    @Json(name = "sso_default_connection_id")
-    val ssoDefaultConnectionId: String? = null,
-    /**
-    * The authentication setting that controls the JIT provisioning of Members when authenticating via SSO. The accepted
-    * values are:
-    *  
-    *   `ALL_ALLOWED` – new Members will be automatically provisioned upon successful authentication via any of the
-    * Organization's `sso_active_connections`.
-    *  
-    *   `RESTRICTED` – only new Members with SSO logins that comply with `sso_jit_provisioning_allowed_connections` can be
-    * provisioned upon authentication.
-    *  
-    *   `NOT_ALLOWED` – disable JIT provisioning via SSO.
-    *   
-    * 
-    * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-    * perform the `update.settings.sso-jit-provisioning` action on the `stytch.organization` Resource.
-    */
-    @Json(name = "sso_jit_provisioning")
-    val ssoJITProvisioning: String? = null,
-    /**
-    * An array of `connection_id`s that reference
-    * [SAML Connection objects](https://stytch.com/docs/b2b/api/saml-connection-object). 
-    *   Only these connections will be allowed to JIT provision Members via SSO when `sso_jit_provisioning` is set to
-    * `RESTRICTED`.
-    * 
-    * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-    * perform the `update.settings.sso-jit-provisioning` action on the `stytch.organization` Resource.
-    */
-    @Json(name = "sso_jit_provisioning_allowed_connections")
-    val ssoJITProvisioningAllowedConnections: List<String>? = null,
-    /**
-    * An array of email domains that allow invites or JIT provisioning for new Members. This list is enforced when either
-    * `email_invites` or `email_jit_provisioning` is set to `RESTRICTED`. 
-    *     
-    *     
-    *     Common domains such as `gmail.com` are not allowed. See the
-    * [common email domains resource](https://stytch.com/docs/b2b/api/common-email-domains) for the full list.
-    * 
-    * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-    * perform the `update.settings.allowed-domains` action on the `stytch.organization` Resource.
-    */
-    @Json(name = "email_allowed_domains")
-    val emailAllowedDomains: List<String>? = null,
-    /**
-    * The authentication setting that controls how a new Member can be provisioned by authenticating via Email Magic Link or
-    * OAuth. The accepted values are: 
-    *  
-    *   `RESTRICTED` – only new Members with verified emails that comply with `email_allowed_domains` can be provisioned upon
-    * authentication via Email Magic Link or OAuth.
-    *  
-    *   `NOT_ALLOWED` – disable JIT provisioning via Email Magic Link and OAuth.
-    *   
-    * 
-    * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-    * perform the `update.settings.email-jit-provisioning` action on the `stytch.organization` Resource.
-    */
-    @Json(name = "email_jit_provisioning")
-    val emailJITProvisioning: String? = null,
-    /**
-    * The authentication setting that controls how a new Member can be invited to an organization by email. The accepted
-    * values are: 
-    *  
-    *   `ALL_ALLOWED` – any new Member can be invited to join via email. 
-    *  
-    *   `RESTRICTED` – only new Members with verified emails that comply with `email_allowed_domains` can be invited via
-    * email.
-    *  
-    *   `NOT_ALLOWED` – disable email invites.
-    *   
-    * 
-    * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-    * perform the `update.settings.email-invites` action on the `stytch.organization` Resource.
-    */
-    @Json(name = "email_invites")
-    val emailInvites: String? = null,
-    /**
-    * The setting that controls which authentication methods can be used by Members of an Organization. The accepted values
-    * are:
-    *  
-    *   `ALL_ALLOWED` – the default setting which allows all authentication methods to be used.
-    *  
-    *   `RESTRICTED` – only methods that comply with `allowed_auth_methods` can be used for authentication. This setting does
-    * not apply to Members with `is_breakglass` set to `true`.
-    *   
-    * 
-    * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-    * perform the `update.settings.allowed-auth-methods` action on the `stytch.organization` Resource.
-    */
-    @Json(name = "auth_methods")
-    val authMethods: String? = null,
-    /**
-    * An array of allowed authentication methods. This list is enforced when `auth_methods` is set to `RESTRICTED`. 
-    *   The list's accepted values are: `sso`, `magic_link`, `password`, `google_oauth`, and `microsoft_oauth`.
-    *   
-    * 
-    * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-    * perform the `update.settings.allowed-auth-methods` action on the `stytch.organization` Resource.
-    */
-    @Json(name = "allowed_auth_methods")
-    val allowedAuthMethods: List<String>? = null,
-    /**
-    * The setting that controls the MFA policy for all Members in the Organization. The accepted values are:
-    *  
-    *   `REQUIRED_FOR_ALL` – All Members within the Organization will be required to complete MFA every time they wish to log
-    * in. However, any active Session that existed prior to this setting change will remain valid. 
-    *  
-    *   `OPTIONAL` – The default value. The Organization does not require MFA by default for all Members. Members will be
-    * required to complete MFA only if their `mfa_enrolled` status is set to true.
-    *   
-    * 
-    * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-    * perform the `update.settings.mfa-policy` action on the `stytch.organization` Resource.
-    */
-    @Json(name = "mfa_policy")
-    val mfaPolicy: String? = null,
-    /**
-    * Implicit role assignments based off of email domains. 
-    *   For each domain-Role pair, all Members whose email addresses have the specified email domain will be granted the
-    *   associated Role, regardless of their login method. See the
-    * [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment)
-    *   for more information about role assignment.
-    * 
-    * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-    * perform the `update.settings.implicit-roles` action on the `stytch.organization` Resource.
-    */
-    @Json(name = "rbac_email_implicit_role_assignments")
-    val rbacEmailImplicitRoleAssignments: List<String>? = null,
-)
-
+public data class UpdateRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String,
+        /**
+         * The name of the Organization. Must be between 1 and 128 characters in length.
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.info.name` action on the `stytch.organization` Resource.
+         */
+        @Json(name = "organization_name")
+        val organizationName: String? = null,
+        /**
+         * The unique URL slug of the Organization. The slug only accepts alphanumeric characters and the following reserved
+         * characters: `-` `.` `_` `~`. Must be between 2 and 128 characters in length.
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.info.slug` action on the `stytch.organization` Resource.
+         */
+        @Json(name = "organization_slug")
+        val organizationSlug: String? = null,
+        /**
+         * The image URL of the Organization logo.
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.info.logo-url` action on the `stytch.organization` Resource.
+         */
+        @Json(name = "organization_logo_url")
+        val organizationLogoURL: String? = null,
+        /**
+         * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
+         *           If a session header is passed into the request, this field may **not** be passed into the request. You cannot
+         *           update trusted metadata when acting as a Member.
+         */
+        @Json(name = "trusted_metadata")
+        val trustedMetadata: Map<String, Any>? = null,
+        /**
+         * The default connection used for SSO when there are multiple active connections.
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.default-sso-connection` action on the `stytch.organization` Resource.
+         */
+        @Json(name = "sso_default_connection_id")
+        val ssoDefaultConnectionId: String? = null,
+        /**
+         * The authentication setting that controls the JIT provisioning of Members when authenticating via SSO. The accepted
+         * values are:
+         *
+         *   `ALL_ALLOWED` – new Members will be automatically provisioned upon successful authentication via any of the
+         * Organization's `sso_active_connections`.
+         *
+         *   `RESTRICTED` – only new Members with SSO logins that comply with `sso_jit_provisioning_allowed_connections` can be
+         * provisioned upon authentication.
+         *
+         *   `NOT_ALLOWED` – disable JIT provisioning via SSO.
+         *
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.sso-jit-provisioning` action on the `stytch.organization` Resource.
+         */
+        @Json(name = "sso_jit_provisioning")
+        val ssoJITProvisioning: String? = null,
+        /**
+         * An array of `connection_id`s that reference
+         * [SAML Connection objects](https://stytch.com/docs/b2b/api/saml-connection-object).
+         *   Only these connections will be allowed to JIT provision Members via SSO when `sso_jit_provisioning` is set to
+         * `RESTRICTED`.
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.sso-jit-provisioning` action on the `stytch.organization` Resource.
+         */
+        @Json(name = "sso_jit_provisioning_allowed_connections")
+        val ssoJITProvisioningAllowedConnections: List<String>? = null,
+        /**
+         * An array of email domains that allow invites or JIT provisioning for new Members. This list is enforced when either
+         * `email_invites` or `email_jit_provisioning` is set to `RESTRICTED`.
+         *
+         *
+         *     Common domains such as `gmail.com` are not allowed. See the
+         * [common email domains resource](https://stytch.com/docs/b2b/api/common-email-domains) for the full list.
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.allowed-domains` action on the `stytch.organization` Resource.
+         */
+        @Json(name = "email_allowed_domains")
+        val emailAllowedDomains: List<String>? = null,
+        /**
+         * The authentication setting that controls how a new Member can be provisioned by authenticating via Email Magic Link or
+         * OAuth. The accepted values are:
+         *
+         *   `RESTRICTED` – only new Members with verified emails that comply with `email_allowed_domains` can be provisioned upon
+         * authentication via Email Magic Link or OAuth.
+         *
+         *   `NOT_ALLOWED` – disable JIT provisioning via Email Magic Link and OAuth.
+         *
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.email-jit-provisioning` action on the `stytch.organization` Resource.
+         */
+        @Json(name = "email_jit_provisioning")
+        val emailJITProvisioning: String? = null,
+        /**
+         * The authentication setting that controls how a new Member can be invited to an organization by email. The accepted
+         * values are:
+         *
+         *   `ALL_ALLOWED` – any new Member can be invited to join via email.
+         *
+         *   `RESTRICTED` – only new Members with verified emails that comply with `email_allowed_domains` can be invited via
+         * email.
+         *
+         *   `NOT_ALLOWED` – disable email invites.
+         *
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.email-invites` action on the `stytch.organization` Resource.
+         */
+        @Json(name = "email_invites")
+        val emailInvites: String? = null,
+        /**
+         * The setting that controls which authentication methods can be used by Members of an Organization. The accepted values
+         * are:
+         *
+         *   `ALL_ALLOWED` – the default setting which allows all authentication methods to be used.
+         *
+         *   `RESTRICTED` – only methods that comply with `allowed_auth_methods` can be used for authentication. This setting does
+         * not apply to Members with `is_breakglass` set to `true`.
+         *
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.allowed-auth-methods` action on the `stytch.organization` Resource.
+         */
+        @Json(name = "auth_methods")
+        val authMethods: String? = null,
+        /**
+         * An array of allowed authentication methods. This list is enforced when `auth_methods` is set to `RESTRICTED`.
+         *   The list's accepted values are: `sso`, `magic_link`, `password`, `google_oauth`, and `microsoft_oauth`.
+         *
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.allowed-auth-methods` action on the `stytch.organization` Resource.
+         */
+        @Json(name = "allowed_auth_methods")
+        val allowedAuthMethods: List<String>? = null,
+        /**
+         * The setting that controls the MFA policy for all Members in the Organization. The accepted values are:
+         *
+         *   `REQUIRED_FOR_ALL` – All Members within the Organization will be required to complete MFA every time they wish to log
+         * in. However, any active Session that existed prior to this setting change will remain valid.
+         *
+         *   `OPTIONAL` – The default value. The Organization does not require MFA by default for all Members. Members will be
+         * required to complete MFA only if their `mfa_enrolled` status is set to true.
+         *
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.mfa-policy` action on the `stytch.organization` Resource.
+         */
+        @Json(name = "mfa_policy")
+        val mfaPolicy: String? = null,
+        /**
+         * Implicit role assignments based off of email domains.
+         *   For each domain-Role pair, all Members whose email addresses have the specified email domain will be granted the
+         *   associated Role, regardless of their login method. See the
+         * [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment)
+         *   for more information about role assignment.
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.implicit-roles` action on the `stytch.organization` Resource.
+         */
+        @Json(name = "rbac_email_implicit_role_assignments")
+        val rbacEmailImplicitRoleAssignments: List<String>? = null,
+        @Json(name = "mfa_methods")
+        val mfaMethods: String? = null,
+        @Json(name = "allowed_mfa_methods")
+        val allowedMfaMethods: List<String>? = null,
+    )
 
 /**
 * Response type for `Organizations.update`.
 */
 @JsonClass(generateAdapter = true)
-public data class UpdateResponse @JvmOverloads constructor(
-    /**
-    * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
-    * may ask for this value to help identify a specific API call when helping you debug an issue.
-    */
-    @Json(name = "request_id")
-    val requestId: String,
-    /**
-    * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
-    */
-    @Json(name = "organization")
-    val organization: Organization,
-    /**
-    * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
-    * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
-    */
-    @Json(name = "status_code")
-    val statusCode: Int,
-)
-
-
-
+public data class UpdateResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
+         */
+        @Json(name = "organization")
+        val organization: Organization,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )

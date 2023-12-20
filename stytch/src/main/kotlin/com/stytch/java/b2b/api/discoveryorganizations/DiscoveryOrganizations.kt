@@ -182,7 +182,7 @@ internal class OrganizationsImpl(private val httpClient: HttpClient, private val
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
             httpClient.post("/v1/b2b/discovery/organizations/create", asJson, headers)
@@ -204,7 +204,7 @@ internal class OrganizationsImpl(private val httpClient: HttpClient, private val
 
     override suspend fun list(data: ListRequest): StytchResult<ListResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(ListRequest::class.java).toJson(data)
             httpClient.post("/v1/b2b/discovery/organizations", asJson, headers)

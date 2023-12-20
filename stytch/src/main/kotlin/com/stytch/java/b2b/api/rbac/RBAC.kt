@@ -83,7 +83,7 @@ internal class RBACImpl(private val httpClient: HttpClient, private val coroutin
 
     override suspend fun policy(data: PolicyRequest): StytchResult<PolicyResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(PolicyRequest::class.java).toJson(data)
             val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)

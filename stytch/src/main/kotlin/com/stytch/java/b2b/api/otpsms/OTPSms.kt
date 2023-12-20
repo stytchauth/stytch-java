@@ -212,7 +212,7 @@ internal class SmsImpl(private val httpClient: HttpClient, private val coroutine
 
     override suspend fun send(data: SendRequest): StytchResult<SendResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(SendRequest::class.java).toJson(data)
             httpClient.post("/v1/b2b/otps/sms/send", asJson, headers)
@@ -234,7 +234,7 @@ internal class SmsImpl(private val httpClient: HttpClient, private val coroutine
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
             httpClient.post("/v1/b2b/otps/sms/authenticate", asJson, headers)

@@ -2,26 +2,36 @@ package com.stytch.java.common
 
 import com.stytch.java.b2b.api.rbac.RBAC
 import com.stytch.java.b2b.models.rbac.Policy
+import com.stytch.java.b2b.models.rbac.PolicyRequest
 import com.stytch.java.b2b.models.sessions.AuthorizationCheck
 import java.time.Duration
 import java.time.Instant
 
-class TenancyException(subjectOrgId: String, authCheckOrgId: String) :
-    RuntimeException("Subject organizationId $subjectOrgId does not match authZ request organizationId $actualOrgId")
+public class TenancyException(subjectOrgId: String, authCheckOrgId: String) :
+    RuntimeException("Subject organizationId $subjectOrgId does not match authZ request organizationId $authCheckOrgId")
 
-class PermissionException(authorizationCheck: AuthorizationCheck) :
+public class PermissionException(authorizationCheck: AuthorizationCheck) :
     RuntimeException("Permission denied for request $authorizationCheck")
 
-class PolicyCache(private val client: RBAC) {
+internal class PolicyCache(
+    private val client: RBAC,
+) {
     private var cachedPolicy: Policy? = null
     private var policyLastUpdate: Instant? = null
 
-    fun getPolicy(invalidate: bool = false): Policy {
-        if (invalidate || policyLastUpdate == null || Duration.between(policyLastUpdate, Instant.now()).seconds > 300) {
-            cachedPolicy = client.policy()
-            policyLastUpdate = Instant.now()
+    private fun getPolicy(invalidate: Boolean = false): Policy {
+        val isMissing = cachedPolicy == null || policyLastUpdate == null
+        val isStale = Duration.between(policyLastUpdate, Instant.now()).seconds > 300
+        if (invalidate || isMissing || isStale) {
+            when (val result = client.policyCompletable(PolicyRequest()).get()) {
+                is StytchResult.Success -> {
+                    cachedPolicy = result.value.policy
+                    policyLastUpdate = Instant.now()
+                }
+                else -> {}
+            }
         }
-        return cachedPolicy!!
+        return cachedPolicy ?: throw Exception("Error fetching the policy")
     }
 
     fun performAuthorizationCheck(
@@ -29,26 +39,21 @@ class PolicyCache(private val client: RBAC) {
         subjectOrgId: String,
         authorizationCheck: AuthorizationCheck,
     ) {
-        requestOrgId = authorizationCheck.orgId
-        if (authorizationCheck.orgId != subjectOrgId) {
-            throw TenancyException(subjectOrgId, authorizationCheck.orgId)
+        if (authorizationCheck.organizationId != subjectOrgId) {
+            throw TenancyException(subjectOrgId, authorizationCheck.organizationId)
         }
-
-        policy = getPolicy()
-
-        for (role in policy.roles) {
-            if (role.name in subjectRoles) {
-                for (permission in role.permissions) {
-                    hasMatchingAction = permission.actions.contains("*") || permission.actions.contains(action)
-                    hasMatchingResource = permission.resource_id == authorizationCheck.resourceId
-                    if (hasMatchingAction && hasMatchingResource) {
-                        // All good, we found a match
-                        return
-                    }
+        val policy = getPolicy()
+        val hasMatchingActionAndResource =
+            policy.roles
+                .filter { it.roleId in subjectRoles }
+                .flatMap { it.permissions }
+                .filter {
+                    val hasMatchingAction = it.actions.contains("*") || it.actions.contains(authorizationCheck.action)
+                    val hasMatchingResource = it.resourceId == authorizationCheck.resourceId
+                    return@filter hasMatchingAction && hasMatchingResource
                 }
-            }
-        }
-
+                .isNotEmpty()
+        hasMatchingActionAndResource && return
         throw PermissionException(authorizationCheck)
     }
 }

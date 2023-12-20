@@ -48,7 +48,7 @@ internal class DiscoveryImpl(private val httpClient: HttpClient, private val cor
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
             httpClient.post("/v1/b2b/oauth/discovery/authenticate", asJson, headers)

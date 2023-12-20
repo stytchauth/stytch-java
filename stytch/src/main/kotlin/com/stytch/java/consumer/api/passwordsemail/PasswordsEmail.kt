@@ -92,7 +92,7 @@ internal class EmailImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun resetStart(data: ResetStartRequest): StytchResult<ResetStartResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(ResetStartRequest::class.java).toJson(data)
             httpClient.post("/v1/passwords/email/reset/start", asJson, headers)
@@ -114,7 +114,7 @@ internal class EmailImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun reset(data: ResetRequest): StytchResult<ResetResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(ResetRequest::class.java).toJson(data)
             httpClient.post("/v1/passwords/email/reset", asJson, headers)

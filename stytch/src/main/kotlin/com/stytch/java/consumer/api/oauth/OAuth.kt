@@ -98,7 +98,7 @@ internal class OAuthImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun attach(data: AttachRequest): StytchResult<AttachResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(AttachRequest::class.java).toJson(data)
             httpClient.post("/v1/oauth/attach", asJson, headers)
@@ -120,7 +120,7 @@ internal class OAuthImpl(private val httpClient: HttpClient, private val corouti
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
             httpClient.post("/v1/oauth/authenticate", asJson, headers)

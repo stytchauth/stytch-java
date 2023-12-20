@@ -215,7 +215,7 @@ internal class PasswordsImpl(private val httpClient: HttpClient, private val cor
 
     override suspend fun strengthCheck(data: StrengthCheckRequest): StytchResult<StrengthCheckResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(StrengthCheckRequest::class.java).toJson(data)
             httpClient.post("/v1/b2b/passwords/strength_check", asJson, headers)
@@ -237,7 +237,7 @@ internal class PasswordsImpl(private val httpClient: HttpClient, private val cor
 
     override suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(MigrateRequest::class.java).toJson(data)
             httpClient.post("/v1/b2b/passwords/migrate", asJson, headers)
@@ -259,7 +259,7 @@ internal class PasswordsImpl(private val httpClient: HttpClient, private val cor
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
             httpClient.post("/v1/b2b/passwords/authenticate", asJson, headers)

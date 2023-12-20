@@ -242,7 +242,7 @@ internal class WebAuthnImpl(private val httpClient: HttpClient, private val coro
 
     override suspend fun registerStart(data: RegisterStartRequest): StytchResult<RegisterStartResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(RegisterStartRequest::class.java).toJson(data)
             httpClient.post("/v1/webauthn/register/start", asJson, headers)
@@ -264,7 +264,7 @@ internal class WebAuthnImpl(private val httpClient: HttpClient, private val coro
 
     override suspend fun register(data: RegisterRequest): StytchResult<RegisterResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(RegisterRequest::class.java).toJson(data)
             httpClient.post("/v1/webauthn/register", asJson, headers)
@@ -286,7 +286,7 @@ internal class WebAuthnImpl(private val httpClient: HttpClient, private val coro
 
     override suspend fun authenticateStart(data: AuthenticateStartRequest): StytchResult<AuthenticateStartResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(AuthenticateStartRequest::class.java).toJson(data)
             httpClient.post("/v1/webauthn/authenticate/start", asJson, headers)
@@ -308,7 +308,7 @@ internal class WebAuthnImpl(private val httpClient: HttpClient, private val coro
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
             httpClient.post("/v1/webauthn/authenticate", asJson, headers)
@@ -330,7 +330,7 @@ internal class WebAuthnImpl(private val httpClient: HttpClient, private val coro
 
     override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> =
         withContext(Dispatchers.IO) {
-            var headers = emptyMap()
+            var headers = emptyMap<String, String>()
 
             val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
             httpClient.put("/v1/webauthn/${data.webauthnRegistrationId}", asJson, headers)
