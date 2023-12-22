@@ -12,6 +12,10 @@ import com.squareup.moshi.Types
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.JWTException
 import com.stytch.java.common.JwtOptions
+import com.stytch.java.common.JWTResponse
+import com.stytch.java.common.JWTAuthResponse
+import com.stytch.java.common.JWTNullResponse
+import com.stytch.java.common.JWTSessionResponse
 import com.stytch.java.common.ParseJWTClaimsOptions
 import com.stytch.java.common.StytchException
 import com.stytch.java.common.StytchResult
@@ -173,6 +177,11 @@ public interface Sessions {
     // ADDIMPORT: import com.stytch.java.common.ParseJWTClaimsOptions
     // ADDIMPORT: import com.stytch.java.common.StytchSessionClaim
     // ADDIMPORT: import com.stytch.java.common.parseJWTClaims
+    // ADDIMPORT: import com.stytch.java.common.ParsedJWTClaims
+    // ADDIMPORT: import com.stytch.java.common.JWTResponse
+    // ADDIMPORT: import com.stytch.java.common.JWTAuthResponse
+    // ADDIMPORT: import com.stytch.java.common.JWTNullResponse
+    // ADDIMPORT: import com.stytch.java.common.JWTSessionResponse
 
     /** Parse a JWT and verify the signature, preferring local verification over remote.
      *
@@ -185,7 +194,7 @@ public interface Sessions {
     public suspend fun authenticateJwt(
         jwt: String,
         maxTokenAgeSeconds: Int?,
-    ): StytchResult<Session?>
+    ): StytchResult<JWTResponse?>
 
     /** Parse a JWT and verify the signature, preferring local verification over remote.
      *
@@ -198,7 +207,7 @@ public interface Sessions {
     public fun authenticateJwt(
         jwt: String,
         maxTokenAgeSeconds: Int?,
-        callback: (StytchResult<Session?>) -> Unit,
+        callback: (StytchResult<JWTResponse?>) -> Unit,
     )
 
     /** Parse a JWT and verify the signature, preferring local verification over remote.
@@ -212,7 +221,7 @@ public interface Sessions {
     public fun authenticateJwtCompletable(
         jwt: String,
         maxTokenAgeSeconds: Int?,
-    ): CompletableFuture<StytchResult<Session?>>
+    ): CompletableFuture<StytchResult<JWTResponse?>>
 
     /** Parse a JWT and verify the signature locally (without calling /authenticate in the API).
      *
@@ -374,14 +383,17 @@ internal class SessionsImpl(
     override suspend fun authenticateJwt(
         jwt: String,
         maxTokenAgeSeconds: Int?,
-    ): StytchResult<Session?> =
+    ): StytchResult<JWTResponse?> =
         withContext(Dispatchers.IO) {
             try {
-                authenticateJwtLocal(jwt = jwt, maxTokenAgeSeconds = maxTokenAgeSeconds)
+                when (val result = authenticateJwtLocal(jwt = jwt, maxTokenAgeSeconds = maxTokenAgeSeconds)) {
+                    is StytchResult.Success -> StytchResult.Success(JWTSessionResponse(result.value))
+                    else -> StytchResult.Success(JWTNullResponse)
+                }
             } catch (e: JWTException) {
                 when (val result = authenticate(AuthenticateRequest(sessionJwt = jwt))) {
-                    is StytchResult.Success -> StytchResult.Success(result.value.session)
-                    else -> StytchResult.Success(null)
+                    is StytchResult.Success -> StytchResult.Success(JWTAuthResponse(result.value))
+                    else -> StytchResult.Success(JWTNullResponse)
                 }
             }
         }
@@ -389,7 +401,7 @@ internal class SessionsImpl(
     override fun authenticateJwt(
         jwt: String,
         maxTokenAgeSeconds: Int?,
-        callback: (StytchResult<Session?>) -> Unit,
+        callback: (StytchResult<JWTResponse?>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(authenticateJwt(jwt, maxTokenAgeSeconds))
@@ -399,7 +411,7 @@ internal class SessionsImpl(
     override fun authenticateJwtCompletable(
         jwt: String,
         maxTokenAgeSeconds: Int?,
-    ): CompletableFuture<StytchResult<Session?>> =
+    ): CompletableFuture<StytchResult<JWTResponse?>> =
         coroutineScope.async {
             authenticateJwt(jwt, maxTokenAgeSeconds)
         }.asCompletableFuture()
