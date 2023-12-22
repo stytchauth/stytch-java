@@ -1,10 +1,10 @@
 package com.stytch.java.common.methodoptions
 
-data class Authorization(
+public data class Authorization(
     private val sessionToken: String? = null,
     private val sessionJwt: String? = null,
 ) {
-    fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+    internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
         val authHeaders =
             mutableMapOf<String, String>().apply {
                 if (sessionToken != null) {

@@ -63,7 +63,7 @@ public data class PolicyRolePermission
 * Request type for `RBAC.policy`.
 */
 @JsonClass(generateAdapter = true)
-public data class PolicyRequest
+public class PolicyRequest
     @JvmOverloads
     constructor()
 

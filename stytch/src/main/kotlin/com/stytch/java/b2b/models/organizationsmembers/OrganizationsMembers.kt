@@ -24,8 +24,8 @@ public data class CreateRequestOptions
          */
         val authorization: Authorization? = null,
     ) {
-        fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
-            var res = mutableMapOf<String, String>()
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
             if (authorization != null) {
                 res = authorization.addHeaders(res)
             }
@@ -43,8 +43,8 @@ public data class DeleteMFAPhoneNumberRequestOptions
          */
         val authorization: Authorization? = null,
     ) {
-        fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
-            var res = mutableMapOf<String, String>()
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
             if (authorization != null) {
                 res = authorization.addHeaders(res)
             }
@@ -62,8 +62,8 @@ public data class DeletePasswordRequestOptions
          */
         val authorization: Authorization? = null,
     ) {
-        fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
-            var res = mutableMapOf<String, String>()
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
             if (authorization != null) {
                 res = authorization.addHeaders(res)
             }
@@ -81,8 +81,8 @@ public data class DeleteRequestOptions
          */
         val authorization: Authorization? = null,
     ) {
-        fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
-            var res = mutableMapOf<String, String>()
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
             if (authorization != null) {
                 res = authorization.addHeaders(res)
             }
@@ -100,8 +100,8 @@ public data class ReactivateRequestOptions
          */
         val authorization: Authorization? = null,
     ) {
-        fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
-            var res = mutableMapOf<String, String>()
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
             if (authorization != null) {
                 res = authorization.addHeaders(res)
             }
@@ -119,8 +119,8 @@ public data class SearchRequestOptions
          */
         val authorization: Authorization? = null,
     ) {
-        fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
-            var res = mutableMapOf<String, String>()
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
             if (authorization != null) {
                 res = authorization.addHeaders(res)
             }
@@ -138,8 +138,8 @@ public data class UpdateRequestOptions
          */
         val authorization: Authorization? = null,
     ) {
-        fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
-            var res = mutableMapOf<String, String>()
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
             if (authorization != null) {
                 res = authorization.addHeaders(res)
             }

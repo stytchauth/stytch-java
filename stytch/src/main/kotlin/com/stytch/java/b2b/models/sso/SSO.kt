@@ -37,8 +37,8 @@ public data class DeleteConnectionRequestOptions
          */
         val authorization: Authorization? = null,
     ) {
-        fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
-            var res = mutableMapOf<String, String>()
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
             if (authorization != null) {
                 res = authorization.addHeaders(res)
             }
@@ -56,8 +56,8 @@ public data class GetConnectionsRequestOptions
          */
         val authorization: Authorization? = null,
     ) {
-        fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
-            var res = mutableMapOf<String, String>()
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
             if (authorization != null) {
                 res = authorization.addHeaders(res)
             }

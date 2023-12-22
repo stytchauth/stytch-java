@@ -21,7 +21,7 @@ internal class PolicyCache(
 
     private fun getPolicy(invalidate: Boolean = false): Policy {
         val isMissing = cachedPolicy == null || policyLastUpdate == null
-        val isStale = Duration.between(policyLastUpdate, Instant.now()).seconds > 300
+        val isStale = policyLastUpdate == null || Duration.between(policyLastUpdate, Instant.now()).seconds > 300
         if (invalidate || isMissing || isStale) {
             when (val result = client.policyCompletable(PolicyRequest()).get()) {
                 is StytchResult.Success -> {

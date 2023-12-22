@@ -173,7 +173,7 @@ public data class AuthenticateRequest
          * If an `authorization_check` object is passed in, this endpoint will also check if the Member is
          *   authorized to perform the given action on the given Resource in the specified Organization. A Member is authorized if
          *   their Member Session contains a Role, assigned
-         *   [explicitly or implicitly](https://github.com/docs/b2b/guides/rbac/role-assignment), with adequate permissions.
+         *   [explicitly or implicitly](https://stytch.com/docs/b2b/guides/rbac/role-assignment), with adequate permissions.
          *   In addition, the `organization_id` passed in the authorization check must match the Member's Organization.
          *
          *   The Roles on the Member Session may differ from the Roles you see on the Member object - Roles that are implicitly

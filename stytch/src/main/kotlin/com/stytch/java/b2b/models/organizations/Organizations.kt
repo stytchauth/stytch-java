@@ -45,8 +45,8 @@ public data class DeleteRequestOptions
          */
         val authorization: Authorization? = null,
     ) {
-        fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
-            var res = mutableMapOf<String, String>()
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
             if (authorization != null) {
                 res = authorization.addHeaders(res)
             }
@@ -430,22 +430,8 @@ public data class Organization
          */
         @Json(name = "rbac_email_implicit_role_assignments")
         val rbacEmailImplicitRoleAssignments: List<EmailImplicitRoleAssignment>,
-        /**
-         * The setting that controls which mfa methods can be used by Members of an Organization. The accepted values are:
-         *
-         *   `ALL_ALLOWED` – the default setting which allows all authentication methods to be used.
-         *
-         *   `RESTRICTED` – only methods that comply with `allowed_auth_methods` can be used for authentication. This setting does
-         * not apply to Members with `is_breakglass` set to `true`.
-         *
-         */
         @Json(name = "mfa_methods")
         val mfaMethods: String,
-        /**
-         * An array of allowed mfa authentication methods. This list is enforced when `mfa_methods` is set to `RESTRICTED`.
-         *   The list's accepted values are: `sms_otp` and `totp`.
-         *
-         */
         @Json(name = "allowed_mfa_methods")
         val allowedMfaMethods: List<String>,
         /**
@@ -533,8 +519,8 @@ public data class UpdateRequestOptions
          */
         val authorization: Authorization? = null,
     ) {
-        fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
-            var res = mutableMapOf<String, String>()
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
             if (authorization != null) {
                 res = authorization.addHeaders(res)
             }
