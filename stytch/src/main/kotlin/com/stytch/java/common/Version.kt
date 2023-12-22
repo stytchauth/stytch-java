@@ -1,3 +1,3 @@
 package com.stytch.java.common
 
-internal const val VERSION = "1.2.2"
+internal const val VERSION = "2.0.0"
