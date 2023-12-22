@@ -157,7 +157,7 @@ public data class CreateRequest
         val userId: String,
         /**
          * The expiration for the TOTP instance. If the newly created TOTP is not authenticated within this time frame the TOTP
-         * will be unusable. Defaults to 60 (1 hour) with a minimum of 5 and a maximum of 1440.
+         * will be unusable. Defaults to 1440 (1 day) with a minimum of 5 and a maximum of 1440.
          */
         @Json(name = "expiration_minutes")
         val expirationMinutes: Int? = null,

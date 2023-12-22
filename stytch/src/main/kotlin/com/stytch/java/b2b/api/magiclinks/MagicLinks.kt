@@ -107,8 +107,10 @@ internal class MagicLinksImpl(
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/magic_links/authenticate", asJson)
+            httpClient.post("/v1/b2b/magic_links/authenticate", asJson, headers)
         }
 
     override fun authenticate(

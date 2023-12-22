@@ -48,8 +48,10 @@ internal class DiscoveryImpl(
 
     override suspend fun send(data: SendRequest): StytchResult<SendResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(SendRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/magic_links/email/discovery/send", asJson)
+            httpClient.post("/v1/b2b/magic_links/email/discovery/send", asJson, headers)
         }
 
     override fun send(

@@ -17,24 +17,29 @@ import com.stytch.java.b2b.api.otp.OTPs
 import com.stytch.java.b2b.api.otp.OTPsImpl
 import com.stytch.java.b2b.api.passwords.Passwords
 import com.stytch.java.b2b.api.passwords.PasswordsImpl
+import com.stytch.java.b2b.api.rbac.RBAC
+import com.stytch.java.b2b.api.rbac.RBACImpl
 import com.stytch.java.b2b.api.sessions.Sessions
 import com.stytch.java.b2b.api.sessions.SessionsImpl
 import com.stytch.java.b2b.api.sso.SSO
 import com.stytch.java.b2b.api.sso.SSOImpl
+import com.stytch.java.b2b.api.totps.TOTPs
+import com.stytch.java.b2b.api.totps.TOTPsImpl
 import com.stytch.java.common.BASE_LIVE_URL
 import com.stytch.java.common.BASE_TEST_URL
 import com.stytch.java.common.JwtOptions
+import com.stytch.java.common.PolicyCache
 import com.stytch.java.consumer.api.m2m.M2M
 import com.stytch.java.consumer.api.m2m.M2MImpl
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import org.jose4j.jwk.HttpsJwks
-
 public object StytchB2BClient {
     private lateinit var httpClient: HttpClient
     private lateinit var httpsJwks: HttpsJwks
     private lateinit var jwtOptions: JwtOptions
+    private lateinit var policyCache: PolicyCache
 
     @JvmStatic
     public lateinit var discovery: Discovery
@@ -58,10 +63,16 @@ public object StytchB2BClient {
     public lateinit var passwords: Passwords
 
     @JvmStatic
+    public lateinit var rbac: RBAC
+
+    @JvmStatic
     public lateinit var sso: SSO
 
     @JvmStatic
     public lateinit var sessions: Sessions
+
+    @JvmStatic
+    public lateinit var totps: TOTPs
 
     @JvmStatic
     public fun configure(
@@ -83,6 +94,8 @@ public object StytchB2BClient {
             )
         val coroutineScope = CoroutineScope(SupervisorJob())
         httpsJwks = HttpsJwks("$baseUrl/v1/b2b/sessions/jwks/$projectId")
+        policyCache = PolicyCache(RBACImpl(httpClient, coroutineScope))
+
         discovery = DiscoveryImpl(httpClient, coroutineScope)
         m2m = M2MImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
         magicLinks = MagicLinksImpl(httpClient, coroutineScope)
@@ -90,8 +103,10 @@ public object StytchB2BClient {
         otps = OTPsImpl(httpClient, coroutineScope)
         organizations = OrganizationsImpl(httpClient, coroutineScope)
         passwords = PasswordsImpl(httpClient, coroutineScope)
+        rbac = RBACImpl(httpClient, coroutineScope)
         sso = SSOImpl(httpClient, coroutineScope)
-        sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
+        sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions, policyCache)
+        totps = TOTPsImpl(httpClient, coroutineScope)
     }
 
     /**

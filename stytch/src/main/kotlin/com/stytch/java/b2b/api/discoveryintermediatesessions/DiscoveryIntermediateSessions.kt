@@ -96,8 +96,10 @@ internal class IntermediateSessionsImpl(
 
     override suspend fun exchange(data: ExchangeRequest): StytchResult<ExchangeResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(ExchangeRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/discovery/intermediate_sessions/exchange", asJson)
+            httpClient.post("/v1/b2b/discovery/intermediate_sessions/exchange", asJson, headers)
         }
 
     override fun exchange(

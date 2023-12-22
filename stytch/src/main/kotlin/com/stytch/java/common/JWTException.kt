@@ -12,6 +12,8 @@ public sealed class JWTException(
 
     public object JwtMissingClaims : JWTException()
 
+    public object MissingRolesClaim : JWTException(reason = "Missing roles claim field")
+
     public data class JwtMissingScopes(val missingScopes: List<String>) : JWTException(
         reason = "Missing required scopes: $missingScopes",
     )

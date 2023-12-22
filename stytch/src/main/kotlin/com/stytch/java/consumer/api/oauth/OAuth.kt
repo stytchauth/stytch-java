@@ -101,8 +101,10 @@ internal class OAuthImpl(
 
     override suspend fun attach(data: AttachRequest): StytchResult<AttachResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(AttachRequest::class.java).toJson(data)
-            httpClient.post("/v1/oauth/attach", asJson)
+            httpClient.post("/v1/oauth/attach", asJson, headers)
         }
 
     override fun attach(
@@ -121,8 +123,10 @@ internal class OAuthImpl(
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-            httpClient.post("/v1/oauth/authenticate", asJson)
+            httpClient.post("/v1/oauth/authenticate", asJson, headers)
         }
 
     override fun authenticate(

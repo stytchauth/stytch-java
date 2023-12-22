@@ -28,6 +28,51 @@ public enum class ExchangeRequestLocale {
 }
 
 @JsonClass(generateAdapter = true)
+public data class AuthorizationCheck
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String,
+        /**
+         * A unique identifier of the RBAC Resource, provided by the developer and intended to be human-readable.
+         *
+         *   A `resource_id` is not allowed to start with `stytch`, which is a special prefix used for Stytch default Resources
+         * with reserved  `resource_id`s. These include:
+         *
+         *   * `stytch.organization`
+         *   * `stytch.member`
+         *   * `stytch.sso`
+         *   * `stytch.self`
+         *
+         *   Check out the [guide on Stytch default Resources](https://stytch.com/docs/b2b/guides/rbac/stytch-defaults) for a more
+         * detailed explanation.
+         *
+         *
+         */
+        @Json(name = "resource_id")
+        val resourceId: String,
+        /**
+         * An action to take on a Resource.
+         */
+        @Json(name = "action")
+        val action: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class AuthorizationVerdict
+    @JvmOverloads
+    constructor(
+        @Json(name = "authorized")
+        val authorized: Boolean,
+        @Json(name = "granting_roles")
+        val grantingRoles: List<String>,
+    )
+
+@JsonClass(generateAdapter = true)
 public data class MemberSession
     @JvmOverloads
     constructor(
@@ -70,6 +115,8 @@ public data class MemberSession
          */
         @Json(name = "organization_id")
         val organizationId: String,
+        @Json(name = "roles")
+        val roles: List<String>,
         /**
          * The custom claims map for a Session. Claims can be added to a session during a Sessions authenticate call.
          */
@@ -122,6 +169,24 @@ public data class AuthenticateRequest
          */
         @Json(name = "session_custom_claims")
         val sessionCustomClaims: Map<String, Any>? = null,
+        /**
+         * If an `authorization_check` object is passed in, this endpoint will also check if the Member is
+         *   authorized to perform the given action on the given Resource in the specified Organization. A Member is authorized if
+         *   their Member Session contains a Role, assigned
+         *   [explicitly or implicitly](https://stytch.com/docs/b2b/guides/rbac/role-assignment), with adequate permissions.
+         *   In addition, the `organization_id` passed in the authorization check must match the Member's Organization.
+         *
+         *   The Roles on the Member Session may differ from the Roles you see on the Member object - Roles that are implicitly
+         *   assigned by SSO connection or SSO group will only be valid for a Member Session if there is at least one
+         * authentication
+         *   factor on the Member Session from the specified SSO connection.
+         *
+         *   If the Member is not authorized to perform the specified action on the specified Resource, or if the
+         *   `organization_id` does not match the Member's Organization, a 403 error will be thrown.
+         *   Otherwise, the response will contain a list of Roles that satisfied the authorization check.
+         */
+        @Json(name = "authorization_check")
+        val authorizationCheck: AuthorizationCheck? = null,
     )
 
 /**
@@ -168,6 +233,12 @@ public data class AuthenticateResponse
          */
         @Json(name = "status_code")
         val statusCode: Int,
+        /**
+         * If an `authorization_check` is provided in the request and the check succeeds, this field will return
+         *   the complete list of Roles that gave the Member permission to perform the specified action on the specified Resource.
+         */
+        @Json(name = "verdict")
+        val verdict: AuthorizationVerdict? = null,
     )
 
 /**
