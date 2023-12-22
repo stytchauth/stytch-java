@@ -40,6 +40,7 @@ public object StytchB2BClient {
     private lateinit var httpClient: HttpClient
     private lateinit var httpsJwks: HttpsJwks
     private lateinit var jwtOptions: JwtOptions
+    private lateinit var policyCache: PolicyCache
 
     @JvmStatic
     public lateinit var discovery: Discovery

@@ -314,7 +314,7 @@ public interface Sessions {
         jwt: String,
         maxTokenAgeSeconds: Int?,
         authorizationCheck: AuthorizationCheck? = null,
-        callback: (StytchResult<Session?>) -> Unit,
+        callback: (StytchResult<MemberSession?>) -> Unit,
     )
 
     /** Parse a JWT and verify the signature, preferring local verification over remote.

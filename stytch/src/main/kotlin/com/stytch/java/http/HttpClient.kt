@@ -11,6 +11,7 @@ import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Credentials
 import okhttp3.Headers
+import okhttp3.Headers.Companion.toHeaders
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType
@@ -134,7 +135,7 @@ internal class HttpClient(
         val request =
             Request.Builder()
                 .url(buildUrl(path, params))
-                .headers(Headers.of(headers))
+                .headers(headers.toHeaders())
                 .build()
         return try {
             makeRequest(request, T::class.java)
@@ -146,14 +147,14 @@ internal class HttpClient(
     suspend inline fun <reified T> post(
         path: String,
         json: String,
-        mediaType: MediaType = "application/json".toMediaType(),
         headers: Map<String, String> = emptyMap(),
+        mediaType: MediaType = "application/json".toMediaType(),
     ): StytchResult<T> {
         val request =
             Request.Builder()
                 .url(buildUrl(path))
                 .post(json.toRequestBody(mediaType))
-                .headers(Headers.of(headers))
+                .headers(headers.toHeaders())
                 .build()
         return try {
             makeRequest(request, T::class.java)
@@ -165,14 +166,14 @@ internal class HttpClient(
     suspend inline fun <reified T> put(
         path: String,
         json: String,
-        mediaType: MediaType = "application/json".toMediaType(),
         headers: Map<String, String> = emptyMap(),
+        mediaType: MediaType = "application/json".toMediaType(),
     ): StytchResult<T> {
         val request =
             Request.Builder()
                 .url(buildUrl(path))
                 .put(json.toRequestBody(mediaType))
-                .headers(Headers.of(headers))
+                .headers(headers.toHeaders())
                 .build()
         return try {
             makeRequest(request, T::class.java)
@@ -189,7 +190,7 @@ internal class HttpClient(
             Request.Builder()
                 .url(buildUrl(path, emptyMap()))
                 .delete()
-                .headers(Headers.of(headers))
+                .headers(headers.toHeaders())
                 .build()
         return try {
             makeRequest(request, T::class.java)
