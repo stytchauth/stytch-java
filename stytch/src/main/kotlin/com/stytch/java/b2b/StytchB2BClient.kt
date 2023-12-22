@@ -23,8 +23,6 @@ import com.stytch.java.b2b.api.sessions.Sessions
 import com.stytch.java.b2b.api.sessions.SessionsImpl
 import com.stytch.java.b2b.api.sso.SSO
 import com.stytch.java.b2b.api.sso.SSOImpl
-import com.stytch.java.b2b.api.totps.TOTPs
-import com.stytch.java.b2b.api.totps.TOTPsImpl
 import com.stytch.java.common.BASE_LIVE_URL
 import com.stytch.java.common.BASE_TEST_URL
 import com.stytch.java.common.JwtOptions
@@ -72,9 +70,6 @@ public object StytchB2BClient {
     public lateinit var sessions: Sessions
 
     @JvmStatic
-    public lateinit var totps: TOTPs
-
-    @JvmStatic
     public fun configure(
         projectId: String,
         secret: String,
@@ -106,7 +101,6 @@ public object StytchB2BClient {
         rbac = RBACImpl(httpClient, coroutineScope)
         sso = SSOImpl(httpClient, coroutineScope)
         sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions, policyCache)
-        totps = TOTPsImpl(httpClient, coroutineScope)
     }
 
     /**
