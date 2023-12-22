@@ -88,7 +88,10 @@ public interface IntermediateSessions {
     public fun exchangeCompletable(data: ExchangeRequest): CompletableFuture<StytchResult<ExchangeResponse>>
 }
 
-internal class IntermediateSessionsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : IntermediateSessions {
+internal class IntermediateSessionsImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : IntermediateSessions {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun exchange(data: ExchangeRequest): StytchResult<ExchangeResponse> =

@@ -377,7 +377,10 @@ public interface Members {
     public fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>>
 }
 
-internal class MembersImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Members {
+internal class MembersImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : Members {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun update(

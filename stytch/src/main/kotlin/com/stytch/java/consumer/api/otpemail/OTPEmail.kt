@@ -114,7 +114,10 @@ public interface Email {
     public fun loginOrCreateCompletable(data: LoginOrCreateRequest): CompletableFuture<StytchResult<LoginOrCreateResponse>>
 }
 
-internal class EmailImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Email {
+internal class EmailImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : Email {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun send(data: SendRequest): StytchResult<SendResponse> =

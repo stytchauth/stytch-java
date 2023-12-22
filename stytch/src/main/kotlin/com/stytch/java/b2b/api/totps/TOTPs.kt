@@ -53,7 +53,10 @@ public interface TOTPs {
     public fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>>
 }
 
-internal class TOTPsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : TOTPs {
+internal class TOTPsImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : TOTPs {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =

@@ -30,7 +30,6 @@ import com.stytch.java.common.StytchB2BSessionClaim
 import com.stytch.java.common.StytchException
 import com.stytch.java.common.StytchResult
 import com.stytch.java.common.parseJWTClaims
-import com.stytch.java.consumer.models.sessions.Session
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -388,7 +387,13 @@ public interface Sessions {
     // ENDMANUAL(authenticateJWT_interface)
 }
 
-internal class SessionsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope, private val jwksClient: HttpsJwks, private val jwtOptions: JwtOptions, private val policyCache: PolicyCache) : Sessions {
+internal class SessionsImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+    private val jwksClient: HttpsJwks,
+    private val jwtOptions: JwtOptions,
+    private val policyCache: PolicyCache,
+) : Sessions {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> =

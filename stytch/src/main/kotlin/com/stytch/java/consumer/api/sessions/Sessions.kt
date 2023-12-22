@@ -268,7 +268,12 @@ public interface Sessions {
     // ENDMANUAL(authenticateJWT_interface)
 }
 
-internal class SessionsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope, private val jwksClient: HttpsJwks, private val jwtOptions: JwtOptions) : Sessions {
+internal class SessionsImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+    private val jwksClient: HttpsJwks,
+    private val jwtOptions: JwtOptions,
+) : Sessions {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> =

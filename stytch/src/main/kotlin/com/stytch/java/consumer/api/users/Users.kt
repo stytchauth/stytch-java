@@ -362,7 +362,10 @@ public interface Users {
     ): CompletableFuture<StytchResult<DeleteOAuthRegistrationResponse>>
 }
 
-internal class UsersImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Users {
+internal class UsersImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : Users {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =

@@ -78,7 +78,10 @@ public interface RBAC {
     public fun policyCompletable(data: PolicyRequest): CompletableFuture<StytchResult<PolicyResponse>>
 }
 
-internal class RBACImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : RBAC {
+internal class RBACImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : RBAC {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun policy(data: PolicyRequest): StytchResult<PolicyResponse> =

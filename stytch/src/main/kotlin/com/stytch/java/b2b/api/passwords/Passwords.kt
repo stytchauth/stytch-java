@@ -206,7 +206,10 @@ public interface Passwords {
     public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
-internal class PasswordsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Passwords {
+internal class PasswordsImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : Passwords {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val email: Email = EmailImpl(httpClient, coroutineScope)

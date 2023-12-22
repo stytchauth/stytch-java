@@ -87,7 +87,10 @@ public interface Email {
     public fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>>
 }
 
-internal class EmailImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Email {
+internal class EmailImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : Email {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun resetStart(data: ResetStartRequest): StytchResult<ResetStartResponse> =

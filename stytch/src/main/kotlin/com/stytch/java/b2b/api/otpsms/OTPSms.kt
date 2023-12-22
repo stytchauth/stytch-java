@@ -207,7 +207,10 @@ public interface Sms {
     public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
-internal class SmsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Sms {
+internal class SmsImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : Sms {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun send(data: SendRequest): StytchResult<SendResponse> =

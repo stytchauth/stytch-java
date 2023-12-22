@@ -156,7 +156,10 @@ public interface Whatsapp {
     public fun loginOrCreateCompletable(data: LoginOrCreateRequest): CompletableFuture<StytchResult<LoginOrCreateResponse>>
 }
 
-internal class WhatsappImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Whatsapp {
+internal class WhatsappImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : Whatsapp {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun send(data: SendRequest): StytchResult<SendResponse> =

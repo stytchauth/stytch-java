@@ -237,7 +237,10 @@ public interface WebAuthn {
     public fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>>
 }
 
-internal class WebAuthnImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : WebAuthn {
+internal class WebAuthnImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : WebAuthn {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun registerStart(data: RegisterStartRequest): StytchResult<RegisterStartResponse> =

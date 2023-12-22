@@ -104,7 +104,10 @@ public interface OAuth {
     public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
-internal class OAuthImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : OAuth {
+internal class OAuthImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : OAuth {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val discovery: Discovery = DiscoveryImpl(httpClient, coroutineScope)

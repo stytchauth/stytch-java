@@ -148,7 +148,10 @@ public interface OIDC {
     ): CompletableFuture<StytchResult<UpdateConnectionResponse>>
 }
 
-internal class OIDCImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : OIDC {
+internal class OIDCImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : OIDC {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun createConnection(

@@ -186,7 +186,10 @@ public interface SAML {
     ): CompletableFuture<StytchResult<DeleteVerificationCertificateResponse>>
 }
 
-internal class SAMLImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : SAML {
+internal class SAMLImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : SAML {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun createConnection(

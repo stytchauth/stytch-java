@@ -177,7 +177,10 @@ public interface Organizations {
     public fun listCompletable(data: ListRequest): CompletableFuture<StytchResult<ListResponse>>
 }
 
-internal class OrganizationsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Organizations {
+internal class OrganizationsImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : Organizations {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =

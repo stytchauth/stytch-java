@@ -154,7 +154,10 @@ public interface SSO {
     public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
-internal class SSOImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : SSO {
+internal class SSOImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : SSO {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val oidc: OIDC = OIDCImpl(httpClient, coroutineScope)

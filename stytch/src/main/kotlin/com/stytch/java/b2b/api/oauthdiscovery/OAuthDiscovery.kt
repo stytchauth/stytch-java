@@ -43,7 +43,10 @@ public interface Discovery {
     public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
-internal class DiscoveryImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Discovery {
+internal class DiscoveryImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : Discovery {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =

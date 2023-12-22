@@ -211,7 +211,10 @@ public interface Organizations {
     public fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>>
 }
 
-internal class OrganizationsImpl(private val httpClient: HttpClient, private val coroutineScope: CoroutineScope) : Organizations {
+internal class OrganizationsImpl(
+    private val httpClient: HttpClient,
+    private val coroutineScope: CoroutineScope,
+) : Organizations {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val members: Members = MembersImpl(httpClient, coroutineScope)
