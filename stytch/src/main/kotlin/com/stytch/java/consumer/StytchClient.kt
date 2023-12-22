@@ -32,7 +32,6 @@ import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import org.jose4j.jwk.HttpsJwks
-
 public object StytchClient {
     private lateinit var httpClient: HttpClient
     private lateinit var httpsJwks: HttpsJwks
@@ -88,6 +87,7 @@ public object StytchClient {
             )
         val coroutineScope = CoroutineScope(SupervisorJob())
         httpsJwks = HttpsJwks("$baseUrl/v1/sessions/jwks/$projectId")
+
         cryptoWallets = CryptoWalletsImpl(httpClient, coroutineScope)
         m2m = M2MImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
         magicLinks = MagicLinksImpl(httpClient, coroutineScope)

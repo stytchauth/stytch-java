@@ -202,11 +202,13 @@ internal class ClientsImpl(
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
             val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
             val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
             val asMap = adapter.fromJson(asJson) ?: emptyMap()
-            httpClient.get("/v1/m2m/clients/${data.clientId}", asMap)
+            httpClient.get("/v1/m2m/clients/${data.clientId}", asMap, headers)
         }
 
     override fun get(
@@ -225,8 +227,10 @@ internal class ClientsImpl(
 
     override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)
-            httpClient.post("/v1/m2m/clients/search", asJson)
+            httpClient.post("/v1/m2m/clients/search", asJson, headers)
         }
 
     override fun search(
@@ -245,8 +249,10 @@ internal class ClientsImpl(
 
     override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
-            httpClient.put("/v1/m2m/clients/${data.clientId}", asJson)
+            httpClient.put("/v1/m2m/clients/${data.clientId}", asJson, headers)
         }
 
     override fun update(
@@ -265,7 +271,9 @@ internal class ClientsImpl(
 
     override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> =
         withContext(Dispatchers.IO) {
-            httpClient.delete("/v1/m2m/clients/${data.clientId}")
+            var headers = emptyMap<String, String>()
+
+            httpClient.delete("/v1/m2m/clients/${data.clientId}", headers)
         }
 
     override fun delete(
@@ -284,8 +292,10 @@ internal class ClientsImpl(
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-            httpClient.post("/v1/m2m/clients", asJson)
+            httpClient.post("/v1/m2m/clients", asJson, headers)
         }
 
     override fun create(

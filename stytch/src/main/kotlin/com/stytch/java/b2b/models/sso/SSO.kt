@@ -12,6 +12,7 @@ import com.stytch.java.b2b.models.mfa.MfaRequired
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
+import com.stytch.java.common.methodoptions.Authorization
 import java.time.Instant
 
 @JsonClass(generateAdapter = false)
@@ -25,6 +26,44 @@ public enum class AuthenticateRequestLocale {
     @Json(name = "ptbr")
     PTBR,
 }
+
+public data class DeleteConnectionRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
+        }
+    }
+
+public data class GetConnectionsRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
+        }
+    }
 
 @JsonClass(generateAdapter = true)
 public data class OIDCConnection
@@ -80,8 +119,32 @@ public data class SAMLConnection
         val signingCertificates: List<X509Certificate>,
         @Json(name = "verification_certificates")
         val verificationCertificates: List<X509Certificate>,
+        @Json(name = "saml_connection_implicit_role_assignments")
+        val samlConnectionImplicitRoleAssignments: List<SAMLConnectionImplicitRoleAssignment>,
+        @Json(name = "saml_group_implicit_role_assignments")
+        val samlGroupImplicitRoleAssignments: List<SAMLGroupImplicitRoleAssignment>,
+        @Json(name = "alternative_audience_uri")
+        val alternativeAudienceUri: String,
         @Json(name = "attribute_mapping")
         val attributeMapping: Map<String, Any>? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class SAMLConnectionImplicitRoleAssignment
+    @JvmOverloads
+    constructor(
+        @Json(name = "role_id")
+        val roleId: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class SAMLGroupImplicitRoleAssignment
+    @JvmOverloads
+    constructor(
+        @Json(name = "role_id")
+        val roleId: String,
+        @Json(name = "group")
+        val group: String,
     )
 
 @JsonClass(generateAdapter = true)

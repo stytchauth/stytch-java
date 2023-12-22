@@ -16,8 +16,10 @@ import com.stytch.java.b2b.api.ssosaml.SAMLImpl
 import com.stytch.java.b2b.models.sso.AuthenticateRequest
 import com.stytch.java.b2b.models.sso.AuthenticateResponse
 import com.stytch.java.b2b.models.sso.DeleteConnectionRequest
+import com.stytch.java.b2b.models.sso.DeleteConnectionRequestOptions
 import com.stytch.java.b2b.models.sso.DeleteConnectionResponse
 import com.stytch.java.b2b.models.sso.GetConnectionsRequest
+import com.stytch.java.b2b.models.sso.GetConnectionsRequestOptions
 import com.stytch.java.b2b.models.sso.GetConnectionsResponse
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
@@ -36,40 +38,54 @@ public interface SSO {
     public val saml: SAML
 
     /**
-     * Get all SSO Connections owned by the organization.
+     * Get all SSO Connections owned by the organization. /%}
      */
-    public suspend fun getConnections(data: GetConnectionsRequest): StytchResult<GetConnectionsResponse>
+    public suspend fun getConnections(
+        data: GetConnectionsRequest,
+        methodOptions: GetConnectionsRequestOptions? = null,
+    ): StytchResult<GetConnectionsResponse>
 
     /**
-     * Get all SSO Connections owned by the organization.
+     * Get all SSO Connections owned by the organization. /%}
      */
     public fun getConnections(
         data: GetConnectionsRequest,
+        methodOptions: GetConnectionsRequestOptions? = null,
         callback: (StytchResult<GetConnectionsResponse>) -> Unit,
     )
 
     /**
-     * Get all SSO Connections owned by the organization.
+     * Get all SSO Connections owned by the organization. /%}
      */
-    public fun getConnectionsCompletable(data: GetConnectionsRequest): CompletableFuture<StytchResult<GetConnectionsResponse>>
+    public fun getConnectionsCompletable(
+        data: GetConnectionsRequest,
+        methodOptions: GetConnectionsRequestOptions? = null,
+    ): CompletableFuture<StytchResult<GetConnectionsResponse>>
 
     /**
-     * Delete an existing SSO connection.
+     * Delete an existing SSO connection. /%}
      */
-    public suspend fun deleteConnection(data: DeleteConnectionRequest): StytchResult<DeleteConnectionResponse>
+    public suspend fun deleteConnection(
+        data: DeleteConnectionRequest,
+        methodOptions: DeleteConnectionRequestOptions? = null,
+    ): StytchResult<DeleteConnectionResponse>
 
     /**
-     * Delete an existing SSO connection.
+     * Delete an existing SSO connection. /%}
      */
     public fun deleteConnection(
         data: DeleteConnectionRequest,
+        methodOptions: DeleteConnectionRequestOptions? = null,
         callback: (StytchResult<DeleteConnectionResponse>) -> Unit,
     )
 
     /**
-     * Delete an existing SSO connection.
+     * Delete an existing SSO connection. /%}
      */
-    public fun deleteConnectionCompletable(data: DeleteConnectionRequest): CompletableFuture<StytchResult<DeleteConnectionResponse>>
+    public fun deleteConnectionCompletable(
+        data: DeleteConnectionRequest,
+        methodOptions: DeleteConnectionRequestOptions? = null,
+    ): CompletableFuture<StytchResult<DeleteConnectionResponse>>
 
     /**
      * Authenticate a user given a token.
@@ -147,52 +163,78 @@ internal class SSOImpl(
     override val oidc: OIDC = OIDCImpl(httpClient, coroutineScope)
     override val saml: SAML = SAMLImpl(httpClient, coroutineScope)
 
-    override suspend fun getConnections(data: GetConnectionsRequest): StytchResult<GetConnectionsResponse> =
+    override suspend fun getConnections(
+        data: GetConnectionsRequest,
+        methodOptions: GetConnectionsRequestOptions?,
+    ): StytchResult<GetConnectionsResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
+
             val asJson = moshi.adapter(GetConnectionsRequest::class.java).toJson(data)
             val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
             val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
             val asMap = adapter.fromJson(asJson) ?: emptyMap()
-            httpClient.get("/v1/b2b/sso/${data.organizationId}", asMap)
+            httpClient.get("/v1/b2b/sso/${data.organizationId}", asMap, headers)
         }
 
     override fun getConnections(
         data: GetConnectionsRequest,
+        methodOptions: GetConnectionsRequestOptions?,
         callback: (StytchResult<GetConnectionsResponse>) -> Unit,
     ) {
         coroutineScope.launch {
-            callback(getConnections(data))
+            callback(getConnections(data, methodOptions))
         }
     }
 
-    override fun getConnectionsCompletable(data: GetConnectionsRequest): CompletableFuture<StytchResult<GetConnectionsResponse>> =
+    override fun getConnectionsCompletable(
+        data: GetConnectionsRequest,
+        methodOptions: GetConnectionsRequestOptions?,
+    ): CompletableFuture<StytchResult<GetConnectionsResponse>> =
         coroutineScope.async {
-            getConnections(data)
+            getConnections(data, methodOptions)
         }.asCompletableFuture()
 
-    override suspend fun deleteConnection(data: DeleteConnectionRequest): StytchResult<DeleteConnectionResponse> =
+    override suspend fun deleteConnection(
+        data: DeleteConnectionRequest,
+        methodOptions: DeleteConnectionRequestOptions?,
+    ): StytchResult<DeleteConnectionResponse> =
         withContext(Dispatchers.IO) {
-            httpClient.delete("/v1/b2b/sso/${data.organizationId}/connections/${data.connectionId}")
+            var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
+
+            httpClient.delete("/v1/b2b/sso/${data.organizationId}/connections/${data.connectionId}", headers)
         }
 
     override fun deleteConnection(
         data: DeleteConnectionRequest,
+        methodOptions: DeleteConnectionRequestOptions?,
         callback: (StytchResult<DeleteConnectionResponse>) -> Unit,
     ) {
         coroutineScope.launch {
-            callback(deleteConnection(data))
+            callback(deleteConnection(data, methodOptions))
         }
     }
 
-    override fun deleteConnectionCompletable(data: DeleteConnectionRequest): CompletableFuture<StytchResult<DeleteConnectionResponse>> =
+    override fun deleteConnectionCompletable(
+        data: DeleteConnectionRequest,
+        methodOptions: DeleteConnectionRequestOptions?,
+    ): CompletableFuture<StytchResult<DeleteConnectionResponse>> =
         coroutineScope.async {
-            deleteConnection(data)
+            deleteConnection(data, methodOptions)
         }.asCompletableFuture()
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/sso/authenticate", asJson)
+            httpClient.post("/v1/b2b/sso/authenticate", asJson, headers)
         }
 
     override fun authenticate(

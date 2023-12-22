@@ -8,8 +8,10 @@ package com.stytch.java.b2b.api.ssooidc
 
 import com.squareup.moshi.Moshi
 import com.stytch.java.b2b.models.ssooidc.CreateConnectionRequest
+import com.stytch.java.b2b.models.ssooidc.CreateConnectionRequestOptions
 import com.stytch.java.b2b.models.ssooidc.CreateConnectionResponse
 import com.stytch.java.b2b.models.ssooidc.UpdateConnectionRequest
+import com.stytch.java.b2b.models.ssooidc.UpdateConnectionRequestOptions
 import com.stytch.java.b2b.models.ssooidc.UpdateConnectionResponse
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
@@ -24,22 +26,29 @@ import java.util.concurrent.CompletableFuture
 
 public interface OIDC {
     /**
-     * Create a new OIDC Connection.
+     * Create a new OIDC Connection. /%}
      */
-    public suspend fun createConnection(data: CreateConnectionRequest): StytchResult<CreateConnectionResponse>
+    public suspend fun createConnection(
+        data: CreateConnectionRequest,
+        methodOptions: CreateConnectionRequestOptions? = null,
+    ): StytchResult<CreateConnectionResponse>
 
     /**
-     * Create a new OIDC Connection.
+     * Create a new OIDC Connection. /%}
      */
     public fun createConnection(
         data: CreateConnectionRequest,
+        methodOptions: CreateConnectionRequestOptions? = null,
         callback: (StytchResult<CreateConnectionResponse>) -> Unit,
     )
 
     /**
-     * Create a new OIDC Connection.
+     * Create a new OIDC Connection. /%}
      */
-    public fun createConnectionCompletable(data: CreateConnectionRequest): CompletableFuture<StytchResult<CreateConnectionResponse>>
+    public fun createConnectionCompletable(
+        data: CreateConnectionRequest,
+        methodOptions: CreateConnectionRequestOptions? = null,
+    ): CompletableFuture<StytchResult<CreateConnectionResponse>>
 
     /**
      * Updates an existing OIDC connection.
@@ -66,8 +75,12 @@ public interface OIDC {
      * * `token_url`
      * * `userinfo_url`
      * * `jwks_url`
+     *  /%}
      */
-    public suspend fun updateConnection(data: UpdateConnectionRequest): StytchResult<UpdateConnectionResponse>
+    public suspend fun updateConnection(
+        data: UpdateConnectionRequest,
+        methodOptions: UpdateConnectionRequestOptions? = null,
+    ): StytchResult<UpdateConnectionResponse>
 
     /**
      * Updates an existing OIDC connection.
@@ -94,9 +107,11 @@ public interface OIDC {
      * * `token_url`
      * * `userinfo_url`
      * * `jwks_url`
+     *  /%}
      */
     public fun updateConnection(
         data: UpdateConnectionRequest,
+        methodOptions: UpdateConnectionRequestOptions? = null,
         callback: (StytchResult<UpdateConnectionResponse>) -> Unit,
     )
 
@@ -125,8 +140,12 @@ public interface OIDC {
      * * `token_url`
      * * `userinfo_url`
      * * `jwks_url`
+     *  /%}
      */
-    public fun updateConnectionCompletable(data: UpdateConnectionRequest): CompletableFuture<StytchResult<UpdateConnectionResponse>>
+    public fun updateConnectionCompletable(
+        data: UpdateConnectionRequest,
+        methodOptions: UpdateConnectionRequestOptions? = null,
+    ): CompletableFuture<StytchResult<UpdateConnectionResponse>>
 }
 
 internal class OIDCImpl(
@@ -135,43 +154,67 @@ internal class OIDCImpl(
 ) : OIDC {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override suspend fun createConnection(data: CreateConnectionRequest): StytchResult<CreateConnectionResponse> =
+    override suspend fun createConnection(
+        data: CreateConnectionRequest,
+        methodOptions: CreateConnectionRequestOptions?,
+    ): StytchResult<CreateConnectionResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
+
             val asJson = moshi.adapter(CreateConnectionRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/sso/oidc/${data.organizationId}", asJson)
+            httpClient.post("/v1/b2b/sso/oidc/${data.organizationId}", asJson, headers)
         }
 
     override fun createConnection(
         data: CreateConnectionRequest,
+        methodOptions: CreateConnectionRequestOptions?,
         callback: (StytchResult<CreateConnectionResponse>) -> Unit,
     ) {
         coroutineScope.launch {
-            callback(createConnection(data))
+            callback(createConnection(data, methodOptions))
         }
     }
 
-    override fun createConnectionCompletable(data: CreateConnectionRequest): CompletableFuture<StytchResult<CreateConnectionResponse>> =
+    override fun createConnectionCompletable(
+        data: CreateConnectionRequest,
+        methodOptions: CreateConnectionRequestOptions?,
+    ): CompletableFuture<StytchResult<CreateConnectionResponse>> =
         coroutineScope.async {
-            createConnection(data)
+            createConnection(data, methodOptions)
         }.asCompletableFuture()
 
-    override suspend fun updateConnection(data: UpdateConnectionRequest): StytchResult<UpdateConnectionResponse> =
+    override suspend fun updateConnection(
+        data: UpdateConnectionRequest,
+        methodOptions: UpdateConnectionRequestOptions?,
+    ): StytchResult<UpdateConnectionResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
+
             val asJson = moshi.adapter(UpdateConnectionRequest::class.java).toJson(data)
-            httpClient.put("/v1/b2b/sso/oidc/${data.organizationId}/connections/${data.connectionId}", asJson)
+            httpClient.put("/v1/b2b/sso/oidc/${data.organizationId}/connections/${data.connectionId}", asJson, headers)
         }
 
     override fun updateConnection(
         data: UpdateConnectionRequest,
+        methodOptions: UpdateConnectionRequestOptions?,
         callback: (StytchResult<UpdateConnectionResponse>) -> Unit,
     ) {
         coroutineScope.launch {
-            callback(updateConnection(data))
+            callback(updateConnection(data, methodOptions))
         }
     }
 
-    override fun updateConnectionCompletable(data: UpdateConnectionRequest): CompletableFuture<StytchResult<UpdateConnectionResponse>> =
+    override fun updateConnectionCompletable(
+        data: UpdateConnectionRequest,
+        methodOptions: UpdateConnectionRequestOptions?,
+    ): CompletableFuture<StytchResult<UpdateConnectionResponse>> =
         coroutineScope.async {
-            updateConnection(data)
+            updateConnection(data, methodOptions)
         }.asCompletableFuture()
 }

@@ -2,7 +2,9 @@
 
 The Stytch Java library makes it easy to use the Stytch user infrastructure API in Java, Kotlin and Scala applications.
 
-It pairs well with the Stytch [Web SDK](https://www.npmjs.com/package/@stytch/stytch-js) or your own custom authentication flow.
+It pairs well with the Stytch [Web SDK](https://www.npmjs.com/package/@stytch/vanilla-js) or your own custom authentication flow.
+
+Check out our Java example app [here](https://github.com/stytchauth/stytch-java-magic-links).
 
 ## Install
 

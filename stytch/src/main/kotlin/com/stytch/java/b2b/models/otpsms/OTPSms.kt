@@ -113,6 +113,8 @@ public data class AuthenticateRequest
          */
         @Json(name = "set_mfa_enrollment")
         val setMfaEnrollment: String? = null,
+        @Json(name = "set_default_mfa")
+        val setDefaultMfa: Boolean? = null,
     )
 
 /**

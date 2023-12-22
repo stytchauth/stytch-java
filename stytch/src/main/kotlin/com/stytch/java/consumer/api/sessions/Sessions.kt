@@ -115,12 +115,38 @@ public interface Sessions {
     public fun revokeCompletable(data: RevokeRequest): CompletableFuture<StytchResult<RevokeResponse>>
 
     /**
-     * Get the JSON Web Key Set (JWKS) for a Stytch Project.
+     * Get the JSON Web Key Set (JWKS) for a project.
+     *
+     * JWKS are rotated every ~6 months. Upon rotation, new JWTs will be signed using the new key set, and both key sets will
+     * be returned by this endpoint for a period of 1 month.
+     *
+     * JWTs have a set lifetime of 5 minutes, so there will be a 5 minute period where some JWTs will be signed by the old
+     * JWKS, and some JWTs will be signed by the new JWKS. The correct JWKS to use for validation is determined by matching
+     * the `kid` value of the JWT and JWKS.
+     *
+     * If you're using one of our [backend SDKs](https://stytch.com/docs/sdks), the JWKS roll will be handled for you.
+     *
+     * If you're using your own JWT validation library, many have built-in support for JWKS rotation, and you'll just need to
+     * supply this API endpoint. If not, your application should decide which JWKS to use for validation by inspecting the
+     * `kid` value.
      */
     public suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse>
 
     /**
-     * Get the JSON Web Key Set (JWKS) for a Stytch Project.
+     * Get the JSON Web Key Set (JWKS) for a project.
+     *
+     * JWKS are rotated every ~6 months. Upon rotation, new JWTs will be signed using the new key set, and both key sets will
+     * be returned by this endpoint for a period of 1 month.
+     *
+     * JWTs have a set lifetime of 5 minutes, so there will be a 5 minute period where some JWTs will be signed by the old
+     * JWKS, and some JWTs will be signed by the new JWKS. The correct JWKS to use for validation is determined by matching
+     * the `kid` value of the JWT and JWKS.
+     *
+     * If you're using one of our [backend SDKs](https://stytch.com/docs/sdks), the JWKS roll will be handled for you.
+     *
+     * If you're using your own JWT validation library, many have built-in support for JWKS rotation, and you'll just need to
+     * supply this API endpoint. If not, your application should decide which JWKS to use for validation by inspecting the
+     * `kid` value.
      */
     public fun getJWKS(
         data: GetJWKSRequest,
@@ -128,7 +154,20 @@ public interface Sessions {
     )
 
     /**
-     * Get the JSON Web Key Set (JWKS) for a Stytch Project.
+     * Get the JSON Web Key Set (JWKS) for a project.
+     *
+     * JWKS are rotated every ~6 months. Upon rotation, new JWTs will be signed using the new key set, and both key sets will
+     * be returned by this endpoint for a period of 1 month.
+     *
+     * JWTs have a set lifetime of 5 minutes, so there will be a 5 minute period where some JWTs will be signed by the old
+     * JWKS, and some JWTs will be signed by the new JWKS. The correct JWKS to use for validation is determined by matching
+     * the `kid` value of the JWT and JWKS.
+     *
+     * If you're using one of our [backend SDKs](https://stytch.com/docs/sdks), the JWKS roll will be handled for you.
+     *
+     * If you're using your own JWT validation library, many have built-in support for JWKS rotation, and you'll just need to
+     * supply this API endpoint. If not, your application should decide which JWKS to use for validation by inspecting the
+     * `kid` value.
      */
     public fun getJWKSCompletable(data: GetJWKSRequest): CompletableFuture<StytchResult<GetJWKSResponse>>
 
@@ -136,6 +175,7 @@ public interface Sessions {
     // ADDIMPORT: import com.stytch.java.consumer.models.sessions.Session
     // ADDIMPORT: import com.stytch.java.common.JWTException
     // ADDIMPORT: import com.stytch.java.common.ParseJWTClaimsOptions
+    // ADDIMPORT: import com.stytch.java.common.StytchSessionClaim
     // ADDIMPORT: import com.stytch.java.common.parseJWTClaims
     // ADDIMPORT: import com.stytch.java.common.ParsedJWTClaims
     // ADDIMPORT: import com.stytch.java.common.JWTResponse
@@ -148,7 +188,7 @@ public interface Sessions {
      * If maxTokenAgeSeconds is set, remote verification will be forced if the JWT was issued at
      * (based on the "iat" claim) more than that many seconds ago.
      *
-     * To force remote validation for all tokens, set max_token_age_seconds to zero or use the
+     * To force remote validation for all tokens, set maxTokenAgeSeconds to zero or use the
      * authenticate method instead.
      */
     public suspend fun authenticateJwt(
@@ -161,7 +201,7 @@ public interface Sessions {
      * If maxTokenAgeSeconds is set, remote verification will be forced if the JWT was issued at
      * (based on the "iat" claim) more than that many seconds ago.
      *
-     * To force remote validation for all tokens, set max_token_age_seconds to zero or use the
+     * To force remote validation for all tokens, set maxTokenAgeSeconds to zero or use the
      * authenticate method instead.
      */
     public fun authenticateJwt(
@@ -175,7 +215,7 @@ public interface Sessions {
      * If maxTokenAgeSeconds is set, remote verification will be forced if the JWT was issued at
      * (based on the "iat" claim) more than that many seconds ago.
      *
-     * To force remote validation for all tokens, set max_token_age_seconds to zero or use the
+     * To force remote validation for all tokens, set maxTokenAgeSeconds to zero or use the
      * authenticate method instead.
      */
     public fun authenticateJwtCompletable(
@@ -247,11 +287,13 @@ internal class SessionsImpl(
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
             val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
             val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
             val asMap = adapter.fromJson(asJson) ?: emptyMap()
-            httpClient.get("/v1/sessions", asMap)
+            httpClient.get("/v1/sessions", asMap, headers)
         }
 
     override fun get(
@@ -270,8 +312,10 @@ internal class SessionsImpl(
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-            httpClient.post("/v1/sessions/authenticate", asJson)
+            httpClient.post("/v1/sessions/authenticate", asJson, headers)
         }
 
     override fun authenticate(
@@ -290,8 +334,10 @@ internal class SessionsImpl(
 
     override suspend fun revoke(data: RevokeRequest): StytchResult<RevokeResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(RevokeRequest::class.java).toJson(data)
-            httpClient.post("/v1/sessions/revoke", asJson)
+            httpClient.post("/v1/sessions/revoke", asJson, headers)
         }
 
     override fun revoke(
@@ -310,11 +356,13 @@ internal class SessionsImpl(
 
     override suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(GetJWKSRequest::class.java).toJson(data)
             val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
             val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
             val asMap = adapter.fromJson(asJson) ?: emptyMap()
-            httpClient.get("/v1/sessions/jwks/${data.projectId}", asMap)
+            httpClient.get("/v1/sessions/jwks/${data.projectId}", asMap, headers)
         }
 
     override fun getJWKS(

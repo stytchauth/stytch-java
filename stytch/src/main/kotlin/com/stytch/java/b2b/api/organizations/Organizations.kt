@@ -14,12 +14,14 @@ import com.stytch.java.b2b.api.organizationsmembers.MembersImpl
 import com.stytch.java.b2b.models.organizations.CreateRequest
 import com.stytch.java.b2b.models.organizations.CreateResponse
 import com.stytch.java.b2b.models.organizations.DeleteRequest
+import com.stytch.java.b2b.models.organizations.DeleteRequestOptions
 import com.stytch.java.b2b.models.organizations.DeleteResponse
 import com.stytch.java.b2b.models.organizations.GetRequest
 import com.stytch.java.b2b.models.organizations.GetResponse
 import com.stytch.java.b2b.models.organizations.SearchRequest
 import com.stytch.java.b2b.models.organizations.SearchResponse
 import com.stytch.java.b2b.models.organizations.UpdateRequest
+import com.stytch.java.b2b.models.organizations.UpdateRequestOptions
 import com.stytch.java.b2b.models.organizations.UpdateResponse
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
@@ -91,51 +93,101 @@ public interface Organizations {
 
     /**
      * Updates an Organization specified by `organization_id`. An Organization must always have at least one auth setting set
-     * to either `RESTRICTED` or `ALL_ALLOWED` in order to provision new Members. test
+     * to either `RESTRICTED` or `ALL_ALLOWED` in order to provision new Members.
      *
      * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
      * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
+     *
+     * Our RBAC implementation offers out-of-the-box handling of authorization checks for this endpoint. If you pass in
+     * a header containing a `session_token` or a `session_jwt` for an unexpired Member Session, we will check that the
+     * Member Session has the necessary permissions. The specific permissions needed depend on which of the optional fields
+     * are passed in the request. For example, if the `organization_name` argument is provided, the Member Session must have
+     * permission to perform the `update.info.name` action on the `stytch.organization` Resource.
+     *
+     * If the Member Session does not contain a Role that satisfies the requested permissions, or if the Member's Organization
+     * does not match the `organization_id` passed in the request, a 403 error will be thrown. Otherwise, the request will
+     * proceed as normal.
+     *
+     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
      */
-    public suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse>
+    public suspend fun update(
+        data: UpdateRequest,
+        methodOptions: UpdateRequestOptions? = null,
+    ): StytchResult<UpdateResponse>
 
     /**
      * Updates an Organization specified by `organization_id`. An Organization must always have at least one auth setting set
-     * to either `RESTRICTED` or `ALL_ALLOWED` in order to provision new Members. test
+     * to either `RESTRICTED` or `ALL_ALLOWED` in order to provision new Members.
      *
      * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
      * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
+     *
+     * Our RBAC implementation offers out-of-the-box handling of authorization checks for this endpoint. If you pass in
+     * a header containing a `session_token` or a `session_jwt` for an unexpired Member Session, we will check that the
+     * Member Session has the necessary permissions. The specific permissions needed depend on which of the optional fields
+     * are passed in the request. For example, if the `organization_name` argument is provided, the Member Session must have
+     * permission to perform the `update.info.name` action on the `stytch.organization` Resource.
+     *
+     * If the Member Session does not contain a Role that satisfies the requested permissions, or if the Member's Organization
+     * does not match the `organization_id` passed in the request, a 403 error will be thrown. Otherwise, the request will
+     * proceed as normal.
+     *
+     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
      */
     public fun update(
         data: UpdateRequest,
+        methodOptions: UpdateRequestOptions? = null,
         callback: (StytchResult<UpdateResponse>) -> Unit,
     )
 
     /**
      * Updates an Organization specified by `organization_id`. An Organization must always have at least one auth setting set
-     * to either `RESTRICTED` or `ALL_ALLOWED` in order to provision new Members. test
+     * to either `RESTRICTED` or `ALL_ALLOWED` in order to provision new Members.
      *
      * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
      * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
+     *
+     * Our RBAC implementation offers out-of-the-box handling of authorization checks for this endpoint. If you pass in
+     * a header containing a `session_token` or a `session_jwt` for an unexpired Member Session, we will check that the
+     * Member Session has the necessary permissions. The specific permissions needed depend on which of the optional fields
+     * are passed in the request. For example, if the `organization_name` argument is provided, the Member Session must have
+     * permission to perform the `update.info.name` action on the `stytch.organization` Resource.
+     *
+     * If the Member Session does not contain a Role that satisfies the requested permissions, or if the Member's Organization
+     * does not match the `organization_id` passed in the request, a 403 error will be thrown. Otherwise, the request will
+     * proceed as normal.
+     *
+     * To learn more about our RBAC implementation, see our [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/overview).
      */
-    public fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>>
+    public fun updateCompletable(
+        data: UpdateRequest,
+        methodOptions: UpdateRequestOptions? = null,
+    ): CompletableFuture<StytchResult<UpdateResponse>>
 
     /**
-     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted.
+     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted. /%}
      */
-    public suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse>
+    public suspend fun delete(
+        data: DeleteRequest,
+        methodOptions: DeleteRequestOptions? = null,
+    ): StytchResult<DeleteResponse>
 
     /**
-     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted.
+     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted. /%}
      */
     public fun delete(
         data: DeleteRequest,
+        methodOptions: DeleteRequestOptions? = null,
         callback: (StytchResult<DeleteResponse>) -> Unit,
     )
 
     /**
-     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted.
+     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted. /%}
      */
-    public fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>>
+    public fun deleteCompletable(
+        data: DeleteRequest,
+        methodOptions: DeleteRequestOptions? = null,
+    ): CompletableFuture<StytchResult<DeleteResponse>>
 
     /**
      * Search for Organizations. If you send a request with no body params, no filtering will be applied and the endpoint will
@@ -169,8 +221,10 @@ internal class OrganizationsImpl(
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/organizations", asJson)
+            httpClient.post("/v1/b2b/organizations", asJson, headers)
         }
 
     override fun create(
@@ -189,11 +243,13 @@ internal class OrganizationsImpl(
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
             val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
             val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
             val asMap = adapter.fromJson(asJson) ?: emptyMap()
-            httpClient.get("/v1/b2b/organizations/${data.organizationId}", asMap)
+            httpClient.get("/v1/b2b/organizations/${data.organizationId}", asMap, headers)
         }
 
     override fun get(
@@ -210,49 +266,75 @@ internal class OrganizationsImpl(
             get(data)
         }.asCompletableFuture()
 
-    override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> =
+    override suspend fun update(
+        data: UpdateRequest,
+        methodOptions: UpdateRequestOptions?,
+    ): StytchResult<UpdateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
+
             val asJson = moshi.adapter(UpdateRequest::class.java).toJson(data)
-            httpClient.put("/v1/b2b/organizations/${data.organizationId}", asJson)
+            httpClient.put("/v1/b2b/organizations/${data.organizationId}", asJson, headers)
         }
 
     override fun update(
         data: UpdateRequest,
+        methodOptions: UpdateRequestOptions?,
         callback: (StytchResult<UpdateResponse>) -> Unit,
     ) {
         coroutineScope.launch {
-            callback(update(data))
+            callback(update(data, methodOptions))
         }
     }
 
-    override fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>> =
+    override fun updateCompletable(
+        data: UpdateRequest,
+        methodOptions: UpdateRequestOptions?,
+    ): CompletableFuture<StytchResult<UpdateResponse>> =
         coroutineScope.async {
-            update(data)
+            update(data, methodOptions)
         }.asCompletableFuture()
 
-    override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> =
+    override suspend fun delete(
+        data: DeleteRequest,
+        methodOptions: DeleteRequestOptions?,
+    ): StytchResult<DeleteResponse> =
         withContext(Dispatchers.IO) {
-            httpClient.delete("/v1/b2b/organizations/${data.organizationId}")
+            var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
+
+            httpClient.delete("/v1/b2b/organizations/${data.organizationId}", headers)
         }
 
     override fun delete(
         data: DeleteRequest,
+        methodOptions: DeleteRequestOptions?,
         callback: (StytchResult<DeleteResponse>) -> Unit,
     ) {
         coroutineScope.launch {
-            callback(delete(data))
+            callback(delete(data, methodOptions))
         }
     }
 
-    override fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>> =
+    override fun deleteCompletable(
+        data: DeleteRequest,
+        methodOptions: DeleteRequestOptions?,
+    ): CompletableFuture<StytchResult<DeleteResponse>> =
         coroutineScope.async {
-            delete(data)
+            delete(data, methodOptions)
         }.asCompletableFuture()
 
     override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(SearchRequest::class.java).toJson(data)
-            httpClient.post("/v1/b2b/organizations/search", asJson)
+            httpClient.post("/v1/b2b/organizations/search", asJson, headers)
         }
 
     override fun search(

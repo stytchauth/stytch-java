@@ -71,8 +71,10 @@ internal class CryptoWalletsImpl(
 
     override suspend fun authenticateStart(data: AuthenticateStartRequest): StytchResult<AuthenticateStartResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(AuthenticateStartRequest::class.java).toJson(data)
-            httpClient.post("/v1/crypto_wallets/authenticate/start", asJson)
+            httpClient.post("/v1/crypto_wallets/authenticate/start", asJson, headers)
         }
 
     override fun authenticateStart(
@@ -91,8 +93,10 @@ internal class CryptoWalletsImpl(
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-            httpClient.post("/v1/crypto_wallets/authenticate", asJson)
+            httpClient.post("/v1/crypto_wallets/authenticate", asJson, headers)
         }
 
     override fun authenticate(

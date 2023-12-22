@@ -277,8 +277,10 @@ internal class PasswordsImpl(
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(CreateRequest::class.java).toJson(data)
-            httpClient.post("/v1/passwords", asJson)
+            httpClient.post("/v1/passwords", asJson, headers)
         }
 
     override fun create(
@@ -297,8 +299,10 @@ internal class PasswordsImpl(
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(AuthenticateRequest::class.java).toJson(data)
-            httpClient.post("/v1/passwords/authenticate", asJson)
+            httpClient.post("/v1/passwords/authenticate", asJson, headers)
         }
 
     override fun authenticate(
@@ -317,8 +321,10 @@ internal class PasswordsImpl(
 
     override suspend fun strengthCheck(data: StrengthCheckRequest): StytchResult<StrengthCheckResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(StrengthCheckRequest::class.java).toJson(data)
-            httpClient.post("/v1/passwords/strength_check", asJson)
+            httpClient.post("/v1/passwords/strength_check", asJson, headers)
         }
 
     override fun strengthCheck(
@@ -337,8 +343,10 @@ internal class PasswordsImpl(
 
     override suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse> =
         withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
             val asJson = moshi.adapter(MigrateRequest::class.java).toJson(data)
-            httpClient.post("/v1/passwords/migrate", asJson)
+            httpClient.post("/v1/passwords/migrate", asJson, headers)
         }
 
     override fun migrate(

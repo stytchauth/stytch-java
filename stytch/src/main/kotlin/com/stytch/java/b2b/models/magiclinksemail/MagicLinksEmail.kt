@@ -10,6 +10,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
+import com.stytch.java.common.methodoptions.Authorization
 
 @JsonClass(generateAdapter = false)
 public enum class InviteRequestLocale {
@@ -34,6 +35,25 @@ public enum class LoginOrSignupRequestLocale {
     @Json(name = "ptbr")
     PTBR,
 }
+
+public data class InviteRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
+        }
+    }
 
 /**
 * Request type for `Email.invite`.
@@ -105,6 +125,12 @@ public data class InviteRequest
          */
         @Json(name = "locale")
         val locale: InviteRequestLocale? = null,
+        /**
+         * Roles to explicitly assign to this Member. See the [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment)
+         *    for more information about role assignment.
+         */
+        @Json(name = "roles")
+        val roles: List<String>? = null,
     )
 
 /**
