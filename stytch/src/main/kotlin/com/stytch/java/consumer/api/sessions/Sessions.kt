@@ -385,17 +385,13 @@ internal class SessionsImpl(
         maxTokenAgeSeconds: Int?,
     ): StytchResult<JWTResponse?> =
         withContext(Dispatchers.IO) {
-            try {
-                when (val result = authenticateJwtLocal(jwt = jwt, maxTokenAgeSeconds = maxTokenAgeSeconds)) {
-                    is StytchResult.Success -> StytchResult.Success(JWTSessionResponse(result.value))
-                    else -> StytchResult.Success(JWTNullResponse)
-                }
-            } catch (e: JWTException) {
-                when (val result = authenticate(AuthenticateRequest(sessionJwt = jwt))) {
-                    is StytchResult.Success -> StytchResult.Success(JWTAuthResponse(result.value))
-                    else -> StytchResult.Success(JWTNullResponse)
-                }
+          when (val localResult = authenticateJwtLocal(jwt = jwt, maxTokenAgeSeconds = maxTokenAgeSeconds)) {
+            is StytchResult.Success -> StytchResult.Success(JWTSessionResponse(localResult.value)
+            else -> when (val netResult = authenticate(AuthenticateRequest(sessionJwt = jwt))) {
+              is StytchResult.Success -> StytchResult.Success(JWTAuthResponse(netResult.value))
+              else -> StytchResult.Success(null)
             }
+          }
         }
 
     override fun authenticateJwt(
