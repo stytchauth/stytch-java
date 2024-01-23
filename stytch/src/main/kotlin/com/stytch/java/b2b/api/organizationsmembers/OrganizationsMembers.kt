@@ -22,6 +22,9 @@ import com.stytch.java.b2b.models.organizationsmembers.DeletePasswordResponse
 import com.stytch.java.b2b.models.organizationsmembers.DeleteRequest
 import com.stytch.java.b2b.models.organizationsmembers.DeleteRequestOptions
 import com.stytch.java.b2b.models.organizationsmembers.DeleteResponse
+import com.stytch.java.b2b.models.organizationsmembers.DeleteTOTPRequest
+import com.stytch.java.b2b.models.organizationsmembers.DeleteTOTPRequestOptions
+import com.stytch.java.b2b.models.organizationsmembers.DeleteTOTPResponse
 import com.stytch.java.b2b.models.organizationsmembers.GetRequest
 import com.stytch.java.b2b.models.organizationsmembers.GetResponse
 import com.stytch.java.b2b.models.organizationsmembers.ReactivateRequest
@@ -213,6 +216,22 @@ public interface Members {
         data: DeleteMFAPhoneNumberRequest,
         methodOptions: DeleteMFAPhoneNumberRequestOptions? = null,
     ): CompletableFuture<StytchResult<DeleteMFAPhoneNumberResponse>>
+
+    public suspend fun deleteTOTP(
+        data: DeleteTOTPRequest,
+        methodOptions: DeleteTOTPRequestOptions? = null,
+    ): StytchResult<DeleteTOTPResponse>
+
+    public fun deleteTOTP(
+        data: DeleteTOTPRequest,
+        methodOptions: DeleteTOTPRequestOptions? = null,
+        callback: (StytchResult<DeleteTOTPResponse>) -> Unit,
+    )
+
+    public fun deleteTOTPCompletable(
+        data: DeleteTOTPRequest,
+        methodOptions: DeleteTOTPRequestOptions? = null,
+    ): CompletableFuture<StytchResult<DeleteTOTPResponse>>
 
     /**
      * Search for Members within specified Organizations. An array with at least one `organization_id` is required. Submitting
@@ -507,6 +526,37 @@ internal class MembersImpl(
     ): CompletableFuture<StytchResult<DeleteMFAPhoneNumberResponse>> =
         coroutineScope.async {
             deleteMFAPhoneNumber(data, methodOptions)
+        }.asCompletableFuture()
+
+    override suspend fun deleteTOTP(
+        data: DeleteTOTPRequest,
+        methodOptions: DeleteTOTPRequestOptions?,
+    ): StytchResult<DeleteTOTPResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
+
+            httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/${data.memberId}/totp", headers)
+        }
+
+    override fun deleteTOTP(
+        data: DeleteTOTPRequest,
+        methodOptions: DeleteTOTPRequestOptions?,
+        callback: (StytchResult<DeleteTOTPResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(deleteTOTP(data, methodOptions))
+        }
+    }
+
+    override fun deleteTOTPCompletable(
+        data: DeleteTOTPRequest,
+        methodOptions: DeleteTOTPRequestOptions?,
+    ): CompletableFuture<StytchResult<DeleteTOTPResponse>> =
+        coroutineScope.async {
+            deleteTOTP(data, methodOptions)
         }.asCompletableFuture()
 
     override suspend fun search(

@@ -301,6 +301,11 @@ public data class ResetStartResponse
         @Json(name = "member_email_id")
         val memberEmailId: String,
         /**
+         * The [Member object](https://stytch.com/docs/b2b/api/member-object)
+         */
+        @Json(name = "member")
+        val member: Member,
+        /**
          * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
          * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
          */

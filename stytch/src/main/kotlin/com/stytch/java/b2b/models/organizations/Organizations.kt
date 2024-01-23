@@ -152,6 +152,8 @@ public data class Member
          */
         @Json(name = "is_admin")
         val isAdmin: Boolean,
+        @Json(name = "totp_registration_id")
+        val totpRegistrationId: String,
         /**
          * Sets whether the Member is enrolled in MFA. If true, the Member must complete an MFA step whenever they wish to log in
          * to their Organization. If false, the Member only needs to complete an MFA step if the Organization's MFA policy is set
@@ -430,8 +432,22 @@ public data class Organization
          */
         @Json(name = "rbac_email_implicit_role_assignments")
         val rbacEmailImplicitRoleAssignments: List<EmailImplicitRoleAssignment>,
+        /**
+         * The setting that controls which mfa methods can be used by Members of an Organization. The accepted values are:
+         *
+         *   `ALL_ALLOWED` – the default setting which allows all authentication methods to be used.
+         *
+         *   `RESTRICTED` – only methods that comply with `allowed_auth_methods` can be used for authentication. This setting does
+         * not apply to Members with `is_breakglass` set to `true`.
+         *
+         */
         @Json(name = "mfa_methods")
         val mfaMethods: String,
+        /**
+         * An array of allowed mfa authentication methods. This list is enforced when `mfa_methods` is set to `RESTRICTED`.
+         *   The list's accepted values are: `sms_otp` and `totp`.
+         *
+         */
         @Json(name = "allowed_mfa_methods")
         val allowedMfaMethods: List<String>,
         /**
@@ -647,8 +663,22 @@ public data class CreateRequest
          */
         @Json(name = "rbac_email_implicit_role_assignments")
         val rbacEmailImplicitRoleAssignments: List<EmailImplicitRoleAssignment>? = null,
+        /**
+         * The setting that controls which mfa methods can be used by Members of an Organization. The accepted values are:
+         *
+         *   `ALL_ALLOWED` – the default setting which allows all authentication methods to be used.
+         *
+         *   `RESTRICTED` – only methods that comply with `allowed_auth_methods` can be used for authentication. This setting does
+         * not apply to Members with `is_breakglass` set to `true`.
+         *
+         */
         @Json(name = "mfa_methods")
         val mfaMethods: String? = null,
+        /**
+         * An array of allowed mfa authentication methods. This list is enforced when `mfa_methods` is set to `RESTRICTED`.
+         *   The list's accepted values are: `sms_otp` and `totp`.
+         *
+         */
         @Json(name = "allowed_mfa_methods")
         val allowedMfaMethods: List<String>? = null,
     )
@@ -1004,8 +1034,28 @@ public data class UpdateRequest
          */
         @Json(name = "rbac_email_implicit_role_assignments")
         val rbacEmailImplicitRoleAssignments: List<String>? = null,
+        /**
+         * The setting that controls which mfa methods can be used by Members of an Organization. The accepted values are:
+         *
+         *   `ALL_ALLOWED` – the default setting which allows all authentication methods to be used.
+         *
+         *   `RESTRICTED` – only methods that comply with `allowed_auth_methods` can be used for authentication. This setting does
+         * not apply to Members with `is_breakglass` set to `true`.
+         *
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.allowed-auth-methods` action on the `stytch.organization` Resource.
+         */
         @Json(name = "mfa_methods")
         val mfaMethods: String? = null,
+        /**
+         * An array of allowed mfa authentication methods. This list is enforced when `mfa_methods` is set to `RESTRICTED`.
+         *   The list's accepted values are: `sms_otp` and `totp`.
+         *
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.allowed-mfa-methods` action on the `stytch.organization` Resource.
+         */
         @Json(name = "allowed_mfa_methods")
         val allowedMfaMethods: List<String>? = null,
     )
