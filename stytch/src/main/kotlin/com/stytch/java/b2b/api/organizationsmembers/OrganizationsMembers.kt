@@ -30,6 +30,9 @@ import com.stytch.java.b2b.models.organizationsmembers.ReactivateResponse
 import com.stytch.java.b2b.models.organizationsmembers.SearchRequest
 import com.stytch.java.b2b.models.organizationsmembers.SearchRequestOptions
 import com.stytch.java.b2b.models.organizationsmembers.SearchResponse
+import com.stytch.java.b2b.models.organizationsmembers.TOTPRequest
+import com.stytch.java.b2b.models.organizationsmembers.TOTPRequestOptions
+import com.stytch.java.b2b.models.organizationsmembers.TOTPResponse
 import com.stytch.java.b2b.models.organizationsmembers.UpdateRequest
 import com.stytch.java.b2b.models.organizationsmembers.UpdateRequestOptions
 import com.stytch.java.b2b.models.organizationsmembers.UpdateResponse
@@ -213,6 +216,22 @@ public interface Members {
         data: DeleteMFAPhoneNumberRequest,
         methodOptions: DeleteMFAPhoneNumberRequestOptions? = null,
     ): CompletableFuture<StytchResult<DeleteMFAPhoneNumberResponse>>
+
+    public suspend fun totp(
+        data: TOTPRequest,
+        methodOptions: TOTPRequestOptions? = null,
+    ): StytchResult<TOTPResponse>
+
+    public fun totp(
+        data: TOTPRequest,
+        methodOptions: TOTPRequestOptions? = null,
+        callback: (StytchResult<TOTPResponse>) -> Unit,
+    )
+
+    public fun totpCompletable(
+        data: TOTPRequest,
+        methodOptions: TOTPRequestOptions? = null,
+    ): CompletableFuture<StytchResult<TOTPResponse>>
 
     /**
      * Search for Members within specified Organizations. An array with at least one `organization_id` is required. Submitting
@@ -507,6 +526,37 @@ internal class MembersImpl(
     ): CompletableFuture<StytchResult<DeleteMFAPhoneNumberResponse>> =
         coroutineScope.async {
             deleteMFAPhoneNumber(data, methodOptions)
+        }.asCompletableFuture()
+
+    override suspend fun totp(
+        data: TOTPRequest,
+        methodOptions: TOTPRequestOptions?,
+    ): StytchResult<TOTPResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
+
+            httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/${data.memberId}/totp", headers)
+        }
+
+    override fun totp(
+        data: TOTPRequest,
+        methodOptions: TOTPRequestOptions?,
+        callback: (StytchResult<TOTPResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(totp(data, methodOptions))
+        }
+    }
+
+    override fun totpCompletable(
+        data: TOTPRequest,
+        methodOptions: TOTPRequestOptions?,
+    ): CompletableFuture<StytchResult<TOTPResponse>> =
+        coroutineScope.async {
+            totp(data, methodOptions)
         }.asCompletableFuture()
 
     override suspend fun search(

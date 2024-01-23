@@ -19,10 +19,14 @@ import com.stytch.java.b2b.api.passwords.Passwords
 import com.stytch.java.b2b.api.passwords.PasswordsImpl
 import com.stytch.java.b2b.api.rbac.RBAC
 import com.stytch.java.b2b.api.rbac.RBACImpl
+import com.stytch.java.b2b.api.recoverycodes.RecoveryCodes
+import com.stytch.java.b2b.api.recoverycodes.RecoveryCodesImpl
 import com.stytch.java.b2b.api.sessions.Sessions
 import com.stytch.java.b2b.api.sessions.SessionsImpl
 import com.stytch.java.b2b.api.sso.SSO
 import com.stytch.java.b2b.api.sso.SSOImpl
+import com.stytch.java.b2b.api.totps.TOTPs
+import com.stytch.java.b2b.api.totps.TOTPsImpl
 import com.stytch.java.common.BASE_LIVE_URL
 import com.stytch.java.common.BASE_TEST_URL
 import com.stytch.java.common.JwtOptions
@@ -64,10 +68,16 @@ public object StytchB2BClient {
     public lateinit var rbac: RBAC
 
     @JvmStatic
+    public lateinit var recoveryCodes: RecoveryCodes
+
+    @JvmStatic
     public lateinit var sso: SSO
 
     @JvmStatic
     public lateinit var sessions: Sessions
+
+    @JvmStatic
+    public lateinit var totps: TOTPs
 
     @JvmStatic
     public fun configure(
@@ -99,8 +109,10 @@ public object StytchB2BClient {
         organizations = OrganizationsImpl(httpClient, coroutineScope)
         passwords = PasswordsImpl(httpClient, coroutineScope)
         rbac = RBACImpl(httpClient, coroutineScope)
+        recoveryCodes = RecoveryCodesImpl(httpClient, coroutineScope)
         sso = SSOImpl(httpClient, coroutineScope)
         sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions, policyCache)
+        totps = TOTPsImpl(httpClient, coroutineScope)
     }
 
     /**

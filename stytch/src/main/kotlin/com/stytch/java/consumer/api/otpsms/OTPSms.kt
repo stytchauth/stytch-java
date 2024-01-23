@@ -38,6 +38,9 @@ public interface Sms {
      * prior to October 2023. If you're interested in sending international SMS, please reach out to
      * [support@stytch.com](mailto:support@stytch.com?subject=Enable%20international%20SMS).
      *
+     * Even when international SMS is enabled, we do not support sending SMS to countries on our
+     * [Unsupported countries list](https://stytch.com/docs/guides/passcodes/unsupported-countries).
+     *
      * ### Add a phone number to an existing user
      *
      * This endpoint also allows you to add a new phone number to an existing Stytch User. Including a `user_id`,
@@ -67,6 +70,9 @@ public interface Sms {
      * __Note:__ SMS to phone numbers outside of the US and Canada is disabled by default for customers who did not use SMS
      * prior to October 2023. If you're interested in sending international SMS, please reach out to
      * [support@stytch.com](mailto:support@stytch.com?subject=Enable%20international%20SMS).
+     *
+     * Even when international SMS is enabled, we do not support sending SMS to countries on our
+     * [Unsupported countries list](https://stytch.com/docs/guides/passcodes/unsupported-countries).
      *
      * ### Add a phone number to an existing user
      *
@@ -101,6 +107,9 @@ public interface Sms {
      * prior to October 2023. If you're interested in sending international SMS, please reach out to
      * [support@stytch.com](mailto:support@stytch.com?subject=Enable%20international%20SMS).
      *
+     * Even when international SMS is enabled, we do not support sending SMS to countries on our
+     * [Unsupported countries list](https://stytch.com/docs/guides/passcodes/unsupported-countries).
+     *
      * ### Add a phone number to an existing user
      *
      * This endpoint also allows you to add a new phone number to an existing Stytch User. Including a `user_id`,
@@ -129,6 +138,9 @@ public interface Sms {
      * prior to October 2023. If you're interested in sending international SMS, please reach out to
      * [support@stytch.com](mailto:support@stytch.com?subject=Enable%20international%20SMS).
      *
+     * Even when international SMS is enabled, we do not support sending SMS to countries on our
+     * [Unsupported countries list](https://stytch.com/docs/guides/passcodes/unsupported-countries).
+     *
      * ### Next steps
      *
      * Collect the OTP which was delivered to the User. Call [Authenticate OTP](https://stytch.com/docs/api/authenticate-otp)
@@ -148,6 +160,9 @@ public interface Sms {
      * __Note:__ SMS to phone numbers outside of the US and Canada is disabled by default for customers who did not use SMS
      * prior to October 2023. If you're interested in sending international SMS, please reach out to
      * [support@stytch.com](mailto:support@stytch.com?subject=Enable%20international%20SMS).
+     *
+     * Even when international SMS is enabled, we do not support sending SMS to countries on our
+     * [Unsupported countries list](https://stytch.com/docs/guides/passcodes/unsupported-countries).
      *
      * ### Next steps
      *
@@ -171,6 +186,9 @@ public interface Sms {
      * __Note:__ SMS to phone numbers outside of the US and Canada is disabled by default for customers who did not use SMS
      * prior to October 2023. If you're interested in sending international SMS, please reach out to
      * [support@stytch.com](mailto:support@stytch.com?subject=Enable%20international%20SMS).
+     *
+     * Even when international SMS is enabled, we do not support sending SMS to countries on our
+     * [Unsupported countries list](https://stytch.com/docs/guides/passcodes/unsupported-countries).
      *
      * ### Next steps
      *

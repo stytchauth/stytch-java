@@ -128,6 +128,25 @@ public data class SearchRequestOptions
         }
     }
 
+public data class TOTPRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
+        }
+    }
+
 public data class UpdateRequestOptions
     @JvmOverloads
     constructor(
@@ -623,6 +642,32 @@ public data class SearchResponse
         val statusCode: Int,
     )
 
+@JsonClass(generateAdapter = true)
+public data class TOTPRequest
+    @JvmOverloads
+    constructor(
+        @Json(name = "organization_id")
+        val organizationId: String,
+        @Json(name = "member_id")
+        val memberId: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class TOTPResponse
+    @JvmOverloads
+    constructor(
+        @Json(name = "request_id")
+        val requestId: String,
+        @Json(name = "member_id")
+        val memberId: String,
+        @Json(name = "member")
+        val member: Member,
+        @Json(name = "organization")
+        val organization: Organization,
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
+
 /**
 * Request type for `Members.update`.
 */
@@ -733,6 +778,10 @@ public data class UpdateRequest
          */
         @Json(name = "preserve_existing_sessions")
         val preserveExistingSessions: Boolean? = null,
+        /**
+         * The Member's default MFA method. This value is used to determine which secondary MFA method to use in the case of
+         * multiple methods registered for a Member. The current possible values are `sms_otp` and `totp`.
+         */
         @Json(name = "default_mfa_method")
         val defaultMfaMethod: String? = null,
     )

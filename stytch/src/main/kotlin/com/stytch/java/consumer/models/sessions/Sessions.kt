@@ -121,6 +121,9 @@ public enum class AuthenticationFactorDeliveryMethod {
 
     @Json(name = "oauth_hubspot")
     OAUTH_HUBSPOT,
+
+    @Json(name = "imported_auth0")
+    IMPORTED_AUTH0,
 }
 
 @JsonClass(generateAdapter = false)
@@ -151,6 +154,12 @@ public enum class AuthenticationFactorType {
 
     @Json(name = "sso")
     SSO,
+
+    @Json(name = "imported")
+    IMPORTED,
+
+    @Json(name = "recovery_codes")
+    RECOVERY_CODES,
 }
 
 @JsonClass(generateAdapter = true)
