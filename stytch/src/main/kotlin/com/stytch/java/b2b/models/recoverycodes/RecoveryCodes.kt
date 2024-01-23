@@ -13,10 +13,10 @@ import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
 
 /**
-* Request type for `RecoveryCodes.b2BGet`.
+* Request type for `RecoveryCodes.get`.
 */
 @JsonClass(generateAdapter = true)
-public data class B2BGetRequest
+public data class GetRequest
     @JvmOverloads
     constructor(
         /**
@@ -34,10 +34,10 @@ public data class B2BGetRequest
     )
 
 /**
-* Response type for `RecoveryCodes.b2BGet`.
+* Response type for `RecoveryCodes.get`.
 */
 @JsonClass(generateAdapter = true)
-public data class B2BGetResponse
+public data class GetResponse
     @JvmOverloads
     constructor(
         /**

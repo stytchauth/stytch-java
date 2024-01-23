@@ -9,8 +9,8 @@ package com.stytch.java.b2b.api.recoverycodes
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import com.stytch.java.b2b.models.recoverycodes.B2BGetRequest
-import com.stytch.java.b2b.models.recoverycodes.B2BGetResponse
+import com.stytch.java.b2b.models.recoverycodes.GetRequest
+import com.stytch.java.b2b.models.recoverycodes.GetResponse
 import com.stytch.java.b2b.models.recoverycodes.RecoverRequest
 import com.stytch.java.b2b.models.recoverycodes.RecoverResponse
 import com.stytch.java.b2b.models.recoverycodes.RotateRequest
@@ -51,20 +51,20 @@ public interface RecoveryCodes {
     /**
      * Returns a Member's full set of active recovery codes.
      */
-    public suspend fun b2BGet(data: B2BGetRequest): StytchResult<B2BGetResponse>
+    public suspend fun get(data: GetRequest): StytchResult<GetResponse>
 
     /**
      * Returns a Member's full set of active recovery codes.
      */
-    public fun b2BGet(
-        data: B2BGetRequest,
-        callback: (StytchResult<B2BGetResponse>) -> Unit,
+    public fun get(
+        data: GetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
     )
 
     /**
      * Returns a Member's full set of active recovery codes.
      */
-    public fun b2BGetCompletable(data: B2BGetRequest): CompletableFuture<StytchResult<B2BGetResponse>>
+    public fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>>
 
     /**
      * Rotate a Member's recovery codes. This invalidates all existing recovery codes and generates a new set of recovery
@@ -116,29 +116,29 @@ internal class RecoveryCodesImpl(
             recover(data)
         }.asCompletableFuture()
 
-    override suspend fun b2BGet(data: B2BGetRequest): StytchResult<B2BGetResponse> =
+    override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
         withContext(Dispatchers.IO) {
             var headers = emptyMap<String, String>()
 
-            val asJson = moshi.adapter(B2BGetRequest::class.java).toJson(data)
+            val asJson = moshi.adapter(GetRequest::class.java).toJson(data)
             val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
             val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
             val asMap = adapter.fromJson(asJson) ?: emptyMap()
             httpClient.get("/v1/b2b/recovery_codes/${data.organizationId}/${data.memberId}", asMap, headers)
         }
 
-    override fun b2BGet(
-        data: B2BGetRequest,
-        callback: (StytchResult<B2BGetResponse>) -> Unit,
+    override fun get(
+        data: GetRequest,
+        callback: (StytchResult<GetResponse>) -> Unit,
     ) {
         coroutineScope.launch {
-            callback(b2BGet(data))
+            callback(get(data))
         }
     }
 
-    override fun b2BGetCompletable(data: B2BGetRequest): CompletableFuture<StytchResult<B2BGetResponse>> =
+    override fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>> =
         coroutineScope.async {
-            b2BGet(data)
+            get(data)
         }.asCompletableFuture()
 
     override suspend fun rotate(data: RotateRequest): StytchResult<RotateResponse> =

@@ -90,6 +90,25 @@ public data class DeleteRequestOptions
         }
     }
 
+public data class DeleteTOTPRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
+        }
+    }
+
 public data class ReactivateRequestOptions
     @JvmOverloads
     constructor(
@@ -110,25 +129,6 @@ public data class ReactivateRequestOptions
     }
 
 public data class SearchRequestOptions
-    @JvmOverloads
-    constructor(
-        /**
-         * Optional authorization object.
-         * Pass in an active Stytch Member session token or session JWT and the request
-         * will be run using that member's permissions.
-         */
-        val authorization: Authorization? = null,
-    ) {
-        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
-            var res = mapOf<String, String>()
-            if (authorization != null) {
-                res = authorization.addHeaders(res)
-            }
-            return res + headers
-        }
-    }
-
-public data class TOTPRequestOptions
     @JvmOverloads
     constructor(
         /**
@@ -449,6 +449,32 @@ public data class DeleteResponse
         val statusCode: Int,
     )
 
+@JsonClass(generateAdapter = true)
+public data class DeleteTOTPRequest
+    @JvmOverloads
+    constructor(
+        @Json(name = "organization_id")
+        val organizationId: String,
+        @Json(name = "member_id")
+        val memberId: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class DeleteTOTPResponse
+    @JvmOverloads
+    constructor(
+        @Json(name = "request_id")
+        val requestId: String,
+        @Json(name = "member_id")
+        val memberId: String,
+        @Json(name = "member")
+        val member: Member,
+        @Json(name = "organization")
+        val organization: Organization,
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
+
 /**
 * Request type for `Members.get`.
 */
@@ -638,32 +664,6 @@ public data class SearchResponse
          * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
          * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
          */
-        @Json(name = "status_code")
-        val statusCode: Int,
-    )
-
-@JsonClass(generateAdapter = true)
-public data class TOTPRequest
-    @JvmOverloads
-    constructor(
-        @Json(name = "organization_id")
-        val organizationId: String,
-        @Json(name = "member_id")
-        val memberId: String,
-    )
-
-@JsonClass(generateAdapter = true)
-public data class TOTPResponse
-    @JvmOverloads
-    constructor(
-        @Json(name = "request_id")
-        val requestId: String,
-        @Json(name = "member_id")
-        val memberId: String,
-        @Json(name = "member")
-        val member: Member,
-        @Json(name = "organization")
-        val organization: Organization,
         @Json(name = "status_code")
         val statusCode: Int,
     )

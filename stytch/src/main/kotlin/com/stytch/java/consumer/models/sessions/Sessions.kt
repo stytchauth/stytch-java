@@ -787,7 +787,7 @@ public data class WebAuthnFactor
         @Json(name = "domain")
         val domain: String,
         @Json(name = "user_agent")
-        val userAgent: String,
+        val userAgent: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
