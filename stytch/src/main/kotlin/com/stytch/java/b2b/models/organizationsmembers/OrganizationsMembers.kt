@@ -726,7 +726,7 @@ public data class UpdateRequest
          * `auth_methods` and `allowed_auth_methods` fields for more details.
          *
          * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-         * perform the `update.info.is-breakglass` action on the `stytch.member` Resource.
+         * perform the `update.settings.is-breakglass` action on the `stytch.member` Resource.
          */
         @Json(name = "is_breakglass")
         val isBreakglass: Boolean? = null,
