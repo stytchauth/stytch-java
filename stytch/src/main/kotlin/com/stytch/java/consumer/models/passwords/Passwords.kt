@@ -503,6 +503,15 @@ public data class MigrateRequest
         @Json(name = "untrusted_metadata")
         val untrustedMetadata: Map<String, Any>? = null,
         /**
+         * Whether to set the user's email as verified. This is a dangerous field. Incorrect use may lead to users getting
+         * erroneously
+         *                 deduplicated into one user object. This flag should only be set if you can attest that the user owns
+         * the email address in question.
+         *                 Access to this field is restricted. To enable it, please send us a note at support@stytch.com.
+         */
+        @Json(name = "set_email_verified")
+        val setEmailVerified: Boolean? = null,
+        /**
          * The name of the user. Each field in the name object is optional.
          */
         @Json(name = "name")
