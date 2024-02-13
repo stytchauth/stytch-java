@@ -17,4 +17,6 @@ internal data class StytchSessionClaim(
     val attributes: Attributes?,
     @Json(name = "authentication_factors")
     val authenticationFactors: List<AuthenticationFactor>,
+    @Json(name = "roles")
+    val roles: List<String>? = null,
 )
