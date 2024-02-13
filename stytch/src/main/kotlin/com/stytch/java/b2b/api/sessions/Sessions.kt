@@ -26,9 +26,9 @@ import com.stytch.java.common.JWTException
 import com.stytch.java.common.JwtOptions
 import com.stytch.java.common.ParseJWTClaimsOptions
 import com.stytch.java.common.PolicyCache
-import com.stytch.java.common.StytchB2BSessionClaim
 import com.stytch.java.common.StytchException
 import com.stytch.java.common.StytchResult
+import com.stytch.java.common.StytchSessionClaim
 import com.stytch.java.common.parseJWTClaims
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
@@ -284,7 +284,7 @@ public interface Sessions {
     // ADDIMPORT: import com.stytch.java.b2b.models.sessions.MemberSession
     // ADDIMPORT: import com.stytch.java.common.JWTException
     // ADDIMPORT: import com.stytch.java.common.ParseJWTClaimsOptions
-    // ADDIMPORT: import com.stytch.java.common.StytchB2BSessionClaim
+    // ADDIMPORT: import com.stytch.java.common.StytchSessionClaim
     // ADDIMPORT: import com.stytch.java.common.parseJWTClaims
 
     /** Parse a JWT and verify the signature, preferring local verification over remote.
@@ -575,12 +575,10 @@ internal class SessionsImpl(
                 stytchSessionClaims?.let {
                     val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
                     val adapter: JsonAdapter<Map<*, *>> = moshi.adapter(type)
-                    moshi.adapter(StytchB2BSessionClaim::class.java).fromJson(adapter.toJson(it))
+                    moshi.adapter(StytchSessionClaim::class.java).fromJson(adapter.toJson(it))
                 } ?: throw JWTException.JwtMissingClaims
-
             val orgSessionClaims = jwtClaims.payload.claimsMap["https://stytch.com/organization"] as? Map<*, *>
-            val organizationId = orgSessionClaims!!.get("id") as String
-
+            val organizationId = orgSessionClaims?.get("organization_id") as String
             if (authorizationCheck != null) {
                 if (stytchSessionClaim.roles == null) {
                     throw JWTException.MissingRolesClaim
@@ -603,7 +601,7 @@ internal class SessionsImpl(
                     lastAccessedAt = Instant.parse(stytchSessionClaim.lastAccessedAt),
                     expiresAt = Instant.parse(stytchSessionClaim.expiresAt),
                     customClaims = jwtClaims.customClaims,
-                    roles = stytchSessionClaim.roles,
+                    roles = stytchSessionClaim.roles ?: emptyList(),
                 ),
             )
         } catch (e: JWTException.JwtTooOld) {
