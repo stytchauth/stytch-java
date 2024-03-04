@@ -784,6 +784,11 @@ public data class UpdateRequest
          */
         @Json(name = "default_mfa_method")
         val defaultMfaMethod: String? = null,
+        /**
+         * Updates the Member's `email_address`, if provided.
+         */
+        @Json(name = "email_address")
+        val emailAddress: String? = null,
     )
 
 /**
