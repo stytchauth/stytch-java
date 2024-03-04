@@ -9,15 +9,10 @@ package com.stytch.java.consumer.api.sessions
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import com.stytch.java.common.*
 import com.stytch.java.common.InstantAdapter
-import com.stytch.java.common.JWTAuthResponse
-import com.stytch.java.common.JWTException
-import com.stytch.java.common.JWTResponse
-import com.stytch.java.common.JWTSessionResponse
 import com.stytch.java.common.JwtOptions
 import com.stytch.java.common.ParseJWTClaimsOptions
-import com.stytch.java.common.StytchException
-import com.stytch.java.common.StytchResult
 import com.stytch.java.common.StytchSessionClaim
 import com.stytch.java.common.parseJWTClaims
 import com.stytch.java.consumer.models.sessions.AuthenticateRequest
@@ -193,7 +188,7 @@ public interface Sessions {
     public suspend fun authenticateJwt(
         jwt: String,
         maxTokenAgeSeconds: Int?,
-    ): StytchResult<JWTResponse?>
+    ): StytchResult<JWTResponse>
 
     /** Parse a JWT and verify the signature, preferring local verification over remote.
      *
@@ -382,14 +377,14 @@ internal class SessionsImpl(
     override suspend fun authenticateJwt(
         jwt: String,
         maxTokenAgeSeconds: Int?,
-    ): StytchResult<JWTResponse?> =
+    ): StytchResult<JWTResponse> =
         withContext(Dispatchers.IO) {
             when (val localResult = authenticateJwtLocal(jwt = jwt, maxTokenAgeSeconds = maxTokenAgeSeconds)) {
                 is StytchResult.Success -> StytchResult.Success(JWTSessionResponse(localResult.value))
                 else ->
                     when (val netResult = authenticate(AuthenticateRequest(sessionJwt = jwt))) {
                         is StytchResult.Success -> StytchResult.Success(JWTAuthResponse(netResult.value))
-                        else -> StytchResult.Success(null)
+                        else -> StytchResult.Success(JWTNullResponse)
                     }
             }
         }
