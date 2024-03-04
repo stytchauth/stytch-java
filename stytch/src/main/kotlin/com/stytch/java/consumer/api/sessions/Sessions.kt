@@ -201,7 +201,7 @@ public interface Sessions {
     public fun authenticateJwt(
         jwt: String,
         maxTokenAgeSeconds: Int?,
-        callback: (StytchResult<JWTResponse?>) -> Unit,
+        callback: (StytchResult<JWTResponse>) -> Unit,
     )
 
     /** Parse a JWT and verify the signature, preferring local verification over remote.
@@ -215,7 +215,7 @@ public interface Sessions {
     public fun authenticateJwtCompletable(
         jwt: String,
         maxTokenAgeSeconds: Int?,
-    ): CompletableFuture<StytchResult<JWTResponse?>>
+    ): CompletableFuture<StytchResult<JWTResponse>>
 
     /** Parse a JWT and verify the signature locally (without calling /authenticate in the API).
      *
@@ -392,7 +392,7 @@ internal class SessionsImpl(
     override fun authenticateJwt(
         jwt: String,
         maxTokenAgeSeconds: Int?,
-        callback: (StytchResult<JWTResponse?>) -> Unit,
+        callback: (StytchResult<JWTResponse>) -> Unit,
     ) {
         coroutineScope.launch {
             callback(authenticateJwt(jwt, maxTokenAgeSeconds))
@@ -402,7 +402,7 @@ internal class SessionsImpl(
     override fun authenticateJwtCompletable(
         jwt: String,
         maxTokenAgeSeconds: Int?,
-    ): CompletableFuture<StytchResult<JWTResponse?>> =
+    ): CompletableFuture<StytchResult<JWTResponse>> =
         coroutineScope.async {
             authenticateJwt(jwt, maxTokenAgeSeconds)
         }.asCompletableFuture()
