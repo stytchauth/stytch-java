@@ -9,6 +9,8 @@ package com.stytch.java.b2b.api.organizationsmembers
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import com.stytch.java.b2b.api.organizationsmembersoauthproviders.OAuthProviders
+import com.stytch.java.b2b.api.organizationsmembersoauthproviders.OAuthProvidersImpl
 import com.stytch.java.b2b.models.organizationsmembers.CreateRequest
 import com.stytch.java.b2b.models.organizationsmembers.CreateRequestOptions
 import com.stytch.java.b2b.models.organizationsmembers.CreateResponse
@@ -48,6 +50,8 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
 
 public interface Members {
+    public val oauthProviders: OAuthProviders
+
     /**
      * Updates a Member specified by `organization_id` and `member_id`.
      *
@@ -401,6 +405,8 @@ internal class MembersImpl(
     private val coroutineScope: CoroutineScope,
 ) : Members {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
+
+    override val oauthProviders: OAuthProviders = OAuthProvidersImpl(httpClient, coroutineScope)
 
     override suspend fun update(
         data: UpdateRequest,

@@ -87,7 +87,7 @@ public data class AuthenticateRequest
          *   Total custom claims size cannot exceed four kilobytes.
          */
         @Json(name = "session_custom_claims")
-        val sessionCustomClaims: Map<String, Any>? = null,
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
         /**
          * If the Member needs to complete an MFA step, and the Member has a phone number, this endpoint will pre-emptively send a
          * one-time passcode (OTP) to the Member's phone number. The locale argument will be used to determine which language to
@@ -104,6 +104,8 @@ public data class AuthenticateRequest
          */
         @Json(name = "locale")
         val locale: AuthenticateRequestLocale? = null,
+        @Json(name = "intermediate_session_token")
+        val intermediateSessionToken: String? = null,
     )
 
 /**
@@ -169,8 +171,10 @@ public data class AuthenticateResponse
         /**
          * The returned Intermediate Session Token contains an Email Magic Link factor associated with the Member's email address.
          *       The token can be used with the
-         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA flow and log
-         * in to the Organization.
+         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
+         * [TOTP Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-totp),
+         *       or [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete the MFA
+         * flow and log in to the Organization.
          *       It can also be used with the
          * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join a
          * different existing Organization that allows login with Email Magic Links,

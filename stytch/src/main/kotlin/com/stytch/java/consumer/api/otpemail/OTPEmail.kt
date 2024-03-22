@@ -36,7 +36,7 @@ public interface Email {
      *
      * ### Next steps
      * Collect the OTP which was delivered to the user. Call [Authenticate OTP](https://stytch.com/docs/api/authenticate-otp)
-     * using the OTP `code` along with the `phone_id` found in the response as the `method_id`.
+     * using the OTP `code` along with the `email_id` found in the response as the `method_id`.
      */
     public suspend fun send(data: SendRequest): StytchResult<SendResponse>
 
@@ -53,7 +53,7 @@ public interface Email {
      *
      * ### Next steps
      * Collect the OTP which was delivered to the user. Call [Authenticate OTP](https://stytch.com/docs/api/authenticate-otp)
-     * using the OTP `code` along with the `phone_id` found in the response as the `method_id`.
+     * using the OTP `code` along with the `email_id` found in the response as the `method_id`.
      */
     public fun send(
         data: SendRequest,
@@ -73,7 +73,7 @@ public interface Email {
      *
      * ### Next steps
      * Collect the OTP which was delivered to the user. Call [Authenticate OTP](https://stytch.com/docs/api/authenticate-otp)
-     * using the OTP `code` along with the `phone_id` found in the response as the `method_id`.
+     * using the OTP `code` along with the `email_id` found in the response as the `method_id`.
      */
     public fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>>
 

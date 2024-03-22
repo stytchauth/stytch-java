@@ -193,7 +193,7 @@ public data class CreateRequest
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * An arbitrary JSON object of application-specific data. These fields can be edited directly by the
          *   frontend SDK, and should not be used to store critical information. See the
@@ -201,7 +201,7 @@ public data class CreateRequest
          *   for complete field behavior details.
          */
         @Json(name = "untrusted_metadata")
-        val untrustedMetadata: Map<String, Any>? = null,
+        val untrustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * Flag for whether or not to save a Member as `pending` or `active` in Stytch. It defaults to false. If true, new Members
          * will be created with status `pending` in Stytch's backend. Their status will remain `pending` and they will continue to
@@ -235,7 +235,7 @@ public data class CreateRequest
          *    for more information about role assignment.
          */
         @Json(name = "roles")
-        val roles: List<String>? = null,
+        val roles: List<String>? = emptyList(),
     )
 
 /**
@@ -704,7 +704,7 @@ public data class UpdateRequest
          *           update trusted metadata when acting as a Member.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * An arbitrary JSON object of application-specific data. These fields can be edited directly by the
          *   frontend SDK, and should not be used to store critical information. See the
@@ -718,7 +718,7 @@ public data class UpdateRequest
          * `update.info.untrusted-metadata` action on the `stytch.self` Resource.
          */
         @Json(name = "untrusted_metadata")
-        val untrustedMetadata: Map<String, Any>? = null,
+        val untrustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * Identifies the Member as a break glass user - someone who has permissions to authenticate into an Organization by
          * bypassing the Organization's settings. A break glass account is typically used for emergency purposes to gain access
@@ -770,7 +770,7 @@ public data class UpdateRequest
          * perform the `update.settings.roles` action on the `stytch.member` Resource.
          */
         @Json(name = "roles")
-        val roles: List<String>? = null,
+        val roles: List<String>? = emptyList(),
         /**
          * Whether to preserve existing sessions when explicit Roles that are revoked are also implicitly assigned
          *   by SSO connection or SSO group. Defaults to `false` - that is, existing Member Sessions that contain SSO
@@ -779,13 +779,26 @@ public data class UpdateRequest
         @Json(name = "preserve_existing_sessions")
         val preserveExistingSessions: Boolean? = null,
         /**
-         * The Member's default MFA method. This value is used to determine which secondary MFA method to use in the case of
-         * multiple methods registered for a Member. The current possible values are `sms_otp` and `totp`.
+         * Sets whether the Member is enrolled in MFA. If true, the Member must complete an MFA step whenever they wish to log in
+         * to their Organization. If false, the Member only needs to complete an MFA step if the Organization's MFA policy is set
+         * to `REQUIRED_FOR_ALL`.
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.default-mfa-method` action on the `stytch.member` Resource.
+         *   Alternatively, if the Member Session matches the Member associated with the `member_id` passed in the request, the
+         * authorization check will also allow a Member Session that has permission to perform the
+         * `update.settings.default-mfa-method` action on the `stytch.self` Resource.
          */
         @Json(name = "default_mfa_method")
         val defaultMfaMethod: String? = null,
         /**
          * Updates the Member's `email_address`, if provided.
+         *         If a Member's email address is changed, other Members in the same Organization cannot use the old email
+         * address, although the Member may update back to their old email address.
+         *         A Member's email address can only be useable again by other Members if the Member is deleted.
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.info.email` action on the `stytch.member` Resource. Members cannot update their own email address.
          */
         @Json(name = "email_address")
         val emailAddress: String? = null,

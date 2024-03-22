@@ -268,7 +268,7 @@ public data class AuthenticateRequest
          * custom claims size cannot exceed four kilobytes.
          */
         @Json(name = "session_custom_claims")
-        val sessionCustomClaims: Map<String, Any>? = null,
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
     )
 
 /**
@@ -363,20 +363,20 @@ public data class CreateRequest
          * custom claims size cannot exceed four kilobytes.
          */
         @Json(name = "session_custom_claims")
-        val sessionCustomClaims: Map<String, Any>? = null,
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
         /**
          * The `trusted_metadata` field contains an arbitrary JSON object of application-specific data. See the
          * [Metadata](https://stytch.com/docs/api/metadata) reference for complete field behavior details.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * The `untrusted_metadata` field contains an arbitrary JSON object of application-specific data. Untrusted metadata can
          * be edited by end users directly via the SDK, and **cannot be used to store critical information.** See the
          * [Metadata](https://stytch.com/docs/api/metadata) reference for complete field behavior details.
          */
         @Json(name = "untrusted_metadata")
-        val untrustedMetadata: Map<String, Any>? = null,
+        val untrustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * The name of the user. Each field in the name object is optional.
          */
@@ -494,14 +494,14 @@ public data class MigrateRequest
          * [Metadata](https://stytch.com/docs/api/metadata) reference for complete field behavior details.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * The `untrusted_metadata` field contains an arbitrary JSON object of application-specific data. Untrusted metadata can
          * be edited by end users directly via the SDK, and **cannot be used to store critical information.** See the
          * [Metadata](https://stytch.com/docs/api/metadata) reference for complete field behavior details.
          */
         @Json(name = "untrusted_metadata")
-        val untrustedMetadata: Map<String, Any>? = null,
+        val untrustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * Whether to set the user's email as verified. This is a dangerous field. Incorrect use may lead to users getting
          * erroneously

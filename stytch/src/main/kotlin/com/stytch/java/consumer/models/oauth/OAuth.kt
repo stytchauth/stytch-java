@@ -22,7 +22,7 @@ public data class ProviderValues
         @Json(name = "access_token")
         val accessToken: String,
         /**
-         * The `refresh_token` that you may use to refresh a User's session within the provider's API.
+         * The `refresh_token` that you may use to obtain a new `access_token` for the User within the provider's API.
          */
         @Json(name = "refresh_token")
         val refreshToken: String,
@@ -161,7 +161,7 @@ public data class AuthenticateRequest
          * custom claims size cannot exceed four kilobytes.
          */
         @Json(name = "session_custom_claims")
-        val sessionCustomClaims: Map<String, Any>? = null,
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
         /**
          * A base64url encoded one time secret used to validate that the request starts and ends on the same device.
          */

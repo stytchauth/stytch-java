@@ -14,6 +14,7 @@ import com.stytch.java.b2b.models.organizations.EmailImplicitRoleAssignment
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
+import com.stytch.java.b2b.models.sessions.PrimaryRequired
 
 /**
 * Request type for `Organizations.create`.
@@ -26,7 +27,10 @@ public data class CreateRequest
          * The Intermediate Session Token. This token does not necessarily belong to a specific instance of a Member, but
          * represents a bag of factors that may be converted to a member session.
          *     The token can be used with the
-         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete an MFA flow;
+         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
+         * [TOTP Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-totp),
+         *     or [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete an MFA
+         * flow;
          *     the [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join
          * a specific Organization that allows the factors represented by the intermediate session token;
          *     or the
@@ -79,7 +83,7 @@ public data class CreateRequest
          *   Total custom claims size cannot exceed four kilobytes.
          */
         @Json(name = "session_custom_claims")
-        val sessionCustomClaims: Map<String, Any>? = null,
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
         /**
          * The image URL of the Organization logo.
          */
@@ -89,7 +93,7 @@ public data class CreateRequest
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * The authentication setting that controls the JIT provisioning of Members when authenticating via SSO. The accepted
          * values are:
@@ -114,7 +118,7 @@ public data class CreateRequest
          * [common email domains resource](https://stytch.com/docs/b2b/api/common-email-domains) for the full list.
          */
         @Json(name = "email_allowed_domains")
-        val emailAllowedDomains: List<String>? = null,
+        val emailAllowedDomains: List<String>? = emptyList(),
         /**
          * The authentication setting that controls how a new Member can be provisioned by authenticating via Email Magic Link or
          * OAuth. The accepted values are:
@@ -159,7 +163,7 @@ public data class CreateRequest
          *
          */
         @Json(name = "allowed_auth_methods")
-        val allowedAuthMethods: List<String>? = null,
+        val allowedAuthMethods: List<String>? = emptyList(),
         /**
          * The setting that controls the MFA policy for all Members in the Organization. The accepted values are:
          *
@@ -180,7 +184,7 @@ public data class CreateRequest
          *   for more information about role assignment.
          */
         @Json(name = "rbac_email_implicit_role_assignments")
-        val rbacEmailImplicitRoleAssignments: List<EmailImplicitRoleAssignment>? = null,
+        val rbacEmailImplicitRoleAssignments: List<EmailImplicitRoleAssignment>? = emptyList(),
         /**
          * The setting that controls which MFA methods can be used by Members of an Organization. The accepted values are:
          *
@@ -198,7 +202,7 @@ public data class CreateRequest
          *
          */
         @Json(name = "allowed_mfa_methods")
-        val allowedMfaMethods: List<String>? = null,
+        val allowedMfaMethods: List<String>? = emptyList(),
     )
 
 /**
@@ -243,8 +247,10 @@ public data class CreateResponse
         /**
          * The returned Intermediate Session Token is identical to the one that was originally passed in to the request.
          *       The token can be used with the
-         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA flow and log
-         * in to the Organization.
+         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
+         * [TOTP Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-totp),
+         *       or [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete the MFA
+         * flow and log in to the Organization.
          *       It can also be used with the
          * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join a
          * different existing Organization,
@@ -275,6 +281,8 @@ public data class CreateResponse
          */
         @Json(name = "mfa_required")
         val mfaRequired: MfaRequired? = null,
+        @Json(name = "primary_required")
+        val primaryRequired: PrimaryRequired? = null,
     )
 
 /**
@@ -288,7 +296,10 @@ public data class ListRequest
          * The Intermediate Session Token. This token does not necessarily belong to a specific instance of a Member, but
          * represents a bag of factors that may be converted to a member session.
          *     The token can be used with the
-         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete an MFA flow;
+         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
+         * [TOTP Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-totp),
+         *     or [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete an MFA
+         * flow;
          *     the [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join
          * a specific Organization that allows the factors represented by the intermediate session token;
          *     or the

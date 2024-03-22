@@ -96,7 +96,7 @@ public data class InviteRequest
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * An arbitrary JSON object of application-specific data. These fields can be edited directly by the
          *   frontend SDK, and should not be used to store critical information. See the
@@ -104,7 +104,7 @@ public data class InviteRequest
          *   for complete field behavior details.
          */
         @Json(name = "untrusted_metadata")
-        val untrustedMetadata: Map<String, Any>? = null,
+        val untrustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * Use a custom template for invite emails. By default, it will use your default email template. The template must be a
          * template
@@ -130,7 +130,7 @@ public data class InviteRequest
          *    for more information about role assignment.
          */
         @Json(name = "roles")
-        val roles: List<String>? = null,
+        val roles: List<String>? = emptyList(),
     )
 
 /**

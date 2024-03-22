@@ -9,6 +9,8 @@ package com.stytch.java.b2b.models.ssosaml
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.stytch.java.b2b.models.sso.SAMLConnection
+import com.stytch.java.b2b.models.sso.SAMLConnectionImplicitRoleAssignment
+import com.stytch.java.b2b.models.sso.SAMLGroupImplicitRoleAssignment
 import com.stytch.java.common.methodoptions.Authorization
 
 public data class CreateConnectionRequestOptions
@@ -270,7 +272,7 @@ public data class UpdateConnectionRequest
          * `last_name`.
          */
         @Json(name = "attribute_mapping")
-        val attributeMapping: Map<String, Any>? = null,
+        val attributeMapping: Map<String, Any?>? = emptyMap(),
         /**
          * A certificate that Stytch will use to verify the sign-in assertion sent by the IdP, in
          * [PEM](https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail) format. See our
@@ -288,7 +290,7 @@ public data class UpdateConnectionRequest
          * [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment) for more information about role assignment.
          */
         @Json(name = "saml_connection_implicit_role_assignments")
-        val samlConnectionImplicitRoleAssignments: List<String>? = null,
+        val samlConnectionImplicitRoleAssignments: List<SAMLConnectionImplicitRoleAssignment>? = emptyList(),
         /**
          * Defines the names of the SAML groups
          *  that grant specific role assignments. For each group-Role pair, if a Member logs in with this SAML connection and
@@ -298,7 +300,7 @@ public data class UpdateConnectionRequest
          *          `attribute_mapping`. Make sure that your IdP is configured to correctly send the group information.
          */
         @Json(name = "saml_group_implicit_role_assignments")
-        val samlGroupImplicitRoleAssignments: List<String>? = null,
+        val samlGroupImplicitRoleAssignments: List<SAMLGroupImplicitRoleAssignment>? = emptyList(),
         /**
          * An alternative URL to use for the Audience Restriction. This value can be used when you wish to migrate an existing
          * SAML integration to Stytch with zero downtime.

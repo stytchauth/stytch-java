@@ -40,7 +40,10 @@ public data class AuthenticateRequest
          * The Intermediate Session Token. This token does not necessarily belong to a specific instance of a Member, but
          * represents a bag of factors that may be converted to a member session.
          *     The token can be used with the
-         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete an MFA flow;
+         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
+         * [TOTP Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-totp),
+         *     or [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete an MFA
+         * flow;
          *     the [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join
          * a specific Organization that allows the factors represented by the intermediate session token;
          *     or the
@@ -86,7 +89,7 @@ public data class AuthenticateRequest
          *   Total custom claims size cannot exceed four kilobytes.
          */
         @Json(name = "session_custom_claims")
-        val sessionCustomClaims: Map<String, Any>? = null,
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
         /**
          * Optionally sets the Member’s MFA enrollment status upon a successful authentication. If the Organization’s MFA policy
          * is `REQUIRED_FOR_ALL`, this field will be ignored. If this field is not passed in, the Member’s `mfa_enrolled` boolean
@@ -191,7 +194,10 @@ public data class CreateRequest
          * The Intermediate Session Token. This token does not necessarily belong to a specific instance of a Member, but
          * represents a bag of factors that may be converted to a member session.
          *     The token can be used with the
-         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete an MFA flow;
+         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
+         * [TOTP Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-totp),
+         *     or [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete an MFA
+         * flow;
          *     the [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join
          * a specific Organization that allows the factors represented by the intermediate session token;
          *     or the
