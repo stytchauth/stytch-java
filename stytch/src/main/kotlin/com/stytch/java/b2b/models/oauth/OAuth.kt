@@ -12,6 +12,7 @@ import com.stytch.java.b2b.models.mfa.MfaRequired
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
+import com.stytch.java.b2b.models.sessions.PrimaryRequired
 import java.time.Instant
 
 @JsonClass(generateAdapter = false)
@@ -42,7 +43,7 @@ public data class ProviderValues
         @Json(name = "scopes")
         val scopes: List<String>,
         /**
-         * The `refresh_token` that you may use to refresh a User's session within the provider's API.
+         * The `refresh_token` that you may use to obtain a new `access_token` for the User within the provider's API.
          */
         @Json(name = "refresh_token")
         val refreshToken: String? = null,
@@ -106,7 +107,7 @@ public data class AuthenticateRequest
          *   Total custom claims size cannot exceed four kilobytes.
          */
         @Json(name = "session_custom_claims")
-        val sessionCustomClaims: Map<String, Any>? = null,
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
         /**
          * A base64url encoded one time secret used to validate that the request starts and ends on the same device.
          */
@@ -128,6 +129,8 @@ public data class AuthenticateRequest
          */
         @Json(name = "locale")
         val locale: AuthenticateRequestLocale? = null,
+        @Json(name = "intermediate_session_token")
+        val intermediateSessionToken: String? = null,
     )
 
 /**
@@ -196,8 +199,10 @@ public data class AuthenticateResponse
         /**
          * The returned Intermediate Session Token contains an OAuth factor associated with the Member's email address.
          *       The token can be used with the
-         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA flow and log
-         * in to the Organization.
+         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
+         * [TOTP Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-totp),
+         *       or [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete the MFA
+         * flow and log in to the Organization.
          *       It can also be used with the
          * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join a
          * different existing Organization that allows login with OAuth,
@@ -232,4 +237,6 @@ public data class AuthenticateResponse
          */
         @Json(name = "mfa_required")
         val mfaRequired: MfaRequired? = null,
+        @Json(name = "primary_required")
+        val primaryRequired: PrimaryRequired? = null,
     )

@@ -8,7 +8,7 @@ import java.util.Date
 
 internal data class ParsedJWTClaims(
     val payload: JwtClaims,
-    val customClaims: Map<String, Any> = emptyMap(),
+    val customClaims: Map<String, Any?> = emptyMap(),
 )
 
 internal val IGNORED_CLAIMS = listOf("aud", "exp", "iat", "iss", "jti", "nbf", "sub")

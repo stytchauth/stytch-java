@@ -124,6 +124,12 @@ public enum class AuthenticationFactorDeliveryMethod {
 
     @Json(name = "imported_auth0")
     IMPORTED_AUTH0,
+
+    @Json(name = "oauth_exchange_slack")
+    OAUTH_EXCHANGE_SLACK,
+
+    @Json(name = "oauth_exchange_hubspot")
+    OAUTH_EXCHANGE_HUBSPOT,
 }
 
 @JsonClass(generateAdapter = false)
@@ -251,6 +257,9 @@ public data class AuthenticationFactor
         val appleOAuthFactor: AppleOAuthFactor? = null,
         @Json(name = "webauthn_factor")
         val webauthnFactor: WebAuthnFactor? = null,
+        /**
+         * Information about the TOTP-backed Authenticator App factor, if one is present.
+         */
         @Json(name = "authenticator_app_factor")
         val authenticatorAppFactor: AuthenticatorAppFactor? = null,
         @Json(name = "github_oauth_factor")
@@ -313,12 +322,19 @@ public data class AuthenticationFactor
         val yahooOAuthFactor: YahooOAuthFactor? = null,
         @Json(name = "hubspot_oauth_factor")
         val hubspotOAuthFactor: HubspotOAuthFactor? = null,
+        @Json(name = "slack_oauth_exchange_factor")
+        val slackOAuthExchangeFactor: SlackOAuthExchangeFactor? = null,
+        @Json(name = "hubspot_oauth_exchange_factor")
+        val hubspotOAuthExchangeFactor: HubspotOAuthExchangeFactor? = null,
     )
 
 @JsonClass(generateAdapter = true)
 public data class AuthenticatorAppFactor
     @JvmOverloads
     constructor(
+        /**
+         * Globally unique UUID that identifies a TOTP instance.
+         */
         @Json(name = "totp_id")
         val totpId: String,
     )
@@ -471,6 +487,14 @@ public data class GoogleOAuthFactor
          */
         @Json(name = "provider_subject")
         val providerSubject: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class HubspotOAuthExchangeFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "email_id")
+        val emailId: String,
     )
 
 @JsonClass(generateAdapter = true)
@@ -679,7 +703,7 @@ public data class Session
          * The custom claims map for a Session. Claims can be added to a session during a Sessions authenticate call.
          */
         @Json(name = "custom_claims")
-        val customClaims: Map<String, Any>? = null,
+        val customClaims: Map<String, Any?>? = emptyMap(),
     )
 
 @JsonClass(generateAdapter = true)
@@ -692,6 +716,14 @@ public data class ShopifyOAuthFactor
         val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class SlackOAuthExchangeFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "email_id")
+        val emailId: String,
     )
 
 @JsonClass(generateAdapter = true)
@@ -835,7 +867,7 @@ public data class AuthenticateRequest
          * custom claims size cannot exceed four kilobytes.
          */
         @Json(name = "session_custom_claims")
-        val sessionCustomClaims: Map<String, Any>? = null,
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
     )
 
 /**

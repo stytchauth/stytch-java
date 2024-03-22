@@ -18,6 +18,11 @@ public data class MemberOptions
          */
         @Json(name = "mfa_phone_number")
         val mfaPhoneNumber: String,
+        /**
+         * The Member's MFA TOTP registration ID.
+         */
+        @Json(name = "totp_registration_id")
+        val totpRegistrationId: String,
     )
 
 @JsonClass(generateAdapter = true)

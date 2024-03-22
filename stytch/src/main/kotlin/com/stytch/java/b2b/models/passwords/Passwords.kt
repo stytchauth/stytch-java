@@ -173,7 +173,7 @@ public data class AuthenticateRequest
          *   Total custom claims size cannot exceed four kilobytes.
          */
         @Json(name = "session_custom_claims")
-        val sessionCustomClaims: Map<String, Any>? = null,
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
         /**
          * If the Member needs to complete an MFA step, and the Member has a phone number, this endpoint will pre-emptively send a
          * one-time passcode (OTP) to the Member's phone number. The locale argument will be used to determine which language to
@@ -190,6 +190,8 @@ public data class AuthenticateRequest
          */
         @Json(name = "locale")
         val locale: AuthenticateRequestLocale? = null,
+        @Json(name = "intermediate_session_token")
+        val intermediateSessionToken: String? = null,
     )
 
 /**
@@ -239,8 +241,10 @@ public data class AuthenticateResponse
         /**
          * The returned Intermediate Session Token contains a password factor associated with the Member.
          *       The token can be used with the
-         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA flow and log
-         * in to the Organization.
+         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
+         * [TOTP Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-totp),
+         *       or [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete the MFA
+         * flow and log in to the Organization.
          *       Password factors are not transferable between Organizations, so the intermediate session token is not valid for
          * use with discovery endpoints.
          */
@@ -334,7 +338,7 @@ public data class MigrateRequest
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * An arbitrary JSON object of application-specific data. These fields can be edited directly by the
          *   frontend SDK, and should not be used to store critical information. See the
@@ -342,7 +346,7 @@ public data class MigrateRequest
          *   for complete field behavior details.
          */
         @Json(name = "untrusted_metadata")
-        val untrustedMetadata: Map<String, Any>? = null,
+        val untrustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * Roles to explicitly assign to this Member.
          *  Will completely replace any existing explicitly assigned roles. See the
@@ -354,7 +358,7 @@ public data class MigrateRequest
          *    `preserve_existing_sessions` parameter with a value of `true`.
          */
         @Json(name = "roles")
-        val roles: List<String>? = null,
+        val roles: List<String>? = emptyList(),
         /**
          * Whether to preserve existing sessions when explicit Roles that are revoked are also implicitly assigned
          *   by SSO connection or SSO group. Defaults to `false` - that is, existing Member Sessions that contain SSO

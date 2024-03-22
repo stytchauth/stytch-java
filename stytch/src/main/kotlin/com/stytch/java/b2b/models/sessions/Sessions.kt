@@ -121,7 +121,21 @@ public data class MemberSession
          * The custom claims map for a Session. Claims can be added to a session during a Sessions authenticate call.
          */
         @Json(name = "custom_claims")
-        val customClaims: Map<String, Any>? = null,
+        val customClaims: Map<String, Any?>? = emptyMap(),
+    )
+
+@JsonClass(generateAdapter = true)
+public data class PrimaryRequired
+    @JvmOverloads
+    constructor(
+        /**
+         * If non-empty, indicates that the Organization restricts the authentication methods it allows for login (such as `sso`
+         * or `password`), and the end user must complete one of those authentication methods to log in. If empty, indicates that
+         * the Organization does not restrict the authentication method it allows for login, but the end user does not have any
+         * transferrable primary factors. Only email magic link and OAuth factors can be transferred between Organizations.
+         */
+        @Json(name = "allowed_auth_methods")
+        val allowedAuthMethods: List<String>,
     )
 
 /**
@@ -168,7 +182,7 @@ public data class AuthenticateRequest
          *   Total custom claims size cannot exceed four kilobytes.
          */
         @Json(name = "session_custom_claims")
-        val sessionCustomClaims: Map<String, Any>? = null,
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
         /**
          * If an `authorization_check` object is passed in, this endpoint will also check if the Member is
          *   authorized to perform the given action on the given Resource in the specified Organization. A Member is authorized if
@@ -291,7 +305,7 @@ public data class ExchangeRequest
          *   Total custom claims size cannot exceed four kilobytes.
          */
         @Json(name = "session_custom_claims")
-        val sessionCustomClaims: Map<String, Any>? = null,
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
         /**
          * If the Member needs to complete an MFA step, and the Member has a phone number, this endpoint will pre-emptively send a
          * one-time passcode (OTP) to the Member's phone number. The locale argument will be used to determine which language to
@@ -363,8 +377,10 @@ public data class ExchangeResponse
          * The returned Intermediate Session Token contains any Email Magic Link or OAuth factors from the original member session
          * that are valid for the target Organization.
          *       The token can be used with the
-         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA flow and log
-         * in to the target Organization.
+         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
+         * [TOTP Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-totp),
+         *       or [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete the MFA
+         * flow and log in to the target Organization.
          *       It can also be used with the
          * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join a
          * different existing Organization,
@@ -385,6 +401,8 @@ public data class ExchangeResponse
          */
         @Json(name = "mfa_required")
         val mfaRequired: MfaRequired? = null,
+        @Json(name = "primary_required")
+        val primaryRequired: PrimaryRequired? = null,
     )
 
 /**

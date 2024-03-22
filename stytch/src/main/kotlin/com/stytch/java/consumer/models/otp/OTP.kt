@@ -74,7 +74,7 @@ public data class AuthenticateRequest
          * custom claims size cannot exceed four kilobytes.
          */
         @Json(name = "session_custom_claims")
-        val sessionCustomClaims: Map<String, Any>? = null,
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
     )
 
 /**

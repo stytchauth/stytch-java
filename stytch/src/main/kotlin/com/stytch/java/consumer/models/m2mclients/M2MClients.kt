@@ -61,7 +61,7 @@ public data class CreateRequest
          * [Metadata](https://stytch.com/docs/api/metadata) reference for complete field behavior details.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
     )
 
 /**
@@ -264,13 +264,13 @@ public data class UpdateRequest
          * An array of scopes assigned to the client.
          */
         @Json(name = "scopes")
-        val scopes: List<String>? = null,
+        val scopes: List<String>? = emptyList(),
         /**
          * The `trusted_metadata` field contains an arbitrary JSON object of application-specific data. See the
          * [Metadata](https://stytch.com/docs/api/metadata) reference for complete field behavior details.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
     )
 
 /**

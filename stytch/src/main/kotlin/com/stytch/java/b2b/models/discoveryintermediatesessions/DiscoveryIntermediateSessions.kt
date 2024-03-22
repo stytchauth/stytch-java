@@ -12,6 +12,7 @@ import com.stytch.java.b2b.models.mfa.MfaRequired
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
+import com.stytch.java.b2b.models.sessions.PrimaryRequired
 
 @JsonClass(generateAdapter = false)
 public enum class ExchangeRequestLocale {
@@ -36,7 +37,10 @@ public data class ExchangeRequest
          * The Intermediate Session Token. This token does not necessarily belong to a specific instance of a Member, but
          * represents a bag of factors that may be converted to a member session.
          *     The token can be used with the
-         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete an MFA flow;
+         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
+         * [TOTP Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-totp),
+         *     or [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete an MFA
+         * flow;
          *     the [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join
          * a specific Organization that allows the factors represented by the intermediate session token;
          *     or the
@@ -78,7 +82,7 @@ public data class ExchangeRequest
          *   Total custom claims size cannot exceed four kilobytes.
          */
         @Json(name = "session_custom_claims")
-        val sessionCustomClaims: Map<String, Any>? = null,
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
         /**
          * If the Member needs to complete an MFA step, and the Member has a phone number, this endpoint will pre-emptively send a
          * one-time passcode (OTP) to the Member's phone number. The locale argument will be used to determine which language to
@@ -144,8 +148,10 @@ public data class ExchangeResponse
         /**
          * The returned Intermediate Session Token is identical to the one that was originally passed in to the request.
          *       The token can be used with the
-         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA flow and log
-         * in to the Organization.
+         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
+         * [TOTP Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-totp),
+         *       or [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete the MFA
+         * flow and log in to the Organization.
          *       It can also be used with the
          * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join a
          * different existing Organization,
@@ -171,4 +177,6 @@ public data class ExchangeResponse
          */
         @Json(name = "mfa_required")
         val mfaRequired: MfaRequired? = null,
+        @Json(name = "primary_required")
+        val primaryRequired: PrimaryRequired? = null,
     )

@@ -58,7 +58,7 @@ public data class AuthenticateRequest
          * custom claims size cannot exceed four kilobytes.
          */
         @Json(name = "session_custom_claims")
-        val sessionCustomClaims: Map<String, Any>? = null,
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
     )
 
 /**
@@ -225,7 +225,7 @@ public data class RegisterRequest
          * custom claims size cannot exceed four kilobytes.
          */
         @Json(name = "session_custom_claims")
-        val sessionCustomClaims: Map<String, Any>? = null,
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
     )
 
 /**
@@ -357,7 +357,7 @@ public data class UpdateRequest
     constructor(
         /**
          * Globally unique UUID that identifies a Passkey or WebAuthn registration in the Stytch API. The
-         * `webautn_registration_id` is used when you need to operate on a specific User's WebAuthn registartion.
+         * `webauthn_registration_id` is used when you need to operate on a specific User's WebAuthn registration.
          */
         @Json(name = "webauthn_registration_id")
         val webauthnRegistrationId: String,

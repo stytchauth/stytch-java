@@ -56,7 +56,7 @@ public data class M2MClient
          * An arbitrary JSON object for storing application-specific data.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * The last four characters of the `next_client_secret`. Null if no `next_client_secret` exists.
          */
@@ -109,7 +109,7 @@ public data class M2MClientWithClientSecret
          * An arbitrary JSON object for storing application-specific data.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * The last four characters of the `next_client_secret`. Null if no `next_client_secret` exists.
          */
@@ -162,7 +162,7 @@ public data class M2MClientWithNextClientSecret
          * An arbitrary JSON object for storing application-specific data.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * The last four characters of the `next_client_secret`. Null if no `next_client_secret` exists.
          */
@@ -187,7 +187,7 @@ public data class M2MSearchQuery
          * An array of operand objects that contains all of the filters and values to apply to your search search query.
          */
         @Json(name = "operands")
-        val operands: List<Map<String, Any>>,
+        val operands: List<Map<String, Any?>>,
     )
 
 @JsonClass(generateAdapter = true)
@@ -217,7 +217,7 @@ public data class TokenRequest
         @Json(name = "client_secret")
         val clientSecret: String,
         @Json(name = "scopes")
-        val scopes: List<String>? = null,
+        val scopes: List<String>? = emptyList(),
     )
 
 @JsonClass(generateAdapter = true)
@@ -241,7 +241,7 @@ public data class AuthenticateTokenRequest
         @Json(name = "access_token")
         val accessToken: String,
         @Json(name = "required_scopes")
-        val requiredScopes: List<String>? = null,
+        val requiredScopes: List<String>? = emptyList(),
         @Json(name = "max_token_age_seconds")
         val maxTokenAgeSeconds: Int? = null,
     )
@@ -255,6 +255,6 @@ public data class AuthenticateTokenResponse
         @Json(name = "scopes")
         val scopes: List<String>,
         @Json(name = "custom_claims")
-        val customClaims: Map<String, Any>? = null,
+        val customClaims: Map<String, Any?>? = emptyMap(),
     )
 // ENDMANUAL(AuthenticateToken)

@@ -212,7 +212,7 @@ public data class SearchUsersQuery
          * An array of operand objects that contains all of the filters and values to apply to your search search query.
          */
         @Json(name = "operands")
-        val operands: List<Map<String, Any>>,
+        val operands: List<Map<String, Any?>>,
     )
 
 @JsonClass(generateAdapter = true)
@@ -302,14 +302,14 @@ public data class User
          * [Metadata](https://stytch.com/docs/api/metadata) reference for complete field behavior details.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * The `untrusted_metadata` field contains an arbitrary JSON object of application-specific data. Untrusted metadata can
          * be edited by end users directly via the SDK, and **cannot be used to store critical information.** See the
          * [Metadata](https://stytch.com/docs/api/metadata) reference for complete field behavior details.
          */
         @Json(name = "untrusted_metadata")
-        val untrustedMetadata: Map<String, Any>? = null,
+        val untrustedMetadata: Map<String, Any?>? = emptyMap(),
     )
 
 @JsonClass(generateAdapter = true)
@@ -393,14 +393,14 @@ public data class CreateRequest
          * [Metadata](https://stytch.com/docs/api/metadata) reference for complete field behavior details.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * The `untrusted_metadata` field contains an arbitrary JSON object of application-specific data. Untrusted metadata can
          * be edited by end users directly via the SDK, and **cannot be used to store critical information.** See the
          * [Metadata](https://stytch.com/docs/api/metadata) reference for complete field behavior details.
          */
         @Json(name = "untrusted_metadata")
-        val untrustedMetadata: Map<String, Any>? = null,
+        val untrustedMetadata: Map<String, Any?>? = emptyMap(),
     )
 
 /**
@@ -1013,14 +1013,14 @@ public data class GetResponse
          * [Metadata](https://stytch.com/docs/api/metadata) reference for complete field behavior details.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * The `untrusted_metadata` field contains an arbitrary JSON object of application-specific data. Untrusted metadata can
          * be edited by end users directly via the SDK, and **cannot be used to store critical information.** See the
          * [Metadata](https://stytch.com/docs/api/metadata) reference for complete field behavior details.
          */
         @Json(name = "untrusted_metadata")
-        val untrustedMetadata: Map<String, Any>? = null,
+        val untrustedMetadata: Map<String, Any?>? = emptyMap(),
     )
 
 /**
@@ -1113,14 +1113,14 @@ public data class UpdateRequest
          * [Metadata](https://stytch.com/docs/api/metadata) reference for complete field behavior details.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * The `untrusted_metadata` field contains an arbitrary JSON object of application-specific data. Untrusted metadata can
          * be edited by end users directly via the SDK, and **cannot be used to store critical information.** See the
          * [Metadata](https://stytch.com/docs/api/metadata) reference for complete field behavior details.
          */
         @Json(name = "untrusted_metadata")
-        val untrustedMetadata: Map<String, Any>? = null,
+        val untrustedMetadata: Map<String, Any?>? = emptyMap(),
     )
 
 /**

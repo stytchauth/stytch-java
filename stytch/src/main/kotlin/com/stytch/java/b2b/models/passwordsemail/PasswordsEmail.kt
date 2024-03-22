@@ -104,7 +104,7 @@ public data class ResetRequest
          *   Total custom claims size cannot exceed four kilobytes.
          */
         @Json(name = "session_custom_claims")
-        val sessionCustomClaims: Map<String, Any>? = null,
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
         /**
          * If the Member needs to complete an MFA step, and the Member has a phone number, this endpoint will pre-emptively send a
          * one-time passcode (OTP) to the Member's phone number. The locale argument will be used to determine which language to
@@ -121,6 +121,8 @@ public data class ResetRequest
          */
         @Json(name = "locale")
         val locale: ResetRequestLocale? = null,
+        @Json(name = "intermediate_session_token")
+        val intermediateSessionToken: String? = null,
     )
 
 /**
@@ -175,8 +177,10 @@ public data class ResetResponse
         /**
          * The returned Intermediate Session Token contains a password factor associated with the Member.
          *       The token can be used with the
-         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA flow and log
-         * in to the Organization.
+         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
+         * [TOTP Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-totp),
+         *       or [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete the MFA
+         * flow and log in to the Organization.
          *       Password factors are not transferable between Organizations, so the intermediate session token is not valid for
          * use with discovery endpoints.
          */

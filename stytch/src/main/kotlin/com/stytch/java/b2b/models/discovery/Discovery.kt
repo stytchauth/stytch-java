@@ -11,6 +11,7 @@ import com.squareup.moshi.JsonClass
 import com.stytch.java.b2b.models.mfa.MfaRequired
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
+import com.stytch.java.b2b.models.sessions.PrimaryRequired
 
 @JsonClass(generateAdapter = true)
 public data class DiscoveredOrganization
@@ -58,24 +59,10 @@ public data class Membership
          * An object containing additional metadata about the membership, if available.
          */
         @Json(name = "details")
-        val details: Map<String, Any>? = null,
+        val details: Map<String, Any?>? = emptyMap(),
         /**
          * The [Member object](https://stytch.com/docs/b2b/api/member-object) if one already exists, or null if one does not.
          */
         @Json(name = "member")
         val member: Member? = null,
-    )
-
-@JsonClass(generateAdapter = true)
-public data class PrimaryRequired
-    @JvmOverloads
-    constructor(
-        /**
-         * If non-empty, indicates that the Organization restricts the authentication methods it allows for login (such as `sso`
-         * or `password`), and the end user must complete one of those authentication methods to log in. If empty, indicates that
-         * the Organization does not restrict the authentication method it allows for login, but the end user does not have any
-         * transferrable primary factors. Only email magic link and OAuth factors can be transferred between Organizations.
-         */
-        @Json(name = "allowed_auth_methods")
-        val allowedAuthMethods: List<String>,
     )

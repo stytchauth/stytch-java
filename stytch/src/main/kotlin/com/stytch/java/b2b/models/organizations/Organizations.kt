@@ -179,7 +179,7 @@ public data class Member
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * An arbitrary JSON object of application-specific data. These fields can be edited directly by the
          *   frontend SDK, and should not be used to store critical information. See the
@@ -187,7 +187,7 @@ public data class Member
          *   for complete field behavior details.
          */
         @Json(name = "untrusted_metadata")
-        val untrustedMetadata: Map<String, Any>? = null,
+        val untrustedMetadata: Map<String, Any?>? = emptyMap(),
     )
 
 @JsonClass(generateAdapter = true)
@@ -275,7 +275,7 @@ public data class MemberRoleSource
          *
          */
         @Json(name = "details")
-        val details: Map<String, Any>? = null,
+        val details: Map<String, Any?>? = emptyMap(),
     )
 
 @JsonClass(generateAdapter = true)
@@ -454,7 +454,7 @@ public data class Organization
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * The default connection used for SSO when there are multiple active connections.
          */
@@ -502,7 +502,7 @@ public data class SSORegistration
          * An object for storing SSO attributes brought over from the identity provider.
          */
         @Json(name = "sso_attributes")
-        val ssoAttributes: Map<String, Any>? = null,
+        val ssoAttributes: Map<String, Any?>? = emptyMap(),
     )
 
 @JsonClass(generateAdapter = true)
@@ -522,7 +522,7 @@ public data class SearchQuery
          * An array of operand objects that contains all of the filters and values to apply to your search query.
          */
         @Json(name = "operands")
-        val operands: List<Map<String, Any>>,
+        val operands: List<Map<String, Any?>>,
     )
 
 public data class UpdateRequestOptions
@@ -571,7 +571,7 @@ public data class CreateRequest
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * The authentication setting that controls the JIT provisioning of Members when authenticating via SSO. The accepted
          * values are:
@@ -596,7 +596,7 @@ public data class CreateRequest
          * [common email domains resource](https://stytch.com/docs/b2b/api/common-email-domains) for the full list.
          */
         @Json(name = "email_allowed_domains")
-        val emailAllowedDomains: List<String>? = null,
+        val emailAllowedDomains: List<String>? = emptyList(),
         /**
          * The authentication setting that controls how a new Member can be provisioned by authenticating via Email Magic Link or
          * OAuth. The accepted values are:
@@ -641,7 +641,7 @@ public data class CreateRequest
          *
          */
         @Json(name = "allowed_auth_methods")
-        val allowedAuthMethods: List<String>? = null,
+        val allowedAuthMethods: List<String>? = emptyList(),
         /**
          * The setting that controls the MFA policy for all Members in the Organization. The accepted values are:
          *
@@ -662,7 +662,7 @@ public data class CreateRequest
          *   for more information about role assignment.
          */
         @Json(name = "rbac_email_implicit_role_assignments")
-        val rbacEmailImplicitRoleAssignments: List<EmailImplicitRoleAssignment>? = null,
+        val rbacEmailImplicitRoleAssignments: List<EmailImplicitRoleAssignment>? = emptyList(),
         /**
          * The setting that controls which MFA methods can be used by Members of an Organization. The accepted values are:
          *
@@ -680,7 +680,7 @@ public data class CreateRequest
          *
          */
         @Json(name = "allowed_mfa_methods")
-        val allowedMfaMethods: List<String>? = null,
+        val allowedMfaMethods: List<String>? = emptyList(),
     )
 
 /**
@@ -899,7 +899,7 @@ public data class UpdateRequest
          *           update trusted metadata when acting as a Member.
          */
         @Json(name = "trusted_metadata")
-        val trustedMetadata: Map<String, Any>? = null,
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * The default connection used for SSO when there are multiple active connections.
          *
@@ -936,7 +936,7 @@ public data class UpdateRequest
          * perform the `update.settings.sso-jit-provisioning` action on the `stytch.organization` Resource.
          */
         @Json(name = "sso_jit_provisioning_allowed_connections")
-        val ssoJITProvisioningAllowedConnections: List<String>? = null,
+        val ssoJITProvisioningAllowedConnections: List<String>? = emptyList(),
         /**
          * An array of email domains that allow invites or JIT provisioning for new Members. This list is enforced when either
          * `email_invites` or `email_jit_provisioning` is set to `RESTRICTED`.
@@ -949,7 +949,7 @@ public data class UpdateRequest
          * perform the `update.settings.allowed-domains` action on the `stytch.organization` Resource.
          */
         @Json(name = "email_allowed_domains")
-        val emailAllowedDomains: List<String>? = null,
+        val emailAllowedDomains: List<String>? = emptyList(),
         /**
          * The authentication setting that controls how a new Member can be provisioned by authenticating via Email Magic Link or
          * OAuth. The accepted values are:
@@ -1006,7 +1006,7 @@ public data class UpdateRequest
          * perform the `update.settings.allowed-auth-methods` action on the `stytch.organization` Resource.
          */
         @Json(name = "allowed_auth_methods")
-        val allowedAuthMethods: List<String>? = null,
+        val allowedAuthMethods: List<String>? = emptyList(),
         /**
          * The setting that controls the MFA policy for all Members in the Organization. The accepted values are:
          *
@@ -1033,7 +1033,7 @@ public data class UpdateRequest
          * perform the `update.settings.implicit-roles` action on the `stytch.organization` Resource.
          */
         @Json(name = "rbac_email_implicit_role_assignments")
-        val rbacEmailImplicitRoleAssignments: List<String>? = null,
+        val rbacEmailImplicitRoleAssignments: List<EmailImplicitRoleAssignment>? = emptyList(),
         /**
          * The setting that controls which MFA methods can be used by Members of an Organization. The accepted values are:
          *
@@ -1057,7 +1057,7 @@ public data class UpdateRequest
          * perform the `update.settings.allowed-mfa-methods` action on the `stytch.organization` Resource.
          */
         @Json(name = "allowed_mfa_methods")
-        val allowedMfaMethods: List<String>? = null,
+        val allowedMfaMethods: List<String>? = emptyList(),
     )
 
 /**
