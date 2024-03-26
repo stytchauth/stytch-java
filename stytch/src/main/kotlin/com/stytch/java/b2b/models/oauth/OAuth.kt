@@ -202,15 +202,14 @@ public data class AuthenticateResponse
         @Json(name = "member_authenticated")
         val memberAuthenticated: Boolean,
         /**
-         * The returned Intermediate Session Token contains an OAuth factor associated with the Member's email address.
-         *         If this value is non-empty, the member must complete an MFA step to finish logging in to the Organization. The
-         * token can be used with the [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
-         * [TOTP Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-totp),
-         *     or [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete an MFA
-         * flow and log in to the Organization. It can also be used with the
+         * The returned Intermediate Session Token contains an OAuth factor associated with the Member's email address. If this
+         * value is non-empty, the member must complete an MFA step to finish logging in to the Organization. The token can be
+         * used with the [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
+         * [TOTP Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-totp), or
+         * [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete an MFA flow and
+         * log in to the Organization. It can also be used with the
          * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join a
-         * specific Organization that allows the factors represented by the intermediate session token;
-         *     or the
+         * specific Organization that allows the factors represented by the intermediate session token; or the
          * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to
          * create a new Organization and Member.
          */
