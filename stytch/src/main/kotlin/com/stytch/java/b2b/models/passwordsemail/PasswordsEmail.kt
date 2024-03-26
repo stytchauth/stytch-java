@@ -122,10 +122,9 @@ public data class ResetRequest
         @Json(name = "locale")
         val locale: ResetRequestLocale? = null,
         /**
-         * Adds this primary authentication factor to the intermediate session token. If the resulting set of factors
-         *        satisfies the organization's primary authentication requirements and MFA requirements, the intermediate session
-         *        token will be consumed and converted to a member session. If not, the same intermediate session token will be
-         *        returned.
+         * Adds this primary authentication factor to the intermediate session token. If the resulting set of factors satisfies
+         * the organization's primary authentication requirements and MFA requirements, the intermediate session token will be
+         * consumed and converted to a member session. If not, the same intermediate session token will be returned.
          */
         @Json(name = "intermediate_session_token")
         val intermediateSessionToken: String? = null,

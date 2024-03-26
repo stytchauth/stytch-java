@@ -691,10 +691,9 @@ public data class UpdateRequest
          * The name of the Member.
          *
          * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-         * perform the `update.info.name` action on the `stytch.member` Resource.
-         *   Alternatively, if the Member Session matches the Member associated with the `member_id` passed in the request, the
-         * authorization check will also allow a Member Session that has permission to perform the `update.info.name` action on
-         * the `stytch.self` Resource.
+         * perform the `update.info.name` action on the `stytch.member` Resource. Alternatively, if the Member Session matches the
+         * Member associated with the `member_id` passed in the request, the authorization check will also allow a Member Session
+         * that has permission to perform the `update.info.name` action on the `stytch.self` Resource.
          */
         @Json(name = "name")
         val name: String? = null,
@@ -712,10 +711,10 @@ public data class UpdateRequest
          *   for complete field behavior details.
          *
          * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-         * perform the `update.info.untrusted-metadata` action on the `stytch.member` Resource.
-         *   Alternatively, if the Member Session matches the Member associated with the `member_id` passed in the request, the
-         * authorization check will also allow a Member Session that has permission to perform the
-         * `update.info.untrusted-metadata` action on the `stytch.self` Resource.
+         * perform the `update.info.untrusted-metadata` action on the `stytch.member` Resource. Alternatively, if the Member
+         * Session matches the Member associated with the `member_id` passed in the request, the authorization check will also
+         * allow a Member Session that has permission to perform the `update.info.untrusted-metadata` action on the `stytch.self`
+         * Resource.
          */
         @Json(name = "untrusted_metadata")
         val untrustedMetadata: Map<String, Any?>? = emptyMap(),
@@ -736,10 +735,9 @@ public data class UpdateRequest
          * to delete the Member's existing phone number first.
          *
          * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-         * perform the `update.info.mfa-phone` action on the `stytch.member` Resource.
-         *   Alternatively, if the Member Session matches the Member associated with the `member_id` passed in the request, the
-         * authorization check will also allow a Member Session that has permission to perform the `update.info.mfa-phone` action
-         * on the `stytch.self` Resource.
+         * perform the `update.info.mfa-phone` action on the `stytch.member` Resource. Alternatively, if the Member Session
+         * matches the Member associated with the `member_id` passed in the request, the authorization check will also allow a
+         * Member Session that has permission to perform the `update.info.mfa-phone` action on the `stytch.self` Resource.
          */
         @Json(name = "mfa_phone_number")
         val mfaPhoneNumber: String? = null,
@@ -749,10 +747,9 @@ public data class UpdateRequest
          * to `REQUIRED_FOR_ALL`.
          *
          * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-         * perform the `update.settings.mfa-enrolled` action on the `stytch.member` Resource.
-         *   Alternatively, if the Member Session matches the Member associated with the `member_id` passed in the request, the
-         * authorization check will also allow a Member Session that has permission to perform the `update.settings.mfa-enrolled`
-         * action on the `stytch.self` Resource.
+         * perform the `update.settings.mfa-enrolled` action on the `stytch.member` Resource. Alternatively, if the Member Session
+         * matches the Member associated with the `member_id` passed in the request, the authorization check will also allow a
+         * Member Session that has permission to perform the `update.settings.mfa-enrolled` action on the `stytch.self` Resource.
          */
         @Json(name = "mfa_enrolled")
         val mfaEnrolled: Boolean? = null,
@@ -784,10 +781,10 @@ public data class UpdateRequest
          * to `REQUIRED_FOR_ALL`.
          *
          * If this field is provided and a session header is passed into the request, the Member Session must have permission to
-         * perform the `update.settings.default-mfa-method` action on the `stytch.member` Resource.
-         *   Alternatively, if the Member Session matches the Member associated with the `member_id` passed in the request, the
-         * authorization check will also allow a Member Session that has permission to perform the
-         * `update.settings.default-mfa-method` action on the `stytch.self` Resource.
+         * perform the `update.settings.default-mfa-method` action on the `stytch.member` Resource. Alternatively, if the Member
+         * Session matches the Member associated with the `member_id` passed in the request, the authorization check will also
+         * allow a Member Session that has permission to perform the `update.settings.default-mfa-method` action on the
+         * `stytch.self` Resource.
          */
         @Json(name = "default_mfa_method")
         val defaultMfaMethod: String? = null,
