@@ -174,10 +174,10 @@ public data class AmazonOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -186,10 +186,10 @@ public data class AppleOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -353,10 +353,10 @@ public data class BitbucketOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -365,10 +365,10 @@ public data class CoinbaseOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -389,10 +389,10 @@ public data class DiscordOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -425,10 +425,10 @@ public data class FacebookOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -437,10 +437,10 @@ public data class FigmaOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -449,10 +449,10 @@ public data class GitLabOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -461,10 +461,10 @@ public data class GithubOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -477,16 +477,16 @@ public data class GoogleOAuthFactor
         @Json(name = "id")
         val id: String,
         /**
-         * The globally unique UUID of the Member's email.
-         */
-        @Json(name = "email_id")
-        val emailId: String,
-        /**
          * The unique identifier for the User within a given OAuth provider. Also commonly called the `sub` or "Subject field" in
          * OAuth protocols.
          */
         @Json(name = "provider_subject")
         val providerSubject: String,
+        /**
+         * The globally unique UUID of the Member's email.
+         */
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -503,10 +503,10 @@ public data class HubspotOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -515,10 +515,10 @@ public data class InstagramOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -551,10 +551,10 @@ public data class LinkedInOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -567,16 +567,16 @@ public data class MicrosoftOAuthFactor
         @Json(name = "id")
         val id: String,
         /**
-         * The globally unique UUID of the Member's email.
-         */
-        @Json(name = "email_id")
-        val emailId: String,
-        /**
          * The unique identifier for the User within a given OAuth provider. Also commonly called the `sub` or "Subject field" in
          * OAuth protocols.
          */
         @Json(name = "provider_subject")
         val providerSubject: String,
+        /**
+         * The globally unique UUID of the Member's email.
+         */
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -651,10 +651,10 @@ public data class SalesforceOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -712,10 +712,10 @@ public data class ShopifyOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -732,10 +732,10 @@ public data class SlackOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -744,10 +744,10 @@ public data class SnapchatOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -756,10 +756,10 @@ public data class SpotifyOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -768,10 +768,10 @@ public data class SteamOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -780,10 +780,10 @@ public data class TikTokOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -792,10 +792,10 @@ public data class TwitchOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -804,10 +804,10 @@ public data class TwitterOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -828,10 +828,10 @@ public data class YahooOAuthFactor
     constructor(
         @Json(name = "id")
         val id: String,
-        @Json(name = "email_id")
-        val emailId: String,
         @Json(name = "provider_subject")
         val providerSubject: String,
+        @Json(name = "email_id")
+        val emailId: String? = null,
     )
 
 /**

@@ -129,6 +129,12 @@ public data class AuthenticateRequest
          */
         @Json(name = "locale")
         val locale: AuthenticateRequestLocale? = null,
+        /**
+         * Adds this primary authentication factor to the intermediate session token. If the resulting set of factors
+         *        satisfies the organization's primary authentication requirements and MFA requirements, the intermediate session
+         *        token will be consumed and converted to a member session. If not, the same intermediate session token will be
+         *        returned.
+         */
         @Json(name = "intermediate_session_token")
         val intermediateSessionToken: String? = null,
     )
@@ -198,17 +204,16 @@ public data class AuthenticateResponse
         val memberAuthenticated: Boolean,
         /**
          * The returned Intermediate Session Token contains an OAuth factor associated with the Member's email address.
-         *       The token can be used with the
-         * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
+         *         If this value is non-empty, the member must complete an MFA step to finish logging in to the Organization. The
+         * token can be used with the [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
          * [TOTP Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-totp),
-         *       or [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete the MFA
-         * flow and log in to the Organization.
-         *       It can also be used with the
+         *     or [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete an MFA
+         * flow and log in to the Organization. It can also be used with the
          * [Exchange Intermediate Session endpoint](https://stytch.com/docs/b2b/api/exchange-intermediate-session) to join a
-         * different existing Organization that allows login with OAuth,
-         *       or the
+         * specific Organization that allows the factors represented by the intermediate session token;
+         *     or the
          * [Create Organization via Discovery endpoint](https://stytch.com/docs/b2b/api/create-organization-via-discovery) to
-         * create a new Organization.
+         * create a new Organization and Member.
          */
         @Json(name = "intermediate_session_token")
         val intermediateSessionToken: String,
