@@ -10,8 +10,8 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.stytch.java.b2b.models.organizationsmembersoauthproviders.GoogleResponse
-import com.stytch.java.b2b.models.organizationsmembersoauthproviders.MicrosoftRequest
 import com.stytch.java.b2b.models.organizationsmembersoauthproviders.MicrosoftResponse
+import com.stytch.java.b2b.models.organizationsmembersoauthproviders.ProviderInformationRequest
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.http.HttpClient
@@ -34,7 +34,7 @@ public interface OAuthProviders {
      * To force a refresh token to be issued, pass the `?provider_prompt=consent` query param into the
      * [Start Google OAuth flow](https://stytch.com/docs/b2b/api/oauth-google-start) endpoint.
      */
-    public suspend fun google(data: MicrosoftRequest): StytchResult<GoogleResponse>
+    public suspend fun google(data: ProviderInformationRequest): StytchResult<GoogleResponse>
 
     /**
      * Retrieve the saved Google access token and ID token for a member. After a successful OAuth login, Stytch will save the
@@ -47,7 +47,7 @@ public interface OAuthProviders {
      * [Start Google OAuth flow](https://stytch.com/docs/b2b/api/oauth-google-start) endpoint.
      */
     public fun google(
-        data: MicrosoftRequest,
+        data: ProviderInformationRequest,
         callback: (StytchResult<GoogleResponse>) -> Unit,
     )
 
@@ -61,7 +61,7 @@ public interface OAuthProviders {
      * To force a refresh token to be issued, pass the `?provider_prompt=consent` query param into the
      * [Start Google OAuth flow](https://stytch.com/docs/b2b/api/oauth-google-start) endpoint.
      */
-    public fun googleCompletable(data: MicrosoftRequest): CompletableFuture<StytchResult<GoogleResponse>>
+    public fun googleCompletable(data: ProviderInformationRequest): CompletableFuture<StytchResult<GoogleResponse>>
 
     /**
      * Retrieve the saved Microsoft access token and ID token for a member. After a successful OAuth login, Stytch will save
@@ -69,7 +69,7 @@ public interface OAuthProviders {
      * issued access token and ID token from the identity provider. If a refresh token has been issued, Stytch will refresh the
      * access token automatically.
      */
-    public suspend fun microsoft(data: MicrosoftRequest): StytchResult<MicrosoftResponse>
+    public suspend fun microsoft(data: ProviderInformationRequest): StytchResult<MicrosoftResponse>
 
     /**
      * Retrieve the saved Microsoft access token and ID token for a member. After a successful OAuth login, Stytch will save
@@ -78,7 +78,7 @@ public interface OAuthProviders {
      * access token automatically.
      */
     public fun microsoft(
-        data: MicrosoftRequest,
+        data: ProviderInformationRequest,
         callback: (StytchResult<MicrosoftResponse>) -> Unit,
     )
 
@@ -88,7 +88,7 @@ public interface OAuthProviders {
      * issued access token and ID token from the identity provider. If a refresh token has been issued, Stytch will refresh the
      * access token automatically.
      */
-    public fun microsoftCompletable(data: MicrosoftRequest): CompletableFuture<StytchResult<MicrosoftResponse>>
+    public fun microsoftCompletable(data: ProviderInformationRequest): CompletableFuture<StytchResult<MicrosoftResponse>>
 }
 
 internal class OAuthProvidersImpl(
@@ -97,11 +97,11 @@ internal class OAuthProvidersImpl(
 ) : OAuthProviders {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override suspend fun google(data: MicrosoftRequest): StytchResult<GoogleResponse> =
+    override suspend fun google(data: ProviderInformationRequest): StytchResult<GoogleResponse> =
         withContext(Dispatchers.IO) {
             var headers = emptyMap<String, String>()
 
-            val asJson = moshi.adapter(MicrosoftRequest::class.java).toJson(data)
+            val asJson = moshi.adapter(ProviderInformationRequest::class.java).toJson(data)
             val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
             val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
             val asMap = adapter.fromJson(asJson) ?: emptyMap()
@@ -109,7 +109,7 @@ internal class OAuthProvidersImpl(
         }
 
     override fun google(
-        data: MicrosoftRequest,
+        data: ProviderInformationRequest,
         callback: (StytchResult<GoogleResponse>) -> Unit,
     ) {
         coroutineScope.launch {
@@ -117,16 +117,16 @@ internal class OAuthProvidersImpl(
         }
     }
 
-    override fun googleCompletable(data: MicrosoftRequest): CompletableFuture<StytchResult<GoogleResponse>> =
+    override fun googleCompletable(data: ProviderInformationRequest): CompletableFuture<StytchResult<GoogleResponse>> =
         coroutineScope.async {
             google(data)
         }.asCompletableFuture()
 
-    override suspend fun microsoft(data: MicrosoftRequest): StytchResult<MicrosoftResponse> =
+    override suspend fun microsoft(data: ProviderInformationRequest): StytchResult<MicrosoftResponse> =
         withContext(Dispatchers.IO) {
             var headers = emptyMap<String, String>()
 
-            val asJson = moshi.adapter(MicrosoftRequest::class.java).toJson(data)
+            val asJson = moshi.adapter(ProviderInformationRequest::class.java).toJson(data)
             val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
             val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
             val asMap = adapter.fromJson(asJson) ?: emptyMap()
@@ -138,7 +138,7 @@ internal class OAuthProvidersImpl(
         }
 
     override fun microsoft(
-        data: MicrosoftRequest,
+        data: ProviderInformationRequest,
         callback: (StytchResult<MicrosoftResponse>) -> Unit,
     ) {
         coroutineScope.launch {
@@ -146,7 +146,7 @@ internal class OAuthProvidersImpl(
         }
     }
 
-    override fun microsoftCompletable(data: MicrosoftRequest): CompletableFuture<StytchResult<MicrosoftResponse>> =
+    override fun microsoftCompletable(data: ProviderInformationRequest): CompletableFuture<StytchResult<MicrosoftResponse>> =
         coroutineScope.async {
             microsoft(data)
         }.asCompletableFuture()
