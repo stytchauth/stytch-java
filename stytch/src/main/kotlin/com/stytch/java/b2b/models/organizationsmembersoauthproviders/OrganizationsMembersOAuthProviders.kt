@@ -70,33 +70,6 @@ public data class GoogleResponse
     )
 
 /**
-* Request type for `OAuthProviders.google`, `OAuthProviders.microsoft`.
-*/
-@JsonClass(generateAdapter = true)
-public data class MicrosoftRequest
-    @JvmOverloads
-    constructor(
-        /**
-         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value.
-         */
-        @Json(name = "organization_id")
-        val organizationId: String,
-        /**
-         * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
-         * so be sure to preserve this value.
-         */
-        @Json(name = "member_id")
-        val memberId: String,
-        /**
-         * Whether to return the refresh token Stytch has stored for the OAuth Provider. Defaults to false. **Important:** If your
-         * application exchanges the refresh token, Stytch may not be able to automatically refresh access tokens in the future.
-         */
-        @Json(name = "include_refresh_token")
-        val includeRefreshToken: Boolean? = null,
-    )
-
-/**
 * Response type for `OAuthProviders.microsoft`.
 */
 @JsonClass(generateAdapter = true)
@@ -154,4 +127,31 @@ public data class MicrosoftResponse
          */
         @Json(name = "refresh_token")
         val refreshToken: String? = null,
+    )
+
+/**
+* Request type for `OAuthProviders.google`, `OAuthProviders.microsoft`.
+*/
+@JsonClass(generateAdapter = true)
+public data class ProviderInformationRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String,
+        /**
+         * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
+         * so be sure to preserve this value.
+         */
+        @Json(name = "member_id")
+        val memberId: String,
+        /**
+         * Whether to return the refresh token Stytch has stored for the OAuth Provider. Defaults to false. **Important:** If your
+         * application exchanges the refresh token, Stytch may not be able to automatically refresh access tokens in the future.
+         */
+        @Json(name = "include_refresh_token")
+        val includeRefreshToken: Boolean? = null,
     )
