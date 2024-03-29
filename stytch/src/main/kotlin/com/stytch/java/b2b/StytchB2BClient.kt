@@ -21,6 +21,8 @@ import com.stytch.java.b2b.api.rbac.RBAC
 import com.stytch.java.b2b.api.rbac.RBACImpl
 import com.stytch.java.b2b.api.recoverycodes.RecoveryCodes
 import com.stytch.java.b2b.api.recoverycodes.RecoveryCodesImpl
+import com.stytch.java.b2b.api.scim.SCIM
+import com.stytch.java.b2b.api.scim.SCIMImpl
 import com.stytch.java.b2b.api.sessions.Sessions
 import com.stytch.java.b2b.api.sessions.SessionsImpl
 import com.stytch.java.b2b.api.sso.SSO
@@ -71,6 +73,9 @@ public object StytchB2BClient {
     public lateinit var recoveryCodes: RecoveryCodes
 
     @JvmStatic
+    public lateinit var scim: SCIM
+
+    @JvmStatic
     public lateinit var sso: SSO
 
     @JvmStatic
@@ -110,6 +115,7 @@ public object StytchB2BClient {
         passwords = PasswordsImpl(httpClient, coroutineScope)
         rbac = RBACImpl(httpClient, coroutineScope)
         recoveryCodes = RecoveryCodesImpl(httpClient, coroutineScope)
+        scim = SCIMImpl(httpClient, coroutineScope)
         sso = SSOImpl(httpClient, coroutineScope)
         sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions, policyCache)
         totps = TOTPsImpl(httpClient, coroutineScope)
