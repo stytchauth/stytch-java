@@ -23,6 +23,21 @@ public enum class CreateRequestIdp {
 
     @Json(name = "microsoftentra")
     MICROSOFTENTRA,
+
+    @Json(name = "cyberark")
+    CYBERARK,
+
+    @Json(name = "jumpcloud")
+    JUMPCLOUD,
+
+    @Json(name = "onelogin")
+    ONELOGIN,
+
+    @Json(name = "pingfederate")
+    PINGFEDERATE,
+
+    @Json(name = "rippling")
+    RIPPLING,
 }
 
 @JsonClass(generateAdapter = false)

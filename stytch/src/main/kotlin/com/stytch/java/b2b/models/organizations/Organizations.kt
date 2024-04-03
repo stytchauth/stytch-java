@@ -792,6 +792,26 @@ public data class GetResponse
         val statusCode: Int,
     )
 
+@JsonClass(generateAdapter = true)
+public data class MetricsRequest
+    @JvmOverloads
+    constructor(
+        @Json(name = "organization_id")
+        val organizationId: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class MetricsResponse
+    @JvmOverloads
+    constructor(
+        @Json(name = "request_id")
+        val requestId: String,
+        @Json(name = "member_count")
+        val memberCount: UInt,
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
+
 /**
 * Request type for `Organizations.search`.
 */
