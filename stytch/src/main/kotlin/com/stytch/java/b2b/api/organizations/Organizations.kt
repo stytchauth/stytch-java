@@ -18,6 +18,8 @@ import com.stytch.java.b2b.models.organizations.DeleteRequestOptions
 import com.stytch.java.b2b.models.organizations.DeleteResponse
 import com.stytch.java.b2b.models.organizations.GetRequest
 import com.stytch.java.b2b.models.organizations.GetResponse
+import com.stytch.java.b2b.models.organizations.MetricsRequest
+import com.stytch.java.b2b.models.organizations.MetricsResponse
 import com.stytch.java.b2b.models.organizations.SearchRequest
 import com.stytch.java.b2b.models.organizations.SearchResponse
 import com.stytch.java.b2b.models.organizations.UpdateRequest
@@ -209,6 +211,15 @@ public interface Organizations {
      * return all Organizations. All fuzzy search filters require a minimum of three characters.
      */
     public fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>>
+
+    public suspend fun metrics(data: MetricsRequest): StytchResult<MetricsResponse>
+
+    public fun metrics(
+        data: MetricsRequest,
+        callback: (StytchResult<MetricsResponse>) -> Unit,
+    )
+
+    public fun metricsCompletable(data: MetricsRequest): CompletableFuture<StytchResult<MetricsResponse>>
 }
 
 internal class OrganizationsImpl(
@@ -349,5 +360,30 @@ internal class OrganizationsImpl(
     override fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>> =
         coroutineScope.async {
             search(data)
+        }.asCompletableFuture()
+
+    override suspend fun metrics(data: MetricsRequest): StytchResult<MetricsResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
+            val asJson = moshi.adapter(MetricsRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/organizations/${data.organizationId}/metrics", asMap, headers)
+        }
+
+    override fun metrics(
+        data: MetricsRequest,
+        callback: (StytchResult<MetricsResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(metrics(data))
+        }
+    }
+
+    override fun metricsCompletable(data: MetricsRequest): CompletableFuture<StytchResult<MetricsResponse>> =
+        coroutineScope.async {
+            metrics(data)
         }.asCompletableFuture()
 }

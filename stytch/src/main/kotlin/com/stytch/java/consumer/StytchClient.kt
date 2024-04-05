@@ -20,6 +20,8 @@ import com.stytch.java.consumer.api.otp.OTPs
 import com.stytch.java.consumer.api.otp.OTPsImpl
 import com.stytch.java.consumer.api.passwords.Passwords
 import com.stytch.java.consumer.api.passwords.PasswordsImpl
+import com.stytch.java.consumer.api.project.Project
+import com.stytch.java.consumer.api.project.ProjectImpl
 import com.stytch.java.consumer.api.sessions.Sessions
 import com.stytch.java.consumer.api.sessions.SessionsImpl
 import com.stytch.java.consumer.api.totps.TOTPs
@@ -54,6 +56,9 @@ public object StytchClient {
 
     @JvmStatic
     public lateinit var passwords: Passwords
+
+    @JvmStatic
+    public lateinit var project: Project
 
     @JvmStatic
     public lateinit var sessions: Sessions
@@ -94,6 +99,7 @@ public object StytchClient {
         oauth = OAuthImpl(httpClient, coroutineScope)
         otps = OTPsImpl(httpClient, coroutineScope)
         passwords = PasswordsImpl(httpClient, coroutineScope)
+        project = ProjectImpl(httpClient, coroutineScope)
         sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
         totps = TOTPsImpl(httpClient, coroutineScope)
         users = UsersImpl(httpClient, coroutineScope)

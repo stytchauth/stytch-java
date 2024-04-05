@@ -35,6 +35,8 @@ import com.stytch.java.common.JwtOptions
 import com.stytch.java.common.PolicyCache
 import com.stytch.java.consumer.api.m2m.M2M
 import com.stytch.java.consumer.api.m2m.M2MImpl
+import com.stytch.java.consumer.api.project.Project
+import com.stytch.java.consumer.api.project.ProjectImpl
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -65,6 +67,9 @@ public object StytchB2BClient {
 
     @JvmStatic
     public lateinit var passwords: Passwords
+
+    @JvmStatic
+    public lateinit var project: Project
 
     @JvmStatic
     public lateinit var rbac: RBAC
@@ -113,6 +118,7 @@ public object StytchB2BClient {
         otps = OTPsImpl(httpClient, coroutineScope)
         organizations = OrganizationsImpl(httpClient, coroutineScope)
         passwords = PasswordsImpl(httpClient, coroutineScope)
+        project = ProjectImpl(httpClient, coroutineScope)
         rbac = RBACImpl(httpClient, coroutineScope)
         recoveryCodes = RecoveryCodesImpl(httpClient, coroutineScope)
         scim = SCIMImpl(httpClient, coroutineScope)
