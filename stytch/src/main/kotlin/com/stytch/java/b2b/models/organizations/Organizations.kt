@@ -807,7 +807,7 @@ public data class MetricsResponse
         @Json(name = "request_id")
         val requestId: String,
         @Json(name = "member_count")
-        val memberCount: UInt,
+        val memberCount: Int,
         @Json(name = "status_code")
         val statusCode: Int,
     )

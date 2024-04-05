@@ -32,7 +32,7 @@ public data class ProjectMetric
     @JvmOverloads
     constructor(
         @Json(name = "count")
-        val count: UInt,
+        val count: Int,
         @Json(name = "metric_type")
         val metricType: ProjectMetricMetricType? = null,
     )
