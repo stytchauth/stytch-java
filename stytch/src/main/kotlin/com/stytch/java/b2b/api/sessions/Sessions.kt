@@ -19,6 +19,8 @@ import com.stytch.java.b2b.models.sessions.GetJWKSResponse
 import com.stytch.java.b2b.models.sessions.GetRequest
 import com.stytch.java.b2b.models.sessions.GetResponse
 import com.stytch.java.b2b.models.sessions.MemberSession
+import com.stytch.java.b2b.models.sessions.MigrateRequest
+import com.stytch.java.b2b.models.sessions.MigrateResponse
 import com.stytch.java.b2b.models.sessions.RevokeRequest
 import com.stytch.java.b2b.models.sessions.RevokeResponse
 import com.stytch.java.common.InstantAdapter
@@ -224,6 +226,30 @@ public interface Sessions {
      * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      */
     public fun exchangeCompletable(data: ExchangeRequest): CompletableFuture<StytchResult<ExchangeResponse>>
+
+    /**
+     * Migrate a session from an external endpoint. Stytch will call the UserInfo endpoint specified in your project settings,
+     * performing a lookup using the session token passed in. If the endpoint repsonds and the response contains a valid
+     * email, Stytch will attempt to match that email with a member in your organization, and create a Stytch Session for you.
+     */
+    public suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse>
+
+    /**
+     * Migrate a session from an external endpoint. Stytch will call the UserInfo endpoint specified in your project settings,
+     * performing a lookup using the session token passed in. If the endpoint repsonds and the response contains a valid
+     * email, Stytch will attempt to match that email with a member in your organization, and create a Stytch Session for you.
+     */
+    public fun migrate(
+        data: MigrateRequest,
+        callback: (StytchResult<MigrateResponse>) -> Unit,
+    )
+
+    /**
+     * Migrate a session from an external endpoint. Stytch will call the UserInfo endpoint specified in your project settings,
+     * performing a lookup using the session token passed in. If the endpoint repsonds and the response contains a valid
+     * email, Stytch will attempt to match that email with a member in your organization, and create a Stytch Session for you.
+     */
+    public fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>>
 
     /**
      * Get the JSON Web Key Set (JWKS) for a project.
@@ -488,6 +514,28 @@ internal class SessionsImpl(
     override fun exchangeCompletable(data: ExchangeRequest): CompletableFuture<StytchResult<ExchangeResponse>> =
         coroutineScope.async {
             exchange(data)
+        }.asCompletableFuture()
+
+    override suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
+            val asJson = moshi.adapter(MigrateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/sessions/migrate", asJson, headers)
+        }
+
+    override fun migrate(
+        data: MigrateRequest,
+        callback: (StytchResult<MigrateResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(migrate(data))
+        }
+    }
+
+    override fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>> =
+        coroutineScope.async {
+            migrate(data)
         }.asCompletableFuture()
 
     override suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse> =

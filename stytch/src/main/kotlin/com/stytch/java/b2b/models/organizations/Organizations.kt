@@ -9,6 +9,7 @@ package com.stytch.java.b2b.models.organizations
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.stytch.java.common.methodoptions.Authorization
+import java.time.Instant
 
 @JsonClass(generateAdapter = false)
 public enum class SearchQueryOperator {
@@ -18,6 +19,20 @@ public enum class SearchQueryOperator {
     @Json(name = "AND")
     AND,
 }
+
+@JsonClass(generateAdapter = true)
+public data class ActiveSCIMConnection
+    @JvmOverloads
+    constructor(
+        @Json(name = "connection_id")
+        val connectionId: String,
+        @Json(name = "display_name")
+        val displayName: String,
+        @Json(name = "bearer_token_last_four")
+        val bearerTokenLastFour: String,
+        @Json(name = "bearer_token_expires_at")
+        val bearerTokenExpiresAt: Instant? = null,
+    )
 
 @JsonClass(generateAdapter = true)
 public data class ActiveSSOConnection
@@ -450,6 +465,8 @@ public data class Organization
          */
         @Json(name = "allowed_mfa_methods")
         val allowedMfaMethods: List<String>,
+        @Json(name = "scim_active_connections")
+        val scimActiveConnections: List<ActiveSCIMConnection>,
         /**
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */
