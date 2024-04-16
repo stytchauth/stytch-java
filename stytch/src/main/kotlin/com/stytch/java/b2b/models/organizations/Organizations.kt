@@ -24,8 +24,14 @@ public enum class SearchQueryOperator {
 public data class ActiveSCIMConnection
     @JvmOverloads
     constructor(
+        /**
+         * The ID of the SCIM connection.
+         */
         @Json(name = "connection_id")
         val connectionId: String,
+        /**
+         * A human-readable display name for the connection.
+         */
         @Json(name = "display_name")
         val displayName: String,
         @Json(name = "bearer_token_last_four")
@@ -127,7 +133,8 @@ public data class Member
         @Json(name = "name")
         val name: String,
         /**
-         * An array of registered [SAML Connection](saml-connection-object) objects the Member has authenticated with.
+         * An array of registered [SAML Connection](saml-connection-object) or [OIDC Connection](oidc-connection-object) objects
+         * the Member has authenticated with.
          */
         @Json(name = "sso_registrations")
         val ssoRegistrations: List<SSORegistration>,
@@ -169,6 +176,12 @@ public data class Member
         val isAdmin: Boolean,
         @Json(name = "totp_registration_id")
         val totpRegistrationId: String,
+        /**
+         * An array of scim member registrations, each one referencing a [SCIM Connection](scim-connection-object) object in use
+         * for the Member creation.
+         */
+        @Json(name = "scim_registrations")
+        val scimRegistrations: List<SCIMRegistration>,
         /**
          * Sets whether the Member is enrolled in MFA. If true, the Member must complete an MFA step whenever they wish to log in
          * to their Organization. If false, the Member only needs to complete an MFA step if the Organization's MFA policy is set
@@ -377,7 +390,8 @@ public data class Organization
         @Json(name = "sso_jit_provisioning_allowed_connections")
         val ssoJITProvisioningAllowedConnections: List<String>,
         /**
-         * An array of active [SAML Connection references](https://stytch.com/docs/b2b/api/saml-connection-object).
+         * An array of active [SAML Connection references](https://stytch.com/docs/b2b/api/saml-connection-object) or
+         * [OIDC Connection references](https://stytch.com/docs/b2b/api/oidc-connection-object).
          */
         @Json(name = "sso_active_connections")
         val ssoActiveConnections: List<ActiveSSOConnection>,
@@ -465,6 +479,9 @@ public data class Organization
          */
         @Json(name = "allowed_mfa_methods")
         val allowedMfaMethods: List<String>,
+        /**
+         * An array of active [SCIM Connection references](https://stytch.com/docs/b2b/api/scim-connection-object).
+         */
         @Json(name = "scim_active_connections")
         val scimActiveConnections: List<ActiveSCIMConnection>,
         /**
@@ -494,6 +511,32 @@ public data class ResultsMetadata
          */
         @Json(name = "next_cursor")
         val nextCursor: String? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class SCIMRegistration
+    @JvmOverloads
+    constructor(
+        /**
+         * The ID of the SCIM connection.
+         */
+        @Json(name = "connection_id")
+        val connectionId: String,
+        /**
+         * The unique ID of a SCIM Registration.
+         */
+        @Json(name = "registration_id")
+        val registrationId: String,
+        /**
+         * The ID of the member given by the identity provider.
+         */
+        @Json(name = "external_id")
+        val externalId: String? = null,
+        /**
+         * An object for storing SCIM attributes brought over from the identity provider.
+         */
+        @Json(name = "scim_attributes")
+        val scimAttributes: Map<String, Any?>? = emptyMap(),
     )
 
 @JsonClass(generateAdapter = true)
