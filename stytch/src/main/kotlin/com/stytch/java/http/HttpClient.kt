@@ -3,6 +3,7 @@ package com.stytch.java.http
 import com.squareup.moshi.Moshi
 import com.stytch.java.common.ErrorResponse
 import com.stytch.java.common.InstantAdapter
+import com.stytch.java.common.OAuth2ErrorResponse
 import com.stytch.java.common.SDK_NAME
 import com.stytch.java.common.StytchException
 import com.stytch.java.common.StytchResult
@@ -105,6 +106,16 @@ internal class HttpClient(
                                     return@use StytchResult.Error(
                                         mapResponseToClass(response, ErrorResponse::class.java)?.let {
                                             StytchException.Response(it)
+                                        } ?: mapResponseToClass(response, OAuth2ErrorResponse::class.java)?.let {
+                                            StytchException.Response(
+                                                ErrorResponse(
+                                                    statusCode = it.statusCode,
+                                                    requestId = it.requestId,
+                                                    errorType = it.error,
+                                                    errorMessage = it.errorDescription,
+                                                    errorUrl = it.errorUri,
+                                                ),
+                                            )
                                         } ?: StytchException.Critical(
                                             reason = IllegalStateException("Unable to map error data"),
                                             response = response.body?.source()?.readUtf8(),
