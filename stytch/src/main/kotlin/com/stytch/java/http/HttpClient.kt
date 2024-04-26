@@ -104,22 +104,22 @@ internal class HttpClient(
                             response.use {
                                 if (!response.isSuccessful) {
                                     return@use StytchResult.Error(
-                                        mapResponseToClass(response, ErrorResponse::class.java)?.let {
-                                            StytchException.Response(it)
-                                        } ?: mapResponseToClass(response, OAuth2ErrorResponse::class.java)?.let {
-                                            StytchException.Response(
-                                                ErrorResponse(
-                                                    statusCode = it.statusCode,
-                                                    requestId = it.requestId,
-                                                    errorType = it.error,
-                                                    errorMessage = it.errorDescription,
-                                                    errorUrl = it.errorUri,
-                                                ),
-                                            )
-                                        } ?: StytchException.Critical(
-                                            reason = IllegalStateException("Unable to map error data"),
-                                            response = response.body?.source()?.readUtf8(),
-                                        ),
+                                        when (
+                                            val errorResponse =
+                                                mapResponseToClass(response, ErrorResponse::class.java)
+                                                    ?: mapResponseToClass(response, OAuth2ErrorResponse::class.java)
+                                        ) {
+                                            is ErrorResponse -> StytchException.Response(errorResponse)
+                                            is OAuth2ErrorResponse ->
+                                                StytchException.Response(
+                                                    errorResponse.toErrorResponse(),
+                                                )
+                                            else ->
+                                                StytchException.Critical(
+                                                    reason = IllegalStateException("Unable to map error data"),
+                                                    response = response.body?.source()?.readUtf8(),
+                                                )
+                                        },
                                     )
                                 }
                                 return@use mapResponseToClass(response, clazz)?.let {

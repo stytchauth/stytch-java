@@ -29,4 +29,13 @@ public data class OAuth2ErrorResponse(
     public val errorDescription: String,
     @Json(name = "error_uri")
     public val errorUri: String,
-)
+) {
+    internal fun toErrorResponse(): ErrorResponse =
+        ErrorResponse(
+            statusCode = statusCode,
+            requestId = requestId,
+            errorType = error,
+            errorMessage = errorDescription,
+            errorUrl = errorUri,
+        )
+}
