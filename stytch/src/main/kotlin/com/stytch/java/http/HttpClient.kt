@@ -3,6 +3,7 @@ package com.stytch.java.http
 import com.squareup.moshi.Moshi
 import com.stytch.java.common.ErrorResponse
 import com.stytch.java.common.InstantAdapter
+import com.stytch.java.common.OAuth2ErrorResponse
 import com.stytch.java.common.SDK_NAME
 import com.stytch.java.common.StytchException
 import com.stytch.java.common.StytchResult
@@ -103,12 +104,22 @@ internal class HttpClient(
                             response.use {
                                 if (!response.isSuccessful) {
                                     return@use StytchResult.Error(
-                                        mapResponseToClass(response, ErrorResponse::class.java)?.let {
-                                            StytchException.Response(it)
-                                        } ?: StytchException.Critical(
-                                            reason = IllegalStateException("Unable to map error data"),
-                                            response = response.body?.source()?.readUtf8(),
-                                        ),
+                                        when (
+                                            val errorResponse =
+                                                mapResponseToClass(response, ErrorResponse::class.java)
+                                                    ?: mapResponseToClass(response, OAuth2ErrorResponse::class.java)
+                                        ) {
+                                            is ErrorResponse -> StytchException.Response(errorResponse)
+                                            is OAuth2ErrorResponse ->
+                                                StytchException.Response(
+                                                    errorResponse.toErrorResponse(),
+                                                )
+                                            else ->
+                                                StytchException.Critical(
+                                                    reason = IllegalStateException("Unable to map error data"),
+                                                    response = response.body?.source()?.readUtf8(),
+                                                )
+                                        },
                                     )
                                 }
                                 return@use mapResponseToClass(response, clazz)?.let {
