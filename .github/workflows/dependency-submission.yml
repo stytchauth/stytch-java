@@ -22,4 +22,4 @@ jobs:
       uses: gradle/actions/dependency-submission@v3
       env:
         # Exclude all dependencies that originate solely in the following projects
-        DEPENDENCY_GRAPH_EXCLUDE_PROJECTS: 'workbench'
+        DEPENDENCY_GRAPH_EXCLUDE_PROJECTS: ':workbench'
