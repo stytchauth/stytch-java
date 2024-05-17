@@ -93,6 +93,8 @@ public data class OIDCConnection
         val userinfoURL: String,
         @Json(name = "jwks_url")
         val jwksURL: String,
+        @Json(name = "identity_provider")
+        val identityProvider: String,
     )
 
 @JsonClass(generateAdapter = true)
@@ -125,6 +127,8 @@ public data class SAMLConnection
         val samlGroupImplicitRoleAssignments: List<SAMLGroupImplicitRoleAssignment>,
         @Json(name = "alternative_audience_uri")
         val alternativeAudienceUri: String,
+        @Json(name = "identity_provider")
+        val identityProvider: String,
         @Json(name = "attribute_mapping")
         val attributeMapping: Map<String, Any?>? = emptyMap(),
     )
@@ -141,7 +145,7 @@ public data class SAMLConnectionImplicitRoleAssignment
          *   * `stytch_member`
          *   * `stytch_admin`
          *
-         *   Check out the [guide on Stytch default Roles](https://stytch.com/docs/b2b/guides/rbac/stytch-defaults) for a more
+         *   Check out the [guide on Stytch default Roles](https://stytch.com/docs/b2b/guides/rbac/stytch-default) for a more
          * detailed explanation.
          *
          *
@@ -162,7 +166,7 @@ public data class SAMLGroupImplicitRoleAssignment
          *   * `stytch_member`
          *   * `stytch_admin`
          *
-         *   Check out the [guide on Stytch default Roles](https://stytch.com/docs/b2b/guides/rbac/stytch-defaults) for a more
+         *   Check out the [guide on Stytch default Roles](https://stytch.com/docs/b2b/guides/rbac/stytch-default) for a more
          * detailed explanation.
          *
          *

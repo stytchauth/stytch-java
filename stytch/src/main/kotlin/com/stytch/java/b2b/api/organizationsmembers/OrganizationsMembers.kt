@@ -221,17 +221,44 @@ public interface Members {
         methodOptions: DeleteMFAPhoneNumberRequestOptions? = null,
     ): CompletableFuture<StytchResult<DeleteMFAPhoneNumberResponse>>
 
+    /**
+     * Delete a Member's MFA TOTP registration.
+     *
+     * To mint a new registration for a Member, you must first call this endpoint to delete the existing registration.
+     *
+     * Existing Member Sessions that include the TOTP authentication factor will not be revoked if the registration is
+     * deleted, and MFA will not be enforced until the Member logs in again.
+     *  /%}
+     */
     public suspend fun deleteTOTP(
         data: DeleteTOTPRequest,
         methodOptions: DeleteTOTPRequestOptions? = null,
     ): StytchResult<DeleteTOTPResponse>
 
+    /**
+     * Delete a Member's MFA TOTP registration.
+     *
+     * To mint a new registration for a Member, you must first call this endpoint to delete the existing registration.
+     *
+     * Existing Member Sessions that include the TOTP authentication factor will not be revoked if the registration is
+     * deleted, and MFA will not be enforced until the Member logs in again.
+     *  /%}
+     */
     public fun deleteTOTP(
         data: DeleteTOTPRequest,
         methodOptions: DeleteTOTPRequestOptions? = null,
         callback: (StytchResult<DeleteTOTPResponse>) -> Unit,
     )
 
+    /**
+     * Delete a Member's MFA TOTP registration.
+     *
+     * To mint a new registration for a Member, you must first call this endpoint to delete the existing registration.
+     *
+     * Existing Member Sessions that include the TOTP authentication factor will not be revoked if the registration is
+     * deleted, and MFA will not be enforced until the Member logs in again.
+     *  /%}
+     */
     public fun deleteTOTPCompletable(
         data: DeleteTOTPRequest,
         methodOptions: DeleteTOTPRequestOptions? = null,

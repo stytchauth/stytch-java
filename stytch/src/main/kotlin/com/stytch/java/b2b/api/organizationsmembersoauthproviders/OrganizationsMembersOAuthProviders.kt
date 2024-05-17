@@ -30,6 +30,9 @@ public interface OAuthProviders {
      * the
      * access token automatically.
      *
+     * Google One Tap does not return access tokens. If the member has only authenticated through Google One Tap and not
+     * through a regular Google OAuth flow, this endpoint will not return any tokens.
+     *
      * __Note:__ Google does not issue a refresh token on every login, and refresh tokens may expire if unused.
      * To force a refresh token to be issued, pass the `?provider_prompt=consent` query param into the
      * [Start Google OAuth flow](https://stytch.com/docs/b2b/api/oauth-google-start) endpoint.
@@ -41,6 +44,9 @@ public interface OAuthProviders {
      * issued access token and ID token from the identity provider. If a refresh token has been issued, Stytch will refresh
      * the
      * access token automatically.
+     *
+     * Google One Tap does not return access tokens. If the member has only authenticated through Google One Tap and not
+     * through a regular Google OAuth flow, this endpoint will not return any tokens.
      *
      * __Note:__ Google does not issue a refresh token on every login, and refresh tokens may expire if unused.
      * To force a refresh token to be issued, pass the `?provider_prompt=consent` query param into the
@@ -56,6 +62,9 @@ public interface OAuthProviders {
      * issued access token and ID token from the identity provider. If a refresh token has been issued, Stytch will refresh
      * the
      * access token automatically.
+     *
+     * Google One Tap does not return access tokens. If the member has only authenticated through Google One Tap and not
+     * through a regular Google OAuth flow, this endpoint will not return any tokens.
      *
      * __Note:__ Google does not issue a refresh token on every login, and refresh tokens may expire if unused.
      * To force a refresh token to be issued, pass the `?provider_prompt=consent` query param into the

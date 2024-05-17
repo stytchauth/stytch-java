@@ -32,16 +32,16 @@ public data class ProviderValues
     @JvmOverloads
     constructor(
         /**
-         * The `access_token` that you may use to access the User's data in the provider's API.
-         */
-        @Json(name = "access_token")
-        val accessToken: String,
-        /**
          * The OAuth scopes included for a given provider. See each provider's section above to see which scopes are included by
          * default and how to add custom scopes.
          */
         @Json(name = "scopes")
         val scopes: List<String>,
+        /**
+         * The `access_token` that you may use to access the User's data in the provider's API.
+         */
+        @Json(name = "access_token")
+        val accessToken: String? = null,
         /**
          * The `refresh_token` that you may use to obtain a new `access_token` for the User within the provider's API.
          */
@@ -231,7 +231,7 @@ public data class AuthenticateResponse
          * this object will include a provider's `access_token` that you can use to access the provider's API for a given user.
          *
          *   Note that these values will vary based on the OAuth provider in question, e.g. `id_token` is only returned by
-         * Microsoft.
+         * Microsoft. Google One Tap does not return access tokens or refresh tokens.
          */
         @Json(name = "provider_values")
         val providerValues: ProviderValues? = null,

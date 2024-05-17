@@ -92,7 +92,7 @@ public data class EmailImplicitRoleAssignment
          *   * `stytch_member`
          *   * `stytch_admin`
          *
-         *   Check out the [guide on Stytch default Roles](https://stytch.com/docs/b2b/guides/rbac/stytch-defaults) for a more
+         *   Check out the [guide on Stytch default Roles](https://stytch.com/docs/b2b/guides/rbac/stytch-default) for a more
          * detailed explanation.
          *
          *
@@ -170,7 +170,7 @@ public data class Member
          * Whether or not the Member has the `stytch_admin` Role. This Role is automatically granted to Members
          *   who create an Organization through the
          * [discovery flow](https://stytch.com/docs/b2b/api/create-organization-via-discovery). See the
-         *   [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/stytch-defaults) for more details on this Role.
+         *   [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/stytch-default) for more details on this Role.
          */
         @Json(name = "is_admin")
         val isAdmin: Boolean,
@@ -230,7 +230,7 @@ public data class MemberRole
          *   * `stytch_member`
          *   * `stytch_admin`
          *
-         *   Check out the [guide on Stytch default Roles](https://stytch.com/docs/b2b/guides/rbac/stytch-defaults) for a more
+         *   Check out the [guide on Stytch default Roles](https://stytch.com/docs/b2b/guides/rbac/stytch-default) for a more
          * detailed explanation.
          *
          *

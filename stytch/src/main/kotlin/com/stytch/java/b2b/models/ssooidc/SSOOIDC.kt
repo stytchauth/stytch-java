@@ -11,6 +11,36 @@ import com.squareup.moshi.JsonClass
 import com.stytch.java.b2b.models.sso.OIDCConnection
 import com.stytch.java.common.methodoptions.Authorization
 
+@JsonClass(generateAdapter = false)
+public enum class CreateConnectionRequestIdentityProvider {
+    @Json(name = "generic")
+    GENERIC,
+
+    @Json(name = "okta")
+    OKTA,
+
+    @Json(name = "microsoftentra")
+    MICROSOFTENTRA,
+
+    @Json(name = "googleworkspace")
+    GOOGLEWORKSPACE,
+}
+
+@JsonClass(generateAdapter = false)
+public enum class UpdateConnectionRequestIdentityProvider {
+    @Json(name = "generic")
+    GENERIC,
+
+    @Json(name = "okta")
+    OKTA,
+
+    @Json(name = "microsoftentra")
+    MICROSOFTENTRA,
+
+    @Json(name = "googleworkspace")
+    GOOGLEWORKSPACE,
+}
+
 public data class CreateConnectionRequestOptions
     @JvmOverloads
     constructor(
@@ -67,6 +97,8 @@ public data class CreateConnectionRequest
          */
         @Json(name = "display_name")
         val displayName: String? = null,
+        @Json(name = "identity_provider")
+        val identityProvider: CreateConnectionRequestIdentityProvider? = null,
     )
 
 /**
@@ -156,6 +188,8 @@ public data class UpdateConnectionRequest
          */
         @Json(name = "jwks_url")
         val jwksURL: String? = null,
+        @Json(name = "identity_provider")
+        val identityProvider: UpdateConnectionRequestIdentityProvider? = null,
     )
 
 /**
