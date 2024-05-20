@@ -68,7 +68,8 @@ public interface Sessions {
      * `session_jwt` or `session_token` be included in the request. It will return an error if both are present.
      *
      * You may provide a JWT that needs to be refreshed and is expired according to its `exp` claim. A new JWT will be
-     * returned if both the signature and the underlying Session are still valid.
+     * returned if both the signature and the underlying Session are still valid. See our
+     * [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/using-jwts) guide for more information.
      *
      * If an `authorization_check` object is passed in, this method will also check if the Member is authorized to perform the
      * given action on the given Resource in the specified Organization. A Member is authorized if their Member Session
@@ -88,7 +89,8 @@ public interface Sessions {
      * `session_jwt` or `session_token` be included in the request. It will return an error if both are present.
      *
      * You may provide a JWT that needs to be refreshed and is expired according to its `exp` claim. A new JWT will be
-     * returned if both the signature and the underlying Session are still valid.
+     * returned if both the signature and the underlying Session are still valid. See our
+     * [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/using-jwts) guide for more information.
      *
      * If an `authorization_check` object is passed in, this method will also check if the Member is authorized to perform the
      * given action on the given Resource in the specified Organization. A Member is authorized if their Member Session
@@ -111,7 +113,8 @@ public interface Sessions {
      * `session_jwt` or `session_token` be included in the request. It will return an error if both are present.
      *
      * You may provide a JWT that needs to be refreshed and is expired according to its `exp` claim. A new JWT will be
-     * returned if both the signature and the underlying Session are still valid.
+     * returned if both the signature and the underlying Session are still valid. See our
+     * [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/using-jwts) guide for more information.
      *
      * If an `authorization_check` object is passed in, this method will also check if the Member is authorized to perform the
      * given action on the given Resource in the specified Organization. A Member is authorized if their Member Session
@@ -230,16 +233,16 @@ public interface Sessions {
     /**
      * Migrate a session from an external OIDC compliant endpoint. Stytch will call the external UserInfo endpoint defined in
      * your Stytch Project settings in the [Dashboard](/dashboard), and then perform a lookup using the `session_token`. If
-     * the response contains a valid email address, Stytch will attempt to match that email address with a Member in your
-     * Organization and create a Stytch Session.
+     * the response contains a valid email address, Stytch will attempt to match that email address with an existing Member in
+     * your Organization and create a Stytch Session. You will need to create the member before using this endpoint.
      */
     public suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse>
 
     /**
      * Migrate a session from an external OIDC compliant endpoint. Stytch will call the external UserInfo endpoint defined in
      * your Stytch Project settings in the [Dashboard](/dashboard), and then perform a lookup using the `session_token`. If
-     * the response contains a valid email address, Stytch will attempt to match that email address with a Member in your
-     * Organization and create a Stytch Session.
+     * the response contains a valid email address, Stytch will attempt to match that email address with an existing Member in
+     * your Organization and create a Stytch Session. You will need to create the member before using this endpoint.
      */
     public fun migrate(
         data: MigrateRequest,
@@ -249,8 +252,8 @@ public interface Sessions {
     /**
      * Migrate a session from an external OIDC compliant endpoint. Stytch will call the external UserInfo endpoint defined in
      * your Stytch Project settings in the [Dashboard](/dashboard), and then perform a lookup using the `session_token`. If
-     * the response contains a valid email address, Stytch will attempt to match that email address with a Member in your
-     * Organization and create a Stytch Session.
+     * the response contains a valid email address, Stytch will attempt to match that email address with an existing Member in
+     * your Organization and create a Stytch Session. You will need to create the member before using this endpoint.
      */
     public fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>>
 
@@ -269,6 +272,9 @@ public interface Sessions {
      * If you're using your own JWT validation library, many have built-in support for JWKS rotation, and you'll just need to
      * supply this API endpoint. If not, your application should decide which JWKS to use for validation by inspecting the
      * `kid` value.
+     *
+     * See our [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/using-jwts) guide for more
+     * information.
      */
     public suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse>
 
@@ -287,6 +293,9 @@ public interface Sessions {
      * If you're using your own JWT validation library, many have built-in support for JWKS rotation, and you'll just need to
      * supply this API endpoint. If not, your application should decide which JWKS to use for validation by inspecting the
      * `kid` value.
+     *
+     * See our [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/using-jwts) guide for more
+     * information.
      */
     public fun getJWKS(
         data: GetJWKSRequest,
@@ -308,6 +317,9 @@ public interface Sessions {
      * If you're using your own JWT validation library, many have built-in support for JWKS rotation, and you'll just need to
      * supply this API endpoint. If not, your application should decide which JWKS to use for validation by inspecting the
      * `kid` value.
+     *
+     * See our [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/using-jwts) guide for more
+     * information.
      */
     public fun getJWKSCompletable(data: GetJWKSRequest): CompletableFuture<StytchResult<GetJWKSResponse>>
 

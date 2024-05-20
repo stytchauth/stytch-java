@@ -449,28 +449,59 @@ public data class DeleteResponse
         val statusCode: Int,
     )
 
+/**
+* Request type for `Members.deleteTOTP`.
+*/
 @JsonClass(generateAdapter = true)
 public data class DeleteTOTPRequest
     @JvmOverloads
     constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value.
+         */
         @Json(name = "organization_id")
         val organizationId: String,
+        /**
+         * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
+         * so be sure to preserve this value.
+         */
         @Json(name = "member_id")
         val memberId: String,
     )
 
+/**
+* Response type for `Members.deleteTOTP`.
+*/
 @JsonClass(generateAdapter = true)
 public data class DeleteTOTPResponse
     @JvmOverloads
     constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
         @Json(name = "request_id")
         val requestId: String,
+        /**
+         * Globally unique UUID that identifies a specific Member.
+         */
         @Json(name = "member_id")
         val memberId: String,
+        /**
+         * The [Member object](https://stytch.com/docs/b2b/api/member-object)
+         */
         @Json(name = "member")
         val member: Member,
+        /**
+         * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
+         */
         @Json(name = "organization")
         val organization: Organization,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
         @Json(name = "status_code")
         val statusCode: Int,
     )

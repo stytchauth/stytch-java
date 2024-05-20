@@ -34,16 +34,6 @@ public data class GoogleResponse
         @Json(name = "provider_subject")
         val providerSubject: String,
         /**
-         * The `access_token` that you may use to access the User's data in the provider's API.
-         */
-        @Json(name = "access_token")
-        val accessToken: String,
-        /**
-         * The number of seconds until the access token expires.
-         */
-        @Json(name = "access_token_expires_in")
-        val accessTokenExpiresIn: Int,
-        /**
          * The `id_token` returned by the OAuth provider. ID Tokens are JWTs that contain structured information about a user. The
          * exact content of each ID Token varies from provider to provider. ID Tokens are returned from OAuth providers that
          * conform to the [OpenID Connect](https://openid.net/foundation/) specification, which is based on OAuth.
@@ -62,6 +52,16 @@ public data class GoogleResponse
          */
         @Json(name = "status_code")
         val statusCode: Int,
+        /**
+         * The `access_token` that you may use to access the User's data in the provider's API.
+         */
+        @Json(name = "access_token")
+        val accessToken: String? = null,
+        /**
+         * The number of seconds until the access token expires.
+         */
+        @Json(name = "access_token_expires_in")
+        val accessTokenExpiresIn: Int? = null,
         /**
          * The `refresh_token` that you may use to obtain a new `access_token` for the User within the provider's API.
          */

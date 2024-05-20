@@ -1,3 +1,3 @@
 package com.stytch.java.common
 
-internal const val VERSION = "4.4.3"
+internal const val VERSION = "4.5.0"

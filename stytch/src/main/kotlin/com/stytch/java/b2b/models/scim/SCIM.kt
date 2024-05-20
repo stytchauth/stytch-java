@@ -30,8 +30,12 @@ public data class SCIMConnection
         val bearerTokenLastFour: String,
         @Json(name = "scim_group_implicit_role_assignments")
         val scimGroupImplicitRoleAssignments: List<SCIMGroupImplicitRoleAssignments>,
+        @Json(name = "next_bearer_token_last_four")
+        val nextBearerTokenLastFour: String,
         @Json(name = "bearer_token_expires_at")
         val bearerTokenExpiresAt: Instant? = null,
+        @Json(name = "next_bearer_token_expires_at")
+        val nextBearerTokenExpiresAt: Instant? = null,
     )
 
 @JsonClass(generateAdapter = true)
