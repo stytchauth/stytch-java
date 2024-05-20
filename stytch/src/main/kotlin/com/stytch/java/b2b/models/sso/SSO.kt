@@ -27,6 +27,24 @@ public enum class AuthenticateRequestLocale {
     PTBR,
 }
 
+@JsonClass(generateAdapter = true)
+public data class Connection
+    @JvmOverloads
+    constructor(
+        @Json(name = "organization_id")
+        val organizationId: String,
+        @Json(name = "connection_id")
+        val connectionId: String,
+        @Json(name = "external_organization_id")
+        val externalOrganizationId: String,
+        @Json(name = "external_connection_id")
+        val externalConnectionId: String,
+        @Json(name = "display_name")
+        val displayName: String,
+        @Json(name = "status")
+        val status: String,
+    )
+
 public data class DeleteConnectionRequestOptions
     @JvmOverloads
     constructor(
@@ -444,6 +462,8 @@ public data class GetConnectionsResponse
          */
         @Json(name = "oidc_connections")
         val oidcConnections: List<OIDCConnection>,
+        @Json(name = "external_connections")
+        val externalConnections: List<Connection>,
         /**
          * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
          * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.

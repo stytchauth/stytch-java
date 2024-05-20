@@ -97,6 +97,10 @@ public data class CreateConnectionRequest
          */
         @Json(name = "display_name")
         val displayName: String? = null,
+        /**
+         * The identity provider of this connection. For OIDC, the accepted values are `generic`, `okta`, and `microsoft-entra`.
+         * For SAML, the accepted values are `generic`, `okta`, `microsoft-entra`, and `google-workspace`.
+         */
         @Json(name = "identity_provider")
         val identityProvider: CreateConnectionRequestIdentityProvider? = null,
     )
@@ -188,6 +192,10 @@ public data class UpdateConnectionRequest
          */
         @Json(name = "jwks_url")
         val jwksURL: String? = null,
+        /**
+         * The identity provider of this connection. For OIDC, the accepted values are `generic`, `okta`, and `microsoft-entra`.
+         * For SAML, the accepted values are `generic`, `okta`, `microsoft-entra`, and `google-workspace`.
+         */
         @Json(name = "identity_provider")
         val identityProvider: UpdateConnectionRequestIdentityProvider? = null,
     )
