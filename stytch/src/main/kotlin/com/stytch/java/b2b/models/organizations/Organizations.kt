@@ -216,6 +216,18 @@ public data class Member
          */
         @Json(name = "untrusted_metadata")
         val untrustedMetadata: Map<String, Any?>? = emptyMap(),
+        /**
+         * The timestamp of the Member's creation. Values conform to the RFC 3339 standard and are expressed in UTC, e.g.
+         * `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "created_at")
+        val createdAt: Instant? = null,
+        /**
+         * The timestamp of when the Member was last updated. Values conform to the RFC 3339 standard and are expressed in UTC,
+         * e.g. `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "updated_at")
+        val updatedAt: Instant? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -489,6 +501,18 @@ public data class Organization
          */
         @Json(name = "trusted_metadata")
         val trustedMetadata: Map<String, Any?>? = emptyMap(),
+        /**
+         * The timestamp of the Organization's creation. Values conform to the RFC 3339 standard and are expressed in UTC, e.g.
+         * `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "created_at")
+        val createdAt: Instant? = null,
+        /**
+         * The timestamp of when the Organization was last updated. Values conform to the RFC 3339 standard and are expressed in
+         * UTC, e.g. `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "updated_at")
+        val updatedAt: Instant? = null,
         /**
          * The default connection used for SSO when there are multiple active connections.
          */
