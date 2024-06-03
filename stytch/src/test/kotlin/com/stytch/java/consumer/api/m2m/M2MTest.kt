@@ -82,7 +82,7 @@ internal class M2MTest {
                         issuer = "stytch.com/$projectId"
                         audience = listOf(projectId)
                         subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
-                        setClaim("scope", "user:read user:write")
+                        setClaim("scope", "read:user write:user")
                         setExpirationTimeMinutesInTheFuture(5F)
                         setGeneratedJwtId()
                         setIssuedAtToNow()
@@ -113,18 +113,33 @@ internal class M2MTest {
     }
 
     @Test
-    fun `authenticateToken returns JwtMissingScopes exception when required scopes are missing`() =
+    fun `authenticateToken returns JwtMissingAction exception when required action is missing`() =
+        runTest {
+            val result =
+                m2m.authenticateToken(
+                    AuthenticateTokenRequest(
+                        accessToken = jwtWithScopes,
+                        requiredScopes = listOf("delete:user"),
+                        maxTokenAgeSeconds = 5000,
+                    ),
+                )
+            require(result is StytchResult.Error)
+            assert(result.exception.reason is JWTException.JwtMissingAction)
+        }
+
+    @Test
+    fun `authenticateToken returns JwtMissingScope exception when required scopes are missing`() =
         runTest {
             val result =
                 m2m.authenticateToken(
                     AuthenticateTokenRequest(
                         accessToken = jwtNoScopes,
-                        requiredScopes = listOf("user:read", "user:write"),
+                        requiredScopes = listOf("read:user", "write:user"),
                         maxTokenAgeSeconds = 5000,
                     ),
                 )
             require(result is StytchResult.Error)
-            assert(result.exception.reason is JWTException.JwtMissingScopes)
+            assert(result.exception.reason is JWTException.JwtMissingScope)
         }
 
     @Test
@@ -134,7 +149,7 @@ internal class M2MTest {
                 m2m.authenticateToken(
                     AuthenticateTokenRequest(
                         accessToken = jwtWithScopes,
-                        requiredScopes = listOf("user:read", "user:write"),
+                        requiredScopes = listOf("read:user", "write:user"),
                         maxTokenAgeSeconds = 5000,
                     ),
                 )
@@ -158,7 +173,7 @@ internal class M2MTest {
                 TokenRequest(
                     clientId = "client-id",
                     clientSecret = "client-secret",
-                    scopes = listOf("user:read", "user:write"),
+                    scopes = listOf("read:user", "write:user"),
                 )
             val expectedMediaType = "application/x-www-form-urlencoded; charset=utf-8".toMediaType()
             val expectedPayload =
