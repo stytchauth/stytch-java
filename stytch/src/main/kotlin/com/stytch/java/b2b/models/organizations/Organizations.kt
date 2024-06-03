@@ -177,12 +177,6 @@ public data class Member
         @Json(name = "totp_registration_id")
         val totpRegistrationId: String,
         /**
-         * An array of scim member registrations, each one referencing a [SCIM Connection](scim-connection-object) object in use
-         * for the Member creation.
-         */
-        @Json(name = "scim_registrations")
-        val scimRegistrations: List<SCIMRegistration>,
-        /**
          * Sets whether the Member is enrolled in MFA. If true, the Member must complete an MFA step whenever they wish to log in
          * to their Organization. If false, the Member only needs to complete an MFA step if the Organization's MFA policy is set
          * to `REQUIRED_FOR_ALL`.
@@ -216,6 +210,24 @@ public data class Member
          */
         @Json(name = "untrusted_metadata")
         val untrustedMetadata: Map<String, Any?>? = emptyMap(),
+        /**
+         * The timestamp of the Member's creation. Values conform to the RFC 3339 standard and are expressed in UTC, e.g.
+         * `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "created_at")
+        val createdAt: Instant? = null,
+        /**
+         * The timestamp of when the Member was last updated. Values conform to the RFC 3339 standard and are expressed in UTC,
+         * e.g. `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "updated_at")
+        val updatedAt: Instant? = null,
+        /**
+         * A scim member registration, referencing a [SCIM Connection](scim-connection-object) object in use for the Member
+         * creation.
+         */
+        @Json(name = "scim_registration")
+        val scimRegistration: SCIMRegistration? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -480,20 +492,32 @@ public data class Organization
         @Json(name = "allowed_mfa_methods")
         val allowedMfaMethods: List<String>,
         /**
-         * An array of active [SCIM Connection references](https://stytch.com/docs/b2b/api/scim-connection-object).
-         */
-        @Json(name = "scim_active_connections")
-        val scimActiveConnections: List<ActiveSCIMConnection>,
-        /**
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */
         @Json(name = "trusted_metadata")
         val trustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
+         * The timestamp of the Organization's creation. Values conform to the RFC 3339 standard and are expressed in UTC, e.g.
+         * `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "created_at")
+        val createdAt: Instant? = null,
+        /**
+         * The timestamp of when the Organization was last updated. Values conform to the RFC 3339 standard and are expressed in
+         * UTC, e.g. `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "updated_at")
+        val updatedAt: Instant? = null,
+        /**
          * The default connection used for SSO when there are multiple active connections.
          */
         @Json(name = "sso_default_connection_id")
         val ssoDefaultConnectionId: String? = null,
+        /**
+         * An active [SCIM Connection references](https://stytch.com/docs/b2b/api/scim-connection-object).
+         */
+        @Json(name = "scim_active_connection")
+        val scimActiveConnection: ActiveSCIMConnection? = null,
     )
 
 @JsonClass(generateAdapter = true)

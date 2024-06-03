@@ -7,14 +7,14 @@ package com.stytch.java.b2b.api.scim
 // !!!
 
 import com.squareup.moshi.Moshi
-import com.stytch.java.b2b.api.scimconnections.Connections
-import com.stytch.java.b2b.api.scimconnections.ConnectionsImpl
+import com.stytch.java.b2b.api.scimconnection.Connection
+import com.stytch.java.b2b.api.scimconnection.ConnectionImpl
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 
 public interface SCIM {
-    public val connections: Connections
+    public val connection: Connection
 }
 
 internal class SCIMImpl(
@@ -23,5 +23,5 @@ internal class SCIMImpl(
 ) : SCIM {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
-    override val connections: Connections = ConnectionsImpl(httpClient, coroutineScope)
+    override val connection: Connection = ConnectionImpl(httpClient, coroutineScope)
 }

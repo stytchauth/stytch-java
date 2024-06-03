@@ -22,7 +22,7 @@ public data class SCIMConnection
         val status: String,
         @Json(name = "display_name")
         val displayName: String,
-        @Json(name = "idp")
+        @Json(name = "identity_provider")
         val identityProvider: String,
         @Json(name = "base_url")
         val baseURL: String,
@@ -52,7 +52,7 @@ public data class SCIMConnectionWithNextToken
         val displayName: String,
         @Json(name = "base_url")
         val baseURL: String,
-        @Json(name = "idp")
+        @Json(name = "identity_provider")
         val identityProvider: String,
         @Json(name = "bearer_token_last_four")
         val bearerTokenLastFour: String,
@@ -78,7 +78,7 @@ public data class SCIMConnectionWithToken
         val status: String,
         @Json(name = "display_name")
         val displayName: String,
-        @Json(name = "idp")
+        @Json(name = "identity_provider")
         val identityProvider: String,
         @Json(name = "base_url")
         val baseURL: String,
