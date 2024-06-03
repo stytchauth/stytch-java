@@ -22,12 +22,12 @@ import java.util.concurrent.CompletableFuture
 
 public interface Discovery {
     /**
-     * Send a discovery magic link to an email address.
+     * Send a discovery magic link to an email address. The magic link is valid for 60 minutes.
      */
     public suspend fun send(data: SendRequest): StytchResult<SendResponse>
 
     /**
-     * Send a discovery magic link to an email address.
+     * Send a discovery magic link to an email address. The magic link is valid for 60 minutes.
      */
     public fun send(
         data: SendRequest,
@@ -35,7 +35,7 @@ public interface Discovery {
     )
 
     /**
-     * Send a discovery magic link to an email address.
+     * Send a discovery magic link to an email address. The magic link is valid for 60 minutes.
      */
     public fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>>
 }
