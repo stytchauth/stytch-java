@@ -256,7 +256,7 @@ internal class M2MImpl(
             val clientScopes: MutableMap<String, MutableSet<String>> = mutableMapOf()
             for (scope in hasScopes) {
                 var action = scope
-                var resource = "*"
+                var resource = "-"
                 if (":" in scope) {
                     val (splitAction, splitResource) = scope.split(":")
                     action = splitAction
@@ -267,7 +267,7 @@ internal class M2MImpl(
 
             for (requiredScope in requiredScopes) {
                 var requiredAction = requiredScope
-                var requiredResource = "*"
+                var requiredResource = "-"
                 if (":" in requiredScope) {
                     val (splitAction, splitResource) = requiredScope.split(":")
                     requiredAction = splitAction
