@@ -254,31 +254,26 @@ internal class M2MImpl(
             requiredScopes: List<String>,
         ) {
             val clientScopes: MutableMap<String, MutableSet<String>> = mutableMapOf()
-            for (scope in hasScopes) {
-                var action = scope
-                var resource = "-"
-                if (":" in scope) {
-                    val (splitAction, splitResource) = scope.split(":")
-                    action = splitAction
-                    resource = splitResource
-                }
+            hasScopes.forEach { scope ->
+                val (action, resource) =
+                    if (scope.contains(":")) {
+                        scope.split(":")
+                    } else {
+                        listOf(scope, "-")
+                    }
                 clientScopes.computeIfAbsent(action) { mutableSetOf() }.add(resource)
             }
 
-            for (requiredScope in requiredScopes) {
-                var requiredAction = requiredScope
-                var requiredResource = "-"
-                if (":" in requiredScope) {
-                    val (splitAction, splitResource) = requiredScope.split(":")
-                    requiredAction = splitAction
-                    requiredResource = splitResource
-                }
-                val resources =
-                    clientScopes[requiredAction] ?: throw JWTException.JwtMissingAction(requiredAction)
-
-                // The client can either have a wildcard resource or the specific resource
+            requiredScopes.forEach { scope ->
+                val (requiredAction, requiredResource) =
+                    if (scope.contains(":")) {
+                        scope.split(":")
+                    } else {
+                        listOf(scope, "-")
+                    }
+                val resources = clientScopes[requiredAction] ?: throw JWTException.JwtMissingAction(requiredAction)
                 if ("*" !in resources && requiredResource !in resources) {
-                    throw JWTException.JwtMissingScope(requiredScope)
+                    throw JWTException.JwtMissingScope(scope)
                 }
             }
         }
