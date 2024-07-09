@@ -128,7 +128,7 @@ internal class M2MTest {
         }
 
     @Test
-    fun `authenticateToken returns JwtMissingScope exception when required scopes are missing`() =
+    fun `authenticateToken returns JwtMissingAction exception when required scopes are missing`() =
         runTest {
             val result =
                 m2m.authenticateToken(
@@ -139,7 +139,7 @@ internal class M2MTest {
                     ),
                 )
             require(result is StytchResult.Error)
-            assert(result.exception.reason is JWTException.JwtMissingScope)
+            assert(result.exception.reason is JWTException.JwtMissingAction)
         }
 
     @Test
