@@ -3,6 +3,19 @@ plugins {
     kotlin("jvm") version libs.versions.kotlin
     kotlin("kapt") version libs.versions.kotlin
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+}
+
+subprojects {
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+}
+
+allprojects {
+    ktlint {
+        version.set("1.2.1")
+        verbose.set(true)
+        outputToConsole.set(true)
+    }
 }
 
 buildscript {
@@ -45,4 +58,13 @@ task("printVersion") {
     doLast {
         println(version)
     }
+}
+
+task("runOnGitHub") {
+    group = "custom"
+    description = "\$ ./gradlew runOnGitHub # runs on GitHub Action"
+    dependsOn(
+        ":stytch:ktlintCheck",
+        ":stytch:test",
+    )
 }
