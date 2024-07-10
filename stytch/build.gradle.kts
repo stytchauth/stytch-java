@@ -30,7 +30,12 @@ kotlin {
     explicitApi()
 }
 
-val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class) {
+    dependencies {
+        dokkaRuntime(enforcedPlatform("com.fasterxml.jackson:jackson-bom:2.17.2"))
+        dokkaPlugin(enforcedPlatform("com.fasterxml.jackson:jackson-bom:2.17.2"))
+    }
+}
 val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
     dependsOn(dokkaHtml)
     archiveClassifier.set("javadoc")
