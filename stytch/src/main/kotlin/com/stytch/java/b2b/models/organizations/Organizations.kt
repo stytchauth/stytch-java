@@ -492,8 +492,6 @@ public data class Organization
          */
         @Json(name = "allowed_mfa_methods")
         val allowedMfaMethods: List<String>,
-        @Json(name = "oauth_tenant_jit_provisioning")
-        val oauthTenantJITProvisioning: String,
         /**
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */
@@ -1165,10 +1163,6 @@ public data class UpdateRequest
          */
         @Json(name = "allowed_mfa_methods")
         val allowedMfaMethods: List<String>? = emptyList(),
-        @Json(name = "oauth_tenant_jit_provisioning")
-        val oauthTenantJITProvisioning: String? = null,
-        @Json(name = "allowed_oauth_tenants")
-        val allowedOAuthTenants: Map<String, Any?>? = emptyMap(),
     )
 
 /**
