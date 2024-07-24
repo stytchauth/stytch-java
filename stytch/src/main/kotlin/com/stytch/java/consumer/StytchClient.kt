@@ -34,7 +34,6 @@ import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import org.jose4j.jwk.HttpsJwks
-
 public object StytchClient {
     private lateinit var httpClient: HttpClient
     private lateinit var httpsJwks: HttpsJwks

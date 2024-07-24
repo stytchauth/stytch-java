@@ -11,6 +11,7 @@ import com.squareup.moshi.JsonClass
 import com.stytch.java.b2b.models.mfa.MfaRequired
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
+import com.stytch.java.common.methodoptions.Authorization
 import com.stytch.java.consumer.models.sessions.AuthenticationFactor
 import com.stytch.java.consumer.models.sessions.JWK
 import java.time.Instant
@@ -137,6 +138,25 @@ public data class PrimaryRequired
         @Json(name = "allowed_auth_methods")
         val allowedAuthMethods: List<String>,
     )
+
+public data class RevokeRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
+        }
+    }
 
 /**
 * Request type for `Sessions.authenticate`.

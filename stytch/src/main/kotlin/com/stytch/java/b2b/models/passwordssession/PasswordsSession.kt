@@ -39,7 +39,8 @@ public data class ResetRequest
         @Json(name = "organization_id")
         val organizationId: String,
         /**
-         * The password to authenticate.
+         * The password to authenticate, reset, or set for the first time. Any UTF8 character is allowed, e.g. spaces, emojis,
+         * non-English characers, etc.
          */
         @Json(name = "password")
         val password: String,

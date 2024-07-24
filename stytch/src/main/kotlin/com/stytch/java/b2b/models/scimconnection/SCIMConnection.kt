@@ -11,6 +11,7 @@ import com.squareup.moshi.JsonClass
 import com.stytch.java.b2b.models.scim.SCIMConnection
 import com.stytch.java.b2b.models.scim.SCIMConnectionWithNextToken
 import com.stytch.java.b2b.models.scim.SCIMConnectionWithToken
+import com.stytch.java.b2b.models.scim.SCIMGroup
 import com.stytch.java.b2b.models.scim.SCIMGroupImplicitRoleAssignments
 import com.stytch.java.common.methodoptions.Authorization
 
@@ -88,6 +89,25 @@ public data class CreateRequestOptions
     }
 
 public data class DeleteRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
+        }
+    }
+
+public data class GetGroupsRequestOptions
     @JvmOverloads
     constructor(
         /**
@@ -294,6 +314,64 @@ public data class DeleteResponse
          */
         @Json(name = "status_code")
         val statusCode: Int,
+    )
+
+/**
+* Request type for `Connection.getGroups`.
+*/
+@JsonClass(generateAdapter = true)
+public data class GetGroupsRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String,
+        /**
+         * The ID of the SCIM connection.
+         */
+        @Json(name = "connection_id")
+        val connectionId: String,
+        /**
+         * The `cursor` field allows you to paginate through your results. Each result array is limited to 1000 results. If your
+         * query returns more than 1000 results, you will need to paginate the responses using the `cursor`. If you receive a
+         * response that includes a non-null `next_cursor` in the `results_metadata` object, repeat the search call with the
+         * `next_cursor` value set to the `cursor` field to retrieve the next page of results. Continue to make search calls until
+         * the `next_cursor` in the response is null.
+         */
+        @Json(name = "cursor")
+        val cursor: String? = null,
+        /**
+         * The number of search results to return per page. The default limit is 100. A maximum of 1000 results can be returned by
+         * a single search request. If the total size of your result set is greater than one page size, you must paginate the
+         * response. See the `cursor` field.
+         */
+        @Json(name = "limit")
+        val limit: Long? = null,
+    )
+
+/**
+* Response type for `Connection.getGroups`.
+*/
+@JsonClass(generateAdapter = true)
+public data class GetGroupsResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * A list of SCIM Connection Groups belonging to the connection.
+         */
+        @Json(name = "scim_groups")
+        val scimGroups: List<SCIMGroup>,
+        @Json(name = "status_code")
+        val statusCode: Int,
+        /**
+         * The `next_cursor` string is returned when your search result contains more than one page of results. This value is
+         * passed into your next search call in the `cursor` field.
+         */
+        @Json(name = "next_cursor")
+        val nextCursor: String? = null,
     )
 
 /**

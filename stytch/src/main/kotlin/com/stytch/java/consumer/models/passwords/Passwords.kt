@@ -195,7 +195,7 @@ public data class ScryptConfig
         val salt: String,
         /**
          * The N value, also known as the iterations count. It must be a power of two greater than 1 and less than 262,145.
-         *       If your applicaiton's N parameter is larger than 262,144, please reach out to
+         *       If your application's N parameter is larger than 262,144, please reach out to
          * [support@stytch.com](mailto:support@stytch.com)
          */
         @Json(name = "n_parameter")
@@ -230,7 +230,7 @@ public data class AuthenticateRequest
         @Json(name = "email")
         val email: String,
         /**
-         * The password of the user
+         * The password for the user. Any UTF8 character is allowed, e.g. spaces, emojis, non-English characers, etc.
          */
         @Json(name = "password")
         val password: String,
@@ -335,7 +335,7 @@ public data class CreateRequest
         @Json(name = "email")
         val email: String,
         /**
-         * The password of the user
+         * The password for the user. Any UTF8 character is allowed, e.g. spaces, emojis, non-English characers, etc.
          */
         @Json(name = "password")
         val password: String,
@@ -568,7 +568,7 @@ public data class StrengthCheckRequest
     @JvmOverloads
     constructor(
         /**
-         * The password of the user
+         * The password for the user. Any UTF8 character is allowed, e.g. spaces, emojis, non-English characers, etc.
          */
         @Json(name = "password")
         val password: String,

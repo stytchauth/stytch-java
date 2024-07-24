@@ -87,6 +87,8 @@ public interface Email {
      * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      *
      * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
+     *
+     * Note that a successful password reset by email will revoke all active sessions for the `member_id`.
      */
     public suspend fun reset(data: ResetRequest): StytchResult<ResetResponse>
 
@@ -106,6 +108,8 @@ public interface Email {
      * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      *
      * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
+     *
+     * Note that a successful password reset by email will revoke all active sessions for the `member_id`.
      */
     public fun reset(
         data: ResetRequest,
@@ -128,6 +132,8 @@ public interface Email {
      * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      *
      * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
+     *
+     * Note that a successful password reset by email will revoke all active sessions for the `member_id`.
      */
     public fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>>
 }

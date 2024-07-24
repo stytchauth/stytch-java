@@ -22,6 +22,7 @@ import com.stytch.java.b2b.models.sessions.MemberSession
 import com.stytch.java.b2b.models.sessions.MigrateRequest
 import com.stytch.java.b2b.models.sessions.MigrateResponse
 import com.stytch.java.b2b.models.sessions.RevokeRequest
+import com.stytch.java.b2b.models.sessions.RevokeRequestOptions
 import com.stytch.java.b2b.models.sessions.RevokeResponse
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.JWTException
@@ -69,7 +70,8 @@ public interface Sessions {
      *
      * You may provide a JWT that needs to be refreshed and is expired according to its `exp` claim. A new JWT will be
      * returned if both the signature and the underlying Session are still valid. See our
-     * [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/using-jwts) guide for more information.
+     * [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/resources/using-jwts) guide for more
+     * information.
      *
      * If an `authorization_check` object is passed in, this method will also check if the Member is authorized to perform the
      * given action on the given Resource in the specified Organization. A Member is authorized if their Member Session
@@ -90,7 +92,8 @@ public interface Sessions {
      *
      * You may provide a JWT that needs to be refreshed and is expired according to its `exp` claim. A new JWT will be
      * returned if both the signature and the underlying Session are still valid. See our
-     * [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/using-jwts) guide for more information.
+     * [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/resources/using-jwts) guide for more
+     * information.
      *
      * If an `authorization_check` object is passed in, this method will also check if the Member is authorized to perform the
      * given action on the given Resource in the specified Organization. A Member is authorized if their Member Session
@@ -114,7 +117,8 @@ public interface Sessions {
      *
      * You may provide a JWT that needs to be refreshed and is expired according to its `exp` claim. A new JWT will be
      * returned if both the signature and the underlying Session are still valid. See our
-     * [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/using-jwts) guide for more information.
+     * [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/resources/using-jwts) guide for more
+     * information.
      *
      * If an `authorization_check` object is passed in, this method will also check if the Member is authorized to perform the
      * given action on the given Resource in the specified Organization. A Member is authorized if their Member Session
@@ -132,7 +136,10 @@ public interface Sessions {
      * Revoke a Session and immediately invalidate all its tokens. To revoke a specific Session, pass either the
      * `member_session_id`, `session_token`, or `session_jwt`. To revoke all Sessions for a Member, pass the `member_id`.
      */
-    public suspend fun revoke(data: RevokeRequest): StytchResult<RevokeResponse>
+    public suspend fun revoke(
+        data: RevokeRequest,
+        methodOptions: RevokeRequestOptions? = null,
+    ): StytchResult<RevokeResponse>
 
     /**
      * Revoke a Session and immediately invalidate all its tokens. To revoke a specific Session, pass either the
@@ -140,6 +147,7 @@ public interface Sessions {
      */
     public fun revoke(
         data: RevokeRequest,
+        methodOptions: RevokeRequestOptions? = null,
         callback: (StytchResult<RevokeResponse>) -> Unit,
     )
 
@@ -147,7 +155,10 @@ public interface Sessions {
      * Revoke a Session and immediately invalidate all its tokens. To revoke a specific Session, pass either the
      * `member_session_id`, `session_token`, or `session_jwt`. To revoke all Sessions for a Member, pass the `member_id`.
      */
-    public fun revokeCompletable(data: RevokeRequest): CompletableFuture<StytchResult<RevokeResponse>>
+    public fun revokeCompletable(
+        data: RevokeRequest,
+        methodOptions: RevokeRequestOptions? = null,
+    ): CompletableFuture<StytchResult<RevokeResponse>>
 
     /**
      * Use this endpoint to exchange a Member's existing session for another session in a different Organization. This can be
@@ -273,8 +284,8 @@ public interface Sessions {
      * supply this API endpoint. If not, your application should decide which JWKS to use for validation by inspecting the
      * `kid` value.
      *
-     * See our [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/using-jwts) guide for more
-     * information.
+     * See our [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/resources/using-jwts) guide for
+     * more information.
      */
     public suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse>
 
@@ -294,8 +305,8 @@ public interface Sessions {
      * supply this API endpoint. If not, your application should decide which JWKS to use for validation by inspecting the
      * `kid` value.
      *
-     * See our [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/using-jwts) guide for more
-     * information.
+     * See our [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/resources/using-jwts) guide for
+     * more information.
      */
     public fun getJWKS(
         data: GetJWKSRequest,
@@ -318,8 +329,8 @@ public interface Sessions {
      * supply this API endpoint. If not, your application should decide which JWKS to use for validation by inspecting the
      * `kid` value.
      *
-     * See our [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/using-jwts) guide for more
-     * information.
+     * See our [How to use Stytch Session JWTs](https://stytch.com/docs/b2b/guides/sessions/resources/using-jwts) guide for
+     * more information.
      */
     public fun getJWKSCompletable(data: GetJWKSRequest): CompletableFuture<StytchResult<GetJWKSResponse>>
 
@@ -487,9 +498,15 @@ internal class SessionsImpl(
             authenticate(data)
         }.asCompletableFuture()
 
-    override suspend fun revoke(data: RevokeRequest): StytchResult<RevokeResponse> =
+    override suspend fun revoke(
+        data: RevokeRequest,
+        methodOptions: RevokeRequestOptions?,
+    ): StytchResult<RevokeResponse> =
         withContext(Dispatchers.IO) {
             var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
 
             val asJson = moshi.adapter(RevokeRequest::class.java).toJson(data)
             httpClient.post("/v1/b2b/sessions/revoke", asJson, headers)
@@ -497,16 +514,20 @@ internal class SessionsImpl(
 
     override fun revoke(
         data: RevokeRequest,
+        methodOptions: RevokeRequestOptions?,
         callback: (StytchResult<RevokeResponse>) -> Unit,
     ) {
         coroutineScope.launch {
-            callback(revoke(data))
+            callback(revoke(data, methodOptions))
         }
     }
 
-    override fun revokeCompletable(data: RevokeRequest): CompletableFuture<StytchResult<RevokeResponse>> =
+    override fun revokeCompletable(
+        data: RevokeRequest,
+        methodOptions: RevokeRequestOptions?,
+    ): CompletableFuture<StytchResult<RevokeResponse>> =
         coroutineScope.async {
-            revoke(data)
+            revoke(data, methodOptions)
         }.asCompletableFuture()
 
     override suspend fun exchange(data: ExchangeRequest): StytchResult<ExchangeResponse> =

@@ -38,12 +38,12 @@ public data class ResetRequest
         @Json(name = "email_address")
         val emailAddress: String,
         /**
-         * The member's current password that they supplied.
+         * The Member's current password that they supplied.
          */
         @Json(name = "existing_password")
         val existingPassword: String,
         /**
-         * The member's elected new password.
+         * The Member's elected new password.
          */
         @Json(name = "new_password")
         val newPassword: String,

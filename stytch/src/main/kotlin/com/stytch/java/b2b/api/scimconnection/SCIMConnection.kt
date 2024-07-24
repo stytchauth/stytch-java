@@ -15,6 +15,9 @@ import com.stytch.java.b2b.models.scimconnection.CreateResponse
 import com.stytch.java.b2b.models.scimconnection.DeleteRequest
 import com.stytch.java.b2b.models.scimconnection.DeleteRequestOptions
 import com.stytch.java.b2b.models.scimconnection.DeleteResponse
+import com.stytch.java.b2b.models.scimconnection.GetGroupsRequest
+import com.stytch.java.b2b.models.scimconnection.GetGroupsRequestOptions
+import com.stytch.java.b2b.models.scimconnection.GetGroupsResponse
 import com.stytch.java.b2b.models.scimconnection.GetRequest
 import com.stytch.java.b2b.models.scimconnection.GetRequestOptions
 import com.stytch.java.b2b.models.scimconnection.GetResponse
@@ -175,6 +178,31 @@ public interface Connection {
         data: RotateCancelRequest,
         methodOptions: RotateCancelRequestOptions? = null,
     ): CompletableFuture<StytchResult<RotateCancelResponse>>
+
+    /**
+     * Gets a paginated list of all SCIM Groups associated with a given Connection.
+     */
+    public suspend fun getGroups(
+        data: GetGroupsRequest,
+        methodOptions: GetGroupsRequestOptions? = null,
+    ): StytchResult<GetGroupsResponse>
+
+    /**
+     * Gets a paginated list of all SCIM Groups associated with a given Connection.
+     */
+    public fun getGroups(
+        data: GetGroupsRequest,
+        methodOptions: GetGroupsRequestOptions? = null,
+        callback: (StytchResult<GetGroupsResponse>) -> Unit,
+    )
+
+    /**
+     * Gets a paginated list of all SCIM Groups associated with a given Connection.
+     */
+    public fun getGroupsCompletable(
+        data: GetGroupsRequest,
+        methodOptions: GetGroupsRequestOptions? = null,
+    ): CompletableFuture<StytchResult<GetGroupsResponse>>
 
     /**
      * Create a new SCIM Connection. /%}
@@ -390,6 +418,41 @@ internal class ConnectionImpl(
     ): CompletableFuture<StytchResult<RotateCancelResponse>> =
         coroutineScope.async {
             rotateCancel(data, methodOptions)
+        }.asCompletableFuture()
+
+    override suspend fun getGroups(
+        data: GetGroupsRequest,
+        methodOptions: GetGroupsRequestOptions?,
+    ): StytchResult<GetGroupsResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
+
+            val asJson = moshi.adapter(GetGroupsRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/scim/${data.organizationId}/connection/${data.connectionId}", asMap, headers)
+        }
+
+    override fun getGroups(
+        data: GetGroupsRequest,
+        methodOptions: GetGroupsRequestOptions?,
+        callback: (StytchResult<GetGroupsResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(getGroups(data, methodOptions))
+        }
+    }
+
+    override fun getGroupsCompletable(
+        data: GetGroupsRequest,
+        methodOptions: GetGroupsRequestOptions?,
+    ): CompletableFuture<StytchResult<GetGroupsResponse>> =
+        coroutineScope.async {
+            getGroups(data, methodOptions)
         }.asCompletableFuture()
 
     override suspend fun create(

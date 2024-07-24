@@ -8,6 +8,7 @@ package com.stytch.java.b2b.models.organizations
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import com.stytch.java.b2b.models.scim.SCIMAttributes
 import com.stytch.java.common.methodoptions.Authorization
 import java.time.Instant
 
@@ -491,6 +492,8 @@ public data class Organization
          */
         @Json(name = "allowed_mfa_methods")
         val allowedMfaMethods: List<String>,
+        @Json(name = "oauth_tenant_jit_provisioning")
+        val oauthTenantJITProvisioning: String,
         /**
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */
@@ -560,7 +563,7 @@ public data class SCIMRegistration
          * An object for storing SCIM attributes brought over from the identity provider.
          */
         @Json(name = "scim_attributes")
-        val scimAttributes: Map<String, Any?>? = emptyMap(),
+        val scimAttributes: SCIMAttributes? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -1162,6 +1165,10 @@ public data class UpdateRequest
          */
         @Json(name = "allowed_mfa_methods")
         val allowedMfaMethods: List<String>? = emptyList(),
+        @Json(name = "oauth_tenant_jit_provisioning")
+        val oauthTenantJITProvisioning: String? = null,
+        @Json(name = "allowed_oauth_tenants")
+        val allowedOAuthTenants: Map<String, Any?>? = emptyMap(),
     )
 
 /**
