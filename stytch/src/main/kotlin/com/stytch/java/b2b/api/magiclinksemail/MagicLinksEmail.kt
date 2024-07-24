@@ -64,7 +64,6 @@ public interface Email {
      * invites to already `active` Members will return an error.
      *
      * The magic link invite will be valid for 1 week.
-     *  /%}
      */
     public suspend fun invite(
         data: InviteRequest,
@@ -77,7 +76,6 @@ public interface Email {
      * invites to already `active` Members will return an error.
      *
      * The magic link invite will be valid for 1 week.
-     *  /%}
      */
     public fun invite(
         data: InviteRequest,
@@ -91,7 +89,6 @@ public interface Email {
      * invites to already `active` Members will return an error.
      *
      * The magic link invite will be valid for 1 week.
-     *  /%}
      */
     public fun inviteCompletable(
         data: InviteRequest,

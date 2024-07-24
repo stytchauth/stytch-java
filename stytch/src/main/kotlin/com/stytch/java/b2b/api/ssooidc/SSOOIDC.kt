@@ -26,7 +26,7 @@ import java.util.concurrent.CompletableFuture
 
 public interface OIDC {
     /**
-     * Create a new OIDC Connection. /%}
+     * Create a new OIDC Connection.
      */
     public suspend fun createConnection(
         data: CreateConnectionRequest,
@@ -34,7 +34,7 @@ public interface OIDC {
     ): StytchResult<CreateConnectionResponse>
 
     /**
-     * Create a new OIDC Connection. /%}
+     * Create a new OIDC Connection.
      */
     public fun createConnection(
         data: CreateConnectionRequest,
@@ -43,7 +43,7 @@ public interface OIDC {
     )
 
     /**
-     * Create a new OIDC Connection. /%}
+     * Create a new OIDC Connection.
      */
     public fun createConnectionCompletable(
         data: CreateConnectionRequest,
@@ -75,7 +75,6 @@ public interface OIDC {
      * * `token_url`
      * * `userinfo_url`
      * * `jwks_url`
-     *  /%}
      */
     public suspend fun updateConnection(
         data: UpdateConnectionRequest,
@@ -107,7 +106,6 @@ public interface OIDC {
      * * `token_url`
      * * `userinfo_url`
      * * `jwks_url`
-     *  /%}
      */
     public fun updateConnection(
         data: UpdateConnectionRequest,
@@ -140,7 +138,6 @@ public interface OIDC {
      * * `token_url`
      * * `userinfo_url`
      * * `jwks_url`
-     *  /%}
      */
     public fun updateConnectionCompletable(
         data: UpdateConnectionRequest,

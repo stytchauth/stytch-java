@@ -46,7 +46,7 @@ import java.util.concurrent.CompletableFuture
 
 public interface Connection {
     /**
-     * Update a SCIM Connection. /%}
+     * Update a SCIM Connection.
      */
     public suspend fun update(
         data: UpdateRequest,
@@ -54,7 +54,7 @@ public interface Connection {
     ): StytchResult<UpdateResponse>
 
     /**
-     * Update a SCIM Connection. /%}
+     * Update a SCIM Connection.
      */
     public fun update(
         data: UpdateRequest,
@@ -63,7 +63,7 @@ public interface Connection {
     )
 
     /**
-     * Update a SCIM Connection. /%}
+     * Update a SCIM Connection.
      */
     public fun updateCompletable(
         data: UpdateRequest,
@@ -71,7 +71,7 @@ public interface Connection {
     ): CompletableFuture<StytchResult<UpdateResponse>>
 
     /**
-     * Deletes a SCIM Connection. /%}
+     * Deletes a SCIM Connection.
      */
     public suspend fun delete(
         data: DeleteRequest,
@@ -79,7 +79,7 @@ public interface Connection {
     ): StytchResult<DeleteResponse>
 
     /**
-     * Deletes a SCIM Connection. /%}
+     * Deletes a SCIM Connection.
      */
     public fun delete(
         data: DeleteRequest,
@@ -88,7 +88,7 @@ public interface Connection {
     )
 
     /**
-     * Deletes a SCIM Connection. /%}
+     * Deletes a SCIM Connection.
      */
     public fun deleteCompletable(
         data: DeleteRequest,
@@ -96,7 +96,7 @@ public interface Connection {
     ): CompletableFuture<StytchResult<DeleteResponse>>
 
     /**
-     * Start a SCIM token rotation. /%}
+     * Start a SCIM token rotation.
      */
     public suspend fun rotateStart(
         data: RotateStartRequest,
@@ -104,7 +104,7 @@ public interface Connection {
     ): StytchResult<RotateStartResponse>
 
     /**
-     * Start a SCIM token rotation. /%}
+     * Start a SCIM token rotation.
      */
     public fun rotateStart(
         data: RotateStartRequest,
@@ -113,7 +113,7 @@ public interface Connection {
     )
 
     /**
-     * Start a SCIM token rotation. /%}
+     * Start a SCIM token rotation.
      */
     public fun rotateStartCompletable(
         data: RotateStartRequest,
@@ -123,7 +123,7 @@ public interface Connection {
     /**
      * Completes a SCIM token rotation. This will complete the current token rotation process and update the active token to
      * be the new token supplied in the [start SCIM token rotation](https://stytch.com/docs/b2b/api/scim-rotate-token-start)
-     * response. /%}
+     * response.
      */
     public suspend fun rotateComplete(
         data: RotateCompleteRequest,
@@ -133,7 +133,7 @@ public interface Connection {
     /**
      * Completes a SCIM token rotation. This will complete the current token rotation process and update the active token to
      * be the new token supplied in the [start SCIM token rotation](https://stytch.com/docs/b2b/api/scim-rotate-token-start)
-     * response. /%}
+     * response.
      */
     public fun rotateComplete(
         data: RotateCompleteRequest,
@@ -144,7 +144,7 @@ public interface Connection {
     /**
      * Completes a SCIM token rotation. This will complete the current token rotation process and update the active token to
      * be the new token supplied in the [start SCIM token rotation](https://stytch.com/docs/b2b/api/scim-rotate-token-start)
-     * response. /%}
+     * response.
      */
     public fun rotateCompleteCompletable(
         data: RotateCompleteRequest,
@@ -153,7 +153,6 @@ public interface Connection {
 
     /**
      * Cancel a SCIM token rotation. This will cancel the current token rotation process, keeping the original token active.
-     * /%}
      */
     public suspend fun rotateCancel(
         data: RotateCancelRequest,
@@ -162,7 +161,6 @@ public interface Connection {
 
     /**
      * Cancel a SCIM token rotation. This will cancel the current token rotation process, keeping the original token active.
-     * /%}
      */
     public fun rotateCancel(
         data: RotateCancelRequest,
@@ -172,7 +170,6 @@ public interface Connection {
 
     /**
      * Cancel a SCIM token rotation. This will cancel the current token rotation process, keeping the original token active.
-     * /%}
      */
     public fun rotateCancelCompletable(
         data: RotateCancelRequest,
@@ -205,7 +202,7 @@ public interface Connection {
     ): CompletableFuture<StytchResult<GetGroupsResponse>>
 
     /**
-     * Create a new SCIM Connection. /%}
+     * Create a new SCIM Connection.
      */
     public suspend fun create(
         data: CreateRequest,
@@ -213,7 +210,7 @@ public interface Connection {
     ): StytchResult<CreateResponse>
 
     /**
-     * Create a new SCIM Connection. /%}
+     * Create a new SCIM Connection.
      */
     public fun create(
         data: CreateRequest,
@@ -222,7 +219,7 @@ public interface Connection {
     )
 
     /**
-     * Create a new SCIM Connection. /%}
+     * Create a new SCIM Connection.
      */
     public fun createCompletable(
         data: CreateRequest,
@@ -230,7 +227,7 @@ public interface Connection {
     ): CompletableFuture<StytchResult<CreateResponse>>
 
     /**
-     * Get SCIM Connections. /%}
+     * Get SCIM Connections.
      */
     public suspend fun get(
         data: GetRequest,
@@ -238,7 +235,7 @@ public interface Connection {
     ): StytchResult<GetResponse>
 
     /**
-     * Get SCIM Connections. /%}
+     * Get SCIM Connections.
      */
     public fun get(
         data: GetRequest,
@@ -247,7 +244,7 @@ public interface Connection {
     )
 
     /**
-     * Get SCIM Connections. /%}
+     * Get SCIM Connections.
      */
     public fun getCompletable(
         data: GetRequest,

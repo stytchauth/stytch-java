@@ -57,7 +57,6 @@ public interface Members {
 
     /**
      * Updates a Member specified by `organization_id` and `member_id`.
-     *  /%}
      */
     public suspend fun update(
         data: UpdateRequest,
@@ -66,7 +65,6 @@ public interface Members {
 
     /**
      * Updates a Member specified by `organization_id` and `member_id`.
-     *  /%}
      */
     public fun update(
         data: UpdateRequest,
@@ -76,7 +74,6 @@ public interface Members {
 
     /**
      * Updates a Member specified by `organization_id` and `member_id`.
-     *  /%}
      */
     public fun updateCompletable(
         data: UpdateRequest,
@@ -84,7 +81,7 @@ public interface Members {
     ): CompletableFuture<StytchResult<UpdateResponse>>
 
     /**
-     * Deletes a Member specified by `organization_id` and `member_id`. /%}
+     * Deletes a Member specified by `organization_id` and `member_id`.
      */
     public suspend fun delete(
         data: DeleteRequest,
@@ -92,7 +89,7 @@ public interface Members {
     ): StytchResult<DeleteResponse>
 
     /**
-     * Deletes a Member specified by `organization_id` and `member_id`. /%}
+     * Deletes a Member specified by `organization_id` and `member_id`.
      */
     public fun delete(
         data: DeleteRequest,
@@ -101,7 +98,7 @@ public interface Members {
     )
 
     /**
-     * Deletes a Member specified by `organization_id` and `member_id`. /%}
+     * Deletes a Member specified by `organization_id` and `member_id`.
      */
     public fun deleteCompletable(
         data: DeleteRequest,
@@ -110,7 +107,7 @@ public interface Members {
 
     /**
      * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
-     * `organization_id` and `member_id`. /%}
+     * `organization_id` and `member_id`.
      */
     public suspend fun reactivate(
         data: ReactivateRequest,
@@ -119,7 +116,7 @@ public interface Members {
 
     /**
      * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
-     * `organization_id` and `member_id`. /%}
+     * `organization_id` and `member_id`.
      */
     public fun reactivate(
         data: ReactivateRequest,
@@ -129,7 +126,7 @@ public interface Members {
 
     /**
      * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
-     * `organization_id` and `member_id`. /%}
+     * `organization_id` and `member_id`.
      */
     public fun reactivateCompletable(
         data: ReactivateRequest,
@@ -147,7 +144,6 @@ public interface Members {
      * a new phone number
      * and calling the [OTP SMS send](https://stytch.com/docs/b2b/api/otp-sms-send) endpoint, then calling the
      * [OTP SMS Authenticate](https://stytch.com/docs/b2b/api/authenticate-otp-sms) endpoint.
-     *  /%}
      */
     public suspend fun deleteMFAPhoneNumber(
         data: DeleteMFAPhoneNumberRequest,
@@ -165,7 +161,6 @@ public interface Members {
      * a new phone number
      * and calling the [OTP SMS send](https://stytch.com/docs/b2b/api/otp-sms-send) endpoint, then calling the
      * [OTP SMS Authenticate](https://stytch.com/docs/b2b/api/authenticate-otp-sms) endpoint.
-     *  /%}
      */
     public fun deleteMFAPhoneNumber(
         data: DeleteMFAPhoneNumberRequest,
@@ -184,7 +179,6 @@ public interface Members {
      * a new phone number
      * and calling the [OTP SMS send](https://stytch.com/docs/b2b/api/otp-sms-send) endpoint, then calling the
      * [OTP SMS Authenticate](https://stytch.com/docs/b2b/api/authenticate-otp-sms) endpoint.
-     *  /%}
      */
     public fun deleteMFAPhoneNumberCompletable(
         data: DeleteMFAPhoneNumberRequest,
@@ -198,7 +192,6 @@ public interface Members {
      *
      * Existing Member Sessions that include the TOTP authentication factor will not be revoked if the registration is
      * deleted, and MFA will not be enforced until the Member logs in again.
-     *  /%}
      */
     public suspend fun deleteTOTP(
         data: DeleteTOTPRequest,
@@ -212,7 +205,6 @@ public interface Members {
      *
      * Existing Member Sessions that include the TOTP authentication factor will not be revoked if the registration is
      * deleted, and MFA will not be enforced until the Member logs in again.
-     *  /%}
      */
     public fun deleteTOTP(
         data: DeleteTOTPRequest,
@@ -227,7 +219,6 @@ public interface Members {
      *
      * Existing Member Sessions that include the TOTP authentication factor will not be revoked if the registration is
      * deleted, and MFA will not be enforced until the Member logs in again.
-     *  /%}
      */
     public fun deleteTOTPCompletable(
         data: DeleteTOTPRequest,
@@ -239,7 +230,6 @@ public interface Members {
      * an empty `query` returns all non-deleted Members within the specified Organizations.
      *
      * *All fuzzy search filters require a minimum of three characters.
-     *  /%}
      */
     public suspend fun search(
         data: SearchRequest,
@@ -251,7 +241,6 @@ public interface Members {
      * an empty `query` returns all non-deleted Members within the specified Organizations.
      *
      * *All fuzzy search filters require a minimum of three characters.
-     *  /%}
      */
     public fun search(
         data: SearchRequest,
@@ -264,7 +253,6 @@ public interface Members {
      * an empty `query` returns all non-deleted Members within the specified Organizations.
      *
      * *All fuzzy search filters require a minimum of three characters.
-     *  /%}
      */
     public fun searchCompletable(
         data: SearchRequest,
@@ -272,7 +260,7 @@ public interface Members {
     ): CompletableFuture<StytchResult<SearchResponse>>
 
     /**
-     * Delete a Member's password. /%}
+     * Delete a Member's password.
      */
     public suspend fun deletePassword(
         data: DeletePasswordRequest,
@@ -280,7 +268,7 @@ public interface Members {
     ): StytchResult<DeletePasswordResponse>
 
     /**
-     * Delete a Member's password. /%}
+     * Delete a Member's password.
      */
     public fun deletePassword(
         data: DeletePasswordRequest,
@@ -289,7 +277,7 @@ public interface Members {
     )
 
     /**
-     * Delete a Member's password. /%}
+     * Delete a Member's password.
      */
     public fun deletePasswordCompletable(
         data: DeletePasswordRequest,
@@ -385,7 +373,7 @@ public interface Members {
     ): CompletableFuture<StytchResult<UnlinkRetiredEmailResponse>>
 
     /**
-     * Creates a Member. An `organization_id` and `email_address` are required. /%}
+     * Creates a Member. An `organization_id` and `email_address` are required.
      */
     public suspend fun create(
         data: CreateRequest,
@@ -393,7 +381,7 @@ public interface Members {
     ): StytchResult<CreateResponse>
 
     /**
-     * Creates a Member. An `organization_id` and `email_address` are required. /%}
+     * Creates a Member. An `organization_id` and `email_address` are required.
      */
     public fun create(
         data: CreateRequest,
@@ -402,7 +390,7 @@ public interface Members {
     )
 
     /**
-     * Creates a Member. An `organization_id` and `email_address` are required. /%}
+     * Creates a Member. An `organization_id` and `email_address` are required.
      */
     public fun createCompletable(
         data: CreateRequest,

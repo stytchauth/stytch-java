@@ -99,7 +99,6 @@ public interface Organizations {
      *
      * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
      * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
-     *  /%}
      */
     public suspend fun update(
         data: UpdateRequest,
@@ -112,7 +111,6 @@ public interface Organizations {
      *
      * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
      * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
-     *  /%}
      */
     public fun update(
         data: UpdateRequest,
@@ -126,7 +124,6 @@ public interface Organizations {
      *
      * *See the [Organization authentication settings](https://stytch.com/docs/b2b/api/org-auth-settings) resource to learn
      * more about fields like `email_jit_provisioning`, `email_invites`, `sso_jit_provisioning`, etc., and their behaviors.
-     *  /%}
      */
     public fun updateCompletable(
         data: UpdateRequest,
@@ -134,7 +131,7 @@ public interface Organizations {
     ): CompletableFuture<StytchResult<UpdateResponse>>
 
     /**
-     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted. /%}
+     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted.
      */
     public suspend fun delete(
         data: DeleteRequest,
@@ -142,7 +139,7 @@ public interface Organizations {
     ): StytchResult<DeleteResponse>
 
     /**
-     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted. /%}
+     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted.
      */
     public fun delete(
         data: DeleteRequest,
@@ -151,7 +148,7 @@ public interface Organizations {
     )
 
     /**
-     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted. /%}
+     * Deletes an Organization specified by `organization_id`. All Members of the Organization will also be deleted.
      */
     public fun deleteCompletable(
         data: DeleteRequest,
