@@ -177,6 +177,8 @@ public data class Member
         val isAdmin: Boolean,
         @Json(name = "totp_registration_id")
         val totpRegistrationId: String,
+        @Json(name = "retired_email_addresses")
+        val retiredEmailAddresses: List<RetiredEmail>,
         /**
          * Sets whether the Member is enrolled in MFA. If true, the Member must complete an MFA step whenever they wish to log in
          * to their Organization. If false, the Member only needs to complete an MFA step if the Organization's MFA policy is set
@@ -536,6 +538,16 @@ public data class ResultsMetadata
          */
         @Json(name = "next_cursor")
         val nextCursor: String? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class RetiredEmail
+    @JvmOverloads
+    constructor(
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "email_address")
+        val emailAddress: String,
     )
 
 @JsonClass(generateAdapter = true)
