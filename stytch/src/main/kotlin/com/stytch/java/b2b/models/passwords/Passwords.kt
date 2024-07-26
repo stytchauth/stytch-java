@@ -132,7 +132,8 @@ public data class AuthenticateRequest
         @Json(name = "email_address")
         val emailAddress: String,
         /**
-         * The password to authenticate.
+         * The password to authenticate, reset, or set for the first time. Any UTF8 character is allowed, e.g. spaces, emojis,
+         * non-English characers, etc.
          */
         @Json(name = "password")
         val password: String,
@@ -421,7 +422,8 @@ public data class StrengthCheckRequest
     @JvmOverloads
     constructor(
         /**
-         * The password to authenticate.
+         * The password to authenticate, reset, or set for the first time. Any UTF8 character is allowed, e.g. spaces, emojis,
+         * non-English characers, etc.
          */
         @Json(name = "password")
         val password: String,

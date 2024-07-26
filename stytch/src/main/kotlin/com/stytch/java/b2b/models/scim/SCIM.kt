@@ -11,6 +11,152 @@ import com.squareup.moshi.JsonClass
 import java.time.Instant
 
 @JsonClass(generateAdapter = true)
+public data class Address
+    @JvmOverloads
+    constructor(
+        @Json(name = "formatted")
+        val formatted: String,
+        @Json(name = "street_address")
+        val streetAddress: String,
+        @Json(name = "locality")
+        val locality: String,
+        @Json(name = "region")
+        val region: String,
+        @Json(name = "postal_code")
+        val postalCode: String,
+        @Json(name = "country")
+        val country: String,
+        @Json(name = "type")
+        val type: String,
+        @Json(name = "primary")
+        val primary: Boolean,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class Email
+    @JvmOverloads
+    constructor(
+        @Json(name = "value")
+        val value: String,
+        @Json(name = "type")
+        val type: String,
+        @Json(name = "primary")
+        val primary: Boolean,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class EnterpriseExtension
+    @JvmOverloads
+    constructor(
+        @Json(name = "employee_number")
+        val employeeNumber: String,
+        @Json(name = "cost_center")
+        val costCenter: String,
+        @Json(name = "division")
+        val division: String,
+        @Json(name = "department")
+        val department: String,
+        @Json(name = "organization")
+        val organization: String,
+        @Json(name = "manager")
+        val manager: Manager? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class Group
+    @JvmOverloads
+    constructor(
+        @Json(name = "value")
+        val value: String,
+        @Json(name = "display")
+        val display: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class Manager
+    @JvmOverloads
+    constructor(
+        @Json(name = "value")
+        val value: String,
+        @Json(name = "ref")
+        val ref: String,
+        @Json(name = "display_name")
+        val displayName: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class Name
+    @JvmOverloads
+    constructor(
+        @Json(name = "formatted")
+        val formatted: String,
+        @Json(name = "family_name")
+        val familyName: String,
+        @Json(name = "given_name")
+        val givenName: String,
+        @Json(name = "middle_name")
+        val middleName: String,
+        @Json(name = "honorific_prefix")
+        val honorificPrefix: String,
+        @Json(name = "honorific_suffix")
+        val honorificSuffix: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class PhoneNumber
+    @JvmOverloads
+    constructor(
+        @Json(name = "value")
+        val value: String,
+        @Json(name = "type")
+        val type: String,
+        @Json(name = "primary")
+        val primary: Boolean,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class SCIMAttributes
+    @JvmOverloads
+    constructor(
+        @Json(name = "user_name")
+        val userName: String,
+        @Json(name = "id")
+        val id: String,
+        @Json(name = "external_id")
+        val externalId: String,
+        @Json(name = "active")
+        val active: Boolean,
+        @Json(name = "groups")
+        val groups: List<Group>,
+        @Json(name = "display_name")
+        val displayName: String,
+        @Json(name = "nick_name")
+        val nickName: String,
+        @Json(name = "profile_url")
+        val profileURL: String,
+        @Json(name = "user_type")
+        val userType: String,
+        @Json(name = "title")
+        val title: String,
+        @Json(name = "preferred_language")
+        val preferredLanguage: String,
+        @Json(name = "locale")
+        val locale: String,
+        @Json(name = "timezone")
+        val timezone: String,
+        @Json(name = "emails")
+        val emails: List<Email>,
+        @Json(name = "phone_numbers")
+        val phoneNumbers: List<PhoneNumber>,
+        @Json(name = "addresses")
+        val addresses: List<Address>,
+        @Json(name = "name")
+        val name: Name? = null,
+        @Json(name = "enterprise_extension")
+        val enterpriseExtension: EnterpriseExtension? = null,
+    )
+
+@JsonClass(generateAdapter = true)
 public data class SCIMConnection
     @JvmOverloads
     constructor(
@@ -88,6 +234,33 @@ public data class SCIMConnectionWithToken
         val scimGroupImplicitRoleAssignments: List<SCIMGroupImplicitRoleAssignments>,
         @Json(name = "bearer_token_expires_at")
         val bearerTokenExpiresAt: Instant? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class SCIMGroup
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific SCIM Group.
+         */
+        @Json(name = "group_id")
+        val groupId: String,
+        /**
+         * The name of the SCIM group.
+         */
+        @Json(name = "group_name")
+        val groupName: String,
+        /**
+         * Globally unique UUID that identifies a specific Organization. The organization_id is critical to perform operations on
+         * an Organization, so be sure to preserve this value.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String,
+        /**
+         * The ID of the SCIM connection.
+         */
+        @Json(name = "connection_id")
+        val connectionId: String,
     )
 
 @JsonClass(generateAdapter = true)

@@ -38,7 +38,7 @@ public interface SSO {
     public val saml: SAML
 
     /**
-     * Get all SSO Connections owned by the organization. /%}
+     * Get all SSO Connections owned by the organization.
      */
     public suspend fun getConnections(
         data: GetConnectionsRequest,
@@ -46,7 +46,7 @@ public interface SSO {
     ): StytchResult<GetConnectionsResponse>
 
     /**
-     * Get all SSO Connections owned by the organization. /%}
+     * Get all SSO Connections owned by the organization.
      */
     public fun getConnections(
         data: GetConnectionsRequest,
@@ -55,7 +55,7 @@ public interface SSO {
     )
 
     /**
-     * Get all SSO Connections owned by the organization. /%}
+     * Get all SSO Connections owned by the organization.
      */
     public fun getConnectionsCompletable(
         data: GetConnectionsRequest,
@@ -63,7 +63,7 @@ public interface SSO {
     ): CompletableFuture<StytchResult<GetConnectionsResponse>>
 
     /**
-     * Delete an existing SSO connection. /%}
+     * Delete an existing SSO connection.
      */
     public suspend fun deleteConnection(
         data: DeleteConnectionRequest,
@@ -71,7 +71,7 @@ public interface SSO {
     ): StytchResult<DeleteConnectionResponse>
 
     /**
-     * Delete an existing SSO connection. /%}
+     * Delete an existing SSO connection.
      */
     public fun deleteConnection(
         data: DeleteConnectionRequest,
@@ -80,7 +80,7 @@ public interface SSO {
     )
 
     /**
-     * Delete an existing SSO connection. /%}
+     * Delete an existing SSO connection.
      */
     public fun deleteConnectionCompletable(
         data: DeleteConnectionRequest,

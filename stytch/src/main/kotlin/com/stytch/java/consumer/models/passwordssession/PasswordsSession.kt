@@ -19,7 +19,7 @@ public data class ResetRequest
     @JvmOverloads
     constructor(
         /**
-         * The password of the user
+         * The password for the user. Any UTF8 character is allowed, e.g. spaces, emojis, non-English characers, etc.
          */
         @Json(name = "password")
         val password: String,

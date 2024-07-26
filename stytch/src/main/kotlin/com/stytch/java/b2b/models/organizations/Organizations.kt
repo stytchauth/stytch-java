@@ -8,6 +8,7 @@ package com.stytch.java.b2b.models.organizations
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import com.stytch.java.b2b.models.scim.SCIMAttributes
 import com.stytch.java.common.methodoptions.Authorization
 import java.time.Instant
 
@@ -176,6 +177,8 @@ public data class Member
         val isAdmin: Boolean,
         @Json(name = "totp_registration_id")
         val totpRegistrationId: String,
+        @Json(name = "retired_email_addresses")
+        val retiredEmailAddresses: List<RetiredEmail>,
         /**
          * Sets whether the Member is enrolled in MFA. If true, the Member must complete an MFA step whenever they wish to log in
          * to their Organization. If false, the Member only needs to complete an MFA step if the Organization's MFA policy is set
@@ -538,6 +541,16 @@ public data class ResultsMetadata
     )
 
 @JsonClass(generateAdapter = true)
+public data class RetiredEmail
+    @JvmOverloads
+    constructor(
+        @Json(name = "email_id")
+        val emailId: String,
+        @Json(name = "email_address")
+        val emailAddress: String,
+    )
+
+@JsonClass(generateAdapter = true)
 public data class SCIMRegistration
     @JvmOverloads
     constructor(
@@ -560,7 +573,7 @@ public data class SCIMRegistration
          * An object for storing SCIM attributes brought over from the identity provider.
          */
         @Json(name = "scim_attributes")
-        val scimAttributes: Map<String, Any?>? = emptyMap(),
+        val scimAttributes: SCIMAttributes? = null,
     )
 
 @JsonClass(generateAdapter = true)
