@@ -27,6 +27,8 @@ import com.stytch.java.consumer.models.sessions.GetJWKSRequest
 import com.stytch.java.consumer.models.sessions.GetJWKSResponse
 import com.stytch.java.consumer.models.sessions.GetRequest
 import com.stytch.java.consumer.models.sessions.GetResponse
+import com.stytch.java.consumer.models.sessions.MigrateRequest
+import com.stytch.java.consumer.models.sessions.MigrateResponse
 import com.stytch.java.consumer.models.sessions.RevokeRequest
 import com.stytch.java.consumer.models.sessions.RevokeResponse
 import com.stytch.java.consumer.models.sessions.Session
@@ -128,6 +130,15 @@ public interface Sessions {
      * in the request. It will return an error if multiple are present.
      */
     public fun revokeCompletable(data: RevokeRequest): CompletableFuture<StytchResult<RevokeResponse>>
+
+    public suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse>
+
+    public fun migrate(
+        data: MigrateRequest,
+        callback: (StytchResult<MigrateResponse>) -> Unit,
+    )
+
+    public fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>>
 
     /**
      * Get the JSON Web Key Set (JWKS) for a project.
@@ -373,6 +384,28 @@ internal class SessionsImpl(
     override fun revokeCompletable(data: RevokeRequest): CompletableFuture<StytchResult<RevokeResponse>> =
         coroutineScope.async {
             revoke(data)
+        }.asCompletableFuture()
+
+    override suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
+            val asJson = moshi.adapter(MigrateRequest::class.java).toJson(data)
+            httpClient.post("/v1/sessions/migrate", asJson, headers)
+        }
+
+    override fun migrate(
+        data: MigrateRequest,
+        callback: (StytchResult<MigrateResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(migrate(data))
+        }
+    }
+
+    override fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>> =
+        coroutineScope.async {
+            migrate(data)
         }.asCompletableFuture()
 
     override suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse> =
