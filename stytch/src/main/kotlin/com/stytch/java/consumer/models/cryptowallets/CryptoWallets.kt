@@ -10,6 +10,57 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.stytch.java.consumer.models.sessions.Session
 import com.stytch.java.consumer.models.users.User
+import java.time.Instant
+
+@JsonClass(generateAdapter = true)
+public data class SIWEParams
+    @JvmOverloads
+    constructor(
+        /**
+         * Only required if `siwe_params` is passed. The domain that is requesting the crypto wallet signature. Must be an RFC
+         * 3986 authority.
+         */
+        @Json(name = "domain")
+        val domain: String,
+        /**
+         * Only required if `siwe_params` is passed. An RFC 3986 URI referring to the resource that is the subject of the signing.
+         */
+        @Json(name = "uri")
+        val uri: String,
+        /**
+         *  A list of information or references to information the user wishes to have resolved as part of authentication. Every
+         * resource must be an RFC 3986 URI.
+         */
+        @Json(name = "resources")
+        val resources: List<String>,
+        /**
+         * The EIP-155 Chain ID to which the session is bound. Defaults to 1.
+         */
+        @Json(name = "chain_id")
+        val chainId: Long? = null,
+        /**
+         * A human-readable ASCII assertion that the user will sign.
+         */
+        @Json(name = "statement")
+        val statement: String? = null,
+        /**
+         * The time when the message was generated. Defaults to the current time. All timestamps in our API conform to the RFC
+         * 3339 standard and are expressed in UTC, e.g. `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "issued_at")
+        val issuedAt: Instant? = null,
+        /**
+         * The time when the signed authentication message will become valid. Defaults to the current time. All timestamps in our
+         * API conform to the RFC 3339 standard and are expressed in UTC, e.g. `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "not_before")
+        val notBefore: Instant? = null,
+        /**
+         * A system-specific identifier that may be used to uniquely refer to the sign-in request.
+         */
+        @Json(name = "message_request_id")
+        val messageRequestId: String? = null,
+    )
 
 /**
 * Request type for `CryptoWallets.authenticate`.
@@ -120,6 +171,11 @@ public data class AuthenticateResponse
          */
         @Json(name = "session")
         val session: Session? = null,
+        /**
+         * The parameters of the Sign In With Ethereum (SIWE) message that was signed.
+         */
+        @Json(name = "siwe_params")
+        val siweParams: SIWEParamsResponse? = null,
     )
 
 /**
@@ -155,6 +211,11 @@ public data class AuthenticateStartRequest
          */
         @Json(name = "session_jwt")
         val sessionJwt: String? = null,
+        /**
+         * The parameters for a Sign In With Ethereum (SIWE) message. May only be passed if the `crypto_wallet_type` is `ethereum`.
+         */
+        @Json(name = "siwe_params")
+        val siweParams: SIWEParams? = null,
     )
 
 /**
@@ -191,4 +252,44 @@ public data class AuthenticateStartResponse
          */
         @Json(name = "status_code")
         val statusCode: Int,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class SIWEParamsResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * The domain that requested the crypto wallet signature.
+         */
+        @Json(name = "domain")
+        val domain: String,
+        /**
+         * An RFC 3986 URI referring to the resource that is the subject of the signing.
+         */
+        @Json(name = "uri")
+        val uri: String,
+        /**
+         * The EIP-155 Chain ID to which the session is bound.
+         */
+        @Json(name = "chain_id")
+        val chainId: Int,
+        /**
+         *  A list of information or references to information the user wishes to have resolved as part of authentication. Every
+         * resource must be an RFC 3986 URI.
+         */
+        @Json(name = "resources")
+        val resources: List<String>,
+        @Json(name = "status_code")
+        val statusCode: Int,
+        /**
+         * The time when the message was generated. All timestamps in our API conform to the RFC 3339 standard and are expressed
+         * in UTC, e.g. `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "issued_at")
+        val issuedAt: Instant? = null,
+        /**
+         * A system-specific identifier that may be used to uniquely refer to the sign-in request.
+         */
+        @Json(name = "message_request_id")
+        val messageRequestId: String? = null,
     )

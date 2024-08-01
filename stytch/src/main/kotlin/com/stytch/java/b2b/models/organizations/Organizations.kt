@@ -177,6 +177,20 @@ public data class Member
         val isAdmin: Boolean,
         @Json(name = "totp_registration_id")
         val totpRegistrationId: String,
+        /**
+         *
+         *   A list of retired email addresses for this member.
+         *   A previously active email address can be marked as retired in one of two ways:
+         *   - It's replaced with a new primary email address during an explicit Member update.
+         *   - A new email address is surfaced by an OAuth, SAML or OIDC provider. In this case the new email address becomes the
+         *   Member's primary email address and the old primary email address is retired.
+         *
+         *   A retired email address cannot be used by other Members in the same Organization. However, unlinking retired email
+         *   addresses allows them to be subsequently re-used by other Organization Members. Retired email addresses can be
+         * unlinked
+         *   using the [Unlink Retired Email endpoint](https://stytch.com/docs/b2b/api/unlink-retired-member-email).
+         *
+         */
         @Json(name = "retired_email_addresses")
         val retiredEmailAddresses: List<RetiredEmail>,
         /**
@@ -544,8 +558,14 @@ public data class ResultsMetadata
 public data class RetiredEmail
     @JvmOverloads
     constructor(
+        /**
+         * The globally unique UUID of a Member's email.
+         */
         @Json(name = "email_id")
         val emailId: String,
+        /**
+         * The email address of the Member.
+         */
         @Json(name = "email_address")
         val emailAddress: String,
     )
