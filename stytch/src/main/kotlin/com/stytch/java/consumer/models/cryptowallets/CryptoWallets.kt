@@ -34,12 +34,15 @@ public data class SIWEParams
         @Json(name = "resources")
         val resources: List<String>,
         /**
-         * The EIP-155 Chain ID to which the session is bound. Defaults to 1.
+         * The EIP-155 Chain ID to which the session is bound. Defaults to 1. Must be the string representation of an integer
+         * between 1 and 9,223,372,036,854,775,771, inclusive.
          */
         @Json(name = "chain_id")
-        val chainId: Long? = null,
+        val chainId: String? = null,
         /**
-         * A human-readable ASCII assertion that the user will sign.
+         * A human-readable ASCII assertion that the user will sign. The statement may only include reserved, unreserved, or space
+         * characters according to RFC 3986 definitions, and must not contain other forms of whitespace such as newlines, tabs,
+         * and carriage returns.
          */
         @Json(name = "statement")
         val statement: String? = null,
@@ -56,7 +59,8 @@ public data class SIWEParams
         @Json(name = "not_before")
         val notBefore: Instant? = null,
         /**
-         * A system-specific identifier that may be used to uniquely refer to the sign-in request.
+         * A system-specific identifier that may be used to uniquely refer to the sign-in request. The `message_request_id` must
+         * be a valid pchar according to RFC 3986 definitions.
          */
         @Json(name = "message_request_id")
         val messageRequestId: String? = null,
@@ -272,7 +276,7 @@ public data class SIWEParamsResponse
          * The EIP-155 Chain ID to which the session is bound.
          */
         @Json(name = "chain_id")
-        val chainId: Int,
+        val chainId: String,
         /**
          *  A list of information or references to information the user wishes to have resolved as part of authentication. Every
          * resource must be an RFC 3986 URI.
