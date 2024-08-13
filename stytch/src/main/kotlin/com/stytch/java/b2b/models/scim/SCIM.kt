@@ -73,6 +73,16 @@ public data class Group
     )
 
 @JsonClass(generateAdapter = true)
+public data class IMs
+    @JvmOverloads
+    constructor(
+        @Json(name = "value")
+        val value: String,
+        @Json(name = "type")
+        val type: String,
+    )
+
+@JsonClass(generateAdapter = true)
 public data class Manager
     @JvmOverloads
     constructor(
@@ -150,6 +160,8 @@ public data class SCIMAttributes
         val phoneNumbers: List<PhoneNumber>,
         @Json(name = "addresses")
         val addresses: List<Address>,
+        @Json(name = "ims")
+        val ims: List<IMs>,
         @Json(name = "name")
         val name: Name? = null,
         @Json(name = "enterprise_extension")
@@ -272,6 +284,9 @@ public data class SCIMGroupImplicitRoleAssignments
          */
         @Json(name = "role_id")
         val roleId: String,
+        /**
+         * The ID of the group.
+         */
         @Json(name = "group_id")
         val groupId: String,
         @Json(name = "group_name")

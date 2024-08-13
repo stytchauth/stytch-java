@@ -579,7 +579,7 @@ public data class UpdateRequest
         @Json(name = "identity_provider")
         val identityProvider: UpdateRequestIdentityProvider? = null,
         /**
-         * An array of SCIM group implicit role assignments. Each object in the array must contain a `group` and a `role_id`.
+         * An array of SCIM group implicit role assignments. Each object in the array must contain a `group_id` and a `role_id`.
          */
         @Json(name = "scim_group_implicit_role_assignments")
         val scimGroupImplicitRoleAssignments: List<SCIMGroupImplicitRoleAssignments>? = emptyList(),

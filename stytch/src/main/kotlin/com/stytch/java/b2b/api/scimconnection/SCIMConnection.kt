@@ -227,7 +227,7 @@ public interface Connection {
     ): CompletableFuture<StytchResult<CreateResponse>>
 
     /**
-     * Get SCIM Connections.
+     * Get SCIM Connection.
      */
     public suspend fun get(
         data: GetRequest,
@@ -235,7 +235,7 @@ public interface Connection {
     ): StytchResult<GetResponse>
 
     /**
-     * Get SCIM Connections.
+     * Get SCIM Connection.
      */
     public fun get(
         data: GetRequest,
@@ -244,7 +244,7 @@ public interface Connection {
     )
 
     /**
-     * Get SCIM Connections.
+     * Get SCIM Connection.
      */
     public fun getCompletable(
         data: GetRequest,
