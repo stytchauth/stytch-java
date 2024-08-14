@@ -519,6 +519,17 @@ public data class Organization
         @Json(name = "allowed_mfa_methods")
         val allowedMfaMethods: List<String>,
         /**
+         * The authentication setting that controls how a new Member can JIT provision into an organization by tenant. The
+         * accepted values are:
+         *
+         *   `RESTRICTED` – only new Members with tenants in `allowed_oauth_tenants` can JIT provision via tenant.
+         *
+         *   `NOT_ALLOWED` – disable JIT provisioning by OAuth Tenant.
+         *
+         */
+        @Json(name = "oauth_tenant_jit_provisioning")
+        val oauthTenantJITProvisioning: String,
+        /**
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */
         @Json(name = "trusted_metadata")
@@ -545,6 +556,12 @@ public data class Organization
          */
         @Json(name = "scim_active_connection")
         val scimActiveConnection: ActiveSCIMConnection? = null,
+        /**
+         * A map of allowed OAuth tenants. If this field is not passed in, the Organization will not allow JIT provisioning by
+         * OAuth Tenant. Allowed keys are "slack" and "hubspot".
+         */
+        @Json(name = "allowed_oauth_tenants")
+        val allowedOAuthTenants: Map<String, Any?>? = emptyMap(),
     )
 
 @JsonClass(generateAdapter = true)
@@ -808,6 +825,23 @@ public data class CreateRequest
          */
         @Json(name = "allowed_mfa_methods")
         val allowedMfaMethods: List<String>? = emptyList(),
+        /**
+         * The authentication setting that controls how a new Member can JIT provision into an organization by tenant. The
+         * accepted values are:
+         *
+         *   `RESTRICTED` – only new Members with tenants in `allowed_oauth_tenants` can JIT provision via tenant.
+         *
+         *   `NOT_ALLOWED` – disable JIT provisioning by OAuth Tenant.
+         *
+         */
+        @Json(name = "oauth_tenant_jit_provisioning")
+        val oauthTenantJITProvisioning: String? = null,
+        /**
+         * A map of allowed OAuth tenants. If this field is not passed in, the Organization will not allow JIT provisioning by
+         * OAuth Tenant. Allowed keys are "slack" and "hubspot".
+         */
+        @Json(name = "allowed_oauth_tenants")
+        val allowedOAuthTenants: Map<String, Any?>? = emptyMap(),
     )
 
 /**
@@ -1205,6 +1239,29 @@ public data class UpdateRequest
          */
         @Json(name = "allowed_mfa_methods")
         val allowedMfaMethods: List<String>? = emptyList(),
+        /**
+         * The authentication setting that controls how a new Member can JIT provision into an organization by tenant. The
+         * accepted values are:
+         *
+         *   `RESTRICTED` – only new Members with tenants in `allowed_oauth_tenants` can JIT provision via tenant.
+         *
+         *   `NOT_ALLOWED` – disable JIT provisioning by OAuth Tenant.
+         *
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.oauth-tenant-jit-provisioning` action on the `stytch.organization` Resource.
+         */
+        @Json(name = "oauth_tenant_jit_provisioning")
+        val oauthTenantJITProvisioning: String? = null,
+        /**
+         * A map of allowed OAuth tenants. If this field is not passed in, the Organization will not allow JIT provisioning by
+         * OAuth Tenant. Allowed keys are "slack" and "hubspot".
+         *
+         * If this field is provided and a session header is passed into the request, the Member Session must have permission to
+         * perform the `update.settings.allowed-oauth-tenants` action on the `stytch.organization` Resource.
+         */
+        @Json(name = "allowed_oauth_tenants")
+        val allowedOAuthTenants: Map<String, Any?>? = emptyMap(),
     )
 
 /**
