@@ -28,7 +28,6 @@ allprojects {
 buildscript {
     dependencies {
         classpath(libs.dokka)
-        classpath(enforcedPlatform("com.fasterxml.jackson:jackson-bom:2.17.2")) // Force upgrade Dokka dependency
     }
 }
 
