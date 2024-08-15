@@ -63,6 +63,18 @@ public data class EnterpriseExtension
     )
 
 @JsonClass(generateAdapter = true)
+public data class Entitlement
+    @JvmOverloads
+    constructor(
+        @Json(name = "value")
+        val value: String,
+        @Json(name = "type")
+        val type: String,
+        @Json(name = "primary")
+        val primary: Boolean,
+    )
+
+@JsonClass(generateAdapter = true)
 public data class Group
     @JvmOverloads
     constructor(
@@ -80,6 +92,8 @@ public data class IMs
         val value: String,
         @Json(name = "type")
         val type: String,
+        @Json(name = "primary")
+        val primary: Boolean,
     )
 
 @JsonClass(generateAdapter = true)
@@ -114,6 +128,30 @@ public data class Name
 
 @JsonClass(generateAdapter = true)
 public data class PhoneNumber
+    @JvmOverloads
+    constructor(
+        @Json(name = "value")
+        val value: String,
+        @Json(name = "type")
+        val type: String,
+        @Json(name = "primary")
+        val primary: Boolean,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class Photo
+    @JvmOverloads
+    constructor(
+        @Json(name = "value")
+        val value: String,
+        @Json(name = "type")
+        val type: String,
+        @Json(name = "primary")
+        val primary: Boolean,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class Role
     @JvmOverloads
     constructor(
         @Json(name = "value")
@@ -162,6 +200,14 @@ public data class SCIMAttributes
         val addresses: List<Address>,
         @Json(name = "ims")
         val ims: List<IMs>,
+        @Json(name = "photos")
+        val photos: List<Photo>,
+        @Json(name = "entitlements")
+        val entitlements: List<Entitlement>,
+        @Json(name = "roles")
+        val roles: List<Role>,
+        @Json(name = "x509certificates")
+        val x509Certificates: List<X509Certificate>,
         @Json(name = "name")
         val name: Name? = null,
         @Json(name = "enterprise_extension")
@@ -291,4 +337,16 @@ public data class SCIMGroupImplicitRoleAssignments
         val groupId: String,
         @Json(name = "group_name")
         val groupName: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class X509Certificate
+    @JvmOverloads
+    constructor(
+        @Json(name = "value")
+        val value: String,
+        @Json(name = "type")
+        val type: String,
+        @Json(name = "primary")
+        val primary: Boolean,
     )
