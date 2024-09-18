@@ -3,6 +3,7 @@ name: Publish
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   publish:
@@ -37,15 +38,15 @@ jobs:
           echo "diff=$FOUND" >> $GITHUB_OUTPUT
 
       - name: Release build
-        if: steps.diff.outputs.diff != 0
+        if: steps.diff.outputs.diff != 0 || ${{ github.event_name == 'workflow_dispatch' }}
         run: ./gradlew assemble
 
       - name: Source jar
-        if: steps.diff.outputs.diff != 0
+        if: steps.diff.outputs.diff != 0 || ${{ github.event_name == 'workflow_dispatch' }}
         run: ./gradlew kotlinSourcesJar
 
       - name: Publish to Maven Central
-        if: steps.diff.outputs.diff != 0
+        if: steps.diff.outputs.diff != 0 || ${{ github.event_name == 'workflow_dispatch' }}
         run: ./gradlew --info publishReleasePublicationToSonatypeRepository --max-workers 1 closeAndReleaseSonatypeStagingRepository
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
