@@ -22,7 +22,7 @@ import java.util.concurrent.CompletableFuture
 
 public interface ExistingPassword {
     /**
-     * Reset the member’s password using their existing password.
+     * Reset the’s password using their existing password.
      *
      * This endpoint adapts to your Project's password strength configuration.
      * If you're using [zxcvbn](https://stytch.com/docs/guides/passwords/strength-policy), the default, your passwords are
@@ -47,7 +47,7 @@ public interface ExistingPassword {
     public suspend fun reset(data: ResetRequest): StytchResult<ResetResponse>
 
     /**
-     * Reset the member’s password using their existing password.
+     * Reset the’s password using their existing password.
      *
      * This endpoint adapts to your Project's password strength configuration.
      * If you're using [zxcvbn](https://stytch.com/docs/guides/passwords/strength-policy), the default, your passwords are
@@ -75,7 +75,7 @@ public interface ExistingPassword {
     )
 
     /**
-     * Reset the member’s password using their existing password.
+     * Reset the’s password using their existing password.
      *
      * This endpoint adapts to your Project's password strength configuration.
      * If you're using [zxcvbn](https://stytch.com/docs/guides/passwords/strength-policy), the default, your passwords are

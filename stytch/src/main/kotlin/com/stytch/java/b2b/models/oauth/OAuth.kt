@@ -114,7 +114,7 @@ public data class AuthenticateRequest
         @Json(name = "pkce_code_verifier")
         val pkceCodeVerifier: String? = null,
         /**
-         * If the Member needs to complete an MFA step, and the Member has a phone number, this endpoint will pre-emptively send a
+         * If the needs to complete an MFA step, and the Member has a phone number, this endpoint will pre-emptively send a
          * one-time passcode (OTP) to the Member's phone number. The locale argument will be used to determine which language to
          * use when sending the passcode.
          *
@@ -240,6 +240,9 @@ public data class AuthenticateResponse
          */
         @Json(name = "mfa_required")
         val mfaRequired: MfaRequired? = null,
+        /**
+         * Information about the primary authentication requirements of the Organization.
+         */
         @Json(name = "primary_required")
         val primaryRequired: PrimaryRequired? = null,
     )

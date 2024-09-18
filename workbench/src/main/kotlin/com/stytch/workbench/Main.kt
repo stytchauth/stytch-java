@@ -3,12 +3,13 @@ import com.stytch.java.consumer.StytchClient
 import com.stytch.java.consumer.models.magiclinksemail.LoginOrCreateRequest
 
 suspend fun main() {
-    StytchClient.configure(
-        projectId = "project-test-....",
-        secret = "secret-test-....",
-    )
+    val stytchClient =
+        StytchClient(
+            projectId = "project-test-....",
+            secret = "secret-test-....",
+        )
     val result =
-        StytchClient.magicLinks.email.loginOrCreate(
+        stytchClient.magicLinks.email.loginOrCreate(
             LoginOrCreateRequest(
                 email = "email@address.com",
                 signupExpirationMinutes = 30,

@@ -26,13 +26,12 @@ public interface OAuth {
     public val discovery: Discovery
 
     /**
-     * Authenticate a Member given a `token`. This endpoint verifies that the member completed the OAuth flow by verifying
-     * that the token is valid and hasn't expired.  Provide the `session_duration_minutes` parameter to set the lifetime of
-     * the session. If the `session_duration_minutes` parameter is not specified, a Stytch session will be created with a 60
-     * minute duration.
+     * Authenticate a given a `token`. This endpoint verifies that the member completed the flow by verifying that the token
+     * is valid and hasn't expired.  Provide the `session_duration_minutes` parameter to set the lifetime of the session. If
+     * the `session_duration_minutes` parameter is not specified, a Stytch session will be created with a 60 minute duration.
      *
-     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
-     * will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the, the returned value of `member_authenticated` will be
+     * `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -43,6 +42,12 @@ public interface OAuth {
      * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      *
      * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
+     *
+     * If the Member is logging in via an OAuth provider that does not fully verify the email, the returned value of
+     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * The `primary_required` field details the authentication flow the Member must perform in order to
+     * [complete a step-up authentication](https://stytch.com/docs/b2b/guides/oauth/auth-flows) into the organization. The
+     * `intermediate_session_token` must be passed into that authentication flow.
      *
      * We’re actively accepting requests for new OAuth providers! Please [email us](mailto:support@stytch.com) or
      * [post in our community](https://stytch.com/docs/b2b/resources) if you are looking for an OAuth provider that is not
@@ -51,13 +56,12 @@ public interface OAuth {
     public suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse>
 
     /**
-     * Authenticate a Member given a `token`. This endpoint verifies that the member completed the OAuth flow by verifying
-     * that the token is valid and hasn't expired.  Provide the `session_duration_minutes` parameter to set the lifetime of
-     * the session. If the `session_duration_minutes` parameter is not specified, a Stytch session will be created with a 60
-     * minute duration.
+     * Authenticate a given a `token`. This endpoint verifies that the member completed the flow by verifying that the token
+     * is valid and hasn't expired.  Provide the `session_duration_minutes` parameter to set the lifetime of the session. If
+     * the `session_duration_minutes` parameter is not specified, a Stytch session will be created with a 60 minute duration.
      *
-     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
-     * will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the, the returned value of `member_authenticated` will be
+     * `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -68,6 +72,12 @@ public interface OAuth {
      * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      *
      * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
+     *
+     * If the Member is logging in via an OAuth provider that does not fully verify the email, the returned value of
+     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * The `primary_required` field details the authentication flow the Member must perform in order to
+     * [complete a step-up authentication](https://stytch.com/docs/b2b/guides/oauth/auth-flows) into the organization. The
+     * `intermediate_session_token` must be passed into that authentication flow.
      *
      * We’re actively accepting requests for new OAuth providers! Please [email us](mailto:support@stytch.com) or
      * [post in our community](https://stytch.com/docs/b2b/resources) if you are looking for an OAuth provider that is not
@@ -79,13 +89,12 @@ public interface OAuth {
     )
 
     /**
-     * Authenticate a Member given a `token`. This endpoint verifies that the member completed the OAuth flow by verifying
-     * that the token is valid and hasn't expired.  Provide the `session_duration_minutes` parameter to set the lifetime of
-     * the session. If the `session_duration_minutes` parameter is not specified, a Stytch session will be created with a 60
-     * minute duration.
+     * Authenticate a given a `token`. This endpoint verifies that the member completed the flow by verifying that the token
+     * is valid and hasn't expired.  Provide the `session_duration_minutes` parameter to set the lifetime of the session. If
+     * the `session_duration_minutes` parameter is not specified, a Stytch session will be created with a 60 minute duration.
      *
-     * If the Member is required to complete MFA to log in to the Organization, the returned value of `member_authenticated`
-     * will be `false`, and an `intermediate_session_token` will be returned.
+     * If the Member is required to complete MFA to log in to the, the returned value of `member_authenticated` will be
+     * `false`, and an `intermediate_session_token` will be returned.
      * The `intermediate_session_token` can be passed into the
      * [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms) to complete the MFA step and
      * acquire a full member session.
@@ -96,6 +105,12 @@ public interface OAuth {
      * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      *
      * If a valid `session_token` or `session_jwt` is passed in, the Member will not be required to complete an MFA step.
+     *
+     * If the Member is logging in via an OAuth provider that does not fully verify the email, the returned value of
+     * `member_authenticated` will be `false`, and an `intermediate_session_token` will be returned.
+     * The `primary_required` field details the authentication flow the Member must perform in order to
+     * [complete a step-up authentication](https://stytch.com/docs/b2b/guides/oauth/auth-flows) into the organization. The
+     * `intermediate_session_token` must be passed into that authentication flow.
      *
      * We’re actively accepting requests for new OAuth providers! Please [email us](mailto:support@stytch.com) or
      * [post in our community](https://stytch.com/docs/b2b/resources) if you are looking for an OAuth provider that is not
