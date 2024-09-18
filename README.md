@@ -9,7 +9,7 @@ Check out our Java example app [here](https://github.com/stytchauth/stytch-java-
 ## Install
 
 ```
-implementation("com.stytch.java:sdk:1.1.0")
+implementation("com.stytch.java:sdk:6.0.0")
 ```
 
 ## Usage
@@ -51,7 +51,7 @@ Create an API client:
 Kotlin:
 ```kotlin
 import com.stytch.java.consumer.StytchClient
-StytchClient.configure(
+val client = StytchClient(
     projectId = "project-live-c60c0abe-c25a-4472-a9ed-320c6667d317",
     secret = "secret-live-80JASucyk7z_G8Z-7dVwZVGXL5NT_qGAQ2I="
 )
@@ -60,21 +60,21 @@ Java:
 
 ```java
 import com.stytch.java.consumer.StytchClient;
-StytchClient.configure(
-        "project-live-c60c0abe-c25a-4472-a9ed-320c6667d317",
-        "secret-live-80JASucyk7z_G8Z-7dVwZVGXL5NT_qGAQ2I="
-        );
+StytchClient client = new StytchClient(
+    "project-live-c60c0abe-c25a-4472-a9ed-320c6667d317",
+    "secret-live-80JASucyk7z_G8Z-7dVwZVGXL5NT_qGAQ2I="
+);
 ```
 
 Send a magic link by email:
 
 Kotlin:
 ```kotlin
-when (val result = StytchClient.magicLinks.email.loginOrCreate(
+when (val result = client.magicLinks.email.loginOrCreate(
     LoginOrCreateRequest(
         email = "email@address.com",
-        loginMagicLinkURL = "https://example.com/authenticate",
-        signupMagicLinkURL = "https://example.com/authenticate",
+        loginMagicLinkURL = "https://example.com/login",
+        signupMagicLinkURL = "https://example.com/signup",
     ),
 )) {
     is StytchResult.Success -> println(result.value)
@@ -85,23 +85,15 @@ Java:
 ```java
 LoginOrCreateRequest request = new LoginOrCreateRequest(
     "email@address.com",
-    "https://example.com/authenticate",
-    "https://example.com/authenticate",
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
+    "https://example.com/signup",
+    "https://example.com/login"
 );
-StytchResult<LoginOrCreateResponse> response = StytchClient.magicLinks.getEmail().loginOrCreateCompletable(request).get();
+StytchResult<LoginOrCreateResponse> response = client.magicLinks.getEmail().loginOrCreateCompletable(request).get();
 if (response instanceof StytchResult.Error) {
     var exception = ((StytchResult.Error) response).getException();
     System.out.println(exception.getReason());
 } else {
-    System.out.println(((StytchResult.Success<?>) response).getValue());
+    System.out.println(((StytchResult.Success<LoginOrCreateResponse>) response).getValue());
 }
 ```
 
@@ -109,7 +101,7 @@ Authenticate the token from the magic link:
 
 Kotlin:
 ```kotlin
-when (val result = StytchClient.magicLinks.authenticate(
+when (val result = client.magicLinks.authenticate(
     AuthenticateRequest(token = "DOYoip3rvIMMW5lgItikFK-Ak1CfMsgjuiCyI7uuU94=")
 )) {
     is StytchResult.Success -> println(result.value)
@@ -119,12 +111,12 @@ when (val result = StytchClient.magicLinks.authenticate(
 Java:
 ```java
 AuthenticateRequest request = new AuthenticateRequest("DOYoip3rvIMMW5lgItikFK-Ak1CfMsgjuiCyI7uuU94=");
-StytchResult<AuthenticateResponse> response = StytchClient.magicLinks.authenticateCompletable(request).get();
+StytchResult<AuthenticateResponse> response = client.magicLinks.authenticateCompletable(request).get();
 if (response instanceof StytchResult.Error) {
     var exception = ((StytchResult.Error) response).getException();
     System.out.println(exception.getReason());
 } else {
-    System.out.println(((StytchResult.Success<?>) response).getValue());
+    System.out.println(((StytchResult.Success<AuthenticateResponse>) response).getValue());
 }
 ```
 
@@ -136,7 +128,7 @@ Kotlin:
 ```kotlin
 import com.stytch.java.b2b.StytchB2BClient
 ...
-StytchB2BClient.configure(
+val client  = StytchB2BClient(
     projectId = "project-live-c60c0abe-c25a-4472-a9ed-320c6667d317",
     secret = "secret-live-80JASucyk7z_G8Z-7dVwZVGXL5NT_qGAQ2I="
 )
@@ -146,17 +138,17 @@ Java:
 ```java
 import com.stytch.java.b2b.StytchB2BClient;
 ...
-        StytchB2BClient.configure(
-        "project-live-c60c0abe-c25a-4472-a9ed-320c6667d317",
-        "secret-live-80JASucyk7z_G8Z-7dVwZVGXL5NT_qGAQ2I="
-        );
+StytchB2BClient client = new StytchB2BClient(
+    "project-live-c60c0abe-c25a-4472-a9ed-320c6667d317",
+    "secret-live-80JASucyk7z_G8Z-7dVwZVGXL5NT_qGAQ2I="
+);
 ```
 
 Create an organization
 
 Kotlin:
 ```kotlin
-when (val result = StytchB2BClient.organizations.create(CreateRequest(
+when (val result = client.organizations.create(CreateRequest(
     organizationName = "Acme Co",
     organizationSlug = "acme-co",
     emailAllowedDomains = listOf("acme.co"),
@@ -172,17 +164,14 @@ emailAllowedDomains.add("acme.co");
 CreateRequest request = new CreateRequest(
         "Acme Co",
         "acme-co",
-        null,
-        null,
-        null,
         emailAllowedDomains
 );
-StytchResult<CreateResponse> response = StytchB2BClient.organizations.createCompletable(request).get();
+StytchResult<CreateResponse> response = client.organizations.createCompletable(request).get();
 if (response instanceof StytchResult.Error) {
     var exception = ((StytchResult.Error) response).getException();
     System.out.println(exception.getReason());
 } else {
-    System.out.println(((StytchResult.Success<?>) response).getValue());
+    System.out.println(((StytchResult.Success<CreateResponse>) response).getValue());
 }
 ```
 
@@ -190,7 +179,7 @@ Log the first user into the organization
 
 Kotlin:
 ```kotlin
-when (val result = StytchB2BClient.magicLinks.email.loginOrSignup(LoginOrSignupRequest(
+when (val result = client.magicLinks.email.loginOrSignup(LoginOrSignupRequest(
     organizationId = "organization-id-from-create-response-...",
     emailAddress = "admin@acme.co",
     loginRedirectURL = "https://example.com/authenticate",
@@ -208,12 +197,12 @@ LoginOrSignupRequest request = new LoginOrSignupRequest(
     "https://example.com/authenticate",
     "https://example.com/authenticate"
 );
-StytchResult<LoginOrSignupResponse> response = StytchB2BClient.magicLinks.getEmail().loginOrSignup(request).get();
+StytchResult<LoginOrSignupResponse> response = client.magicLinks.getEmail().loginOrSignup(request).get();
 if (response instanceof StytchResult.Error) {
     var exception = ((StytchResult.Error) response).getException();
     System.out.println(exception.getReason());
 } else {
-    System.out.println(((StytchResult.Success<?>) response).getValue());
+    System.out.println(((StytchResult.Success<LoginOrSignupResponse>) response).getValue());
 }
 ```
 

@@ -22,14 +22,14 @@ import java.util.concurrent.CompletableFuture
 
 public interface Discovery {
     /**
-     * Authenticates the Discovery OAuth token and exchanges it for an Intermediate Session Token. Intermediate Session Tokens
-     * can be used for various Discovery login flows and are valid for 10 minutes.
+     * Authenticates the Discovery token and exchanges it for an Intermediate Session Token. Intermediate Session Tokens can
+     * be used for various Discovery login flows and are valid for 10 minutes.
      */
     public suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse>
 
     /**
-     * Authenticates the Discovery OAuth token and exchanges it for an Intermediate Session Token. Intermediate Session Tokens
-     * can be used for various Discovery login flows and are valid for 10 minutes.
+     * Authenticates the Discovery token and exchanges it for an Intermediate Session Token. Intermediate Session Tokens can
+     * be used for various Discovery login flows and are valid for 10 minutes.
      */
     public fun authenticate(
         data: AuthenticateRequest,
@@ -37,8 +37,8 @@ public interface Discovery {
     )
 
     /**
-     * Authenticates the Discovery OAuth token and exchanges it for an Intermediate Session Token. Intermediate Session Tokens
-     * can be used for various Discovery login flows and are valid for 10 minutes.
+     * Authenticates the Discovery token and exchanges it for an Intermediate Session Token. Intermediate Session Tokens can
+     * be used for various Discovery login flows and are valid for 10 minutes.
      */
     public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }

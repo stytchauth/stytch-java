@@ -43,6 +43,18 @@ public data class Connection
         val displayName: String,
         @Json(name = "status")
         val status: String,
+        @Json(name = "external_connection_implicit_role_assignments")
+        val externalConnectionImplicitRoleAssignments: List<ConnectionImplicitRoleAssignment>,
+        @Json(name = "external_group_implicit_role_assignments")
+        val externalGroupImplicitRoleAssignments: List<GroupImplicitRoleAssignment>,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class ConnectionImplicitRoleAssignment
+    @JvmOverloads
+    constructor(
+        @Json(name = "role_id")
+        val roleId: String,
     )
 
 public data class DeleteConnectionRequestOptions
@@ -82,6 +94,16 @@ public data class GetConnectionsRequestOptions
             return res + headers
         }
     }
+
+@JsonClass(generateAdapter = true)
+public data class GroupImplicitRoleAssignment
+    @JvmOverloads
+    constructor(
+        @Json(name = "role_id")
+        val roleId: String,
+        @Json(name = "group")
+        val group: String,
+    )
 
 @JsonClass(generateAdapter = true)
 public data class OIDCConnection
@@ -270,7 +292,7 @@ public data class AuthenticateRequest
         @Json(name = "session_custom_claims")
         val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
         /**
-         * If the Member needs to complete an MFA step, and the Member has a phone number, this endpoint will pre-emptively send a
+         * If the needs to complete an MFA step, and the Member has a phone number, this endpoint will pre-emptively send a
          * one-time passcode (OTP) to the Member's phone number. The locale argument will be used to determine which language to
          * use when sending the passcode.
          *

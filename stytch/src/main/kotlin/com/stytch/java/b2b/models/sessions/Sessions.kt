@@ -130,10 +130,9 @@ public data class PrimaryRequired
     @JvmOverloads
     constructor(
         /**
-         * If non-empty, indicates that the Organization restricts the authentication methods it allows for login (such as `sso`
-         * or `password`), and the end user must complete one of those authentication methods to log in. If empty, indicates that
-         * the Organization does not restrict the authentication method it allows for login, but the end user does not have any
-         * transferrable primary factors. Only email magic link and OAuth factors can be transferred between Organizations.
+         * Details the auth method that the member must also complete to fulfill the primary authentication requirements of the
+         * Organization. For example, a value of `[magic_link]` indicates that the Member must also complete a magic link
+         * authentication step. If you have an intermediate session token, you must pass it into that primary authentication step.
          */
         @Json(name = "allowed_auth_methods")
         val allowedAuthMethods: List<String>,
@@ -327,7 +326,7 @@ public data class ExchangeRequest
         @Json(name = "session_custom_claims")
         val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
         /**
-         * If the Member needs to complete an MFA step, and the Member has a phone number, this endpoint will pre-emptively send a
+         * If the needs to complete an MFA step, and the Member has a phone number, this endpoint will pre-emptively send a
          * one-time passcode (OTP) to the Member's phone number. The locale argument will be used to determine which language to
          * use when sending the passcode.
          *

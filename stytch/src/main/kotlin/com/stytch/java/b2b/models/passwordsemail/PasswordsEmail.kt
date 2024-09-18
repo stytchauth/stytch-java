@@ -107,7 +107,7 @@ public data class ResetRequest
         @Json(name = "session_custom_claims")
         val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
         /**
-         * If the Member needs to complete an MFA step, and the Member has a phone number, this endpoint will pre-emptively send a
+         * If the needs to complete an MFA step, and the Member has a phone number, this endpoint will pre-emptively send a
          * one-time passcode (OTP) to the Member's phone number. The locale argument will be used to determine which language to
          * use when sending the passcode.
          *

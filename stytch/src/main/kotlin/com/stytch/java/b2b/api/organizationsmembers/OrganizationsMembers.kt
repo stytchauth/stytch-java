@@ -56,7 +56,7 @@ public interface Members {
     public val oauthProviders: OAuthProviders
 
     /**
-     * Updates a Member specified by `organization_id` and `member_id`.
+     * Updates a specified by `organization_id` and `member_id`.
      */
     public suspend fun update(
         data: UpdateRequest,
@@ -64,7 +64,7 @@ public interface Members {
     ): StytchResult<UpdateResponse>
 
     /**
-     * Updates a Member specified by `organization_id` and `member_id`.
+     * Updates a specified by `organization_id` and `member_id`.
      */
     public fun update(
         data: UpdateRequest,
@@ -73,7 +73,7 @@ public interface Members {
     )
 
     /**
-     * Updates a Member specified by `organization_id` and `member_id`.
+     * Updates a specified by `organization_id` and `member_id`.
      */
     public fun updateCompletable(
         data: UpdateRequest,
@@ -81,7 +81,7 @@ public interface Members {
     ): CompletableFuture<StytchResult<UpdateResponse>>
 
     /**
-     * Deletes a Member specified by `organization_id` and `member_id`.
+     * Deletes a specified by `organization_id` and `member_id`.
      */
     public suspend fun delete(
         data: DeleteRequest,
@@ -89,7 +89,7 @@ public interface Members {
     ): StytchResult<DeleteResponse>
 
     /**
-     * Deletes a Member specified by `organization_id` and `member_id`.
+     * Deletes a specified by `organization_id` and `member_id`.
      */
     public fun delete(
         data: DeleteRequest,
@@ -98,7 +98,7 @@ public interface Members {
     )
 
     /**
-     * Deletes a Member specified by `organization_id` and `member_id`.
+     * Deletes a specified by `organization_id` and `member_id`.
      */
     public fun deleteCompletable(
         data: DeleteRequest,
@@ -106,7 +106,7 @@ public interface Members {
     ): CompletableFuture<StytchResult<DeleteResponse>>
 
     /**
-     * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
+     * Reactivates a deleted's status and its associated email status (if applicable) to active, specified by
      * `organization_id` and `member_id`.
      */
     public suspend fun reactivate(
@@ -115,7 +115,7 @@ public interface Members {
     ): StytchResult<ReactivateResponse>
 
     /**
-     * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
+     * Reactivates a deleted's status and its associated email status (if applicable) to active, specified by
      * `organization_id` and `member_id`.
      */
     public fun reactivate(
@@ -125,7 +125,7 @@ public interface Members {
     )
 
     /**
-     * Reactivates a deleted Member's status and its associated email status (if applicable) to active, specified by
+     * Reactivates a deleted's status and its associated email status (if applicable) to active, specified by
      * `organization_id` and `member_id`.
      */
     public fun reactivateCompletable(
@@ -134,7 +134,7 @@ public interface Members {
     ): CompletableFuture<StytchResult<ReactivateResponse>>
 
     /**
-     * Delete a Member's MFA phone number.
+     * Delete a's MFA phone number.
      *
      * To change a Member's phone number, you must first call this endpoint to delete the existing phone number.
      *
@@ -151,7 +151,7 @@ public interface Members {
     ): StytchResult<DeleteMFAPhoneNumberResponse>
 
     /**
-     * Delete a Member's MFA phone number.
+     * Delete a's MFA phone number.
      *
      * To change a Member's phone number, you must first call this endpoint to delete the existing phone number.
      *
@@ -169,7 +169,7 @@ public interface Members {
     )
 
     /**
-     * Delete a Member's MFA phone number.
+     * Delete a's MFA phone number.
      *
      * To change a Member's phone number, you must first call this endpoint to delete the existing phone number.
      *
@@ -260,7 +260,7 @@ public interface Members {
     ): CompletableFuture<StytchResult<SearchResponse>>
 
     /**
-     * Delete a Member's password.
+     * Delete a's password.
      */
     public suspend fun deletePassword(
         data: DeletePasswordRequest,
@@ -268,7 +268,7 @@ public interface Members {
     ): StytchResult<DeletePasswordResponse>
 
     /**
-     * Delete a Member's password.
+     * Delete a's password.
      */
     public fun deletePassword(
         data: DeletePasswordRequest,
@@ -277,7 +277,7 @@ public interface Members {
     )
 
     /**
-     * Delete a Member's password.
+     * Delete a's password.
      */
     public fun deletePasswordCompletable(
         data: DeletePasswordRequest,
@@ -309,7 +309,7 @@ public interface Members {
     public fun dangerouslyGetCompletable(data: DangerouslyGetRequest): CompletableFuture<StytchResult<GetResponse>>
 
     /**
-     * Unlinks a retired email address from a Member specified by their `organization_id` and `member_id`. The email address
+     * Unlinks a retired email address from a specified by their `organization_id` and `member_id`. The email address
      * to be retired can be identified in the request body by either its `email_id`, its `email_address`, or both. If using
      * both identifiers they must refer to the same email.
      *
@@ -330,7 +330,7 @@ public interface Members {
     ): StytchResult<UnlinkRetiredEmailResponse>
 
     /**
-     * Unlinks a retired email address from a Member specified by their `organization_id` and `member_id`. The email address
+     * Unlinks a retired email address from a specified by their `organization_id` and `member_id`. The email address
      * to be retired can be identified in the request body by either its `email_id`, its `email_address`, or both. If using
      * both identifiers they must refer to the same email.
      *
@@ -352,7 +352,7 @@ public interface Members {
     )
 
     /**
-     * Unlinks a retired email address from a Member specified by their `organization_id` and `member_id`. The email address
+     * Unlinks a retired email address from a specified by their `organization_id` and `member_id`. The email address
      * to be retired can be identified in the request body by either its `email_id`, its `email_address`, or both. If using
      * both identifiers they must refer to the same email.
      *
@@ -373,7 +373,7 @@ public interface Members {
     ): CompletableFuture<StytchResult<UnlinkRetiredEmailResponse>>
 
     /**
-     * Creates a Member. An `organization_id` and `email_address` are required.
+     * Creates a. An `organization_id` and `email_address` are required.
      */
     public suspend fun create(
         data: CreateRequest,
@@ -381,7 +381,7 @@ public interface Members {
     ): StytchResult<CreateResponse>
 
     /**
-     * Creates a Member. An `organization_id` and `email_address` are required.
+     * Creates a. An `organization_id` and `email_address` are required.
      */
     public fun create(
         data: CreateRequest,
@@ -390,7 +390,7 @@ public interface Members {
     )
 
     /**
-     * Creates a Member. An `organization_id` and `email_address` are required.
+     * Creates a. An `organization_id` and `email_address` are required.
      */
     public fun createCompletable(
         data: CreateRequest,

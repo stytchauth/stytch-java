@@ -72,7 +72,7 @@ public interface Email {
     public fun resetStartCompletable(data: ResetStartRequest): CompletableFuture<StytchResult<ResetStartResponse>>
 
     /**
-     * Reset the member's password and authenticate them. This endpoint checks that the password reset token is valid, hasn’t
+     * Reset the's password and authenticate them. This endpoint checks that the password reset token is valid, hasn’t
      * expired, or already been used.
      *
      * The provided password needs to meet our password strength requirements, which can be checked in advance with the
@@ -93,7 +93,7 @@ public interface Email {
     public suspend fun reset(data: ResetRequest): StytchResult<ResetResponse>
 
     /**
-     * Reset the member's password and authenticate them. This endpoint checks that the password reset token is valid, hasn’t
+     * Reset the's password and authenticate them. This endpoint checks that the password reset token is valid, hasn’t
      * expired, or already been used.
      *
      * The provided password needs to meet our password strength requirements, which can be checked in advance with the
@@ -117,7 +117,7 @@ public interface Email {
     )
 
     /**
-     * Reset the member's password and authenticate them. This endpoint checks that the password reset token is valid, hasn’t
+     * Reset the's password and authenticate them. This endpoint checks that the password reset token is valid, hasn’t
      * expired, or already been used.
      *
      * The provided password needs to meet our password strength requirements, which can be checked in advance with the

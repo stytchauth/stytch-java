@@ -294,6 +294,9 @@ public data class CreateResponse
          */
         @Json(name = "mfa_required")
         val mfaRequired: MfaRequired? = null,
+        /**
+         * Information about the primary authentication requirements of the Organization.
+         */
         @Json(name = "primary_required")
         val primaryRequired: PrimaryRequired? = null,
     )
