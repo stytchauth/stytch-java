@@ -36,6 +36,7 @@ import kotlinx.coroutines.SupervisorJob
 import org.jose4j.jwk.HttpsJwks
 
 public class StytchClient(projectId: String, secret: String) {
+    private val coroutineScope = CoroutineScope(SupervisorJob())
     private val baseUrl = getBaseUrl(projectId)
     private val httpClient: HttpClient =
         HttpClient(
@@ -50,8 +51,6 @@ public class StytchClient(projectId: String, secret: String) {
             issuer = "stytch.com/$projectId",
             type = "JWT",
         )
-
-    private val coroutineScope = CoroutineScope(SupervisorJob())
 
     @JvmField
     public val cryptoWallets: CryptoWallets = CryptoWalletsImpl(httpClient, coroutineScope)

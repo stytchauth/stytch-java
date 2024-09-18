@@ -43,6 +43,7 @@ import kotlinx.coroutines.SupervisorJob
 import org.jose4j.jwk.HttpsJwks
 
 public class StytchB2BClient(projectId: String, secret: String) {
+    private val coroutineScope = CoroutineScope(SupervisorJob())
     private val baseUrl = getBaseUrl(projectId)
     private val httpClient: HttpClient =
         HttpClient(
@@ -58,8 +59,6 @@ public class StytchB2BClient(projectId: String, secret: String) {
             type = "JWT",
         )
     private val policyCache: PolicyCache = PolicyCache(RBACImpl(httpClient, coroutineScope))
-
-    private val coroutineScope = CoroutineScope(SupervisorJob())
 
     @JvmField
     public val discovery: Discovery = DiscoveryImpl(httpClient, coroutineScope)
