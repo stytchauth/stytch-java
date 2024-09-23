@@ -436,7 +436,7 @@ public interface Sessions {
      * The value for leeway is the maximum allowable difference when comparing
      * timestamps. It defaults to zero.
      */
-    public suspend fun authenticateJwtLocalCompletable(
+    public fun authenticateJwtLocalCompletable(
         jwt: String,
         maxTokenAgeSeconds: Int?,
         authorizationCheck: AuthorizationCheck? = null,
@@ -715,7 +715,7 @@ internal class SessionsImpl(
         }
     }
 
-    override suspend fun authenticateJwtLocalCompletable(
+    override fun authenticateJwtLocalCompletable(
         jwt: String,
         maxTokenAgeSeconds: Int?,
         authorizationCheck: AuthorizationCheck?,
