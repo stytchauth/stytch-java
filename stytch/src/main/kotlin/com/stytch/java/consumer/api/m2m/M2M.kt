@@ -148,9 +148,7 @@ public interface M2M {
      * Stytch client library. You may pass in an optional set of scopes that the JWT must contain in
      * order to enforce permissions.
      */
-    public suspend fun authenticateTokenCompletable(
-        data: AuthenticateTokenRequest,
-    ): CompletableFuture<StytchResult<AuthenticateTokenResponse>>
+    public fun authenticateTokenCompletable(data: AuthenticateTokenRequest): CompletableFuture<StytchResult<AuthenticateTokenResponse>>
     // ENDMANUAL(AuthenticateM2MToken)
 }
 
@@ -241,9 +239,7 @@ internal class M2MImpl(
         coroutineScope.launch { callback(authenticateToken(data)) }
     }
 
-    override suspend fun authenticateTokenCompletable(
-        data: AuthenticateTokenRequest,
-    ): CompletableFuture<StytchResult<AuthenticateTokenResponse>> {
+    override fun authenticateTokenCompletable(data: AuthenticateTokenRequest): CompletableFuture<StytchResult<AuthenticateTokenResponse>> {
         return coroutineScope.async { authenticateToken(data) }.asCompletableFuture()
     }
 
