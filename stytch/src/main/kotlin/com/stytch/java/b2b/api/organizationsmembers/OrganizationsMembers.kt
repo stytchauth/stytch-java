@@ -107,7 +107,8 @@ public interface Members {
 
     /**
      * Reactivates a deleted's status and its associated email status (if applicable) to active, specified by
-     * `organization_id` and `member_id`.
+     * `organization_id` and `member_id`. This endpoint will only work for Members with at least one verified email where
+     * their `email_address_verified` is `true`.
      */
     public suspend fun reactivate(
         data: ReactivateRequest,
@@ -116,7 +117,8 @@ public interface Members {
 
     /**
      * Reactivates a deleted's status and its associated email status (if applicable) to active, specified by
-     * `organization_id` and `member_id`.
+     * `organization_id` and `member_id`. This endpoint will only work for Members with at least one verified email where
+     * their `email_address_verified` is `true`.
      */
     public fun reactivate(
         data: ReactivateRequest,
@@ -126,7 +128,8 @@ public interface Members {
 
     /**
      * Reactivates a deleted's status and its associated email status (if applicable) to active, specified by
-     * `organization_id` and `member_id`.
+     * `organization_id` and `member_id`. This endpoint will only work for Members with at least one verified email where
+     * their `email_address_verified` is `true`.
      */
     public fun reactivateCompletable(
         data: ReactivateRequest,
