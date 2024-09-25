@@ -42,65 +42,91 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import org.jose4j.jwk.HttpsJwks
 
-public class StytchB2BClient(projectId: String, secret: String) {
-    private val coroutineScope = CoroutineScope(SupervisorJob())
-    private val baseUrl = getBaseUrl(projectId)
-    private val httpClient: HttpClient =
-        HttpClient(
-            baseUrl = baseUrl,
-            projectId = projectId,
-            secret = secret,
-        )
-    private val httpsJwks = HttpsJwks("$baseUrl/v1/b2b/sessions/jwks/$projectId")
-    private val jwtOptions: JwtOptions =
-        JwtOptions(
-            audience = projectId,
-            issuer = "stytch.com/$projectId",
-            type = "JWT",
-        )
-    private val policyCache: PolicyCache = PolicyCache(RBACImpl(httpClient, coroutineScope))
+public object StytchB2BClient {
+    private lateinit var httpClient: HttpClient
+    private lateinit var httpsJwks: HttpsJwks
+    private lateinit var jwtOptions: JwtOptions
+    private lateinit var policyCache: PolicyCache
 
-    @JvmField
-    public val discovery: Discovery = DiscoveryImpl(httpClient, coroutineScope)
+    @JvmStatic
+    public lateinit var discovery: Discovery
 
-    @JvmField
-    public val m2m: M2M = M2MImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
+    @JvmStatic
+    public lateinit var m2m: M2M
 
-    @JvmField
-    public val magicLinks: MagicLinks = MagicLinksImpl(httpClient, coroutineScope)
+    @JvmStatic
+    public lateinit var magicLinks: MagicLinks
 
-    @JvmField
-    public val oauth: OAuth = OAuthImpl(httpClient, coroutineScope)
+    @JvmStatic
+    public lateinit var oauth: OAuth
 
-    @JvmField
-    public val otps: OTPs = OTPsImpl(httpClient, coroutineScope)
+    @JvmStatic
+    public lateinit var otps: OTPs
 
-    @JvmField
-    public val organizations: Organizations = OrganizationsImpl(httpClient, coroutineScope)
+    @JvmStatic
+    public lateinit var organizations: Organizations
 
-    @JvmField
-    public val passwords: Passwords = PasswordsImpl(httpClient, coroutineScope)
+    @JvmStatic
+    public lateinit var passwords: Passwords
 
-    @JvmField
-    public val project: Project = ProjectImpl(httpClient, coroutineScope)
+    @JvmStatic
+    public lateinit var project: Project
 
-    @JvmField
-    public val rbac: RBAC = RBACImpl(httpClient, coroutineScope)
+    @JvmStatic
+    public lateinit var rbac: RBAC
 
-    @JvmField
-    public val recoveryCodes: RecoveryCodes = RecoveryCodesImpl(httpClient, coroutineScope)
+    @JvmStatic
+    public lateinit var recoveryCodes: RecoveryCodes
 
-    @JvmField
-    public val scim: SCIM = SCIMImpl(httpClient, coroutineScope)
+    @JvmStatic
+    public lateinit var scim: SCIM
 
-    @JvmField
-    public val sso: SSO = SSOImpl(httpClient, coroutineScope)
+    @JvmStatic
+    public lateinit var sso: SSO
 
-    @JvmField
-    public val sessions: Sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions, policyCache)
+    @JvmStatic
+    public lateinit var sessions: Sessions
 
-    @JvmField
-    public val totps: TOTPs = TOTPsImpl(httpClient, coroutineScope)
+    @JvmStatic
+    public lateinit var totps: TOTPs
+
+    @JvmStatic
+    public fun configure(
+        projectId: String,
+        secret: String,
+    ) {
+        val baseUrl = getBaseUrl(projectId)
+        httpClient =
+            HttpClient(
+                baseUrl = baseUrl,
+                projectId = projectId,
+                secret = secret,
+            )
+        jwtOptions =
+            JwtOptions(
+                audience = projectId,
+                issuer = "stytch.com/$projectId",
+                type = "JWT",
+            )
+        val coroutineScope = CoroutineScope(SupervisorJob())
+        httpsJwks = HttpsJwks("$baseUrl/v1/b2b/sessions/jwks/$projectId")
+        policyCache = PolicyCache(RBACImpl(httpClient, coroutineScope))
+
+        discovery = DiscoveryImpl(httpClient, coroutineScope)
+        m2m = M2MImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
+        magicLinks = MagicLinksImpl(httpClient, coroutineScope)
+        oauth = OAuthImpl(httpClient, coroutineScope)
+        otps = OTPsImpl(httpClient, coroutineScope)
+        organizations = OrganizationsImpl(httpClient, coroutineScope)
+        passwords = PasswordsImpl(httpClient, coroutineScope)
+        project = ProjectImpl(httpClient, coroutineScope)
+        rbac = RBACImpl(httpClient, coroutineScope)
+        recoveryCodes = RecoveryCodesImpl(httpClient, coroutineScope)
+        scim = SCIMImpl(httpClient, coroutineScope)
+        sso = SSOImpl(httpClient, coroutineScope)
+        sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions, policyCache)
+        totps = TOTPsImpl(httpClient, coroutineScope)
+    }
 
     /**
      * Resolve the base URL for the Stytch API environment.

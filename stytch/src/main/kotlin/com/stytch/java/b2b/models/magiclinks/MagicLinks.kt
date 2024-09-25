@@ -164,11 +164,6 @@ public data class AuthenticateResponse
         @Json(name = "session_jwt")
         val sessionJwt: String,
         /**
-         * The [Session object](https://stytch.com/docs/b2b/api/session-object).
-         */
-        @Json(name = "member_session")
-        val memberSession: MemberSession,
-        /**
          * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
          */
         @Json(name = "organization")
@@ -199,6 +194,11 @@ public data class AuthenticateResponse
          */
         @Json(name = "status_code")
         val statusCode: Int,
+        /**
+         * The [Session object](https://stytch.com/docs/b2b/api/session-object).
+         */
+        @Json(name = "member_session")
+        val memberSession: MemberSession? = null,
         /**
          * Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
          */
