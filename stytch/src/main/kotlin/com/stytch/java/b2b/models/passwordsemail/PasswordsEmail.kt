@@ -37,32 +37,6 @@ public enum class ResetStartRequestLocale {
     PTBR,
 }
 
-@JsonClass(generateAdapter = true)
-public data class DeleteRequest
-    @JvmOverloads
-    constructor(
-        @Json(name = "email_address")
-        val emailAddress: String,
-        @Json(name = "organization_id")
-        val organizationId: String? = null,
-        @Json(name = "member_id")
-        val memberId: String? = null,
-    )
-
-@JsonClass(generateAdapter = true)
-public data class DeleteResponse
-    @JvmOverloads
-    constructor(
-        @Json(name = "member")
-        val member: Member,
-        @Json(name = "organization")
-        val organization: Organization,
-        @Json(name = "status_code")
-        val statusCode: Int,
-        @Json(name = "member_id")
-        val memberId: String? = null,
-    )
-
 /**
 * Request type for `Email.reset`.
 */
