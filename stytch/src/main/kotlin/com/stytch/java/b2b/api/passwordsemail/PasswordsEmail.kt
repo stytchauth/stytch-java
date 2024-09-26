@@ -7,6 +7,8 @@ package com.stytch.java.b2b.api.passwordsemail
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.b2b.models.passwordsemail.DeleteRequest
+import com.stytch.java.b2b.models.passwordsemail.DeleteResponse
 import com.stytch.java.b2b.models.passwordsemail.ResetRequest
 import com.stytch.java.b2b.models.passwordsemail.ResetResponse
 import com.stytch.java.b2b.models.passwordsemail.ResetStartRequest
@@ -136,6 +138,15 @@ public interface Email {
      * Note that a successful password reset by email will revoke all active sessions for the `member_id`.
      */
     public fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>>
+
+    public suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse>
+
+    public fun delete(
+        data: DeleteRequest,
+        callback: (StytchResult<DeleteResponse>) -> Unit,
+    )
+
+    public fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>>
 }
 
 internal class EmailImpl(
@@ -186,5 +197,27 @@ internal class EmailImpl(
     override fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>> =
         coroutineScope.async {
             reset(data)
+        }.asCompletableFuture()
+
+    override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
+            val asJson = moshi.adapter(DeleteRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/passwords/email/delete", asJson, headers)
+        }
+
+    override fun delete(
+        data: DeleteRequest,
+        callback: (StytchResult<DeleteResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(delete(data))
+        }
+    }
+
+    override fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>> =
+        coroutineScope.async {
+            delete(data)
         }.asCompletableFuture()
 }
