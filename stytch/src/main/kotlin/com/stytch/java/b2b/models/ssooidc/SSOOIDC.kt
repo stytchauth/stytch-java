@@ -198,6 +198,10 @@ public data class UpdateConnectionRequest
          */
         @Json(name = "identity_provider")
         val identityProvider: UpdateConnectionRequestIdentityProvider? = null,
+        @Json(name = "custom_scopes")
+        val customScopes: String? = null,
+        @Json(name = "attribute_mapping")
+        val attributeMapping: Map<String, Any?>? = emptyMap(),
     )
 
 /**
