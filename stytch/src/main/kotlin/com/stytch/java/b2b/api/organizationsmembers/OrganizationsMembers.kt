@@ -29,6 +29,8 @@ import com.stytch.java.b2b.models.organizationsmembers.DeleteTOTPRequestOptions
 import com.stytch.java.b2b.models.organizationsmembers.DeleteTOTPResponse
 import com.stytch.java.b2b.models.organizationsmembers.GetRequest
 import com.stytch.java.b2b.models.organizationsmembers.GetResponse
+import com.stytch.java.b2b.models.organizationsmembers.OIDCProviderInformationRequest
+import com.stytch.java.b2b.models.organizationsmembers.OIDCProvidersResponse
 import com.stytch.java.b2b.models.organizationsmembers.ReactivateRequest
 import com.stytch.java.b2b.models.organizationsmembers.ReactivateRequestOptions
 import com.stytch.java.b2b.models.organizationsmembers.ReactivateResponse
@@ -310,6 +312,15 @@ public interface Members {
      * attacks. We recommend using the [Get Member](https://stytch.com/docs/b2b/api/get-member) API instead.
      */
     public fun dangerouslyGetCompletable(data: DangerouslyGetRequest): CompletableFuture<StytchResult<GetResponse>>
+
+    public suspend fun oidcProviders(data: OIDCProviderInformationRequest): StytchResult<OIDCProvidersResponse>
+
+    public fun oidcProviders(
+        data: OIDCProviderInformationRequest,
+        callback: (StytchResult<OIDCProvidersResponse>) -> Unit,
+    )
+
+    public fun oidcProvidersCompletable(data: OIDCProviderInformationRequest): CompletableFuture<StytchResult<OIDCProvidersResponse>>
 
     /**
      * Unlinks a retired email address from a specified by their `organization_id` and `member_id`. The email address
@@ -670,6 +681,31 @@ internal class MembersImpl(
     override fun dangerouslyGetCompletable(data: DangerouslyGetRequest): CompletableFuture<StytchResult<GetResponse>> =
         coroutineScope.async {
             dangerouslyGet(data)
+        }.asCompletableFuture()
+
+    override suspend fun oidcProviders(data: OIDCProviderInformationRequest): StytchResult<OIDCProvidersResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
+            val asJson = moshi.adapter(OIDCProviderInformationRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/organizations/${data.organizationId}/members/${data.memberId}/oidc_providers", asMap, headers)
+        }
+
+    override fun oidcProviders(
+        data: OIDCProviderInformationRequest,
+        callback: (StytchResult<OIDCProvidersResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(oidcProviders(data))
+        }
+    }
+
+    override fun oidcProvidersCompletable(data: OIDCProviderInformationRequest): CompletableFuture<StytchResult<OIDCProvidersResponse>> =
+        coroutineScope.async {
+            oidcProviders(data)
         }.asCompletableFuture()
 
     override suspend fun unlinkRetiredEmail(

@@ -380,6 +380,26 @@ public data class OAuthRegistration
     )
 
 @JsonClass(generateAdapter = true)
+public data class OIDCProviderInfo
+    @JvmOverloads
+    constructor(
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+        @Json(name = "id_token")
+        val idToken: String,
+        @Json(name = "access_token")
+        val accessToken: String,
+        @Json(name = "access_token_expires_in")
+        val accessTokenExpiresIn: Int,
+        @Json(name = "scopes")
+        val scopes: List<String>,
+        @Json(name = "connection_id")
+        val connectionId: String,
+        @Json(name = "refresh_token")
+        val refreshToken: String? = null,
+    )
+
+@JsonClass(generateAdapter = true)
 public data class Organization
     @JvmOverloads
     constructor(

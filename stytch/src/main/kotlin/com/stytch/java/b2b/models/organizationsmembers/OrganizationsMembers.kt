@@ -9,6 +9,7 @@ package com.stytch.java.b2b.models.organizationsmembers
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.stytch.java.b2b.models.organizations.Member
+import com.stytch.java.b2b.models.organizations.OIDCProviderInfo
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.organizations.ResultsMetadata
 import com.stytch.java.b2b.models.organizations.SearchQuery
@@ -583,6 +584,30 @@ public data class GetResponse
          * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
          * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
          */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class OIDCProviderInformationRequest
+    @JvmOverloads
+    constructor(
+        @Json(name = "organization_id")
+        val organizationId: String,
+        @Json(name = "member_id")
+        val memberId: String,
+        @Json(name = "include_refresh_token")
+        val includeRefreshToken: Boolean? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class OIDCProvidersResponse
+    @JvmOverloads
+    constructor(
+        @Json(name = "request_id")
+        val requestId: String,
+        @Json(name = "registrations")
+        val registrations: List<OIDCProviderInfo>,
         @Json(name = "status_code")
         val statusCode: Int,
     )

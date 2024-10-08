@@ -339,7 +339,8 @@ public data class UpdateConnectionRequest
         val samlGroupImplicitRoleAssignments: List<SAMLGroupImplicitRoleAssignment>? = emptyList(),
         /**
          * An alternative URL to use for the Audience Restriction. This value can be used when you wish to migrate an existing
-         * SAML integration to Stytch with zero downtime.
+         * SAML integration to Stytch with zero downtime. Read our
+         * [SSO migration guide](https://stytch.com/docs/b2b/guides/migrations/additional-migration-considerations) for more info.
          */
         @Json(name = "alternative_audience_uri")
         val alternativeAudienceUri: String? = null,
