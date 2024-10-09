@@ -130,6 +130,9 @@ public enum class AuthenticationFactorDeliveryMethod {
 
     @Json(name = "oauth_exchange_hubspot")
     OAUTH_EXCHANGE_HUBSPOT,
+
+    @Json(name = "oauth_exchange_github")
+    OAUTH_EXCHANGE_GITHUB,
 }
 
 @JsonClass(generateAdapter = false)
@@ -326,6 +329,8 @@ public data class AuthenticationFactor
         val slackOAuthExchangeFactor: SlackOAuthExchangeFactor? = null,
         @Json(name = "hubspot_oauth_exchange_factor")
         val hubspotOAuthExchangeFactor: HubspotOAuthExchangeFactor? = null,
+        @Json(name = "github_oauth_exchange_factor")
+        val githubOAuthExchangeFactor: GithubOAuthExchangeFactor? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -453,6 +458,14 @@ public data class GitLabOAuthFactor
         val providerSubject: String,
         @Json(name = "email_id")
         val emailId: String? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class GithubOAuthExchangeFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "email_id")
+        val emailId: String,
     )
 
 @JsonClass(generateAdapter = true)

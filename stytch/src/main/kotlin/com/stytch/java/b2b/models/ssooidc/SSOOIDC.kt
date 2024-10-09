@@ -198,6 +198,18 @@ public data class UpdateConnectionRequest
          */
         @Json(name = "identity_provider")
         val identityProvider: UpdateConnectionRequestIdentityProvider? = null,
+        /**
+         * Include a space-separated list of custom scopes that you'd like to include. Note that this list must be URL encoded,
+         * e.g. the spaces must be expressed as %20.
+         */
+        @Json(name = "custom_scopes")
+        val customScopes: String? = null,
+        /**
+         * An object that represents the attributes used to identify a Member. This object will map the IdP-defined User
+         * attributes to Stytch-specific values, which will appear on the member's Trusted Metadata.
+         */
+        @Json(name = "attribute_mapping")
+        val attributeMapping: Map<String, Any?>? = emptyMap(),
     )
 
 /**

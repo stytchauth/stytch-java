@@ -135,6 +135,10 @@ public data class OIDCConnection
         val jwksURL: String,
         @Json(name = "identity_provider")
         val identityProvider: String,
+        @Json(name = "custom_scopes")
+        val customScopes: String,
+        @Json(name = "attribute_mapping")
+        val attributeMapping: Map<String, Any?>? = emptyMap(),
     )
 
 @JsonClass(generateAdapter = true)
