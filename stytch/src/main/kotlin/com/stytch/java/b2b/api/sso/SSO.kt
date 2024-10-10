@@ -9,6 +9,8 @@ package com.stytch.java.b2b.api.sso
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import com.stytch.java.b2b.api.ssoexternal.External
+import com.stytch.java.b2b.api.ssoexternal.ExternalImpl
 import com.stytch.java.b2b.api.ssooidc.OIDC
 import com.stytch.java.b2b.api.ssooidc.OIDCImpl
 import com.stytch.java.b2b.api.ssosaml.SAML
@@ -36,6 +38,8 @@ public interface SSO {
     public val oidc: OIDC
 
     public val saml: SAML
+
+    public val external: External
 
     /**
      * Get all SSO Connections owned by the organization.
@@ -168,6 +172,7 @@ internal class SSOImpl(
 
     override val oidc: OIDC = OIDCImpl(httpClient, coroutineScope)
     override val saml: SAML = SAMLImpl(httpClient, coroutineScope)
+    override val external: External = ExternalImpl(httpClient, coroutineScope)
 
     override suspend fun getConnections(
         data: GetConnectionsRequest,

@@ -1017,7 +1017,7 @@ public data class MigrateRequest
     @JvmOverloads
     constructor(
         /**
-         * The `session_token` associated with a User's existing Session.
+         * The authorization token Stytch will pass in to the external userinfo endpoint.
          */
         @Json(name = "session_token")
         val sessionToken: String,

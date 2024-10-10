@@ -307,6 +307,11 @@ public data class DangerouslyGetRequest
          */
         @Json(name = "member_id")
         val memberId: String,
+        /**
+         * Whether to include deleted Members in the response. Defaults to false.
+         */
+        @Json(name = "include_deleted")
+        val includeDeleted: Boolean? = null,
     )
 
 /**
