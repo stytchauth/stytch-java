@@ -53,6 +53,19 @@ public data class Connection
 public data class ConnectionImplicitRoleAssignment
     @JvmOverloads
     constructor(
+        /**
+         * The unique identifier of the RBAC Role, provided by the developer and intended to be human-readable.
+         *
+         *   Reserved `role_id`s that are predefined by Stytch include:
+         *
+         *   * `stytch_member`
+         *   * `stytch_admin`
+         *
+         *   Check out the [guide on Stytch default Roles](https://stytch.com/docs/b2b/guides/rbac/stytch-default) for a more
+         * detailed explanation.
+         *
+         *
+         */
         @Json(name = "role_id")
         val roleId: String,
     )
@@ -99,8 +112,24 @@ public data class GetConnectionsRequestOptions
 public data class GroupImplicitRoleAssignment
     @JvmOverloads
     constructor(
+        /**
+         * The unique identifier of the RBAC Role, provided by the developer and intended to be human-readable.
+         *
+         *   Reserved `role_id`s that are predefined by Stytch include:
+         *
+         *   * `stytch_member`
+         *   * `stytch_admin`
+         *
+         *   Check out the [guide on Stytch default Roles](https://stytch.com/docs/b2b/guides/rbac/stytch-default) for a more
+         * detailed explanation.
+         *
+         *
+         */
         @Json(name = "role_id")
         val roleId: String,
+        /**
+         * The name of the group that grants the specified role assignment.
+         */
         @Json(name = "group")
         val group: String,
     )
@@ -218,7 +247,7 @@ public data class SAMLGroupImplicitRoleAssignment
         @Json(name = "role_id")
         val roleId: String,
         /**
-         * The name of the SAML group that grants the specified role assignment.
+         * The name of the group that grants the specified role assignment.
          */
         @Json(name = "group")
         val group: String,
@@ -418,7 +447,7 @@ public data class DeleteConnectionRequest
         @Json(name = "organization_id")
         val organizationId: String,
         /**
-         * The ID of the SSO connection. Both SAML and OIDC connection IDs can be provided.
+         * The ID of the SSO connection. SAML, OIDC, and External connection IDs can be provided.
          */
         @Json(name = "connection_id")
         val connectionId: String,
@@ -488,6 +517,10 @@ public data class GetConnectionsResponse
          */
         @Json(name = "oidc_connections")
         val oidcConnections: List<OIDCConnection>,
+        /**
+         * The list of [External Connections](https://stytch.com/docs/b2b/api/external-connection-object) owned by this
+         * organization.
+         */
         @Json(name = "external_connections")
         val externalConnections: List<Connection>,
         /**
