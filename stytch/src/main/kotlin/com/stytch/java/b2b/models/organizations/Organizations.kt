@@ -383,18 +383,43 @@ public data class OAuthRegistration
 public data class OIDCProviderInfo
     @JvmOverloads
     constructor(
+        /**
+         * The unique identifier for the User within a given OAuth provider. Also commonly called the `sub` or "Subject field" in
+         * OAuth protocols.
+         */
         @Json(name = "provider_subject")
         val providerSubject: String,
+        /**
+         * The `id_token` returned by the OAuth provider. ID Tokens are JWTs that contain structured information about a user. The
+         * exact content of each ID Token varies from provider to provider. ID Tokens are returned from OAuth providers that
+         * conform to the [OpenID Connect](https://openid.net/foundation/) specification, which is based on OAuth.
+         */
         @Json(name = "id_token")
         val idToken: String,
+        /**
+         * The `access_token` that you may use to access the User's data in the provider's API.
+         */
         @Json(name = "access_token")
         val accessToken: String,
+        /**
+         * The number of seconds until the access token expires.
+         */
         @Json(name = "access_token_expires_in")
         val accessTokenExpiresIn: Int,
+        /**
+         * The OAuth scopes included for a given provider. See each provider's section above to see which scopes are included by
+         * default and how to add custom scopes.
+         */
         @Json(name = "scopes")
         val scopes: List<String>,
+        /**
+         * Globally unique UUID that identifies a specific SSO `connection_id` for a Member.
+         */
         @Json(name = "connection_id")
         val connectionId: String,
+        /**
+         * The `refresh_token` that you may use to obtain a new `access_token` for the User within the provider's API.
+         */
         @Json(name = "refresh_token")
         val refreshToken: String? = null,
     )
