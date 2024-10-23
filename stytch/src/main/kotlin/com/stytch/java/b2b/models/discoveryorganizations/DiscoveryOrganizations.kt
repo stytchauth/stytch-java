@@ -214,7 +214,7 @@ public data class CreateRequest
         val oauthTenantJITProvisioning: String? = null,
         /**
          * A map of allowed OAuth tenants. If this field is not passed in, the Organization will not allow JIT provisioning by
-         * OAuth Tenant. Allowed keys are "slack" and "hubspot".
+         * OAuth Tenant. Allowed keys are "slack", "hubspot", and "github".
          */
         @Json(name = "allowed_oauth_tenants")
         val allowedOAuthTenants: Map<String, Any?>? = emptyMap(),

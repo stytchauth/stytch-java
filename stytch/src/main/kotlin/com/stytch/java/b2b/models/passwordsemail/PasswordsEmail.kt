@@ -12,6 +12,7 @@ import com.stytch.java.b2b.models.mfa.MfaRequired
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
+import com.stytch.java.common.methodoptions.Authorization
 
 @JsonClass(generateAdapter = false)
 public enum class ResetRequestLocale {
@@ -37,8 +38,27 @@ public enum class ResetStartRequestLocale {
     PTBR,
 }
 
+public data class RequireResetRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
+        }
+    }
+
 @JsonClass(generateAdapter = true)
-public data class DeleteRequest
+public data class RequireResetRequest
     @JvmOverloads
     constructor(
         @Json(name = "email_address")
@@ -50,7 +70,7 @@ public data class DeleteRequest
     )
 
 @JsonClass(generateAdapter = true)
-public data class DeleteResponse
+public data class RequireResetResponse
     @JvmOverloads
     constructor(
         @Json(name = "member")
