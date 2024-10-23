@@ -135,7 +135,7 @@ public data class GithubProviderInfo
     )
 
 @JsonClass(generateAdapter = true)
-public data class HubspOTPRoviderInfo
+public data class HubspotProviderInfo
     @JvmOverloads
     constructor(
         /**

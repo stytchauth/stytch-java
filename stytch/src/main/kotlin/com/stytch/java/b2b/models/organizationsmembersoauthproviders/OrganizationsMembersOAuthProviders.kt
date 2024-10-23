@@ -9,7 +9,7 @@ package com.stytch.java.b2b.models.organizationsmembersoauthproviders
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.stytch.java.b2b.models.organizations.GithubProviderInfo
-import com.stytch.java.b2b.models.organizations.HubspOTPRoviderInfo
+import com.stytch.java.b2b.models.organizations.HubspotProviderInfo
 import com.stytch.java.b2b.models.organizations.SlackProviderInfo
 
 /**
@@ -125,7 +125,7 @@ public data class HubspotResponse
          * A list of tokens the member is registered with.
          */
         @Json(name = "registrations")
-        val registrations: List<HubspOTPRoviderInfo>,
+        val registrations: List<HubspotProviderInfo>,
         /**
          * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
          * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
