@@ -88,10 +88,22 @@ public data class AuthenticateResponse
          */
         @Json(name = "discovered_organizations")
         val discoveredOrganizations: List<DiscoveredOrganization>,
+        /**
+         * Denotes the OAuth identity provider that the user has authenticated with, e.g. Google, Microsoft, GitHub etc.
+         */
         @Json(name = "provider_type")
         val providerType: String,
+        /**
+         * The tenant ID returned by the OAuth provider. This is typically used to identify the organization. For example, for
+         * HubSpot this is the Hub ID, for Slack, this is the Workspace ID, and for GitHub this is an organization ID.
+         */
         @Json(name = "provider_tenant_id")
         val providerTenantId: String,
+        /**
+         * The IDs of tenants returned from a completed OAuth authentication. Some providers do not return tenants.
+         */
+        @Json(name = "provider_tenant_ids")
+        val providerTenantIds: List<String>,
         /**
          * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
          * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
