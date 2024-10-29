@@ -103,6 +103,80 @@ public data class EmailImplicitRoleAssignment
     )
 
 @JsonClass(generateAdapter = true)
+public data class GithubProviderInfo
+    @JvmOverloads
+    constructor(
+        /**
+         * The unique identifier for the User within a given OAuth provider. Also commonly called the `sub` or "Subject field" in
+         * OAuth protocols.
+         */
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+        /**
+         * All tenant IDs returned by the OAuth provider. These is typically used to identify organizations or groups within the
+         * provider's domain. For example, in HubSpot this is a Hub ID, in Slack this is the Workspace ID, and in GitHub this is
+         * an organization ID. Some OAuth providers do not return tenant IDs, some providers are guaranteed to return one, and
+         * some may return multiple. This field will always be populated if at least one tenant ID was returned from the OAuth
+         * provider and developers should prefer this field over `provider_tenant_id`.
+         */
+        @Json(name = "provider_tenant_ids")
+        val providerTenantIds: List<String>,
+        /**
+         * The `access_token` that you may use to access the User's data in the provider's API.
+         */
+        @Json(name = "access_token")
+        val accessToken: String,
+        /**
+         * The OAuth scopes included for a given provider. See each provider's section above to see which scopes are included by
+         * default and how to add custom scopes.
+         */
+        @Json(name = "scopes")
+        val scopes: List<String>,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class HubspotProviderInfo
+    @JvmOverloads
+    constructor(
+        /**
+         * The unique identifier for the User within a given OAuth provider. Also commonly called the `sub` or "Subject field" in
+         * OAuth protocols.
+         */
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+        /**
+         * The tenant ID returned by the OAuth provider. This is typically used to identify an organization or group within the
+         * provider's domain. For example, in HubSpot this is a Hub ID, in Slack this is the Workspace ID, and in GitHub this is
+         * an organization ID. This field will only be populated if exactly one tenant ID is returned from a successful OAuth
+         * authentication and developers should prefer `provider_tenant_ids` over this since it accounts for the possibility of an
+         * OAuth provider yielding multiple tenant IDs.
+         */
+        @Json(name = "provider_tenant_id")
+        val providerTenantId: String,
+        /**
+         * The `access_token` that you may use to access the User's data in the provider's API.
+         */
+        @Json(name = "access_token")
+        val accessToken: String,
+        /**
+         * The number of seconds until the access token expires.
+         */
+        @Json(name = "access_token_expires_in")
+        val accessTokenExpiresIn: Int,
+        /**
+         * The OAuth scopes included for a given provider. See each provider's section above to see which scopes are included by
+         * default and how to add custom scopes.
+         */
+        @Json(name = "scopes")
+        val scopes: List<String>,
+        /**
+         * The `refresh_token` that you may use to obtain a new `access_token` for the User within the provider's API.
+         */
+        @Json(name = "refresh_token")
+        val refreshToken: String? = null,
+    )
+
+@JsonClass(generateAdapter = true)
 public data class Member
     @JvmOverloads
     constructor(
@@ -383,18 +457,43 @@ public data class OAuthRegistration
 public data class OIDCProviderInfo
     @JvmOverloads
     constructor(
+        /**
+         * The unique identifier for the User within a given OAuth provider. Also commonly called the `sub` or "Subject field" in
+         * OAuth protocols.
+         */
         @Json(name = "provider_subject")
         val providerSubject: String,
+        /**
+         * The `id_token` returned by the OAuth provider. ID Tokens are JWTs that contain structured information about a user. The
+         * exact content of each ID Token varies from provider to provider. ID Tokens are returned from OAuth providers that
+         * conform to the [OpenID Connect](https://openid.net/foundation/) specification, which is based on OAuth.
+         */
         @Json(name = "id_token")
         val idToken: String,
+        /**
+         * The `access_token` that you may use to access the User's data in the provider's API.
+         */
         @Json(name = "access_token")
         val accessToken: String,
+        /**
+         * The number of seconds until the access token expires.
+         */
         @Json(name = "access_token_expires_in")
         val accessTokenExpiresIn: Int,
+        /**
+         * The OAuth scopes included for a given provider. See each provider's section above to see which scopes are included by
+         * default and how to add custom scopes.
+         */
         @Json(name = "scopes")
         val scopes: List<String>,
+        /**
+         * Globally unique UUID that identifies a specific SSO `connection_id` for a Member.
+         */
         @Json(name = "connection_id")
         val connectionId: String,
+        /**
+         * The `refresh_token` that you may use to obtain a new `access_token` for the User within the provider's API.
+         */
         @Json(name = "refresh_token")
         val refreshToken: String? = null,
     )
@@ -578,7 +677,7 @@ public data class Organization
         val scimActiveConnection: ActiveSCIMConnection? = null,
         /**
          * A map of allowed OAuth tenants. If this field is not passed in, the Organization will not allow JIT provisioning by
-         * OAuth Tenant. Allowed keys are "slack" and "hubspot".
+         * OAuth Tenant. Allowed keys are "slack", "hubspot", and "github".
          */
         @Json(name = "allowed_oauth_tenants")
         val allowedOAuthTenants: Map<String, Any?>? = emptyMap(),
@@ -687,6 +786,48 @@ public data class SearchQuery
          */
         @Json(name = "operands")
         val operands: List<Map<String, Any?>>,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class SlackProviderInfo
+    @JvmOverloads
+    constructor(
+        /**
+         * The unique identifier for the User within a given OAuth provider. Also commonly called the `sub` or "Subject field" in
+         * OAuth protocols.
+         */
+        @Json(name = "provider_subject")
+        val providerSubject: String,
+        /**
+         * The tenant ID returned by the OAuth provider. This is typically used to identify an organization or group within the
+         * provider's domain. For example, in HubSpot this is a Hub ID, in Slack this is the Workspace ID, and in GitHub this is
+         * an organization ID. This field will only be populated if exactly one tenant ID is returned from a successful OAuth
+         * authentication and developers should prefer `provider_tenant_ids` over this since it accounts for the possibility of an
+         * OAuth provider yielding multiple tenant IDs.
+         */
+        @Json(name = "provider_tenant_id")
+        val providerTenantId: String,
+        /**
+         * The `access_token` that you may use to access the User's data in the provider's API.
+         */
+        @Json(name = "access_token")
+        val accessToken: String,
+        /**
+         * The OAuth scopes included for a given provider. See each provider's section above to see which scopes are included by
+         * default and how to add custom scopes.
+         */
+        @Json(name = "scopes")
+        val scopes: List<String>,
+        /**
+         * The `access_token` that you may use to access data as a bot application in Slack. Use in conjunction with `bot_scopes`.
+         */
+        @Json(name = "bot_access_token")
+        val botAccessToken: String,
+        /**
+         * The scopes that the bot application has access to in Slack.
+         */
+        @Json(name = "bot_scopes")
+        val botScopes: List<String>,
     )
 
 public data class UpdateRequestOptions
@@ -858,7 +999,7 @@ public data class CreateRequest
         val oauthTenantJITProvisioning: String? = null,
         /**
          * A map of allowed OAuth tenants. If this field is not passed in, the Organization will not allow JIT provisioning by
-         * OAuth Tenant. Allowed keys are "slack" and "hubspot".
+         * OAuth Tenant. Allowed keys are "slack", "hubspot", and "github".
          */
         @Json(name = "allowed_oauth_tenants")
         val allowedOAuthTenants: Map<String, Any?>? = emptyMap(),
@@ -1275,7 +1416,7 @@ public data class UpdateRequest
         val oauthTenantJITProvisioning: String? = null,
         /**
          * A map of allowed OAuth tenants. If this field is not passed in, the Organization will not allow JIT provisioning by
-         * OAuth Tenant. Allowed keys are "slack" and "hubspot".
+         * OAuth Tenant. Allowed keys are "slack", "hubspot", and "github".
          *
          * If this field is provided and a session header is passed into the request, the Member Session must have permission to
          * perform the `update.settings.allowed-oauth-tenants` action on the `stytch.organization` Resource.
