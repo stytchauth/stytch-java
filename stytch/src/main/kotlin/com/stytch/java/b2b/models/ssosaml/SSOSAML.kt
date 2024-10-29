@@ -15,32 +15,98 @@ import com.stytch.java.common.methodoptions.Authorization
 
 @JsonClass(generateAdapter = false)
 public enum class CreateConnectionRequestIdentityProvider {
+    @Json(name = "classlink")
+    CLASSLINK,
+
+    @Json(name = "cyberark")
+    CYBERARK,
+
+    @Json(name = "duo")
+    DUO,
+
     @Json(name = "generic")
     GENERIC,
 
-    @Json(name = "okta")
-    OKTA,
+    @Json(name = "googleworkspace")
+    GOOGLEWORKSPACE,
+
+    @Json(name = "jumpcloud")
+    JUMPCLOUD,
+
+    @Json(name = "keycloak")
+    KEYCLOAK,
+
+    @Json(name = "miniorange")
+    MINIORANGE,
 
     @Json(name = "microsoftentra")
     MICROSOFTENTRA,
 
-    @Json(name = "googleworkspace")
-    GOOGLEWORKSPACE,
+    @Json(name = "okta")
+    OKTA,
+
+    @Json(name = "onelogin")
+    ONELOGIN,
+
+    @Json(name = "pingfederate")
+    PINGFEDERATE,
+
+    @Json(name = "rippling")
+    RIPPLING,
+
+    @Json(name = "salesforce")
+    SALESFORCE,
+
+    @Json(name = "shibboleth")
+    SHIBBOLETH,
 }
 
 @JsonClass(generateAdapter = false)
 public enum class UpdateConnectionRequestIdentityProvider {
+    @Json(name = "classlink")
+    CLASSLINK,
+
+    @Json(name = "cyberark")
+    CYBERARK,
+
+    @Json(name = "duo")
+    DUO,
+
     @Json(name = "generic")
     GENERIC,
 
-    @Json(name = "okta")
-    OKTA,
+    @Json(name = "googleworkspace")
+    GOOGLEWORKSPACE,
+
+    @Json(name = "jumpcloud")
+    JUMPCLOUD,
+
+    @Json(name = "keycloak")
+    KEYCLOAK,
+
+    @Json(name = "miniorange")
+    MINIORANGE,
 
     @Json(name = "microsoftentra")
     MICROSOFTENTRA,
 
-    @Json(name = "googleworkspace")
-    GOOGLEWORKSPACE,
+    @Json(name = "okta")
+    OKTA,
+
+    @Json(name = "onelogin")
+    ONELOGIN,
+
+    @Json(name = "pingfederate")
+    PINGFEDERATE,
+
+    @Json(name = "rippling")
+    RIPPLING,
+
+    @Json(name = "salesforce")
+    SALESFORCE,
+
+    @Json(name = "shibboleth")
+    SHIBBOLETH,
 }
 
 public data class CreateConnectionRequestOptions

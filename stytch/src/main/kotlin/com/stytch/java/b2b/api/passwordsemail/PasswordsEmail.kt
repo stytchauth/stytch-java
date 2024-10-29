@@ -140,17 +140,29 @@ public interface Email {
      */
     public fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>>
 
+    /**
+     * Require a password be reset by the associated email address. This endpoint is only functional for cross-org password
+     * use cases.
+     */
     public suspend fun requireReset(
         data: RequireResetRequest,
         methodOptions: RequireResetRequestOptions? = null,
     ): StytchResult<RequireResetResponse>
 
+    /**
+     * Require a password be reset by the associated email address. This endpoint is only functional for cross-org password
+     * use cases.
+     */
     public fun requireReset(
         data: RequireResetRequest,
         methodOptions: RequireResetRequestOptions? = null,
         callback: (StytchResult<RequireResetResponse>) -> Unit,
     )
 
+    /**
+     * Require a password be reset by the associated email address. This endpoint is only functional for cross-org password
+     * use cases.
+     */
     public fun requireResetCompletable(
         data: RequireResetRequest,
         methodOptions: RequireResetRequestOptions? = null,

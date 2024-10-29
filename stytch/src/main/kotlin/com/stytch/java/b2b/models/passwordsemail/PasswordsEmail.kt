@@ -57,28 +57,58 @@ public data class RequireResetRequestOptions
         }
     }
 
+/**
+* Request type for `Email.requireReset`.
+*/
 @JsonClass(generateAdapter = true)
 public data class RequireResetRequest
     @JvmOverloads
     constructor(
+        /**
+         * The email address of the Member to start the email reset process for.
+         */
         @Json(name = "email_address")
         val emailAddress: String,
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value.
+         */
         @Json(name = "organization_id")
         val organizationId: String? = null,
+        /**
+         * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
+         * so be sure to preserve this value.
+         */
         @Json(name = "member_id")
         val memberId: String? = null,
     )
 
+/**
+* Response type for `Email.requireReset`.
+*/
 @JsonClass(generateAdapter = true)
 public data class RequireResetResponse
     @JvmOverloads
     constructor(
+        /**
+         * The [Member object](https://stytch.com/docs/b2b/api/member-object)
+         */
         @Json(name = "member")
         val member: Member,
+        /**
+         * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
+         */
         @Json(name = "organization")
         val organization: Organization,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
         @Json(name = "status_code")
         val statusCode: Int,
+        /**
+         * Globally unique UUID that identifies a specific Member.
+         */
         @Json(name = "member_id")
         val memberId: String? = null,
     )
