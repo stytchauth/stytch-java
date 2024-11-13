@@ -184,13 +184,13 @@ public data class SendRequest
         val sessionJwt: String? = null,
         /**
          * Use a custom template for login emails. By default, it will use your default email template. The template must be a
-         * template using our built-in customizations or a custom HTML email for Magic links - Login.
+         * template using our built-in customizations or a custom HTML email for OTP - Login.
          */
         @Json(name = "login_template_id")
         val loginTemplateId: String? = null,
         /**
          * Use a custom template for sign-up emails. By default, it will use your default email template. The template must be a
-         * template using our built-in customizations or a custom HTML email for Magic links - Sign-up.
+         * template using our built-in customizations or a custom HTML email for OTP - Sign-up.
          */
         @Json(name = "signup_template_id")
         val signupTemplateId: String? = null,

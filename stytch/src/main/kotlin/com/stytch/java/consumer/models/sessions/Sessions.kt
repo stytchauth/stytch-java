@@ -169,6 +169,9 @@ public enum class AuthenticationFactorType {
 
     @Json(name = "recovery_codes")
     RECOVERY_CODES,
+
+    @Json(name = "email_otp")
+    EMAIL_OTP,
 }
 
 @JsonClass(generateAdapter = true)
@@ -201,7 +204,7 @@ public data class AuthenticationFactor
     constructor(
         /**
          * The type of authentication factor. The possible values are: `magic_link`, `otp`,
-         *        `oauth`, `password`, or `sso`.
+         *        `oauth`, `password`, `email_otp`, or `sso` .
          */
         @Json(name = "type")
         val type: AuthenticationFactorType,
@@ -210,7 +213,7 @@ public data class AuthenticationFactor
          *
          *       `magic_link` – Only `email`.
          *
-         *       `otp` – Only `sms`.
+         *       `otp` –  Either `sms` or `email` .
          *
          *       `oauth` – Either `oauth_google` or `oauth_microsoft`.
          *
