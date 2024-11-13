@@ -204,8 +204,11 @@ public data class CreateConnectionRequest
         @Json(name = "display_name")
         val displayName: String? = null,
         /**
-         * The identity provider of this connection. For OIDC, the accepted values are `generic`, `okta`, and `microsoft-entra`.
-         * For SAML, the accepted values are `generic`, `okta`, `microsoft-entra`, and `google-workspace`.
+         * Name of the IdP. Enum with possible values: `classlink`, `cyberark`, `duo`, `google-workspace`, `jumpcloud`,
+         * `keycloak`, `miniorange`, `microsoft-entra`, `okta`, `onelogin`, `pingfederate`, `rippling`, `salesforce`,
+         * `shibboleth`, or `generic`.
+         *
+         * Specifying a known provider allows Stytch to handle any provider-specific logic.
          */
         @Json(name = "identity_provider")
         val identityProvider: CreateConnectionRequestIdentityProvider? = null,
@@ -411,8 +414,11 @@ public data class UpdateConnectionRequest
         @Json(name = "alternative_audience_uri")
         val alternativeAudienceUri: String? = null,
         /**
-         * The identity provider of this connection. For OIDC, the accepted values are `generic`, `okta`, and `microsoft-entra`.
-         * For SAML, the accepted values are `generic`, `okta`, `microsoft-entra`, and `google-workspace`.
+         * Name of the IdP. Enum with possible values: `classlink`, `cyberark`, `duo`, `google-workspace`, `jumpcloud`,
+         * `keycloak`, `miniorange`, `microsoft-entra`, `okta`, `onelogin`, `pingfederate`, `rippling`, `salesforce`,
+         * `shibboleth`, or `generic`.
+         *
+         * Specifying a known provider allows Stytch to handle any provider-specific logic.
          */
         @Json(name = "identity_provider")
         val identityProvider: UpdateConnectionRequestIdentityProvider? = null,

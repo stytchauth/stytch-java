@@ -38,23 +38,6 @@ public data class CreateRequest
         @Json(name = "intermediate_session_token")
         val intermediateSessionToken: String,
         /**
-         * The name of the Organization. If the name is not specified, a default name will be created based on the email used to
-         * initiate the discovery flow. If the email domain is a common email provider such as gmail.com, or if the email is a
-         * .edu email, the organization name will be generated based on the name portion of the email. Otherwise, the organization
-         * name will be generated based on the email domain.
-         */
-        @Json(name = "organization_name")
-        val organizationName: String,
-        /**
-         * The unique URL slug of the Organization. A minimum of two characters is required. The slug only accepts alphanumeric
-         * characters and the following reserved characters: `-` `.` `_` `~`. If the slug is not specified, a default slug will be
-         * created based on the email used to initiate the discovery flow. If the email domain is a common email provider such as
-         * gmail.com, or if the email is a .edu email, the organization slug will be generated based on the name portion of the
-         * email. Otherwise, the organization slug will be generated based on the email domain.
-         */
-        @Json(name = "organization_slug")
-        val organizationSlug: String,
-        /**
          * Set the session lifetime to be this many minutes from now. This will start a new session if one doesn't already exist,
          *   returning both an opaque `session_token` and `session_jwt` for this session. Remember that the `session_jwt` will
          * have a fixed lifetime of
@@ -82,6 +65,23 @@ public data class CreateRequest
          */
         @Json(name = "session_custom_claims")
         val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
+        /**
+         * The name of the Organization. If the name is not specified, a default name will be created based on the email used to
+         * initiate the discovery flow. If the email domain is a common email provider such as gmail.com, or if the email is a
+         * .edu email, the organization name will be generated based on the name portion of the email. Otherwise, the organization
+         * name will be generated based on the email domain.
+         */
+        @Json(name = "organization_name")
+        val organizationName: String? = null,
+        /**
+         * The unique URL slug of the Organization. A minimum of two characters is required. The slug only accepts alphanumeric
+         * characters and the following reserved characters: `-` `.` `_` `~`. If the slug is not specified, a default slug will be
+         * created based on the email used to initiate the discovery flow. If the email domain is a common email provider such as
+         * gmail.com, or if the email is a .edu email, the organization slug will be generated based on the name portion of the
+         * email. Otherwise, the organization slug will be generated based on the email domain.
+         */
+        @Json(name = "organization_slug")
+        val organizationSlug: String? = null,
         /**
          * The image URL of the Organization logo.
          */
