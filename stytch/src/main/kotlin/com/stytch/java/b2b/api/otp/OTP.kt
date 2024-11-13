@@ -7,6 +7,8 @@ package com.stytch.java.b2b.api.otp
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.b2b.api.otpemail.Email
+import com.stytch.java.b2b.api.otpemail.EmailImpl
 import com.stytch.java.b2b.api.otpsms.Sms
 import com.stytch.java.b2b.api.otpsms.SmsImpl
 import com.stytch.java.common.InstantAdapter
@@ -15,6 +17,8 @@ import kotlinx.coroutines.CoroutineScope
 
 public interface OTPs {
     public val sms: Sms
+
+    public val email: Email
 }
 
 internal class OTPsImpl(
@@ -24,4 +28,5 @@ internal class OTPsImpl(
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val sms: Sms = SmsImpl(httpClient, coroutineScope)
+    override val email: Email = EmailImpl(httpClient, coroutineScope)
 }
