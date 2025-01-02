@@ -31,10 +31,10 @@ public enum class ProjectMetricMetricType {
 public data class ProjectMetric
     @JvmOverloads
     constructor(
+        @Json(name = "metric_type")
+        val metricType: ProjectMetricMetricType,
         @Json(name = "count")
         val count: Int,
-        @Json(name = "metric_type")
-        val metricType: ProjectMetricMetricType? = null,
     )
 
 @JsonClass(generateAdapter = true)

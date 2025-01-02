@@ -10,6 +10,8 @@ import com.stytch.java.common.BASE_TEST_URL
 import com.stytch.java.common.JwtOptions
 import com.stytch.java.consumer.api.cryptowallets.CryptoWallets
 import com.stytch.java.consumer.api.cryptowallets.CryptoWalletsImpl
+import com.stytch.java.consumer.api.fraud.Fraud
+import com.stytch.java.consumer.api.fraud.FraudImpl
 import com.stytch.java.consumer.api.m2m.M2M
 import com.stytch.java.consumer.api.m2m.M2MImpl
 import com.stytch.java.consumer.api.magiclinks.MagicLinks
@@ -35,12 +37,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import org.jose4j.jwk.HttpsJwks
 
-public class StytchClient(projectId: String, secret: String) {
+public class StytchClient(projectId: String, secret: String, fraudBaseUrl: String = "https://telemetry.stytch.com") {
     private val coroutineScope = CoroutineScope(SupervisorJob())
     private val baseUrl = getBaseUrl(projectId)
     private val httpClient: HttpClient =
         HttpClient(
             baseUrl = baseUrl,
+            projectId = projectId,
+            secret = secret,
+        )
+    private val fraudHttpClient: HttpClient =
+        HttpClient(
+            baseUrl = fraudBaseUrl,
             projectId = projectId,
             secret = secret,
         )
@@ -54,6 +62,9 @@ public class StytchClient(projectId: String, secret: String) {
 
     @JvmField
     public val cryptoWallets: CryptoWallets = CryptoWalletsImpl(httpClient, coroutineScope)
+
+    @JvmField
+    public val fraud: Fraud = FraudImpl(fraudHttpClient, coroutineScope)
 
     @JvmField
     public val m2m: M2M = M2MImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
