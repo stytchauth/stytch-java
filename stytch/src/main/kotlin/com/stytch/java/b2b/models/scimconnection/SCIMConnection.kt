@@ -408,6 +408,10 @@ public data class GetResponse
          */
         @Json(name = "status_code")
         val statusCode: Int,
+        /**
+         * A [SCIM Connection](https://stytch.com/docs/b2b/api/scim-connection-object) connection belonging to the organization
+         * (currently limited to one).
+         */
         @Json(name = "connection")
         val connection: SCIMConnection? = null,
     )

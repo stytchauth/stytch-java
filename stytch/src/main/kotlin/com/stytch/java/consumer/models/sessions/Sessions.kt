@@ -133,6 +133,12 @@ public enum class AuthenticationFactorDeliveryMethod {
 
     @Json(name = "oauth_exchange_github")
     OAUTH_EXCHANGE_GITHUB,
+
+    @Json(name = "oauth_exchange_google")
+    OAUTH_EXCHANGE_GOOGLE,
+
+    @Json(name = "impersonation")
+    IMPERSONATION,
 }
 
 @JsonClass(generateAdapter = false)
@@ -172,6 +178,9 @@ public enum class AuthenticationFactorType {
 
     @Json(name = "email_otp")
     EMAIL_OTP,
+
+    @Json(name = "impersonated")
+    IMPERSONATED,
 }
 
 @JsonClass(generateAdapter = true)
@@ -334,6 +343,10 @@ public data class AuthenticationFactor
         val hubspotOAuthExchangeFactor: HubspotOAuthExchangeFactor? = null,
         @Json(name = "github_oauth_exchange_factor")
         val githubOAuthExchangeFactor: GithubOAuthExchangeFactor? = null,
+        @Json(name = "google_oauth_exchange_factor")
+        val googleOAuthExchangeFactor: GoogleOAuthExchangeFactor? = null,
+        @Json(name = "impersonated_factor")
+        val impersonatedFactor: ImpersonatedFactor? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -484,6 +497,14 @@ public data class GithubOAuthFactor
     )
 
 @JsonClass(generateAdapter = true)
+public data class GoogleOAuthExchangeFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "email_id")
+        val emailId: String,
+    )
+
+@JsonClass(generateAdapter = true)
 public data class GoogleOAuthFactor
     @JvmOverloads
     constructor(
@@ -523,6 +544,16 @@ public data class HubspotOAuthFactor
         val providerSubject: String,
         @Json(name = "email_id")
         val emailId: String? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class ImpersonatedFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "impersonator_id")
+        val impersonatorId: String,
+        @Json(name = "impersonator_email_address")
+        val impersonatorEmailAddress: String,
     )
 
 @JsonClass(generateAdapter = true)

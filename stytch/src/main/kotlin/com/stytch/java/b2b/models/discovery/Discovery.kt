@@ -51,7 +51,8 @@ public data class Membership
     @JvmOverloads
     constructor(
         /**
-         * Either `active_member`, `pending_member`, `invited_member`, or `eligible_to_join_by_email_domain`
+         * Either `active_member`, `pending_member`, `invited_member`, `eligible_to_join_by_email_domain`, or
+         * `eligible_to_join_by_oauth_tenant`
          */
         @Json(name = "type")
         val type: String,
