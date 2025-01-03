@@ -137,8 +137,7 @@ public data class AuthenticateResponse
         @Json(name = "method_id")
         val methodId: String,
         /**
-         * Indicates if all Sessions linked to the Member need to be reset. You should check this field if you aren't using
-         *     Stytch's Session product. If you are using Stytch's Session product, we revoke the Member’s other Sessions for you.
+         * This field is deprecated.
          */
         @Json(name = "reset_sessions")
         val resetSessions: Boolean,

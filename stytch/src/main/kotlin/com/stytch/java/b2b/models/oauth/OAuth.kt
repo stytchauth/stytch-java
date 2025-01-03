@@ -193,6 +193,9 @@ public data class AuthenticateResponse
          */
         @Json(name = "organization")
         val organization: Organization,
+        /**
+         * This field is deprecated.
+         */
         @Json(name = "reset_sessions")
         val resetSessions: Boolean,
         /**

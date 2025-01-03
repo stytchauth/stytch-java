@@ -183,7 +183,8 @@ public data class ResultsMetadata
     @JvmOverloads
     constructor(
         /**
-         * The total number of results returned by your search query.
+         * The total number of results returned by your search query. If totals have been disabled for your Stytch Workspace to
+         * improve search performance, the value will always be -1.
          */
         @Json(name = "total")
         val total: Int,
