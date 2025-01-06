@@ -133,17 +133,17 @@ public interface Sessions {
 
     /**
      * Migrate a session from an external OIDC compliant endpoint. Stytch will call the external UserInfo endpoint defined in
-     * your Stytch Project settings in the [Dashboard](/dashboard), and then perform a lookup using the `session_token`. If
-     * the response contains a valid email address, Stytch will attempt to match that email address with an existing User and
-     * create a Stytch Session. You will need to create the user before using this endpoint.
+     * your Stytch Project settings in the [Dashboard](https://stytch.com/docs/dashboard), and then perform a lookup using the
+     * `session_token`. If the response contains a valid email address, Stytch will attempt to match that email address with
+     * an existing User and create a Stytch Session. You will need to create the user before using this endpoint.
      */
     public suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse>
 
     /**
      * Migrate a session from an external OIDC compliant endpoint. Stytch will call the external UserInfo endpoint defined in
-     * your Stytch Project settings in the [Dashboard](/dashboard), and then perform a lookup using the `session_token`. If
-     * the response contains a valid email address, Stytch will attempt to match that email address with an existing User and
-     * create a Stytch Session. You will need to create the user before using this endpoint.
+     * your Stytch Project settings in the [Dashboard](https://stytch.com/docs/dashboard), and then perform a lookup using the
+     * `session_token`. If the response contains a valid email address, Stytch will attempt to match that email address with
+     * an existing User and create a Stytch Session. You will need to create the user before using this endpoint.
      */
     public fun migrate(
         data: MigrateRequest,
@@ -152,9 +152,9 @@ public interface Sessions {
 
     /**
      * Migrate a session from an external OIDC compliant endpoint. Stytch will call the external UserInfo endpoint defined in
-     * your Stytch Project settings in the [Dashboard](/dashboard), and then perform a lookup using the `session_token`. If
-     * the response contains a valid email address, Stytch will attempt to match that email address with an existing User and
-     * create a Stytch Session. You will need to create the user before using this endpoint.
+     * your Stytch Project settings in the [Dashboard](https://stytch.com/docs/dashboard), and then perform a lookup using the
+     * `session_token`. If the response contains a valid email address, Stytch will attempt to match that email address with
+     * an existing User and create a Stytch Session. You will need to create the user before using this endpoint.
      */
     public fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>>
 

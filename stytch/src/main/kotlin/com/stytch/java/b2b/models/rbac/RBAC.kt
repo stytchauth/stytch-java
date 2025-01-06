@@ -190,7 +190,7 @@ public data class PolicyResponse
         val statusCode: Int,
         /**
          * The RBAC Policy document that contains all defined Roles and Resources – which are managed in the
-         * [Dashboard](/dashboard/rbac). Read more about these entities and how they work in our
+         * [Dashboard](https://stytch.com/docs/dashboard/rbac). Read more about these entities and how they work in our
          * [RBAC overview](https://stytch.com/docs/b2b/guides/rbac/overview).
          */
         @Json(name = "policy")
