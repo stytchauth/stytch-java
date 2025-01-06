@@ -32,6 +32,7 @@ import com.stytch.java.b2b.api.totps.TOTPsImpl
 import com.stytch.java.common.BASE_LIVE_URL
 import com.stytch.java.common.BASE_TEST_URL
 import com.stytch.java.common.JwtOptions
+import com.stytch.java.common.OptionalClientConfig
 import com.stytch.java.common.PolicyCache
 import com.stytch.java.consumer.api.fraud.Fraud
 import com.stytch.java.consumer.api.fraud.FraudImpl
@@ -44,81 +45,90 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import org.jose4j.jwk.HttpsJwks
 
-public class StytchB2BClient(projectId: String, secret: String, fraudBaseUrl: String = "https://telemetry.stytch.com") {
-    private val coroutineScope = CoroutineScope(SupervisorJob())
-    private val baseUrl = getBaseUrl(projectId)
-    private val httpClient: HttpClient =
-        HttpClient(
-            baseUrl = baseUrl,
-            projectId = projectId,
-            secret = secret,
-        )
-    private val fraudHttpClient: HttpClient =
-        HttpClient(
-            baseUrl = fraudBaseUrl,
-            projectId = projectId,
-            secret = secret,
-        )
-    private val httpsJwks = HttpsJwks("$baseUrl/v1/b2b/sessions/jwks/$projectId")
-    private val jwtOptions: JwtOptions =
-        JwtOptions(
-            audience = projectId,
-            issuer = "stytch.com/$projectId",
-            type = "JWT",
-        )
-    private val policyCache: PolicyCache = PolicyCache(RBACImpl(httpClient, coroutineScope))
+public class StytchB2BClient
+    @JvmOverloads
+    constructor(projectId: String, secret: String, clientConfig: OptionalClientConfig = OptionalClientConfig()) {
+        private val coroutineScope = CoroutineScope(SupervisorJob())
+        private val baseUrl = getBaseUrl(projectId, clientConfig)
+        private val httpClient: HttpClient =
+            HttpClient(
+                baseUrl = baseUrl,
+                projectId = projectId,
+                secret = secret,
+            )
+        private val fraudHttpClient: HttpClient =
+            HttpClient(
+                baseUrl = clientConfig.fraudBaseUrl,
+                projectId = projectId,
+                secret = secret,
+            )
+        private val httpsJwks = HttpsJwks("$baseUrl/v1/b2b/sessions/jwks/$projectId")
+        private val jwtOptions: JwtOptions =
+            JwtOptions(
+                audience = projectId,
+                issuer = "stytch.com/$projectId",
+                type = "JWT",
+            )
+        private val policyCache: PolicyCache = PolicyCache(RBACImpl(httpClient, coroutineScope))
 
-    @JvmField
-    public val discovery: Discovery = DiscoveryImpl(httpClient, coroutineScope)
+        @JvmField
+        public val discovery: Discovery = DiscoveryImpl(httpClient, coroutineScope)
 
-    @JvmField
-    public val fraud: Fraud = FraudImpl(fraudHttpClient, coroutineScope)
+        @JvmField
+        public val fraud: Fraud = FraudImpl(fraudHttpClient, coroutineScope)
 
-    @JvmField
-    public val m2m: M2M = M2MImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
+        @JvmField
+        public val m2m: M2M = M2MImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
 
-    @JvmField
-    public val magicLinks: MagicLinks = MagicLinksImpl(httpClient, coroutineScope)
+        @JvmField
+        public val magicLinks: MagicLinks = MagicLinksImpl(httpClient, coroutineScope)
 
-    @JvmField
-    public val oauth: OAuth = OAuthImpl(httpClient, coroutineScope)
+        @JvmField
+        public val oauth: OAuth = OAuthImpl(httpClient, coroutineScope)
 
-    @JvmField
-    public val otps: OTPs = OTPsImpl(httpClient, coroutineScope)
+        @JvmField
+        public val otps: OTPs = OTPsImpl(httpClient, coroutineScope)
 
-    @JvmField
-    public val organizations: Organizations = OrganizationsImpl(httpClient, coroutineScope)
+        @JvmField
+        public val organizations: Organizations = OrganizationsImpl(httpClient, coroutineScope)
 
-    @JvmField
-    public val passwords: Passwords = PasswordsImpl(httpClient, coroutineScope)
+        @JvmField
+        public val passwords: Passwords = PasswordsImpl(httpClient, coroutineScope)
 
-    @JvmField
-    public val project: Project = ProjectImpl(httpClient, coroutineScope)
+        @JvmField
+        public val project: Project = ProjectImpl(httpClient, coroutineScope)
 
-    @JvmField
-    public val rbac: RBAC = RBACImpl(httpClient, coroutineScope)
+        @JvmField
+        public val rbac: RBAC = RBACImpl(httpClient, coroutineScope)
 
-    @JvmField
-    public val recoveryCodes: RecoveryCodes = RecoveryCodesImpl(httpClient, coroutineScope)
+        @JvmField
+        public val recoveryCodes: RecoveryCodes = RecoveryCodesImpl(httpClient, coroutineScope)
 
-    @JvmField
-    public val scim: SCIM = SCIMImpl(httpClient, coroutineScope)
+        @JvmField
+        public val scim: SCIM = SCIMImpl(httpClient, coroutineScope)
 
-    @JvmField
-    public val sso: SSO = SSOImpl(httpClient, coroutineScope)
+        @JvmField
+        public val sso: SSO = SSOImpl(httpClient, coroutineScope)
 
-    @JvmField
-    public val sessions: Sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions, policyCache)
+        @JvmField
+        public val sessions: Sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions, policyCache)
 
-    @JvmField
-    public val totps: TOTPs = TOTPsImpl(httpClient, coroutineScope)
+        @JvmField
+        public val totps: TOTPs = TOTPsImpl(httpClient, coroutineScope)
 
-    /**
-     * Resolve the base URL for the Stytch API environment.
-     */
-    private fun getBaseUrl(projectId: String): String =
-        when (projectId.startsWith("project-test")) {
-            true -> BASE_TEST_URL
-            false -> BASE_LIVE_URL
+        /**
+         * Resolve the base URL for the Stytch API environment.
+         */
+        private fun getBaseUrl(
+            projectId: String,
+            clientConfig: OptionalClientConfig,
+        ): String {
+            if (clientConfig.apiBaseUrl != "") return clientConfig.apiBaseUrl
+            val baseUrl =
+                when (projectId.startsWith("project-test")) {
+                    true -> BASE_TEST_URL
+                    false -> BASE_LIVE_URL
+                }
+            return baseUrl
         }
-}
+    }
