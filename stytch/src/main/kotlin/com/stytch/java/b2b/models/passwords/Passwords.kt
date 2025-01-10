@@ -371,6 +371,10 @@ public data class MigrateRequest
          */
         @Json(name = "preserve_existing_sessions")
         val preserveExistingSessions: Boolean? = null,
+        @Json(name = "mfa_phone_number")
+        val mfaPhoneNumber: String? = null,
+        @Json(name = "set_phone_number_verified")
+        val setPhoneNumberVerified: Boolean? = null,
     )
 
 /**
