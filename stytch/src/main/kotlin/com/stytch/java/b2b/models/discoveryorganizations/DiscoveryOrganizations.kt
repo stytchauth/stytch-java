@@ -157,7 +157,8 @@ public data class CreateRequest
         val authMethods: String? = null,
         /**
          * An array of allowed authentication methods. This list is enforced when `auth_methods` is set to `RESTRICTED`.
-         *   The list's accepted values are: `sso`, `magic_link`, `password`, `google_oauth`, and `microsoft_oauth`.
+         *   The list's accepted values are: `sso`, `magic_link`, `email_otp`, `password`, `google_oauth`, `microsoft_oauth`,
+         * `slack_oauth`, `github_oauth`, and `hubspot_oauth`.
          *
          */
         @Json(name = "allowed_auth_methods")
