@@ -345,6 +345,9 @@ public data class AuthenticationFactor
         val githubOAuthExchangeFactor: GithubOAuthExchangeFactor? = null,
         @Json(name = "google_oauth_exchange_factor")
         val googleOAuthExchangeFactor: GoogleOAuthExchangeFactor? = null,
+        /**
+         * Information about the impersonated factor, if one is present.
+         */
         @Json(name = "impersonated_factor")
         val impersonatedFactor: ImpersonatedFactor? = null,
     )
@@ -550,8 +553,15 @@ public data class HubspotOAuthFactor
 public data class ImpersonatedFactor
     @JvmOverloads
     constructor(
+        /**
+         * The unique UUID of the impersonator. For impersonation sessions initiated via the Stytch dashboard, the
+         * `impersonator_id` will be the impersonator's Stytch workspace id.
+         */
         @Json(name = "impersonator_id")
         val impersonatorId: String,
+        /**
+         * The email address of the impersonator.
+         */
         @Json(name = "impersonator_email_address")
         val impersonatorEmailAddress: String,
     )
