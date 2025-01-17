@@ -21,13 +21,31 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
 
 public interface Impersonation {
+    /**
+     * Authenticate an impersonation token to impersonate a. This endpoint requires an impersonation token that is not expired
+     * or previously used.
+     * A Stytch session will be created for the impersonated member with a 60 minute duration. Impersonated sessions cannot be
+     * extended.
+     */
     public suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse>
 
+    /**
+     * Authenticate an impersonation token to impersonate a. This endpoint requires an impersonation token that is not expired
+     * or previously used.
+     * A Stytch session will be created for the impersonated member with a 60 minute duration. Impersonated sessions cannot be
+     * extended.
+     */
     public fun authenticate(
         data: AuthenticateRequest,
         callback: (StytchResult<AuthenticateResponse>) -> Unit,
     )
 
+    /**
+     * Authenticate an impersonation token to impersonate a. This endpoint requires an impersonation token that is not expired
+     * or previously used.
+     * A Stytch session will be created for the impersonated member with a 60 minute duration. Impersonated sessions cannot be
+     * extended.
+     */
     public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 }
 
