@@ -25,6 +25,12 @@ public enum class AuthenticateRequestLocale {
 
     @Json(name = "ptbr")
     PTBR,
+
+    @Json(name = "fr")
+    FR,
+
+    @Json(name = "it")
+    IT,
 }
 
 @JsonClass(generateAdapter = true)

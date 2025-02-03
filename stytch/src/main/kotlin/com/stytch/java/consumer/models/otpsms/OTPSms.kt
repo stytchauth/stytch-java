@@ -20,6 +20,12 @@ public enum class LoginOrCreateRequestLocale {
 
     @Json(name = "ptbr")
     PTBR,
+
+    @Json(name = "fr")
+    FR,
+
+    @Json(name = "it")
+    IT,
 }
 
 @JsonClass(generateAdapter = false)
@@ -32,6 +38,12 @@ public enum class SendRequestLocale {
 
     @Json(name = "ptbr")
     PTBR,
+
+    @Json(name = "fr")
+    FR,
+
+    @Json(name = "it")
+    IT,
 }
 
 /**

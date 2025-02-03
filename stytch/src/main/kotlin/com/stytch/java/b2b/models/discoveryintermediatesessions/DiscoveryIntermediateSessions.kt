@@ -24,6 +24,12 @@ public enum class ExchangeRequestLocale {
 
     @Json(name = "ptbr")
     PTBR,
+
+    @Json(name = "fr")
+    FR,
+
+    @Json(name = "it")
+    IT,
 }
 
 /**
