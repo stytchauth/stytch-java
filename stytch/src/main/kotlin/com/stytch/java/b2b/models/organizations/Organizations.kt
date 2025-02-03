@@ -55,6 +55,8 @@ public data class ActiveSSOConnection
          */
         @Json(name = "display_name")
         val displayName: String,
+        @Json(name = "identity_provider")
+        val identityProvider: String,
     )
 
 public data class DeleteRequestOptions

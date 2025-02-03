@@ -22,6 +22,12 @@ public enum class SendRequestLocale {
 
     @Json(name = "ptbr")
     PTBR,
+
+    @Json(name = "fr")
+    FR,
+
+    @Json(name = "it")
+    IT,
 }
 
 /**
