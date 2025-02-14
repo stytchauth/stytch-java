@@ -86,6 +86,7 @@ private val policy =
                         ),
                 ),
             ),
+        scopes = null,
     )
 
 internal class PolicyCacheTest {
