@@ -86,18 +86,20 @@ private val policy =
                         ),
                 ),
             ),
-        scopes = listOf(
-            PolicyScope(
-                scopeId = "global",
-                description = "Global scope",
-                roles = listOf(
-                    PolicyRolePermission(
-                        resourceId = "bar",
-                        actions = listOf("read", "write"),
-                    ),
+        scopes =
+            listOf(
+                PolicyScope(
+                    scopeId = "global",
+                    description = "Global scope",
+                    roles =
+                        listOf(
+                            PolicyRolePermission(
+                                resourceId = "bar",
+                                actions = listOf("read", "write"),
+                            ),
+                        ),
                 ),
             ),
-        ),
     )
 
 internal class PolicyCacheTest {
