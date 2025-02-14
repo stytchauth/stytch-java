@@ -90,9 +90,9 @@ private val policy =
         scopes =
             listOf(
                 PolicyScope(
-                    scopeId = "global",
+                    scope = "global",
                     description = "Global scope",
-                    roles =
+                    permissions =
                         listOf(
                             PolicyRolePermission(
                                 resourceId = "bar",
