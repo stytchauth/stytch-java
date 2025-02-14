@@ -6,6 +6,7 @@ import com.stytch.java.b2b.models.rbac.PolicyResource
 import com.stytch.java.b2b.models.rbac.PolicyResponse
 import com.stytch.java.b2b.models.rbac.PolicyRole
 import com.stytch.java.b2b.models.rbac.PolicyRolePermission
+import com.stytch.java.b2b.models.rbac.PolicyScope
 import com.stytch.java.b2b.models.sessions.AuthorizationCheck
 import io.mockk.every
 import io.mockk.mockk
