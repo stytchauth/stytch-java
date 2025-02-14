@@ -6,6 +6,8 @@ import com.stytch.java.b2b.models.rbac.PolicyResource
 import com.stytch.java.b2b.models.rbac.PolicyResponse
 import com.stytch.java.b2b.models.rbac.PolicyRole
 import com.stytch.java.b2b.models.rbac.PolicyRolePermission
+import com.stytch.java.b2b.models.rbac.PolicyScope
+import com.stytch.java.b2b.models.rbac.PolicyScopePermission
 import com.stytch.java.b2b.models.sessions.AuthorizationCheck
 import io.mockk.every
 import io.mockk.mockk
@@ -80,6 +82,20 @@ private val policy =
                     permissions =
                         listOf(
                             PolicyRolePermission(
+                                resourceId = "bar",
+                                actions = listOf("read", "write"),
+                            ),
+                        ),
+                ),
+            ),
+        scopes =
+            listOf(
+                PolicyScope(
+                    scope = "global",
+                    description = "Global scope",
+                    permissions =
+                        listOf(
+                            PolicyScopePermission(
                                 resourceId = "bar",
                                 actions = listOf("read", "write"),
                             ),

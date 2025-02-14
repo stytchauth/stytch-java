@@ -450,7 +450,7 @@ public data class GetJWKSResponse
     @JvmOverloads
     constructor(
         /**
-         * The JWK
+         * The list of JWKs associated with the project.
          */
         @Json(name = "keys")
         val keys: List<JWK>,
