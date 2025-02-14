@@ -94,7 +94,7 @@ private val policy =
                     description = "Global scope",
                     permissions =
                         listOf(
-                            PolicyRolePermission(
+                            PolicyScopePermission(
                                 resourceId = "bar",
                                 actions = listOf("read", "write"),
                             ),
