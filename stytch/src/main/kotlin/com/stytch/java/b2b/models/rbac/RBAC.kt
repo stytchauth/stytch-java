@@ -23,6 +23,8 @@ public data class Policy
          */
         @Json(name = "resources")
         val resources: List<PolicyResource>,
+        @Json(name = "scopes")
+        val scopes: List<PolicyScope>,
     )
 
 @JsonClass(generateAdapter = true)
@@ -157,6 +159,28 @@ public data class PolicyRolePermission
          * A list of permitted actions the Role is authorized to take with the provided Resource. You can use `*` as a wildcard to
          * grant a Role permission to use all possible actions related to the Resource.
          */
+        @Json(name = "actions")
+        val actions: List<String>,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class PolicyScope
+    @JvmOverloads
+    constructor(
+        @Json(name = "scope")
+        val scope: String,
+        @Json(name = "description")
+        val description: String,
+        @Json(name = "permissions")
+        val permissions: List<PolicyScopePermission>,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class PolicyScopePermission
+    @JvmOverloads
+    constructor(
+        @Json(name = "resource_id")
+        val resourceId: String,
         @Json(name = "actions")
         val actions: List<String>,
     )

@@ -13,6 +13,8 @@ import com.stytch.java.consumer.api.cryptowallets.CryptoWallets
 import com.stytch.java.consumer.api.cryptowallets.CryptoWalletsImpl
 import com.stytch.java.consumer.api.fraud.Fraud
 import com.stytch.java.consumer.api.fraud.FraudImpl
+import com.stytch.java.consumer.api.impersonation.Impersonation
+import com.stytch.java.consumer.api.impersonation.ImpersonationImpl
 import com.stytch.java.consumer.api.m2m.M2M
 import com.stytch.java.consumer.api.m2m.M2MImpl
 import com.stytch.java.consumer.api.magiclinks.MagicLinks
@@ -68,6 +70,9 @@ public class StytchClient
 
         @JvmField
         public val fraud: Fraud = FraudImpl(fraudHttpClient, coroutineScope)
+
+        @JvmField
+        public val impersonation: Impersonation = ImpersonationImpl(httpClient, coroutineScope)
 
         @JvmField
         public val m2m: M2M = M2MImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
