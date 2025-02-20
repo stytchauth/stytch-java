@@ -273,6 +273,8 @@ public data class X509Certificate
         val createdAt: Instant? = null,
         @Json(name = "expires_at")
         val expiresAt: Instant? = null,
+        @Json(name = "updated_at")
+        val updatedAt: Instant? = null,
     )
 
 /**

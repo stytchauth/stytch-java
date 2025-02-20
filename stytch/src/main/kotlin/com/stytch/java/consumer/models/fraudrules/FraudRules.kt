@@ -19,39 +19,39 @@ public data class SetRequest
     @JvmOverloads
     constructor(
         /**
-         * The action that should be returned by a fingerprint lookup for that fingerprint or ID with a `RULE_MATCH` reason. The
-         * following values are valid: `ALLOW`, `BLOCK`, `CHALLENGE`, or `NONE`. If a `NONE` action is specified, it will clear
-         * the stored rule.
+         * The action that should be returned by a fingerprint lookup for that identifier with a `RULE_MATCH` reason. The
+         * following values are valid: `ALLOW`, `BLOCK`, `CHALLENGE`, or `NONE`. For country codes, `ALLOW` actions are not
+         * allowed. If a `NONE` action is specified, it will clear the stored rule.
          */
         @Json(name = "action")
         val action: RuleAction,
         /**
-         * The visitor ID we want to set a rule for. Only one fingerprint or ID can be specified in the request.
+         * The visitor ID we want to set a rule for. Only one identifier can be specified in the request.
          */
         @Json(name = "visitor_id")
         val visitorId: String? = null,
         /**
-         * The browser ID we want to set a rule for. Only one fingerprint or ID can be specified in the request.
+         * The browser ID we want to set a rule for. Only one identifier can be specified in the request.
          */
         @Json(name = "browser_id")
         val browserId: String? = null,
         /**
-         * The visitor fingerprint we want to set a rule for. Only one fingerprint or ID can be specified in the request.
+         * The visitor fingerprint we want to set a rule for. Only one identifier can be specified in the request.
          */
         @Json(name = "visitor_fingerprint")
         val visitorFingerprint: String? = null,
         /**
-         * The browser fingerprint we want to set a rule for. Only one fingerprint or ID can be specified in the request.
+         * The browser fingerprint we want to set a rule for. Only one identifier can be specified in the request.
          */
         @Json(name = "browser_fingerprint")
         val browserFingerprint: String? = null,
         /**
-         * The hardware fingerprint we want to set a rule for. Only one fingerprint or ID can be specified in the request.
+         * The hardware fingerprint we want to set a rule for. Only one identifier can be specified in the request.
          */
         @Json(name = "hardware_fingerprint")
         val hardwareFingerprint: String? = null,
         /**
-         * The network fingerprint we want to set a rule for. Only one fingerprint or ID can be specified in the request.
+         * The network fingerprint we want to set a rule for. Only one identifier can be specified in the request.
          */
         @Json(name = "network_fingerprint")
         val networkFingerprint: String? = null,
@@ -66,6 +66,25 @@ public data class SetRequest
          */
         @Json(name = "description")
         val description: String? = null,
+        /**
+         * The CIDR block we want to set a rule for. You may pass either an IP address or a CIDR block. The CIDR block prefix must
+         * be between 16 and 32, inclusive. If an end user's IP address is within this CIDR block, this rule will be applied. Only
+         * one identifier can be specified in the request.
+         */
+        @Json(name = "cidr_block")
+        val cidrBlock: String? = null,
+        /**
+         * The country code we want to set a rule for. The country code must be a valid ISO 3166-1 alpha-2 code. You may not set
+         * `ALLOW` rules for country codes. Only one identifier can be specified in the request.
+         */
+        @Json(name = "country_code")
+        val countryCode: String? = null,
+        /**
+         * The ASN we want to set a rule for. The ASN must be the string representation of an integer between 0 and 4294967295,
+         * inclusive. Only one identifier can be specified in the request.
+         */
+        @Json(name = "asn")
+        val asn: String? = null,
     )
 
 /**
@@ -93,32 +112,32 @@ public data class SetResponse
         @Json(name = "status_code")
         val statusCode: Int,
         /**
-         * The cookie stored on the user's device that uniquely identifies them.
+         * The visitor ID that a rule was set for.
          */
         @Json(name = "visitor_id")
         val visitorId: String? = null,
         /**
-         * Combination of VisitorID and NetworkFingerprint to create a clear identifier of a browser.
+         * The browser ID that a rule was set for.
          */
         @Json(name = "browser_id")
         val browserId: String? = null,
         /**
-         * Cookie-less way of identifying a unique user.
+         * The visitor fingerprint that a rule was set for.
          */
         @Json(name = "visitor_fingerprint")
         val visitorFingerprint: String? = null,
         /**
-         * Combination of signals to identify a browser and its specific version.
+         * The browser fingerprint that a rule was set for.
          */
         @Json(name = "browser_fingerprint")
         val browserFingerprint: String? = null,
         /**
-         * Combinations of signals to identify an operating system and architecture.
+         * The hardware fingerprint that a rule was set for.
          */
         @Json(name = "hardware_fingerprint")
         val hardwareFingerprint: String? = null,
         /**
-         * Combination of signals associated with a specific network commonly known as TLS fingerprinting.
+         * The network fingerprint that a rule was set for.
          */
         @Json(name = "network_fingerprint")
         val networkFingerprint: String? = null,
@@ -128,4 +147,20 @@ public data class SetResponse
          */
         @Json(name = "expires_at")
         val expiresAt: Instant? = null,
+        /**
+         * The CIDR block that a rule was set for. If an end user's IP address is within this CIDR block, this rule will be
+         * applied.
+         */
+        @Json(name = "cidr_block")
+        val cidrBlock: String? = null,
+        /**
+         * The country code that a rule was set for.
+         */
+        @Json(name = "country_code")
+        val countryCode: String? = null,
+        /**
+         * The ASN that a rule was set for.
+         */
+        @Json(name = "asn")
+        val asn: String? = null,
     )

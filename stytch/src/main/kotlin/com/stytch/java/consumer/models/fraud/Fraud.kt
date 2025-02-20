@@ -25,6 +25,36 @@ public enum class RuleAction {
 }
 
 @JsonClass(generateAdapter = false)
+public enum class RuleType {
+    @Json(name = "VISITOR_ID")
+    VISITOR_ID,
+
+    @Json(name = "BROWSER_ID")
+    BROWSER_ID,
+
+    @Json(name = "VISITOR_FINGERPRINT")
+    VISITOR_FINGERPRINT,
+
+    @Json(name = "BROWSER_FINGERPRINT")
+    BROWSER_FINGERPRINT,
+
+    @Json(name = "HARDWARE_FINGERPRINT")
+    HARDWARE_FINGERPRINT,
+
+    @Json(name = "NETWORK_FINGERPRINT")
+    NETWORK_FINGERPRINT,
+
+    @Json(name = "CIDR_BLOCK")
+    CIDR_BLOCK,
+
+    @Json(name = "ASN")
+    ASN,
+
+    @Json(name = "COUNTRY_CODE")
+    COUNTRY_CODE,
+}
+
+@JsonClass(generateAdapter = false)
 public enum class VerdictAction {
     @Json(name = "ALLOW")
     ALLOW,
@@ -220,4 +250,16 @@ public data class Verdict
          */
         @Json(name = "is_authentic_device")
         val isAuthenticDevice: Boolean,
+        /**
+         * The type of rule match that was applied (e.g. `VISITOR_ID`), if any. This field will only be present if there is a
+         * `RULE_MATCH` reason in the list of verdict reasons.
+         */
+        @Json(name = "rule_match_type")
+        val ruleMatchType: RuleType? = null,
+        /**
+         * The rule that was applied (e.g. a specific visitor ID value), if any. This field will only be present if there is a
+         * `RULE_MATCH` reason in the list of verdict reasons.
+         */
+        @Json(name = "rule_match_identifier")
+        val ruleMatchIdentifier: String? = null,
     )
