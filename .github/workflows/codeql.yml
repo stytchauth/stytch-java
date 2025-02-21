@@ -40,7 +40,7 @@ jobs:
     - name: Autobuild
       run: |
          echo "Run, Build Application using script"
-         ./gradlew --debug --no-daemon assemble
+         ./gradlew --no-daemon assemble
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
