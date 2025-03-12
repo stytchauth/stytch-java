@@ -651,6 +651,8 @@ public data class Organization
          */
         @Json(name = "oauth_tenant_jit_provisioning")
         val oauthTenantJITProvisioning: String,
+        @Json(name = "claimed_email_domains")
+        val claimedEmailDomains: List<String>,
         /**
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */
@@ -865,6 +867,8 @@ public data class CreateRequest
          */
         @Json(name = "organization_name")
         val organizationName: String,
+        @Json(name = "claimed_email_domains")
+        val claimedEmailDomains: List<String>,
         /**
          * The unique URL slug of the Organization. The slug only accepts alphanumeric characters and the following reserved
          * characters: `-` `.` `_` `~`. Must be between 2 and 128 characters in length.
@@ -1429,6 +1433,8 @@ public data class UpdateRequest
          */
         @Json(name = "allowed_oauth_tenants")
         val allowedOAuthTenants: Map<String, Any?>? = emptyMap(),
+        @Json(name = "claimed_email_domains")
+        val claimedEmailDomains: List<String>? = emptyList(),
     )
 
 /**
