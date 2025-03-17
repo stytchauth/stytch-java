@@ -139,6 +139,9 @@ public enum class AuthenticationFactorDeliveryMethod {
 
     @Json(name = "impersonation")
     IMPERSONATION,
+
+    @Json(name = "oauth_access_token_exchange")
+    OAUTH_ACCESS_TOKEN_EXCHANGE,
 }
 
 @JsonClass(generateAdapter = false)
@@ -350,6 +353,8 @@ public data class AuthenticationFactor
          */
         @Json(name = "impersonated_factor")
         val impersonatedFactor: ImpersonatedFactor? = null,
+        @Json(name = "oauth_access_token_exchange_factor")
+        val oauthAccessTokenExchangeFactor: OAuthAccessTokenExchangeFactor? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -634,6 +639,14 @@ public data class MicrosoftOAuthFactor
          */
         @Json(name = "email_id")
         val emailId: String? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class OAuthAccessTokenExchangeFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "client_id")
+        val clientId: String,
     )
 
 @JsonClass(generateAdapter = true)

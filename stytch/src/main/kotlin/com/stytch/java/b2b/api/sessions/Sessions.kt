@@ -12,6 +12,8 @@ import com.squareup.moshi.Types
 import com.stytch.java.b2b.models.sessions.AuthenticateRequest
 import com.stytch.java.b2b.models.sessions.AuthenticateResponse
 import com.stytch.java.b2b.models.sessions.AuthorizationCheck
+import com.stytch.java.b2b.models.sessions.ExchangeAccessTokenRequest
+import com.stytch.java.b2b.models.sessions.ExchangeAccessTokenResponse
 import com.stytch.java.b2b.models.sessions.ExchangeRequest
 import com.stytch.java.b2b.models.sessions.ExchangeResponse
 import com.stytch.java.b2b.models.sessions.GetJWKSRequest
@@ -243,6 +245,47 @@ public interface Sessions {
      * The `session_duration_minutes` and `session_custom_claims` parameters will be ignored.
      */
     public fun exchangeCompletable(data: ExchangeRequest): CompletableFuture<StytchResult<ExchangeResponse>>
+
+    /**
+     * Use this endpoint to exchange a Connected Apps Access Token back into a Member Session for the underlying Member.
+     * This session can be used with the Stytch SDKs and APIs.
+     *
+     * The Access Token must contain the `full_access` scope and must not be more than 5 minutes old. Access Tokens may only
+     * be exchanged a single time.
+     *
+     * Because the Member previously completed MFA and satisfied all Organization authentication requirements at the time of
+     * the original Access Token issuance, this endpoint will never return an `intermediate_session_token` or require MFA.
+     */
+    public suspend fun exchangeAccessToken(data: ExchangeAccessTokenRequest): StytchResult<ExchangeAccessTokenResponse>
+
+    /**
+     * Use this endpoint to exchange a Connected Apps Access Token back into a Member Session for the underlying Member.
+     * This session can be used with the Stytch SDKs and APIs.
+     *
+     * The Access Token must contain the `full_access` scope and must not be more than 5 minutes old. Access Tokens may only
+     * be exchanged a single time.
+     *
+     * Because the Member previously completed MFA and satisfied all Organization authentication requirements at the time of
+     * the original Access Token issuance, this endpoint will never return an `intermediate_session_token` or require MFA.
+     */
+    public fun exchangeAccessToken(
+        data: ExchangeAccessTokenRequest,
+        callback: (StytchResult<ExchangeAccessTokenResponse>) -> Unit,
+    )
+
+    /**
+     * Use this endpoint to exchange a Connected Apps Access Token back into a Member Session for the underlying Member.
+     * This session can be used with the Stytch SDKs and APIs.
+     *
+     * The Access Token must contain the `full_access` scope and must not be more than 5 minutes old. Access Tokens may only
+     * be exchanged a single time.
+     *
+     * Because the Member previously completed MFA and satisfied all Organization authentication requirements at the time of
+     * the original Access Token issuance, this endpoint will never return an `intermediate_session_token` or require MFA.
+     */
+    public fun exchangeAccessTokenCompletable(
+        data: ExchangeAccessTokenRequest,
+    ): CompletableFuture<StytchResult<ExchangeAccessTokenResponse>>
 
     /**
      * Migrate a session from an external OIDC compliant endpoint. Stytch will call the external UserInfo endpoint defined in
@@ -553,6 +596,30 @@ internal class SessionsImpl(
     override fun exchangeCompletable(data: ExchangeRequest): CompletableFuture<StytchResult<ExchangeResponse>> =
         coroutineScope.async {
             exchange(data)
+        }.asCompletableFuture()
+
+    override suspend fun exchangeAccessToken(data: ExchangeAccessTokenRequest): StytchResult<ExchangeAccessTokenResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
+            val asJson = moshi.adapter(ExchangeAccessTokenRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/sessions/exchange_access_token", asJson, headers)
+        }
+
+    override fun exchangeAccessToken(
+        data: ExchangeAccessTokenRequest,
+        callback: (StytchResult<ExchangeAccessTokenResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(exchangeAccessToken(data))
+        }
+    }
+
+    override fun exchangeAccessTokenCompletable(
+        data: ExchangeAccessTokenRequest,
+    ): CompletableFuture<StytchResult<ExchangeAccessTokenResponse>> =
+        coroutineScope.async {
+            exchangeAccessToken(data)
         }.asCompletableFuture()
 
     override suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse> =
