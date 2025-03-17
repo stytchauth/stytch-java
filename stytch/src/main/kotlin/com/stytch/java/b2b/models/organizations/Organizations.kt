@@ -651,6 +651,8 @@ public data class Organization
          */
         @Json(name = "oauth_tenant_jit_provisioning")
         val oauthTenantJITProvisioning: String,
+        @Json(name = "claimed_email_domains")
+        val claimedEmailDomains: List<String>,
         /**
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */
@@ -1008,6 +1010,11 @@ public data class CreateRequest
          */
         @Json(name = "allowed_oauth_tenants")
         val allowedOAuthTenants: Map<String, Any?>? = emptyMap(),
+        /**
+         * A list of email domains that are claimed by the Organization.
+         */
+        @Json(name = "claimed_email_domains")
+        val claimedEmailDomains: List<String>? = emptyList(),
     )
 
 /**
@@ -1429,6 +1436,11 @@ public data class UpdateRequest
          */
         @Json(name = "allowed_oauth_tenants")
         val allowedOAuthTenants: Map<String, Any?>? = emptyMap(),
+        /**
+         * A list of email domains that are claimed by the Organization.
+         */
+        @Json(name = "claimed_email_domains")
+        val claimedEmailDomains: List<String>? = emptyList(),
     )
 
 /**

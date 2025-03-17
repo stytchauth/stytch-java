@@ -91,16 +91,6 @@ public data class RequireResetResponse
     @JvmOverloads
     constructor(
         /**
-         * The [Member object](https://stytch.com/docs/b2b/api/member-object)
-         */
-        @Json(name = "member")
-        val member: Member,
-        /**
-         * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
-         */
-        @Json(name = "organization")
-        val organization: Organization,
-        /**
          * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
          * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
          */
@@ -111,6 +101,16 @@ public data class RequireResetResponse
          */
         @Json(name = "member_id")
         val memberId: String? = null,
+        /**
+         * The [Member object](https://stytch.com/docs/b2b/api/member-object)
+         */
+        @Json(name = "member")
+        val member: Member? = null,
+        /**
+         * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
+         */
+        @Json(name = "organization")
+        val organization: Organization? = null,
     )
 
 /**
