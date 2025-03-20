@@ -360,6 +360,8 @@ public data class ResetStartRequest
          */
         @Json(name = "reset_password_template_id")
         val resetPasswordTemplateId: String? = null,
+        @Json(name = "verify_email_template_id")
+        val verifyEmailTemplateId: String? = null,
     )
 
 /**

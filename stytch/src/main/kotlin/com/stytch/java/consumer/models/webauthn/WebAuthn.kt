@@ -12,6 +12,18 @@ import com.stytch.java.consumer.models.sessions.Session
 import com.stytch.java.consumer.models.users.User
 import com.stytch.java.consumer.models.users.WebAuthnRegistration
 
+@JsonClass(generateAdapter = true)
+public data class WebAuthnCredential
+    @JvmOverloads
+    constructor(
+        @Json(name = "credential_id")
+        val credentialId: String,
+        @Json(name = "webauthn_registration_id")
+        val webauthnRegistrationId: String,
+        @Json(name = "type")
+        val type: String,
+    )
+
 /**
 * Request type for `WebAuthn.authenticate`.
 */
@@ -170,6 +182,26 @@ public data class AuthenticateStartResponse
          * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
          * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
          */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class CredentialsRequest
+    @JvmOverloads
+    constructor(
+        @Json(name = "user_id")
+        val userId: String,
+        @Json(name = "domain")
+        val domain: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class CredentialsResponse
+    @JvmOverloads
+    constructor(
+        @Json(name = "credentials")
+        val credentials: List<WebAuthnCredential>,
         @Json(name = "status_code")
         val statusCode: Int,
     )
