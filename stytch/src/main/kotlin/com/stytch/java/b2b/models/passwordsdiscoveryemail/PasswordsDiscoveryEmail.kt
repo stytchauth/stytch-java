@@ -145,6 +145,8 @@ public data class ResetStartRequest
          */
         @Json(name = "locale")
         val locale: String? = null,
+        @Json(name = "verify_email_template_id")
+        val verifyEmailTemplateId: String? = null,
     )
 
 /**

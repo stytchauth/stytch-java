@@ -6,13 +6,17 @@ package com.stytch.java.consumer.api.webauthn
 // or your changes may be overwritten later!
 // !!!
 
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
 import com.stytch.java.consumer.models.webauthn.AuthenticateRequest
 import com.stytch.java.consumer.models.webauthn.AuthenticateResponse
 import com.stytch.java.consumer.models.webauthn.AuthenticateStartRequest
 import com.stytch.java.consumer.models.webauthn.AuthenticateStartResponse
+import com.stytch.java.consumer.models.webauthn.CredentialsRequest
+import com.stytch.java.consumer.models.webauthn.CredentialsResponse
 import com.stytch.java.consumer.models.webauthn.RegisterRequest
 import com.stytch.java.consumer.models.webauthn.RegisterResponse
 import com.stytch.java.consumer.models.webauthn.RegisterStartRequest
@@ -235,6 +239,15 @@ public interface WebAuthn {
      * Updates a Passkey or WebAuthn registration.
      */
     public fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>>
+
+    public suspend fun credentials(data: CredentialsRequest): StytchResult<CredentialsResponse>
+
+    public fun credentials(
+        data: CredentialsRequest,
+        callback: (StytchResult<CredentialsResponse>) -> Unit,
+    )
+
+    public fun credentialsCompletable(data: CredentialsRequest): CompletableFuture<StytchResult<CredentialsResponse>>
 }
 
 internal class WebAuthnImpl(
@@ -351,5 +364,30 @@ internal class WebAuthnImpl(
     override fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>> =
         coroutineScope.async {
             update(data)
+        }.asCompletableFuture()
+
+    override suspend fun credentials(data: CredentialsRequest): StytchResult<CredentialsResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
+            val asJson = moshi.adapter(CredentialsRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/webauthn/credentials", asMap, headers)
+        }
+
+    override fun credentials(
+        data: CredentialsRequest,
+        callback: (StytchResult<CredentialsResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(credentials(data))
+        }
+    }
+
+    override fun credentialsCompletable(data: CredentialsRequest): CompletableFuture<StytchResult<CredentialsResponse>> =
+        coroutineScope.async {
+            credentials(data)
         }.asCompletableFuture()
 }
