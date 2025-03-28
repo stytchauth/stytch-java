@@ -208,6 +208,10 @@ public data class SAMLConnection
         val alternativeAudienceUri: String,
         @Json(name = "identity_provider")
         val identityProvider: String,
+        @Json(name = "nameid_format")
+        val nameidFormat: String,
+        @Json(name = "alternative_acs_url")
+        val alternativeAcsURL: String,
         @Json(name = "attribute_mapping")
         val attributeMapping: Map<String, Any?>? = emptyMap(),
     )

@@ -429,6 +429,20 @@ public data class UpdateConnectionRequest
          */
         @Json(name = "signing_private_key")
         val signingPrivateKey: String? = null,
+        /**
+         * The NameID format the SAML Connection expects to use. Defaults to
+         * `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress`.
+         */
+        @Json(name = "nameid_format")
+        val nameidFormat: String? = null,
+        /**
+         * An alternative URL to use for the `AssertionConsumerServiceURL` in SP initiated SAML AuthNRequests. This value can be
+         * used when you wish to migrate an existing SAML integration to Stytch with zero downtime. Note that you will be
+         * responsible for proxying requests sent to the Alternative ACS URL to Stytch. Read our
+         * [SSO migration guide](https://stytch.com/docs/b2b/guides/migrations/additional-migration-considerations) for more info.
+         */
+        @Json(name = "alternative_acs_url")
+        val alternativeAcsURL: String? = null,
     )
 
 /**
