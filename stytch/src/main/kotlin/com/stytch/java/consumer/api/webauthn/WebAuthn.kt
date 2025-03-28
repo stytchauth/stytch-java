@@ -240,13 +240,22 @@ public interface WebAuthn {
      */
     public fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>>
 
+    /**
+     * List the public key credentials of the WebAuthn Registrations or Passkeys registered to a specific User.
+     */
     public suspend fun credentials(data: CredentialsRequest): StytchResult<CredentialsResponse>
 
+    /**
+     * List the public key credentials of the WebAuthn Registrations or Passkeys registered to a specific User.
+     */
     public fun credentials(
         data: CredentialsRequest,
         callback: (StytchResult<CredentialsResponse>) -> Unit,
     )
 
+    /**
+     * List the public key credentials of the WebAuthn Registrations or Passkeys registered to a specific User.
+     */
     public fun credentialsCompletable(data: CredentialsRequest): CompletableFuture<StytchResult<CredentialsResponse>>
 }
 

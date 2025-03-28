@@ -16,10 +16,19 @@ import com.stytch.java.consumer.models.users.WebAuthnRegistration
 public data class WebAuthnCredential
     @JvmOverloads
     constructor(
+        /**
+         * The unique, public ID of the WebAuthn credential.
+         */
         @Json(name = "credential_id")
         val credentialId: String,
+        /**
+         * The unique ID for the Passkey or WebAuthn registration.
+         */
         @Json(name = "webauthn_registration_id")
         val webauthnRegistrationId: String,
+        /**
+         * The type of the WebAuthn credential. Examples include `public-key`.
+         */
         @Json(name = "type")
         val type: String,
     )
@@ -186,22 +195,41 @@ public data class AuthenticateStartResponse
         val statusCode: Int,
     )
 
+/**
+* Request type for `WebAuthn.credentials`.
+*/
 @JsonClass(generateAdapter = true)
 public data class CredentialsRequest
     @JvmOverloads
     constructor(
+        /**
+         * The `user_id` of an active user the Passkey or WebAuthn registration should be tied to.
+         */
         @Json(name = "user_id")
         val userId: String,
+        /**
+         * The domain for Passkeys or WebAuthn. Defaults to `window.location.hostname`.
+         */
         @Json(name = "domain")
         val domain: String,
     )
 
+/**
+* Response type for `WebAuthn.credentials`.
+*/
 @JsonClass(generateAdapter = true)
 public data class CredentialsResponse
     @JvmOverloads
     constructor(
+        /**
+         * A list of WebAuthn credential objects.
+         */
         @Json(name = "credentials")
         val credentials: List<WebAuthnCredential>,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
         @Json(name = "status_code")
         val statusCode: Int,
     )
