@@ -15,8 +15,8 @@ import com.stytch.java.consumer.models.webauthn.AuthenticateRequest
 import com.stytch.java.consumer.models.webauthn.AuthenticateResponse
 import com.stytch.java.consumer.models.webauthn.AuthenticateStartRequest
 import com.stytch.java.consumer.models.webauthn.AuthenticateStartResponse
-import com.stytch.java.consumer.models.webauthn.CredentialsRequest
-import com.stytch.java.consumer.models.webauthn.CredentialsResponse
+import com.stytch.java.consumer.models.webauthn.ListCredentialsRequest
+import com.stytch.java.consumer.models.webauthn.ListCredentialsResponse
 import com.stytch.java.consumer.models.webauthn.RegisterRequest
 import com.stytch.java.consumer.models.webauthn.RegisterResponse
 import com.stytch.java.consumer.models.webauthn.RegisterStartRequest
@@ -243,20 +243,20 @@ public interface WebAuthn {
     /**
      * List the public key credentials of the WebAuthn Registrations or Passkeys registered to a specific User.
      */
-    public suspend fun credentials(data: CredentialsRequest): StytchResult<CredentialsResponse>
+    public suspend fun listCredentials(data: ListCredentialsRequest): StytchResult<ListCredentialsResponse>
 
     /**
      * List the public key credentials of the WebAuthn Registrations or Passkeys registered to a specific User.
      */
-    public fun credentials(
-        data: CredentialsRequest,
-        callback: (StytchResult<CredentialsResponse>) -> Unit,
+    public fun listCredentials(
+        data: ListCredentialsRequest,
+        callback: (StytchResult<ListCredentialsResponse>) -> Unit,
     )
 
     /**
      * List the public key credentials of the WebAuthn Registrations or Passkeys registered to a specific User.
      */
-    public fun credentialsCompletable(data: CredentialsRequest): CompletableFuture<StytchResult<CredentialsResponse>>
+    public fun listCredentialsCompletable(data: ListCredentialsRequest): CompletableFuture<StytchResult<ListCredentialsResponse>>
 }
 
 internal class WebAuthnImpl(
@@ -375,28 +375,28 @@ internal class WebAuthnImpl(
             update(data)
         }.asCompletableFuture()
 
-    override suspend fun credentials(data: CredentialsRequest): StytchResult<CredentialsResponse> =
+    override suspend fun listCredentials(data: ListCredentialsRequest): StytchResult<ListCredentialsResponse> =
         withContext(Dispatchers.IO) {
             var headers = emptyMap<String, String>()
 
-            val asJson = moshi.adapter(CredentialsRequest::class.java).toJson(data)
+            val asJson = moshi.adapter(ListCredentialsRequest::class.java).toJson(data)
             val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
             val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
             val asMap = adapter.fromJson(asJson) ?: emptyMap()
-            httpClient.get("/v1/webauthn/credentials", asMap, headers)
+            httpClient.get("/v1/webauthn/credentials/${data.userId}/${data.domain}", asMap, headers)
         }
 
-    override fun credentials(
-        data: CredentialsRequest,
-        callback: (StytchResult<CredentialsResponse>) -> Unit,
+    override fun listCredentials(
+        data: ListCredentialsRequest,
+        callback: (StytchResult<ListCredentialsResponse>) -> Unit,
     ) {
         coroutineScope.launch {
-            callback(credentials(data))
+            callback(listCredentials(data))
         }
     }
 
-    override fun credentialsCompletable(data: CredentialsRequest): CompletableFuture<StytchResult<CredentialsResponse>> =
+    override fun listCredentialsCompletable(data: ListCredentialsRequest): CompletableFuture<StytchResult<ListCredentialsResponse>> =
         coroutineScope.async {
-            credentials(data)
+            listCredentials(data)
         }.asCompletableFuture()
 }

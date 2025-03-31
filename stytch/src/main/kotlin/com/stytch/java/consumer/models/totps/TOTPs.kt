@@ -41,7 +41,8 @@ public data class AuthenticateRequest
     @JvmOverloads
     constructor(
         /**
-         * The `user_id` of an active user the TOTP registration should be tied to.
+         * The `user_id` of an active user the TOTP registration should be tied to. You may use an external_id here if one is set
+         * for the user.
          */
         @Json(name = "user_id")
         val userId: String,
@@ -151,7 +152,8 @@ public data class CreateRequest
     @JvmOverloads
     constructor(
         /**
-         * The `user_id` of an active user the TOTP registration should be tied to.
+         * The `user_id` of an active user the TOTP registration should be tied to. You may use an external_id here if one is set
+         * for the user.
          */
         @Json(name = "user_id")
         val userId: String,
@@ -223,7 +225,8 @@ public data class RecoverRequest
     @JvmOverloads
     constructor(
         /**
-         * The `user_id` of an active user the TOTP registration should be tied to.
+         * The `user_id` of an active user the TOTP registration should be tied to. You may use an external_id here if one is set
+         * for the user.
          */
         @Json(name = "user_id")
         val userId: String,
@@ -333,7 +336,8 @@ public data class RecoveryCodesRequest
     @JvmOverloads
     constructor(
         /**
-         * The `user_id` of an active user the TOTP registration should be tied to.
+         * The `user_id` of an active user the TOTP registration should be tied to. You may use an external_id here if one is set
+         * for the user.
          */
         @Json(name = "user_id")
         val userId: String,

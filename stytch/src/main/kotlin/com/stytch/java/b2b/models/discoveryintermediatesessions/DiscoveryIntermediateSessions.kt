@@ -55,7 +55,7 @@ public data class ExchangeRequest
         val intermediateSessionToken: String,
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,

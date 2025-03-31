@@ -168,7 +168,7 @@ public data class CreateRequest
     @JvmOverloads
     constructor(
         /**
-         * The unique ID of a specific User.
+         * The unique ID of a specific User. You may use an external_id here if one is set for the user.
          */
         @Json(name = "user_id")
         val userId: String,

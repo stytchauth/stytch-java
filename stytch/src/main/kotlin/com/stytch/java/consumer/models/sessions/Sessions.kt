@@ -1034,7 +1034,7 @@ public data class GetRequest
     @JvmOverloads
     constructor(
         /**
-         * The `user_id` to get active Sessions for.
+         * The `user_id` to get active Sessions for. You may use an external_id here if one is set for the user.
          */
         @Json(name = "user_id")
         val userId: String,
