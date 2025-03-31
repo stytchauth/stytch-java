@@ -31,6 +31,11 @@ public data class WebAuthnCredential
          */
         @Json(name = "type")
         val type: String,
+        /**
+         * The public key for the WebAuthn credential in base64 format.
+         */
+        @Json(name = "public_key")
+        val publicKey: String,
     )
 
 /**
@@ -151,7 +156,8 @@ public data class AuthenticateStartRequest
         @Json(name = "domain")
         val domain: String,
         /**
-         * The `user_id` of an active user the Passkey or WebAuthn registration should be tied to.
+         * The `user_id` of an active user the Passkey or WebAuthn registration should be tied to. You may use an external_id here
+         * if one is set for the user.
          */
         @Json(name = "user_id")
         val userId: String? = null,
@@ -196,10 +202,10 @@ public data class AuthenticateStartResponse
     )
 
 /**
-* Request type for `WebAuthn.credentials`.
+* Request type for `WebAuthn.listCredentials`.
 */
 @JsonClass(generateAdapter = true)
-public data class CredentialsRequest
+public data class ListCredentialsRequest
     @JvmOverloads
     constructor(
         /**
@@ -215,10 +221,10 @@ public data class CredentialsRequest
     )
 
 /**
-* Response type for `WebAuthn.credentials`.
+* Response type for `WebAuthn.listCredentials`.
 */
 @JsonClass(generateAdapter = true)
-public data class CredentialsResponse
+public data class ListCredentialsResponse
     @JvmOverloads
     constructor(
         /**
@@ -226,6 +232,12 @@ public data class CredentialsResponse
          */
         @Json(name = "credentials")
         val credentials: List<WebAuthnCredential>,
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
         /**
          * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
          * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
@@ -242,7 +254,8 @@ public data class RegisterRequest
     @JvmOverloads
     constructor(
         /**
-         * The `user_id` of an active user the Passkey or WebAuthn registration should be tied to.
+         * The `user_id` of an active user the Passkey or WebAuthn registration should be tied to. You may use an external_id here
+         * if one is set for the user.
          */
         @Json(name = "user_id")
         val userId: String,
@@ -348,7 +361,8 @@ public data class RegisterStartRequest
     @JvmOverloads
     constructor(
         /**
-         * The `user_id` of an active user the Passkey or WebAuthn registration should be tied to.
+         * The `user_id` of an active user the Passkey or WebAuthn registration should be tied to. You may use an external_id here
+         * if one is set for the user.
          */
         @Json(name = "user_id")
         val userId: String,
