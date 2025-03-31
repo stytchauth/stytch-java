@@ -195,7 +195,7 @@ public data class CreateRequest
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
@@ -323,13 +323,13 @@ public data class DeleteMFAPhoneNumberRequest
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
         /**
          * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
-         * so be sure to preserve this value.
+         * so be sure to preserve this value. You may use an external_id here if one is set for the member.
          */
         @Json(name = "member_id")
         val memberId: String,
@@ -380,7 +380,7 @@ public data class DeletePasswordRequest
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
@@ -436,13 +436,13 @@ public data class DeleteRequest
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
         /**
          * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
-         * so be sure to preserve this value.
+         * so be sure to preserve this value. You may use an external_id here if one is set for the member.
          */
         @Json(name = "member_id")
         val memberId: String,
@@ -483,13 +483,13 @@ public data class DeleteTOTPRequest
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
         /**
          * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
-         * so be sure to preserve this value.
+         * so be sure to preserve this value. You may use an external_id here if one is set for the member.
          */
         @Json(name = "member_id")
         val memberId: String,
@@ -540,13 +540,13 @@ public data class GetRequest
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
         /**
          * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
-         * so be sure to preserve this value.
+         * so be sure to preserve this value. You may use an external_id here if one is set for the member.
          */
         @Json(name = "member_id")
         val memberId: String? = null,
@@ -602,13 +602,13 @@ public data class OIDCProviderInformationRequest
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
         /**
          * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
-         * so be sure to preserve this value.
+         * so be sure to preserve this value. You may use an external_id here if one is set for the member.
          */
         @Json(name = "member_id")
         val memberId: String,
@@ -655,13 +655,13 @@ public data class ReactivateRequest
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
         /**
          * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
-         * so be sure to preserve this value.
+         * so be sure to preserve this value. You may use an external_id here if one is set for the member.
          */
         @Json(name = "member_id")
         val memberId: String,
@@ -786,13 +786,13 @@ public data class UnlinkRetiredEmailRequest
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
         /**
          * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
-         * so be sure to preserve this value.
+         * so be sure to preserve this value. You may use an external_id here if one is set for the member.
          */
         @Json(name = "member_id")
         val memberId: String,
@@ -859,13 +859,13 @@ public data class UpdateRequest
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
         /**
          * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
-         * so be sure to preserve this value.
+         * so be sure to preserve this value. You may use an external_id here if one is set for the member.
          */
         @Json(name = "member_id")
         val memberId: String,
