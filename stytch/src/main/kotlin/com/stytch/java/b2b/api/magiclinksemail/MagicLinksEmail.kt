@@ -64,6 +64,11 @@ public interface Email {
      * `active` Members will return an error.
      *
      * The magic link invite will be valid for 1 week.
+     *
+     * ## Revoke an invite
+     *
+     * To revoke an existing invite, use the [Delete Member](https://stytch.com/docs/b2b/api/delete-member) endpoint. This
+     * will both delete the invited Member from the target Organization and revoke all existing invite emails.
      */
     public suspend fun invite(
         data: InviteRequest,
@@ -76,6 +81,11 @@ public interface Email {
      * `active` Members will return an error.
      *
      * The magic link invite will be valid for 1 week.
+     *
+     * ## Revoke an invite
+     *
+     * To revoke an existing invite, use the [Delete Member](https://stytch.com/docs/b2b/api/delete-member) endpoint. This
+     * will both delete the invited Member from the target Organization and revoke all existing invite emails.
      */
     public fun invite(
         data: InviteRequest,
@@ -89,6 +99,11 @@ public interface Email {
      * `active` Members will return an error.
      *
      * The magic link invite will be valid for 1 week.
+     *
+     * ## Revoke an invite
+     *
+     * To revoke an existing invite, use the [Delete Member](https://stytch.com/docs/b2b/api/delete-member) endpoint. This
+     * will both delete the invited Member from the target Organization and revoke all existing invite emails.
      */
     public fun inviteCompletable(
         data: InviteRequest,
