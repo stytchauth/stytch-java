@@ -101,7 +101,7 @@ public data class SetResponse
         @Json(name = "request_id")
         val requestId: String,
         /**
-         * The action that will be returned for the specified fingerprint or ID.
+         * The action that will be returned for the specified identifier.
          */
         @Json(name = "action")
         val action: RuleAction,
