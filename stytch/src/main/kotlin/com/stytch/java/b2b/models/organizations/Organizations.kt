@@ -321,6 +321,8 @@ public data class Member
          */
         @Json(name = "scim_registration")
         val scimRegistration: SCIMRegistration? = null,
+        @Json(name = "external_id")
+        val externalId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)

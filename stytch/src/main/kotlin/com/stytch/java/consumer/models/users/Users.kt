@@ -311,6 +311,8 @@ public data class User
          */
         @Json(name = "untrusted_metadata")
         val untrustedMetadata: Map<String, Any?>? = emptyMap(),
+        @Json(name = "external_id")
+        val externalId: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -1022,6 +1024,8 @@ public data class GetResponse
          */
         @Json(name = "untrusted_metadata")
         val untrustedMetadata: Map<String, Any?>? = emptyMap(),
+        @Json(name = "external_id")
+        val externalId: String? = null,
     )
 
 /**
@@ -1122,6 +1126,13 @@ public data class UpdateRequest
          */
         @Json(name = "untrusted_metadata")
         val untrustedMetadata: Map<String, Any?>? = emptyMap(),
+        /**
+         * An identifier that can be used in API calls wherever a user_id is expected. This is a string consisting of
+         * alphanumeric, `.`, `_`, or `-` characters with a maximum length of 128 characters. External IDs must be unique within
+         * an organization, but may be reused across different organizations in the same project.
+         */
+        @Json(name = "external_id")
+        val externalId: String? = null,
     )
 
 /**
