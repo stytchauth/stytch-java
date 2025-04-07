@@ -121,7 +121,7 @@ public data class ResetStartRequest
         val discoveryRedirectURL: String? = null,
         /**
          * Use a custom template for reset password emails. By default, it will use your default email template. The template must
-         * be a template using our built-in customizations or a custom HTML email for Magic Links - Reset Password.
+         * be a template using our built-in customizations or a custom HTML email for Passwords - Reset Password.
          */
         @Json(name = "reset_password_template_id")
         val resetPasswordTemplateId: String? = null,
@@ -145,6 +145,12 @@ public data class ResetStartRequest
          */
         @Json(name = "locale")
         val locale: String? = null,
+        /**
+         * Use a custom template for verification emails sent during password reset flows. This template will be used the first
+         * time a user sets a password via a
+         *   password reset flow. By default, it will use your default email template. The template must be a template using our
+         * built-in customizations or a custom HTML email for Passwords - Email Verification.
+         */
         @Json(name = "verify_email_template_id")
         val verifyEmailTemplateId: String? = null,
     )
