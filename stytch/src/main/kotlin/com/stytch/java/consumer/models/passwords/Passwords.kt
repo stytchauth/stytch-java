@@ -529,6 +529,14 @@ public data class MigrateRequest
          */
         @Json(name = "set_phone_number_verified")
         val setPhoneNumberVerified: Boolean? = null,
+        /**
+         * If a new user is created, this will set an identifier that can be used in API calls wherever a user_id is expected.
+         * This is a string consisting of alphanumeric, `.`, `_`, or `-` characters with a maximum length of 128 characters.
+         * External IDs must be unique within an organization, but may be reused across different organizations in the same
+         * project. Note that if a user already exists, this field will be ignored.
+         */
+        @Json(name = "external_id")
+        val externalId: String? = null,
     )
 
 /**

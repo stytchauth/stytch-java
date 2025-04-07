@@ -112,6 +112,11 @@ public data class AuthenticateResponse
         @Json(name = "provider_tenant_ids")
         val providerTenantIds: List<String>,
         /**
+         * The full name of the authenticated end user, if available.
+         */
+        @Json(name = "full_name")
+        val fullName: String,
+        /**
          * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
          * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
          */
