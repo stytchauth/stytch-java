@@ -28,6 +28,9 @@ public enum class AuthenticateRequestLocale {
 
     @Json(name = "ptbr")
     PTBR,
+
+    @Json(name = "fr")
+    FR,
 }
 
 @JsonClass(generateAdapter = false)
@@ -377,7 +380,7 @@ public data class MigrateRequest
         val setPhoneNumberVerified: Boolean? = null,
         /**
          * If a new member is created, this will set an identifier that can be used in API calls wherever a member_id is expected.
-         * This is a string consisting of alphanumeric, `.`, `_`, or `-` characters with a maximum length of 128 characters.
+         * This is a string consisting of alphanumeric, `.`, `_`, `-`, or `|` characters with a maximum length of 128 characters.
          * External IDs must be unique within an organization, but may be reused across different organizations in the same
          * project. Note that if a member already exists, this field will be ignored.
          */

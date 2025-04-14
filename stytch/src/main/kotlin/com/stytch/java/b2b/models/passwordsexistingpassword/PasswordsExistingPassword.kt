@@ -23,6 +23,9 @@ public enum class ResetRequestLocale {
 
     @Json(name = "ptbr")
     PTBR,
+
+    @Json(name = "fr")
+    FR,
 }
 
 /**

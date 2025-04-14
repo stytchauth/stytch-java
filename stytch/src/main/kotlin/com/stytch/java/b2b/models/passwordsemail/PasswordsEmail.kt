@@ -24,6 +24,9 @@ public enum class ResetRequestLocale {
 
     @Json(name = "ptbr")
     PTBR,
+
+    @Json(name = "fr")
+    FR,
 }
 
 @JsonClass(generateAdapter = false)
@@ -36,6 +39,9 @@ public enum class ResetStartRequestLocale {
 
     @Json(name = "ptbr")
     PTBR,
+
+    @Json(name = "fr")
+    FR,
 }
 
 public data class RequireResetRequestOptions
@@ -345,8 +351,8 @@ public data class ResetStartRequest
          * Used to determine which language to use when sending the user this delivery method. Parameter is a
          * [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
          *
-         * Currently supported languages are English (`"en"`), Spanish (`"es"`), and Brazilian Portuguese (`"pt-br"`); if no value
-         * is provided, the copy defaults to English.
+         * Currently supported languages are English (`"en"`), Spanish (`"es"`), French (`"fr"`) and Brazilian Portuguese
+         * (`"pt-br"`); if no value is provided, the copy defaults to English.
          *
          * Request support for additional languages
          * [here](https://docs.google.com/forms/d/e/1FAIpQLScZSpAu_m2AmLXRT3F3kap-s_mcV6UTBitYn6CdyWP0-o7YjQ/viewform?usp=sf_link")!

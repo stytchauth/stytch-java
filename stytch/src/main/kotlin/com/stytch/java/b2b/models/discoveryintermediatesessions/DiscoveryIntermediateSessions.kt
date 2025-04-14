@@ -30,6 +30,15 @@ public enum class ExchangeRequestLocale {
 
     @Json(name = "it")
     IT,
+
+    @Json(name = "deDE")
+    DEDE,
+
+    @Json(name = "zhHans")
+    ZHHANS,
+
+    @Json(name = "caES")
+    CAES,
 }
 
 /**
