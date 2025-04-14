@@ -22,6 +22,9 @@ public enum class InviteRequestLocale {
 
     @Json(name = "ptbr")
     PTBR,
+
+    @Json(name = "fr")
+    FR,
 }
 
 @JsonClass(generateAdapter = false)
@@ -34,6 +37,9 @@ public enum class LoginOrSignupRequestLocale {
 
     @Json(name = "ptbr")
     PTBR,
+
+    @Json(name = "fr")
+    FR,
 }
 
 public data class InviteRequestOptions
@@ -116,8 +122,8 @@ public data class InviteRequest
          * Used to determine which language to use when sending the user this delivery method. Parameter is a
          * [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
          *
-         * Currently supported languages are English (`"en"`), Spanish (`"es"`), and Brazilian Portuguese (`"pt-br"`); if no value
-         * is provided, the copy defaults to English.
+         * Currently supported languages are English (`"en"`), Spanish (`"es"`), French (`"fr"`) and Brazilian Portuguese
+         * (`"pt-br"`); if no value is provided, the copy defaults to English.
          *
          * Request support for additional languages
          * [here](https://docs.google.com/forms/d/e/1FAIpQLScZSpAu_m2AmLXRT3F3kap-s_mcV6UTBitYn6CdyWP0-o7YjQ/viewform?usp=sf_link")!
@@ -131,6 +137,12 @@ public data class InviteRequest
          */
         @Json(name = "roles")
         val roles: List<String>? = emptyList(),
+        /**
+         * The expiration time, in minutes, for an invite email. If not accepted within this time frame, the invite will need to
+         * be resent. Defaults to 10080 (1 week) with a minimum of 5 and a maximum of 10080.
+         */
+        @Json(name = "invite_expiration_minutes")
+        val inviteExpirationMinutes: Long? = null,
     )
 
 /**
@@ -230,8 +242,8 @@ public data class LoginOrSignupRequest
          * Used to determine which language to use when sending the user this delivery method. Parameter is a
          * [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
          *
-         * Currently supported languages are English (`"en"`), Spanish (`"es"`), and Brazilian Portuguese (`"pt-br"`); if no value
-         * is provided, the copy defaults to English.
+         * Currently supported languages are English (`"en"`), Spanish (`"es"`), French (`"fr"`) and Brazilian Portuguese
+         * (`"pt-br"`); if no value is provided, the copy defaults to English.
          *
          * Request support for additional languages
          * [here](https://docs.google.com/forms/d/e/1FAIpQLScZSpAu_m2AmLXRT3F3kap-s_mcV6UTBitYn6CdyWP0-o7YjQ/viewform?usp=sf_link")!
@@ -239,6 +251,18 @@ public data class LoginOrSignupRequest
          */
         @Json(name = "locale")
         val locale: LoginOrSignupRequestLocale? = null,
+        /**
+         * The expiration time, in minutes, for a login Email Magic Link. If not authenticated within this time frame, the email
+         * will need to be resent. Defaults to 60 (1 hour) with a minimum of 5 and a maximum of 10080 (1 week).
+         */
+        @Json(name = "login_expiration_minutes")
+        val loginExpirationMinutes: Long? = null,
+        /**
+         * The expiration time, in minutes, for a signup Email Magic Link. If not authenticated within this time frame, the email
+         * will need to be resent. Defaults to 60 (1 hour) with a minimum of 5 and a maximum of 10080 (1 week).
+         */
+        @Json(name = "signup_expiration_minutes")
+        val signupExpirationMinutes: Long? = null,
     )
 
 /**
