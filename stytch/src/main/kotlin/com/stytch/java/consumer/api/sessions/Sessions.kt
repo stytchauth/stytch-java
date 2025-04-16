@@ -23,6 +23,8 @@ import com.stytch.java.common.StytchSessionClaim
 import com.stytch.java.common.parseJWTClaims
 import com.stytch.java.consumer.models.sessions.AuthenticateRequest
 import com.stytch.java.consumer.models.sessions.AuthenticateResponse
+import com.stytch.java.consumer.models.sessions.ExchangeAccessTokenRequest
+import com.stytch.java.consumer.models.sessions.ExchangeAccessTokenResponse
 import com.stytch.java.consumer.models.sessions.GetJWKSRequest
 import com.stytch.java.consumer.models.sessions.GetJWKSResponse
 import com.stytch.java.consumer.models.sessions.GetRequest
@@ -157,6 +159,17 @@ public interface Sessions {
      * an existing User and create a Stytch Session. You will need to create the user before using this endpoint.
      */
     public fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>>
+
+    public suspend fun exchangeAccessToken(data: ExchangeAccessTokenRequest): StytchResult<ExchangeAccessTokenResponse>
+
+    public fun exchangeAccessToken(
+        data: ExchangeAccessTokenRequest,
+        callback: (StytchResult<ExchangeAccessTokenResponse>) -> Unit,
+    )
+
+    public fun exchangeAccessTokenCompletable(
+        data: ExchangeAccessTokenRequest,
+    ): CompletableFuture<StytchResult<ExchangeAccessTokenResponse>>
 
     /**
      * Get the JSON Web Key Set (JWKS) for a project.
@@ -424,6 +437,30 @@ internal class SessionsImpl(
     override fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>> =
         coroutineScope.async {
             migrate(data)
+        }.asCompletableFuture()
+
+    override suspend fun exchangeAccessToken(data: ExchangeAccessTokenRequest): StytchResult<ExchangeAccessTokenResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
+            val asJson = moshi.adapter(ExchangeAccessTokenRequest::class.java).toJson(data)
+            httpClient.post("/v1/sessions/exchange_access_token", asJson, headers)
+        }
+
+    override fun exchangeAccessToken(
+        data: ExchangeAccessTokenRequest,
+        callback: (StytchResult<ExchangeAccessTokenResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(exchangeAccessToken(data))
+        }
+    }
+
+    override fun exchangeAccessTokenCompletable(
+        data: ExchangeAccessTokenRequest,
+    ): CompletableFuture<StytchResult<ExchangeAccessTokenResponse>> =
+        coroutineScope.async {
+            exchangeAccessToken(data)
         }.asCompletableFuture()
 
     override suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse> =

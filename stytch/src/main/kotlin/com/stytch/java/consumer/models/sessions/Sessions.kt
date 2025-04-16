@@ -986,6 +986,38 @@ public data class AuthenticateResponse
         val statusCode: Int,
     )
 
+@JsonClass(generateAdapter = true)
+public data class ExchangeAccessTokenRequest
+    @JvmOverloads
+    constructor(
+        @Json(name = "access_token")
+        val accessToken: String,
+        @Json(name = "session_duration_minutes")
+        val sessionDurationMinutes: Int? = null,
+        @Json(name = "session_custom_claims")
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
+    )
+
+@JsonClass(generateAdapter = true)
+public data class ExchangeAccessTokenResponse
+    @JvmOverloads
+    constructor(
+        @Json(name = "request_id")
+        val requestId: String,
+        @Json(name = "user_id")
+        val userId: String,
+        @Json(name = "session_token")
+        val sessionToken: String,
+        @Json(name = "session_jwt")
+        val sessionJwt: String,
+        @Json(name = "user")
+        val user: User,
+        @Json(name = "status_code")
+        val statusCode: Int,
+        @Json(name = "session")
+        val session: Session? = null,
+    )
+
 /**
 * Request type for `Sessions.getJWKS`.
 */

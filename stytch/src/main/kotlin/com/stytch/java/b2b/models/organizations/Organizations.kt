@@ -321,6 +321,9 @@ public data class Member
          */
         @Json(name = "scim_registration")
         val scimRegistration: SCIMRegistration? = null,
+        /**
+         * The ID of the member given by the identity provider.
+         */
         @Json(name = "external_id")
         val externalId: String? = null,
     )

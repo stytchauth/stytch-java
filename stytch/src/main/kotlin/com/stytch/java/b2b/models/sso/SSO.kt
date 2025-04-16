@@ -221,6 +221,8 @@ public data class SAMLConnection
         val nameidFormat: String,
         @Json(name = "alternative_acs_url")
         val alternativeAcsURL: String,
+        @Json(name = "idp_initiated_auth_disabled")
+        val idpInitiatedAuthDisabled: Boolean,
         @Json(name = "attribute_mapping")
         val attributeMapping: Map<String, Any?>? = emptyMap(),
     )

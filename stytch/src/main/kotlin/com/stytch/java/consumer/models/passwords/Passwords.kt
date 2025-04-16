@@ -166,6 +166,11 @@ public data class PBKDF2Config
          */
         @Json(name = "key_length")
         val keyLength: Int,
+        /**
+         * The algorithm that was used to generate the HMAC hash. Accepted values are "sha512" and sha256". Defaults to sha256.
+         */
+        @Json(name = "algorithm")
+        val algorithm: String,
     )
 
 @JsonClass(generateAdapter = true)

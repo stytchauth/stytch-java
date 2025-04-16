@@ -443,6 +443,12 @@ public data class UpdateConnectionRequest
          */
         @Json(name = "alternative_acs_url")
         val alternativeAcsURL: String? = null,
+        /**
+         * Determines whether IDP initiated auth is allowed for a given SAML connection. Defaults to false (IDP Initiated Auth is
+         * enabled).
+         */
+        @Json(name = "idp_initiated_auth_disabled")
+        val idpInitiatedAuthDisabled: Boolean? = null,
     )
 
 /**
