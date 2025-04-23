@@ -8,6 +8,7 @@ package com.stytch.java.consumer.models.fraud
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.time.Instant
 
 @JsonClass(generateAdapter = false)
 public enum class RuleAction {
@@ -215,6 +216,92 @@ public data class Properties
         val networkProperties: NetworkProperties,
         @Json(name = "browser_properties")
         val browserProperties: BrowserProperties,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class Rule
+    @JvmOverloads
+    constructor(
+        /**
+         * The rule type. The possible values are `VISITOR_ID`, `BROWSER_ID`, `VISITOR_FINGERPRINT`, `BROWSER_FINGERPRINT`,
+         * `HARDWARE_FINGERPRINT`, `NETWORK_FINGERPRINT`, `CIDR_BLOCK`, `ASN`, or `COUNTRY_CODE`.
+         */
+        @Json(name = "rule_type")
+        val ruleType: RuleType,
+        /**
+         * The action (`ALLOW`, `BLOCK`, or `CHALLENGE`) that will be returned for this rule.
+         */
+        @Json(name = "action")
+        val action: RuleAction,
+        /**
+         * The time when the rule was created. Values conform to the RFC 3339 standard and are expressed in UTC, e.g.
+         * `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "created_at")
+        val createdAt: Instant,
+        /**
+         * The visitor ID that a rule was set for.
+         */
+        @Json(name = "visitor_id")
+        val visitorId: String? = null,
+        /**
+         * The browser ID that a rule was set for.
+         */
+        @Json(name = "browser_id")
+        val browserId: String? = null,
+        /**
+         * The visitor fingerprint that a rule was set for.
+         */
+        @Json(name = "visitor_fingerprint")
+        val visitorFingerprint: String? = null,
+        /**
+         * The browser fingerprint that a rule was set for.
+         */
+        @Json(name = "browser_fingerprint")
+        val browserFingerprint: String? = null,
+        /**
+         * The hardware fingerprint that a rule was set for.
+         */
+        @Json(name = "hardware_fingerprint")
+        val hardwareFingerprint: String? = null,
+        /**
+         * The network fingerprint that a rule was set for.
+         */
+        @Json(name = "network_fingerprint")
+        val networkFingerprint: String? = null,
+        /**
+         * The CIDR block that a rule was set for. If an end user's IP address is within this CIDR block, this rule will be
+         * applied.
+         */
+        @Json(name = "cidr_block")
+        val cidrBlock: String? = null,
+        /**
+         * The country code that a rule was set for.
+         */
+        @Json(name = "country_code")
+        val countryCode: String? = null,
+        /**
+         * The ASN that a rule was set for.
+         */
+        @Json(name = "asn")
+        val asn: String? = null,
+        /**
+         * A description for the rule.
+         */
+        @Json(name = "description")
+        val description: String? = null,
+        /**
+         * The timestamp when the rule expires. Values conform to the RFC 3339 standard and are expressed in UTC, e.g.
+         * `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "expires_at")
+        val expiresAt: Instant? = null,
+        /**
+         * The time when the rule was last updated. Will be null if the rule has never been updated. Values conform to the RFC
+         * 3339 standard and are expressed in UTC, e.g. `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "last_updated_at")
+        val lastUpdatedAt: Instant? = null,
     )
 
 @JsonClass(generateAdapter = true)

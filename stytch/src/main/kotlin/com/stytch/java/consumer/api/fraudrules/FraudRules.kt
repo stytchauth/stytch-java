@@ -9,6 +9,8 @@ package com.stytch.java.consumer.api.fraudrules
 import com.squareup.moshi.Moshi
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
+import com.stytch.java.consumer.models.fraudrules.ListRequest
+import com.stytch.java.consumer.models.fraudrules.ListResponse
 import com.stytch.java.consumer.models.fraudrules.SetRequest
 import com.stytch.java.consumer.models.fraudrules.SetResponse
 import com.stytch.java.http.HttpClient
@@ -95,6 +97,24 @@ public interface Rules {
      * and `ALLOW`, the rule match verdict will be `CHALLENGE`.
      */
     public fun setCompletable(data: SetRequest): CompletableFuture<StytchResult<SetResponse>>
+
+    /**
+     * Get all rules that have been set for your project.
+     */
+    public suspend fun list(data: ListRequest): StytchResult<ListResponse>
+
+    /**
+     * Get all rules that have been set for your project.
+     */
+    public fun list(
+        data: ListRequest,
+        callback: (StytchResult<ListResponse>) -> Unit,
+    )
+
+    /**
+     * Get all rules that have been set for your project.
+     */
+    public fun listCompletable(data: ListRequest): CompletableFuture<StytchResult<ListResponse>>
 }
 
 internal class RulesImpl(
@@ -123,5 +143,27 @@ internal class RulesImpl(
     override fun setCompletable(data: SetRequest): CompletableFuture<StytchResult<SetResponse>> =
         coroutineScope.async {
             set(data)
+        }.asCompletableFuture()
+
+    override suspend fun list(data: ListRequest): StytchResult<ListResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
+            val asJson = moshi.adapter(ListRequest::class.java).toJson(data)
+            httpClient.post("/v1/rules/list", asJson, headers)
+        }
+
+    override fun list(
+        data: ListRequest,
+        callback: (StytchResult<ListResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(list(data))
+        }
+    }
+
+    override fun listCompletable(data: ListRequest): CompletableFuture<StytchResult<ListResponse>> =
+        coroutineScope.async {
+            list(data)
         }.asCompletableFuture()
 }

@@ -994,6 +994,12 @@ public data class UpdateRequest
          */
         @Json(name = "external_id")
         val externalId: String? = null,
+        /**
+         * If `unlink_email` is `true` and an `email_address` is provided, the Member's previous email will be deleted instead of
+         * retired. Defaults to `false`.
+         */
+        @Json(name = "unlink_email")
+        val unlinkEmail: Boolean? = null,
     )
 
 /**
