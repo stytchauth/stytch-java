@@ -371,9 +371,6 @@ public data class CreateRequest
          */
         @Json(name = "name")
         val name: Name? = null,
-        /**
-         * Provided attributes help with fraud detection.
-         */
         @Json(name = "attributes")
         val attributes: Attributes? = null,
         /**

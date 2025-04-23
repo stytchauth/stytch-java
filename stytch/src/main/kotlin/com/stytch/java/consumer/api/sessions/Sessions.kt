@@ -160,13 +160,34 @@ public interface Sessions {
      */
     public fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>>
 
+    /**
+     * Use this endpoint to exchange a Connected Apps Access Token back into a Stytch Session for the underlying User.
+     * This session can be used with the Stytch SDKs and APIs.
+     *
+     * The Access Token must contain the `full_access` scope and must not be more than 5 minutes old. Access Tokens may only
+     * be exchanged a single time.
+     */
     public suspend fun exchangeAccessToken(data: ExchangeAccessTokenRequest): StytchResult<ExchangeAccessTokenResponse>
 
+    /**
+     * Use this endpoint to exchange a Connected Apps Access Token back into a Stytch Session for the underlying User.
+     * This session can be used with the Stytch SDKs and APIs.
+     *
+     * The Access Token must contain the `full_access` scope and must not be more than 5 minutes old. Access Tokens may only
+     * be exchanged a single time.
+     */
     public fun exchangeAccessToken(
         data: ExchangeAccessTokenRequest,
         callback: (StytchResult<ExchangeAccessTokenResponse>) -> Unit,
     )
 
+    /**
+     * Use this endpoint to exchange a Connected Apps Access Token back into a Stytch Session for the underlying User.
+     * This session can be used with the Stytch SDKs and APIs.
+     *
+     * The Access Token must contain the `full_access` scope and must not be more than 5 minutes old. Access Tokens may only
+     * be exchanged a single time.
+     */
     public fun exchangeAccessTokenCompletable(
         data: ExchangeAccessTokenRequest,
     ): CompletableFuture<StytchResult<ExchangeAccessTokenResponse>>

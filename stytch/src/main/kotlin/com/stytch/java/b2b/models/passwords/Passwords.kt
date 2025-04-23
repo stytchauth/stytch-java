@@ -253,8 +253,8 @@ public data class AuthenticateResponse
          * the [OTP SMS Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-otp-sms),
          * [TOTP Authenticate endpoint](https://stytch.com/docs/b2b/api/authenticate-totp), or
          * [Recovery Codes Recover endpoint](https://stytch.com/docs/b2b/api/recovery-codes-recover) to complete an MFA flow and
-         * log in to the Organization. Password factors are not transferable between Organizations, so the intermediate session
-         * token is not valid for use with discovery endpoints.
+         * log in to the Organization. The token has a default expiry of 10 minutes. Password factors are not transferable between
+         * Organizations, so the intermediate session token is not valid for use with discovery endpoints.
          */
         @Json(name = "intermediate_session_token")
         val intermediateSessionToken: String,
@@ -300,7 +300,7 @@ public data class MigrateRequest
         @Json(name = "hash")
         val hash: String,
         /**
-         * The password hash used. Currently `bcrypt`, `scrypt`, `argon_2i`, `argon2_id`, `md_5`, `sha_1`, and `pbkdf_2` are
+         * The password hash used. Currently `bcrypt`, `scrypt`, `argon_2i`, `argon_2id`, `md_5`, `sha_1`, and `pbkdf_2` are
          * supported.
          */
         @Json(name = "hash_type")

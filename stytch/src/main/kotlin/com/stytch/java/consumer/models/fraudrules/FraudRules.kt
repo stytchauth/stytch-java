@@ -8,8 +8,65 @@ package com.stytch.java.consumer.models.fraudrules
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import com.stytch.java.consumer.models.fraud.Rule
 import com.stytch.java.consumer.models.fraud.RuleAction
 import java.time.Instant
+
+/**
+* Request type for `Rules.list`.
+*/
+@JsonClass(generateAdapter = true)
+public data class ListRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * The `cursor` field allows you to paginate through your results. Each result array is limited to 100 results. If your
+         * query returns more than 100 results, you will need to paginate the responses using the `cursor`. If you receive a
+         * response that includes a non-null `next_cursor`, repeat the request with the `next_cursor` value set to the `cursor`
+         * field to retrieve the next page of results. Continue to make requests until the `next_cursor` in the response is null.
+         */
+        @Json(name = "cursor")
+        val cursor: String? = null,
+        /**
+         * The number of results to return per page. The default limit is 10. A maximum of 100 results can be returned by a single
+         * get request. If the total size of your result set is greater than one page size, you must paginate the response. See
+         * the `cursor` field.
+         */
+        @Json(name = "limit")
+        val limit: Int? = null,
+    )
+
+/**
+* Response type for `Rules.list`.
+*/
+@JsonClass(generateAdapter = true)
+public data class ListResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The `next_cursor` string is returned when your result contains more than one page of results. This value is passed into
+         * your next request in the `cursor` field.
+         */
+        @Json(name = "next_cursor")
+        val nextCursor: String,
+        /**
+         * A list of rules for the project
+         */
+        @Json(name = "rules")
+        val rules: List<Rule>,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
 
 /**
 * Request type for `Rules.set`.
