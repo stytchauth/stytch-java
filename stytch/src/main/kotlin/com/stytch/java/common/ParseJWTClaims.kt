@@ -26,7 +26,14 @@ internal fun parseJWTClaims(
             setAllowedClockSkewInSeconds(options.leeway)
             setRequireSubject()
             setExpectedAudience(jwtOptions.audience)
-            setExpectedIssuer(jwtOptions.issuer)
+            
+            // Handle multiple issuers
+            if (jwtOptions.issuers.size > 1) {
+                setExpectedIssuers(true, *jwtOptions.issuers.toTypedArray())
+            } else {
+                setExpectedIssuer(jwtOptions.issuers.first())
+            }
+            
             setVerificationKeyResolver(HttpsJwksVerificationKeyResolver(jwksClient))
         }.build()
     val jwtClaims = jwtConsumer.processToClaims(jwt)

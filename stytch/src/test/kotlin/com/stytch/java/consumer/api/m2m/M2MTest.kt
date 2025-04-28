@@ -106,7 +106,7 @@ internal class M2MTest {
                 jwtOptions =
                     JwtOptions(
                         audience = projectId,
-                        issuer = "stytch.com/$projectId",
+                        issuers = listOf("stytch.com/$projectId", "http://test"),
                         type = "JWT",
                     ),
             )

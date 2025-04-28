@@ -68,7 +68,7 @@ public class StytchB2BClient
         private val jwtOptions: JwtOptions =
             JwtOptions(
                 audience = projectId,
-                issuer = "stytch.com/$projectId",
+                issuers = listOf("stytch.com/$projectId", baseUrl),
                 type = "JWT",
             )
         private val policyCache: PolicyCache = PolicyCache(RBACImpl(httpClient, coroutineScope))
