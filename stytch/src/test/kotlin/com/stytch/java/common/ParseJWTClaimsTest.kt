@@ -76,7 +76,7 @@ internal class ParseJWTClaimsTest {
                 algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
             }
         jwt = jws.compactSerialization
-        
+
         // Create JWT with alternate issuer
         val alternateIssuerClaims =
             JwtClaims().apply {
