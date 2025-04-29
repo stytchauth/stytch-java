@@ -16,7 +16,9 @@ import java.time.format.DateTimeFormatter.ISO_INSTANT
 internal class ParseJWTClaimsTest {
     private lateinit var jwksClient: HttpsJwks
     private lateinit var jwt: String
+    private lateinit var jwtWithAlternateIssuer: String
     private val projectId = "project-test-00000000-0000-0000-0000-000000000000"
+    private val alternateIssuer = "https://customer.cname.com"
 
     @Before
     fun before() {
@@ -74,6 +76,27 @@ internal class ParseJWTClaimsTest {
                 algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
             }
         jwt = jws.compactSerialization
+
+        // Create JWT with alternate issuer
+        val alternateIssuerClaims =
+            JwtClaims().apply {
+                issuer = alternateIssuer
+                audience = listOf(projectId)
+                subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
+                setClaim("https://stytch.com/session", sessionClaim)
+                setExpirationTimeMinutesInTheFuture(5F)
+                setGeneratedJwtId()
+                setIssuedAtToNow()
+                setNotBeforeMinutesInThePast(0F)
+            }
+        val alternateIssuerJws =
+            JsonWebSignature().apply {
+                payload = alternateIssuerClaims.toJson()
+                key = rsaJsonWebKey.privateKey
+                keyIdHeaderValue = rsaJsonWebKey.keyId
+                algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
+            }
+        jwtWithAlternateIssuer = alternateIssuerJws.compactSerialization
     }
 
     @Test(expected = JWTException.JwtTooOld::class)
@@ -83,7 +106,7 @@ internal class ParseJWTClaimsTest {
             jwtOptions =
                 JwtOptions(
                     audience = projectId,
-                    issuer = "stytch.com/$projectId",
+                    issuers = listOf("stytch.com/$projectId"),
                     type = "JWT",
                 ),
             jwksClient = jwksClient,
@@ -99,7 +122,28 @@ internal class ParseJWTClaimsTest {
                 jwtOptions =
                     JwtOptions(
                         audience = projectId,
-                        issuer = "stytch.com/$projectId",
+                        issuers = listOf("stytch.com/$projectId"),
+                        type = "JWT",
+                    ),
+                jwksClient = jwksClient,
+                options = ParseJWTClaimsOptions(leeway = 0, maxTokenAgeSeconds = 10000),
+            )
+        val hasStrippedClaims =
+            claims.customClaims.keys.any {
+                IGNORED_CLAIMS.contains(it)
+            }
+        assert(!hasStrippedClaims)
+    }
+
+    @Test
+    fun `accepts alternate issuer when provided`() {
+        val claims =
+            parseJWTClaims(
+                jwt = jwtWithAlternateIssuer,
+                jwtOptions =
+                    JwtOptions(
+                        audience = projectId,
+                        issuers = listOf("stytch.com/$projectId", alternateIssuer),
                         type = "JWT",
                     ),
                 jwksClient = jwksClient,

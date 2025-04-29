@@ -61,7 +61,7 @@ public class StytchClient
         private val jwtOptions: JwtOptions =
             JwtOptions(
                 audience = projectId,
-                issuer = "stytch.com/$projectId",
+                issuers = listOf("stytch.com/$projectId", baseUrl),
                 type = "JWT",
             )
 

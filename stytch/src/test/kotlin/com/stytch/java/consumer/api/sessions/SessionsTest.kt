@@ -112,7 +112,7 @@ internal class SessionsTest {
                 jwtOptions =
                     JwtOptions(
                         audience = projectId,
-                        issuer = "stytch.com/$projectId",
+                        issuers = listOf("stytch.com/$projectId"),
                         type = "JWT",
                     ),
             )
