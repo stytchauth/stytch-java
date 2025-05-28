@@ -47,7 +47,8 @@ public data class AuthenticateRequest
         @Json(name = "token")
         val token: String,
         /**
-         * Provided attributes help with fraud detection.
+         * Provided attributes to help with fraud detection. These values are pulled and passed into Stytch endpoints by your
+         * application.
          */
         @Json(name = "attributes")
         val attributes: Attributes? = null,
@@ -153,7 +154,7 @@ public data class AuthenticateResponse
          * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
          * Session object in the response.
          *
-         *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
+         *   See [Session object](https://stytch.com/docs/api/session-object) for complete response fields.
          *
          */
         @Json(name = "session")
@@ -168,7 +169,7 @@ public data class CreateRequest
     @JvmOverloads
     constructor(
         /**
-         * The unique ID of a specific User. You may use an external_id here if one is set for the user.
+         * The unique ID of a specific User. You may use an `external_id` here if one is set for the user.
          */
         @Json(name = "user_id")
         val userId: String,
@@ -179,7 +180,8 @@ public data class CreateRequest
         @Json(name = "expiration_minutes")
         val expirationMinutes: Int? = null,
         /**
-         * Provided attributes help with fraud detection.
+         * Provided attributes to help with fraud detection. These values are pulled and passed into Stytch endpoints by your
+         * application.
          */
         @Json(name = "attributes")
         val attributes: Attributes? = null,

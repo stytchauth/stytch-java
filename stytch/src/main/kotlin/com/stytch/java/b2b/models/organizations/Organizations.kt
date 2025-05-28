@@ -13,12 +13,60 @@ import com.stytch.java.common.methodoptions.Authorization
 import java.time.Instant
 
 @JsonClass(generateAdapter = false)
+public enum class CreateRequestFirstPartyConnectedAppsAllowedType {
+    @Json(name = "ALL_ALLOWED")
+    ALL_ALLOWED,
+
+    @Json(name = "RESTRICTED")
+    RESTRICTED,
+
+    @Json(name = "NOT_ALLOWED")
+    NOT_ALLOWED,
+}
+
+@JsonClass(generateAdapter = false)
+public enum class CreateRequestThirdPartyConnectedAppsAllowedType {
+    @Json(name = "ALL_ALLOWED")
+    ALL_ALLOWED,
+
+    @Json(name = "RESTRICTED")
+    RESTRICTED,
+
+    @Json(name = "NOT_ALLOWED")
+    NOT_ALLOWED,
+}
+
+@JsonClass(generateAdapter = false)
 public enum class SearchQueryOperator {
     @Json(name = "OR")
     OR,
 
     @Json(name = "AND")
     AND,
+}
+
+@JsonClass(generateAdapter = false)
+public enum class UpdateRequestFirstPartyConnectedAppsAllowedType {
+    @Json(name = "ALL_ALLOWED")
+    ALL_ALLOWED,
+
+    @Json(name = "RESTRICTED")
+    RESTRICTED,
+
+    @Json(name = "NOT_ALLOWED")
+    NOT_ALLOWED,
+}
+
+@JsonClass(generateAdapter = false)
+public enum class UpdateRequestThirdPartyConnectedAppsAllowedType {
+    @Json(name = "ALL_ALLOWED")
+    ALL_ALLOWED,
+
+    @Json(name = "RESTRICTED")
+    RESTRICTED,
+
+    @Json(name = "NOT_ALLOWED")
+    NOT_ALLOWED,
 }
 
 @JsonClass(generateAdapter = true)
@@ -58,6 +106,25 @@ public data class ActiveSSOConnection
         @Json(name = "identity_provider")
         val identityProvider: String,
     )
+
+public data class ConnectedAppsRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
+        }
+    }
 
 public data class DeleteRequestOptions
     @JvmOverloads
@@ -103,6 +170,25 @@ public data class EmailImplicitRoleAssignment
         @Json(name = "role_id")
         val roleId: String,
     )
+
+public data class GetConnectedAppRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
+        }
+    }
 
 @JsonClass(generateAdapter = true)
 public data class GithubProviderInfo
@@ -269,6 +355,8 @@ public data class Member
          */
         @Json(name = "retired_email_addresses")
         val retiredEmailAddresses: List<RetiredEmail>,
+        @Json(name = "is_locked")
+        val isLocked: Boolean,
         /**
          * Sets whether the Member is enrolled in MFA. If true, the Member must complete an MFA step whenever they wish to log in
          * to their Organization. If false, the Member only needs to complete an MFA step if the Organization's MFA policy is set
@@ -326,6 +414,28 @@ public data class Member
          */
         @Json(name = "external_id")
         val externalId: String? = null,
+        @Json(name = "lock_created_at")
+        val lockCreatedAt: Instant? = null,
+        @Json(name = "lock_expires_at")
+        val lockExpiresAt: Instant? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class MemberConnectedApp
+    @JvmOverloads
+    constructor(
+        @Json(name = "connected_app_id")
+        val connectedAppId: String,
+        @Json(name = "name")
+        val name: String,
+        @Json(name = "description")
+        val description: String,
+        @Json(name = "client_type")
+        val clientType: String,
+        @Json(name = "scopes_granted")
+        val scopesGranted: String,
+        @Json(name = "logo_url")
+        val logoURL: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -659,6 +769,14 @@ public data class Organization
         val oauthTenantJITProvisioning: String,
         @Json(name = "claimed_email_domains")
         val claimedEmailDomains: List<String>,
+        @Json(name = "first_party_connected_apps_allowed_type")
+        val firstPartyConnectedAppsAllowedType: String,
+        @Json(name = "allowed_first_party_connected_apps")
+        val allowedFirstPartyConnectedApps: List<String>,
+        @Json(name = "third_party_connected_apps_allowed_type")
+        val thirdPartyConnectedAppsAllowedType: String,
+        @Json(name = "allowed_third_party_connected_apps")
+        val allowedThirdPartyConnectedApps: List<String>,
         /**
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */
@@ -692,6 +810,32 @@ public data class Organization
          */
         @Json(name = "allowed_oauth_tenants")
         val allowedOAuthTenants: Map<String, Any?>? = emptyMap(),
+    )
+
+@JsonClass(generateAdapter = true)
+public data class OrganizationConnectedApp
+    @JvmOverloads
+    constructor(
+        @Json(name = "connected_app_id")
+        val connectedAppId: String,
+        @Json(name = "name")
+        val name: String,
+        @Json(name = "description")
+        val description: String,
+        @Json(name = "client_type")
+        val clientType: String,
+        @Json(name = "logo_url")
+        val logoURL: String? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class OrganizationConnectedAppActiveMember
+    @JvmOverloads
+    constructor(
+        @Json(name = "member_id")
+        val memberId: String,
+        @Json(name = "granted_scopes")
+        val grantedScopes: List<String>,
     )
 
 @JsonClass(generateAdapter = true)
@@ -861,6 +1005,26 @@ public data class UpdateRequestOptions
         }
     }
 
+@JsonClass(generateAdapter = true)
+public data class ConnectedAppsRequest
+    @JvmOverloads
+    constructor(
+        @Json(name = "organization_id")
+        val organizationId: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class ConnectedAppsResponse
+    @JvmOverloads
+    constructor(
+        @Json(name = "request_id")
+        val requestId: String,
+        @Json(name = "connected_apps")
+        val connectedApps: List<OrganizationConnectedApp>,
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
+
 /**
 * Request type for `Organizations.create`.
 */
@@ -1022,6 +1186,14 @@ public data class CreateRequest
          */
         @Json(name = "claimed_email_domains")
         val claimedEmailDomains: List<String>? = emptyList(),
+        @Json(name = "first_party_connected_apps_allowed_type")
+        val firstPartyConnectedAppsAllowedType: CreateRequestFirstPartyConnectedAppsAllowedType? = null,
+        @Json(name = "allowed_first_party_connected_apps")
+        val allowedFirstPartyConnectedApps: List<String>? = emptyList(),
+        @Json(name = "third_party_connected_apps_allowed_type")
+        val thirdPartyConnectedAppsAllowedType: CreateRequestThirdPartyConnectedAppsAllowedType? = null,
+        @Json(name = "allowed_third_party_connected_apps")
+        val allowedThirdPartyConnectedApps: List<String>? = emptyList(),
     )
 
 /**
@@ -1090,6 +1262,36 @@ public data class DeleteResponse
          */
         @Json(name = "status_code")
         val statusCode: Int,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class GetConnectedAppRequest
+    @JvmOverloads
+    constructor(
+        @Json(name = "organization_id")
+        val organizationId: String,
+        @Json(name = "connected_app_id")
+        val connectedAppId: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class GetConnectedAppResponse
+    @JvmOverloads
+    constructor(
+        @Json(name = "connected_app_id")
+        val connectedAppId: String,
+        @Json(name = "name")
+        val name: String,
+        @Json(name = "description")
+        val description: String,
+        @Json(name = "client_type")
+        val clientType: String,
+        @Json(name = "active_members")
+        val activeMembers: List<OrganizationConnectedAppActiveMember>,
+        @Json(name = "status_code")
+        val statusCode: Int,
+        @Json(name = "logo_url")
+        val logoURL: String? = null,
     )
 
 /**
@@ -1449,6 +1651,14 @@ public data class UpdateRequest
          */
         @Json(name = "claimed_email_domains")
         val claimedEmailDomains: List<String>? = emptyList(),
+        @Json(name = "first_party_connected_apps_allowed_type")
+        val firstPartyConnectedAppsAllowedType: UpdateRequestFirstPartyConnectedAppsAllowedType? = null,
+        @Json(name = "allowed_first_party_connected_apps")
+        val allowedFirstPartyConnectedApps: List<String>? = emptyList(),
+        @Json(name = "third_party_connected_apps_allowed_type")
+        val thirdPartyConnectedAppsAllowedType: UpdateRequestThirdPartyConnectedAppsAllowedType? = null,
+        @Json(name = "allowed_third_party_connected_apps")
+        val allowedThirdPartyConnectedApps: List<String>? = emptyList(),
     )
 
 /**

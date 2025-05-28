@@ -60,7 +60,7 @@ public data class AttachRequest
         @Json(name = "provider")
         val provider: String,
         /**
-         * The unique ID of a specific User. You may use an external_id here if one is set for the user.
+         * The unique ID of a specific User. You may use an `external_id` here if one is set for the user.
          */
         @Json(name = "user_id")
         val userId: String? = null,
@@ -244,7 +244,7 @@ public data class AuthenticateResponse
          * A `Session` object. For backwards compatibility reasons, the session from an OAuth authenticate call is labeled as
          * `user_session`, but is otherwise just a standard stytch `Session` object.
          *
-         *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
+         *   See [Session object](https://stytch.com/docs/api/session-object) for complete response fields.
          *
          */
         @Json(name = "user_session")

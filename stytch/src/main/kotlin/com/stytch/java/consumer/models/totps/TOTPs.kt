@@ -41,8 +41,8 @@ public data class AuthenticateRequest
     @JvmOverloads
     constructor(
         /**
-         * The `user_id` of an active user the TOTP registration should be tied to. You may use an external_id here if one is set
-         * for the user.
+         * The `user_id` of an active user the TOTP registration should be tied to. You may use an `external_id` here if one is
+         * set for the user.
          */
         @Json(name = "user_id")
         val userId: String,
@@ -137,7 +137,7 @@ public data class AuthenticateResponse
          * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
          * Session object in the response.
          *
-         *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
+         *   See [Session object](https://stytch.com/docs/api/session-object) for complete response fields.
          *
          */
         @Json(name = "session")
@@ -152,8 +152,8 @@ public data class CreateRequest
     @JvmOverloads
     constructor(
         /**
-         * The `user_id` of an active user the TOTP registration should be tied to. You may use an external_id here if one is set
-         * for the user.
+         * The `user_id` of an active user the TOTP registration should be tied to. You may use an `external_id` here if one is
+         * set for the user.
          */
         @Json(name = "user_id")
         val userId: String,
@@ -225,8 +225,8 @@ public data class RecoverRequest
     @JvmOverloads
     constructor(
         /**
-         * The `user_id` of an active user the TOTP registration should be tied to. You may use an external_id here if one is set
-         * for the user.
+         * The `user_id` of an active user the TOTP registration should be tied to. You may use an `external_id` here if one is
+         * set for the user.
          */
         @Json(name = "user_id")
         val userId: String,
@@ -321,7 +321,7 @@ public data class RecoverResponse
          * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
          * Session object in the response.
          *
-         *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
+         *   See [Session object](https://stytch.com/docs/api/session-object) for complete response fields.
          *
          */
         @Json(name = "session")
@@ -336,8 +336,8 @@ public data class RecoveryCodesRequest
     @JvmOverloads
     constructor(
         /**
-         * The `user_id` of an active user the TOTP registration should be tied to. You may use an external_id here if one is set
-         * for the user.
+         * The `user_id` of an active user the TOTP registration should be tied to. You may use an `external_id` here if one is
+         * set for the user.
          */
         @Json(name = "user_id")
         val userId: String,

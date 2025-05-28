@@ -182,7 +182,7 @@ public data class NetworkProperties
     @JvmOverloads
     constructor(
         /**
-         * The IP address of the user.
+         * The IP address of the client.
          */
         @Json(name = "ip_address")
         val ipAddress: String,

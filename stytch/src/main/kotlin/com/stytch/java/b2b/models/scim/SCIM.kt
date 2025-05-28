@@ -299,12 +299,14 @@ public data class SCIMGroup
     @JvmOverloads
     constructor(
         /**
-         * Globally unique UUID that identifies a specific SCIM Group.
+         * Stytch-issued, globally unique UUID that identifies a specific SCIM Group. The entity `id` in the SCIM specification is
+         * issued by the Service Provider (SP) and returned to the Identity Provider (IdP) to store and use for uniquely identify
+         * and updating the Group moving forward.
          */
         @Json(name = "group_id")
         val groupId: String,
         /**
-         * The name of the SCIM group.
+         * The displayName of the SCIM group, sent from the Identity Provider (IdP).
          */
         @Json(name = "group_name")
         val groupName: String,

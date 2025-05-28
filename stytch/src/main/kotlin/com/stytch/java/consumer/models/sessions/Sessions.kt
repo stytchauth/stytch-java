@@ -559,8 +559,8 @@ public data class ImpersonatedFactor
     @JvmOverloads
     constructor(
         /**
-         * The unique UUID of the impersonator. For impersonation sessions initiated via the Stytch dashboard, the
-         * `impersonator_id` will be the impersonator's Stytch workspace id.
+         * For impersonated sessions initiated via the Stytch Dashboard, the `impersonator_id` will be the impersonator's Stytch
+         * Dashboard `member_id`.
          */
         @Json(name = "impersonator_id")
         val impersonatorId: String,
@@ -957,7 +957,7 @@ public data class AuthenticateResponse
          * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
          * Session object in the response.
          *
-         *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
+         *   See [Session object](https://stytch.com/docs/api/session-object) for complete response fields.
          *
          */
         @Json(name = "session")
@@ -1069,7 +1069,7 @@ public data class ExchangeAccessTokenResponse
          * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
          * Session object in the response.
          *
-         *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
+         *   See [Session object](https://stytch.com/docs/api/session-object) for complete response fields.
          *
          */
         @Json(name = "session")
@@ -1124,7 +1124,7 @@ public data class GetRequest
     @JvmOverloads
     constructor(
         /**
-         * The `user_id` to get active Sessions for. You may use an external_id here if one is set for the user.
+         * The `user_id` to get active Sessions for. You may use an `external_id` here if one is set for the user.
          */
         @Json(name = "user_id")
         val userId: String,
@@ -1144,7 +1144,7 @@ public data class GetResponse
         @Json(name = "request_id")
         val requestId: String,
         /**
-         * An array of Session objects.
+         * An array of [Session objects](https://stytch.com/docs/api/session-object).
          */
         @Json(name = "sessions")
         val sessions: List<Session>,
@@ -1235,7 +1235,7 @@ public data class MigrateResponse
          * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
          * Session object in the response.
          *
-         *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
+         *   See [Session object](https://stytch.com/docs/api/session-object) for complete response fields.
          *
          */
         @Json(name = "session")
