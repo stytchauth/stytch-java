@@ -45,7 +45,7 @@ public data class ResetRequest
         @Json(name = "token")
         val token: String,
         /**
-         * The password for the user. Any UTF8 character is allowed, e.g. spaces, emojis, non-English characers, etc.
+         * The password for the user. Any UTF8 character is allowed, e.g. spaces, emojis, non-English characters, etc.
          */
         @Json(name = "password")
         val password: String,
@@ -90,7 +90,8 @@ public data class ResetRequest
         @Json(name = "session_custom_claims")
         val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
         /**
-         * Provided attributes help with fraud detection.
+         * Provided attributes to help with fraud detection. These values are pulled and passed into Stytch endpoints by your
+         * application.
          */
         @Json(name = "attributes")
         val attributes: Attributes? = null,
@@ -145,7 +146,7 @@ public data class ResetResponse
          * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
          * Session object in the response.
          *
-         *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
+         *   See [Session object](https://stytch.com/docs/api/session-object) for complete response fields.
          *
          */
         @Json(name = "session")
@@ -187,7 +188,8 @@ public data class ResetStartRequest
         @Json(name = "code_challenge")
         val codeChallenge: String? = null,
         /**
-         * Provided attributes help with fraud detection.
+         * Provided attributes to help with fraud detection. These values are pulled and passed into Stytch endpoints by your
+         * application.
          */
         @Json(name = "attributes")
         val attributes: Attributes? = null,

@@ -133,7 +133,7 @@ public data class ResetRequest
         val passwordResetToken: String,
         /**
          * The password to authenticate, reset, or set for the first time. Any UTF8 character is allowed, e.g. spaces, emojis,
-         * non-English characers, etc.
+         * non-English characters, etc.
          */
         @Json(name = "password")
         val password: String,

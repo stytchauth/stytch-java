@@ -11,11 +11,17 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.stytch.java.b2b.api.organizationsmembers.Members
 import com.stytch.java.b2b.api.organizationsmembers.MembersImpl
+import com.stytch.java.b2b.models.organizations.ConnectedAppsRequest
+import com.stytch.java.b2b.models.organizations.ConnectedAppsRequestOptions
+import com.stytch.java.b2b.models.organizations.ConnectedAppsResponse
 import com.stytch.java.b2b.models.organizations.CreateRequest
 import com.stytch.java.b2b.models.organizations.CreateResponse
 import com.stytch.java.b2b.models.organizations.DeleteRequest
 import com.stytch.java.b2b.models.organizations.DeleteRequestOptions
 import com.stytch.java.b2b.models.organizations.DeleteResponse
+import com.stytch.java.b2b.models.organizations.GetConnectedAppRequest
+import com.stytch.java.b2b.models.organizations.GetConnectedAppRequestOptions
+import com.stytch.java.b2b.models.organizations.GetConnectedAppResponse
 import com.stytch.java.b2b.models.organizations.GetRequest
 import com.stytch.java.b2b.models.organizations.GetResponse
 import com.stytch.java.b2b.models.organizations.MetricsRequest
@@ -184,6 +190,74 @@ public interface Organizations {
     )
 
     public fun metricsCompletable(data: MetricsRequest): CompletableFuture<StytchResult<MetricsResponse>>
+
+    /**
+     * Retrieves a list of Connected Apps for the Organization that have been installed by Members. Installation comprises
+     * successful completion of an authorization flow with a Connected App that has not been explicitly revoked.
+     *
+     * Available Connected Apps will change according to the Organization's `first_party_connected_apps_allowed_type`
+     * and `third_party_connected_apps_allowed_type` policies.
+     */
+    public suspend fun connectedApps(
+        data: ConnectedAppsRequest,
+        methodOptions: ConnectedAppsRequestOptions? = null,
+    ): StytchResult<ConnectedAppsResponse>
+
+    /**
+     * Retrieves a list of Connected Apps for the Organization that have been installed by Members. Installation comprises
+     * successful completion of an authorization flow with a Connected App that has not been explicitly revoked.
+     *
+     * Available Connected Apps will change according to the Organization's `first_party_connected_apps_allowed_type`
+     * and `third_party_connected_apps_allowed_type` policies.
+     */
+    public fun connectedApps(
+        data: ConnectedAppsRequest,
+        methodOptions: ConnectedAppsRequestOptions? = null,
+        callback: (StytchResult<ConnectedAppsResponse>) -> Unit,
+    )
+
+    /**
+     * Retrieves a list of Connected Apps for the Organization that have been installed by Members. Installation comprises
+     * successful completion of an authorization flow with a Connected App that has not been explicitly revoked.
+     *
+     * Available Connected Apps will change according to the Organization's `first_party_connected_apps_allowed_type`
+     * and `third_party_connected_apps_allowed_type` policies.
+     */
+    public fun connectedAppsCompletable(
+        data: ConnectedAppsRequest,
+        methodOptions: ConnectedAppsRequestOptions? = null,
+    ): CompletableFuture<StytchResult<ConnectedAppsResponse>>
+
+    /**
+     * Get Connected App for Organization retrieves information about the specified Connected App as well as a list of the
+     * Organization's Members who have the App installed along with the scopes they requested at completion of their last
+     * authorization with the App.
+     */
+    public suspend fun getConnectedApp(
+        data: GetConnectedAppRequest,
+        methodOptions: GetConnectedAppRequestOptions? = null,
+    ): StytchResult<GetConnectedAppResponse>
+
+    /**
+     * Get Connected App for Organization retrieves information about the specified Connected App as well as a list of the
+     * Organization's Members who have the App installed along with the scopes they requested at completion of their last
+     * authorization with the App.
+     */
+    public fun getConnectedApp(
+        data: GetConnectedAppRequest,
+        methodOptions: GetConnectedAppRequestOptions? = null,
+        callback: (StytchResult<GetConnectedAppResponse>) -> Unit,
+    )
+
+    /**
+     * Get Connected App for Organization retrieves information about the specified Connected App as well as a list of the
+     * Organization's Members who have the App installed along with the scopes they requested at completion of their last
+     * authorization with the App.
+     */
+    public fun getConnectedAppCompletable(
+        data: GetConnectedAppRequest,
+        methodOptions: GetConnectedAppRequestOptions? = null,
+    ): CompletableFuture<StytchResult<GetConnectedAppResponse>>
 }
 
 internal class OrganizationsImpl(
@@ -349,5 +423,75 @@ internal class OrganizationsImpl(
     override fun metricsCompletable(data: MetricsRequest): CompletableFuture<StytchResult<MetricsResponse>> =
         coroutineScope.async {
             metrics(data)
+        }.asCompletableFuture()
+
+    override suspend fun connectedApps(
+        data: ConnectedAppsRequest,
+        methodOptions: ConnectedAppsRequestOptions?,
+    ): StytchResult<ConnectedAppsResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
+
+            val asJson = moshi.adapter(ConnectedAppsRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/organizations/${data.organizationId}/connected_apps", asMap, headers)
+        }
+
+    override fun connectedApps(
+        data: ConnectedAppsRequest,
+        methodOptions: ConnectedAppsRequestOptions?,
+        callback: (StytchResult<ConnectedAppsResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(connectedApps(data, methodOptions))
+        }
+    }
+
+    override fun connectedAppsCompletable(
+        data: ConnectedAppsRequest,
+        methodOptions: ConnectedAppsRequestOptions?,
+    ): CompletableFuture<StytchResult<ConnectedAppsResponse>> =
+        coroutineScope.async {
+            connectedApps(data, methodOptions)
+        }.asCompletableFuture()
+
+    override suspend fun getConnectedApp(
+        data: GetConnectedAppRequest,
+        methodOptions: GetConnectedAppRequestOptions?,
+    ): StytchResult<GetConnectedAppResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
+
+            val asJson = moshi.adapter(GetConnectedAppRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/organizations/${data.organizationId}/connected_apps/${data.connectedAppId}", asMap, headers)
+        }
+
+    override fun getConnectedApp(
+        data: GetConnectedAppRequest,
+        methodOptions: GetConnectedAppRequestOptions?,
+        callback: (StytchResult<GetConnectedAppResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(getConnectedApp(data, methodOptions))
+        }
+    }
+
+    override fun getConnectedAppCompletable(
+        data: GetConnectedAppRequest,
+        methodOptions: GetConnectedAppRequestOptions?,
+    ): CompletableFuture<StytchResult<GetConnectedAppResponse>> =
+        coroutineScope.async {
+            getConnectedApp(data, methodOptions)
         }.asCompletableFuture()
 }
