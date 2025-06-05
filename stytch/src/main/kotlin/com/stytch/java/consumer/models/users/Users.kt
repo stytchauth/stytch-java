@@ -282,6 +282,8 @@ public data class User
          */
         @Json(name = "biometric_registrations")
         val biometricRegistrations: List<BiometricRegistration>,
+        @Json(name = "is_locked")
+        val isLocked: Boolean,
         /**
          * The name of the User. Each field in the `name` object is optional.
          */
@@ -313,6 +315,47 @@ public data class User
         val untrustedMetadata: Map<String, Any?>? = emptyMap(),
         @Json(name = "external_id")
         val externalId: String? = null,
+        @Json(name = "lock_created_at")
+        val lockCreatedAt: Instant? = null,
+        @Json(name = "lock_expires_at")
+        val lockExpiresAt: Instant? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class UserConnectedApp
+    @JvmOverloads
+    constructor(
+        /**
+         * The ID of the Connected App.
+         */
+        @Json(name = "connected_app_id")
+        val connectedAppId: String,
+        /**
+         * The name of the Connected App.
+         */
+        @Json(name = "name")
+        val name: String,
+        /**
+         * A description of the Connected App.
+         */
+        @Json(name = "description")
+        val description: String,
+        /**
+         * The type of Connected App. Supported values are `first_party`, `first_party_public`, `third_party`, and
+         * `third_party_public`.
+         */
+        @Json(name = "client_type")
+        val clientType: String,
+        /**
+         * The scopes granted to the Connected App at the completion of the last authorization flow.
+         */
+        @Json(name = "scopes_granted")
+        val scopesGranted: String,
+        /**
+         * The logo URL of the Connected App, if any.
+         */
+        @Json(name = "logo_url")
+        val logoURL: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -352,6 +395,42 @@ public data class WebAuthnRegistration
          */
         @Json(name = "name")
         val name: String,
+    )
+
+/**
+* Request type for `Users.connectedApps`.
+*/
+@JsonClass(generateAdapter = true)
+public data class ConnectedAppsRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * The unique ID of a specific User. You may use an `external_id` here if one is set for the user.
+         */
+        @Json(name = "user_id")
+        val userId: String,
+    )
+
+/**
+* Response type for `Users.connectedApps`.
+*/
+@JsonClass(generateAdapter = true)
+public data class ConnectedAppsResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * An array of Connected Apps with which the User has successfully completed an authorization flow.
+         */
+        @Json(name = "connected_apps")
+        val connectedApps: List<UserConnectedApp>,
+        @Json(name = "status_code")
+        val statusCode: Int,
     )
 
 /**
@@ -403,8 +482,7 @@ public data class CreateRequest
         val untrustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * An identifier that can be used in API calls wherever a user_id is expected. This is a string consisting of
-         * alphanumeric, `.`, `_`, `-`, or `|` characters with a maximum length of 128 characters. External IDs must be unique
-         * within an organization, but may be reused across different organizations in the same project.
+         * alphanumeric, `.`, `_`, `-`, or `|` characters with a maximum length of 128 characters.
          */
         @Json(name = "external_id")
         val externalId: String? = null,
@@ -741,7 +819,7 @@ public data class DeleteRequest
     @JvmOverloads
     constructor(
         /**
-         * The unique ID of a specific User. You may use an external_id here if one is set for the user.
+         * The unique ID of a specific User. You may use an `external_id` here if one is set for the user.
          */
         @Json(name = "user_id")
         val userId: String,
@@ -873,7 +951,7 @@ public data class ExchangePrimaryFactorRequest
     @JvmOverloads
     constructor(
         /**
-         * The unique ID of a specific User. You may use an external_id here if one is set for the user.
+         * The unique ID of a specific User. You may use an `external_id` here if one is set for the user.
          */
         @Json(name = "user_id")
         val userId: String,
@@ -929,7 +1007,7 @@ public data class GetRequest
     @JvmOverloads
     constructor(
         /**
-         * The unique ID of a specific User. You may use an external_id here if one is set for the user.
+         * The unique ID of a specific User. You may use an `external_id` here if one is set for the user.
          */
         @Json(name = "user_id")
         val userId: String,
@@ -993,6 +1071,8 @@ public data class GetResponse
          */
         @Json(name = "biometric_registrations")
         val biometricRegistrations: List<BiometricRegistration>,
+        @Json(name = "is_locked")
+        val isLocked: Boolean,
         /**
          * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
          * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
@@ -1030,6 +1110,46 @@ public data class GetResponse
         val untrustedMetadata: Map<String, Any?>? = emptyMap(),
         @Json(name = "external_id")
         val externalId: String? = null,
+        @Json(name = "lock_created_at")
+        val lockCreatedAt: Instant? = null,
+        @Json(name = "lock_expires_at")
+        val lockExpiresAt: Instant? = null,
+    )
+
+/**
+* Request type for `Users.revoke`.
+*/
+@JsonClass(generateAdapter = true)
+public data class RevokeRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * The unique ID of a specific User. You may use an `external_id` here if one is set for the user.
+         */
+        @Json(name = "user_id")
+        val userId: String,
+        /**
+         * The ID of the Connected App.
+         */
+        @Json(name = "connected_app_id")
+        val connectedAppId: String,
+    )
+
+/**
+* Response type for `Users.revoke`.
+*/
+@JsonClass(generateAdapter = true)
+public data class RevokeResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        @Json(name = "status_code")
+        val statusCode: Int,
     )
 
 /**
@@ -1103,7 +1223,7 @@ public data class UpdateRequest
     @JvmOverloads
     constructor(
         /**
-         * The unique ID of a specific User. You may use an external_id here if one is set for the user.
+         * The unique ID of a specific User. You may use an `external_id` here if one is set for the user.
          */
         @Json(name = "user_id")
         val userId: String,
@@ -1113,7 +1233,8 @@ public data class UpdateRequest
         @Json(name = "name")
         val name: Name? = null,
         /**
-         * Provided attributes help with fraud detection.
+         * Provided attributes to help with fraud detection. These values are pulled and passed into Stytch endpoints by your
+         * application.
          */
         @Json(name = "attributes")
         val attributes: Attributes? = null,
@@ -1132,8 +1253,7 @@ public data class UpdateRequest
         val untrustedMetadata: Map<String, Any?>? = emptyMap(),
         /**
          * An identifier that can be used in API calls wherever a user_id is expected. This is a string consisting of
-         * alphanumeric, `.`, `_`, `-`, or `|` characters with a maximum length of 128 characters. External IDs must be unique
-         * within an organization, but may be reused across different organizations in the same project.
+         * alphanumeric, `.`, `_`, `-`, or `|` characters with a maximum length of 128 characters.
          */
         @Json(name = "external_id")
         val externalId: String? = null,

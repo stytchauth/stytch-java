@@ -19,7 +19,7 @@ public data class ResetRequest
     @JvmOverloads
     constructor(
         /**
-         * The password for the user. Any UTF8 character is allowed, e.g. spaces, emojis, non-English characers, etc.
+         * The password for the user. Any UTF8 character is allowed, e.g. spaces, emojis, non-English characters, etc.
          */
         @Json(name = "password")
         val password: String,
@@ -104,7 +104,7 @@ public data class ResetResponse
          * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
          * Session object in the response.
          *
-         *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
+         *   See [Session object](https://stytch.com/docs/api/session-object) for complete response fields.
          *
          */
         @Json(name = "session")
