@@ -182,7 +182,7 @@ public data class NetworkProperties
     @JvmOverloads
     constructor(
         /**
-         * The IP address of the user.
+         * The IP address of the client.
          */
         @Json(name = "ip_address")
         val ipAddress: String,
@@ -323,7 +323,8 @@ public data class Verdict
         val action: VerdictAction,
         /**
          * A set of contextual clues to inform why a `CHALLENGE` or `BLOCK` action was suggested. For a list of possible Reasons,
-         * please [contact support](mailto:support@stytch.com).
+         * see
+         * [Warning Flags (Verdict Reasons)](https://stytch.com/docs/docs/fraud/guides/device-fingerprinting/reference/warning-flags-verdict-reasons).
          */
         @Json(name = "reasons")
         val reasons: List<String>,

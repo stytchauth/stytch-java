@@ -22,8 +22,8 @@ import java.util.concurrent.CompletableFuture
 
 public interface Fingerprint {
     /**
-     * Lookup the associated fingerprint for the `telemetry_id` returned from the `GetTelemetryID` function. Learn more about
-     * the different fingerprint types and verdicts in our
+     * Lookup the associated fingerprint for the `telemetry_id` returned from the `GetTelemetryID()` function. Learn more
+     * about the different fingerprint types and verdicts in our
      * [DFP guide](https://stytch.com/docs/fraud/guides/device-fingerprinting/overview).
      *
      * Make a decision based on the returned `verdict`:
@@ -42,8 +42,8 @@ public interface Fingerprint {
     public suspend fun lookup(data: LookupRequest): StytchResult<LookupResponse>
 
     /**
-     * Lookup the associated fingerprint for the `telemetry_id` returned from the `GetTelemetryID` function. Learn more about
-     * the different fingerprint types and verdicts in our
+     * Lookup the associated fingerprint for the `telemetry_id` returned from the `GetTelemetryID()` function. Learn more
+     * about the different fingerprint types and verdicts in our
      * [DFP guide](https://stytch.com/docs/fraud/guides/device-fingerprinting/overview).
      *
      * Make a decision based on the returned `verdict`:
@@ -65,8 +65,8 @@ public interface Fingerprint {
     )
 
     /**
-     * Lookup the associated fingerprint for the `telemetry_id` returned from the `GetTelemetryID` function. Learn more about
-     * the different fingerprint types and verdicts in our
+     * Lookup the associated fingerprint for the `telemetry_id` returned from the `GetTelemetryID()` function. Learn more
+     * about the different fingerprint types and verdicts in our
      * [DFP guide](https://stytch.com/docs/fraud/guides/device-fingerprinting/overview).
      *
      * Make a decision based on the returned `verdict`:

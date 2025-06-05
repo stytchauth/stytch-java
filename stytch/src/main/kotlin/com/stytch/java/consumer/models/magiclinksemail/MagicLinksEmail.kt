@@ -75,7 +75,8 @@ public data class InviteRequest
         @Json(name = "invite_template_id")
         val inviteTemplateId: String? = null,
         /**
-         * Provided attributes help with fraud detection.
+         * Provided attributes to help with fraud detection. These values are pulled and passed into Stytch endpoints by your
+         * application.
          */
         @Json(name = "attributes")
         val attributes: Attributes? = null,
@@ -111,6 +112,19 @@ public data class InviteRequest
          */
         @Json(name = "locale")
         val locale: InviteRequestLocale? = null,
+        /**
+         * The `trusted_metadata` field contains an arbitrary JSON object of application-specific data. See the
+         * [Metadata](https://stytch.com/docs/api/metadata) reference for complete field behavior details.
+         */
+        @Json(name = "trusted_metadata")
+        val trustedMetadata: Map<String, Any?>? = emptyMap(),
+        /**
+         * The `untrusted_metadata` field contains an arbitrary JSON object of application-specific data. Untrusted metadata can
+         * be edited by end users directly via the SDK, and **cannot be used to store critical information.** See the
+         * [Metadata](https://stytch.com/docs/api/metadata) reference for complete field behavior details.
+         */
+        @Json(name = "untrusted_metadata")
+        val untrustedMetadata: Map<String, Any?>? = emptyMap(),
     )
 
 /**
@@ -197,7 +211,8 @@ public data class LoginOrCreateRequest
         @Json(name = "signup_template_id")
         val signupTemplateId: String? = null,
         /**
-         * Provided attributes help with fraud detection.
+         * Provided attributes to help with fraud detection. These values are pulled and passed into Stytch endpoints by your
+         * application.
          */
         @Json(name = "attributes")
         val attributes: Attributes? = null,
@@ -321,7 +336,8 @@ public data class SendRequest
         @Json(name = "login_template_id")
         val loginTemplateId: String? = null,
         /**
-         * Provided attributes help with fraud detection.
+         * Provided attributes to help with fraud detection. These values are pulled and passed into Stytch endpoints by your
+         * application.
          */
         @Json(name = "attributes")
         val attributes: Attributes? = null,
@@ -360,7 +376,7 @@ public data class SendRequest
         @Json(name = "code_challenge")
         val codeChallenge: String? = null,
         /**
-         * The unique ID of a specific User. You may use an external_id here if one is set for the user.
+         * The unique ID of a specific User. You may use an `external_id` here if one is set for the user.
          */
         @Json(name = "user_id")
         val userId: String? = null,

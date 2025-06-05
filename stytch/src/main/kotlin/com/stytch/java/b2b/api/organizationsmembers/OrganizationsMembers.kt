@@ -9,6 +9,8 @@ package com.stytch.java.b2b.api.organizationsmembers
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import com.stytch.java.b2b.api.organizationsmembersconnectedapps.ConnectedApps
+import com.stytch.java.b2b.api.organizationsmembersconnectedapps.ConnectedAppsImpl
 import com.stytch.java.b2b.api.organizationsmembersoauthproviders.OAuthProviders
 import com.stytch.java.b2b.api.organizationsmembersoauthproviders.OAuthProvidersImpl
 import com.stytch.java.b2b.models.organizationsmembers.CreateRequest
@@ -27,6 +29,9 @@ import com.stytch.java.b2b.models.organizationsmembers.DeleteResponse
 import com.stytch.java.b2b.models.organizationsmembers.DeleteTOTPRequest
 import com.stytch.java.b2b.models.organizationsmembers.DeleteTOTPRequestOptions
 import com.stytch.java.b2b.models.organizationsmembers.DeleteTOTPResponse
+import com.stytch.java.b2b.models.organizationsmembers.GetConnectedAppsRequest
+import com.stytch.java.b2b.models.organizationsmembers.GetConnectedAppsRequestOptions
+import com.stytch.java.b2b.models.organizationsmembers.GetConnectedAppsResponse
 import com.stytch.java.b2b.models.organizationsmembers.GetRequest
 import com.stytch.java.b2b.models.organizationsmembers.GetResponse
 import com.stytch.java.b2b.models.organizationsmembers.OIDCProviderInformationRequest
@@ -56,6 +61,8 @@ import java.util.concurrent.CompletableFuture
 
 public interface Members {
     public val oauthProviders: OAuthProviders
+
+    public val connectedApps: ConnectedApps
 
     /**
      * Updates a specified by `organization_id` and `member_id`.
@@ -405,6 +412,46 @@ public interface Members {
     ): CompletableFuture<StytchResult<UnlinkRetiredEmailResponse>>
 
     /**
+     * Member Get Connected Apps retrieves a list of Connected Apps with which the Member has successfully completed an
+     * authorization flow.
+     * If the Member revokes a Connected App's access (e.g. via the Revoke Connected App endpoint) then the Connected App will
+     * no longer be returned in the response. A Connected App's access may also be revoked if the Organization's allowed
+     * Connected
+     * App policy changes.
+     */
+    public suspend fun getConnectedApps(
+        data: GetConnectedAppsRequest,
+        methodOptions: GetConnectedAppsRequestOptions? = null,
+    ): StytchResult<GetConnectedAppsResponse>
+
+    /**
+     * Member Get Connected Apps retrieves a list of Connected Apps with which the Member has successfully completed an
+     * authorization flow.
+     * If the Member revokes a Connected App's access (e.g. via the Revoke Connected App endpoint) then the Connected App will
+     * no longer be returned in the response. A Connected App's access may also be revoked if the Organization's allowed
+     * Connected
+     * App policy changes.
+     */
+    public fun getConnectedApps(
+        data: GetConnectedAppsRequest,
+        methodOptions: GetConnectedAppsRequestOptions? = null,
+        callback: (StytchResult<GetConnectedAppsResponse>) -> Unit,
+    )
+
+    /**
+     * Member Get Connected Apps retrieves a list of Connected Apps with which the Member has successfully completed an
+     * authorization flow.
+     * If the Member revokes a Connected App's access (e.g. via the Revoke Connected App endpoint) then the Connected App will
+     * no longer be returned in the response. A Connected App's access may also be revoked if the Organization's allowed
+     * Connected
+     * App policy changes.
+     */
+    public fun getConnectedAppsCompletable(
+        data: GetConnectedAppsRequest,
+        methodOptions: GetConnectedAppsRequestOptions? = null,
+    ): CompletableFuture<StytchResult<GetConnectedAppsResponse>>
+
+    /**
      * Creates a. An `organization_id` and `email_address` are required.
      */
     public suspend fun create(
@@ -455,6 +502,7 @@ internal class MembersImpl(
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val oauthProviders: OAuthProviders = OAuthProvidersImpl(httpClient, coroutineScope)
+    override val connectedApps: ConnectedApps = ConnectedAppsImpl(httpClient, coroutineScope)
 
     override suspend fun update(
         data: UpdateRequest,
@@ -756,6 +804,41 @@ internal class MembersImpl(
     ): CompletableFuture<StytchResult<UnlinkRetiredEmailResponse>> =
         coroutineScope.async {
             unlinkRetiredEmail(data, methodOptions)
+        }.asCompletableFuture()
+
+    override suspend fun getConnectedApps(
+        data: GetConnectedAppsRequest,
+        methodOptions: GetConnectedAppsRequestOptions?,
+    ): StytchResult<GetConnectedAppsResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
+
+            val asJson = moshi.adapter(GetConnectedAppsRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/b2b/organizations/${data.organizationId}/members/${data.memberId}/connected_apps", asMap, headers)
+        }
+
+    override fun getConnectedApps(
+        data: GetConnectedAppsRequest,
+        methodOptions: GetConnectedAppsRequestOptions?,
+        callback: (StytchResult<GetConnectedAppsResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(getConnectedApps(data, methodOptions))
+        }
+    }
+
+    override fun getConnectedAppsCompletable(
+        data: GetConnectedAppsRequest,
+        methodOptions: GetConnectedAppsRequestOptions?,
+    ): CompletableFuture<StytchResult<GetConnectedAppsResponse>> =
+        coroutineScope.async {
+            getConnectedApps(data, methodOptions)
         }.asCompletableFuture()
 
     override suspend fun create(

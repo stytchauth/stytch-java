@@ -142,6 +142,9 @@ public enum class AuthenticationFactorDeliveryMethod {
 
     @Json(name = "oauth_access_token_exchange")
     OAUTH_ACCESS_TOKEN_EXCHANGE,
+
+    @Json(name = "trusted_token_exchange")
+    TRUSTED_TOKEN_EXCHANGE,
 }
 
 @JsonClass(generateAdapter = false)
@@ -184,6 +187,9 @@ public enum class AuthenticationFactorType {
 
     @Json(name = "impersonated")
     IMPERSONATED,
+
+    @Json(name = "trusted_auth_token")
+    TRUSTED_AUTH_TOKEN,
 }
 
 @JsonClass(generateAdapter = true)
@@ -355,6 +361,8 @@ public data class AuthenticationFactor
         val impersonatedFactor: ImpersonatedFactor? = null,
         @Json(name = "oauth_access_token_exchange_factor")
         val oauthAccessTokenExchangeFactor: OAuthAccessTokenExchangeFactor? = null,
+        @Json(name = "trusted_auth_token_factor")
+        val trustedAuthTokenFactor: TrustedAuthTokenFactor? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -559,8 +567,8 @@ public data class ImpersonatedFactor
     @JvmOverloads
     constructor(
         /**
-         * The unique UUID of the impersonator. For impersonation sessions initiated via the Stytch dashboard, the
-         * `impersonator_id` will be the impersonator's Stytch workspace id.
+         * For impersonated sessions initiated via the Stytch Dashboard, the `impersonator_id` will be the impersonator's Stytch
+         * Dashboard `member_id`.
          */
         @Json(name = "impersonator_id")
         val impersonatorId: String,
@@ -857,6 +865,14 @@ public data class TikTokOAuthFactor
     )
 
 @JsonClass(generateAdapter = true)
+public data class TrustedAuthTokenFactor
+    @JvmOverloads
+    constructor(
+        @Json(name = "token_id")
+        val tokenId: String,
+    )
+
+@JsonClass(generateAdapter = true)
 public data class TwitchOAuthFactor
     @JvmOverloads
     constructor(
@@ -957,7 +973,7 @@ public data class AuthenticateResponse
          * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
          * Session object in the response.
          *
-         *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
+         *   See [Session object](https://stytch.com/docs/api/session-object) for complete response fields.
          *
          */
         @Json(name = "session")
@@ -1069,7 +1085,7 @@ public data class ExchangeAccessTokenResponse
          * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
          * Session object in the response.
          *
-         *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
+         *   See [Session object](https://stytch.com/docs/api/session-object) for complete response fields.
          *
          */
         @Json(name = "session")
@@ -1124,7 +1140,7 @@ public data class GetRequest
     @JvmOverloads
     constructor(
         /**
-         * The `user_id` to get active Sessions for. You may use an external_id here if one is set for the user.
+         * The `user_id` to get active Sessions for. You may use an `external_id` here if one is set for the user.
          */
         @Json(name = "user_id")
         val userId: String,
@@ -1144,7 +1160,7 @@ public data class GetResponse
         @Json(name = "request_id")
         val requestId: String,
         /**
-         * An array of Session objects.
+         * An array of [Session objects](https://stytch.com/docs/api/session-object).
          */
         @Json(name = "sessions")
         val sessions: List<Session>,
@@ -1235,7 +1251,7 @@ public data class MigrateResponse
          * If you initiate a Session, by including `session_duration_minutes` in your authenticate call, you'll receive a full
          * Session object in the response.
          *
-         *   See [GET sessions](https://stytch.com/docs/api/session-get) for complete response fields.
+         *   See [Session object](https://stytch.com/docs/api/session-object) for complete response fields.
          *
          */
         @Json(name = "session")

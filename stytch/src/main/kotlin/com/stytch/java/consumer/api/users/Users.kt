@@ -11,6 +11,8 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.StytchResult
+import com.stytch.java.consumer.models.users.ConnectedAppsRequest
+import com.stytch.java.consumer.models.users.ConnectedAppsResponse
 import com.stytch.java.consumer.models.users.CreateRequest
 import com.stytch.java.consumer.models.users.CreateResponse
 import com.stytch.java.consumer.models.users.DeleteBiometricRegistrationRequest
@@ -35,6 +37,8 @@ import com.stytch.java.consumer.models.users.ExchangePrimaryFactorRequest
 import com.stytch.java.consumer.models.users.ExchangePrimaryFactorResponse
 import com.stytch.java.consumer.models.users.GetRequest
 import com.stytch.java.consumer.models.users.GetResponse
+import com.stytch.java.consumer.models.users.RevokeRequest
+import com.stytch.java.consumer.models.users.RevokeResponse
 import com.stytch.java.consumer.models.users.SearchRequest
 import com.stytch.java.consumer.models.users.SearchResponse
 import com.stytch.java.consumer.models.users.UpdateRequest
@@ -390,6 +394,57 @@ public interface Users {
     public fun deleteOAuthRegistrationCompletable(
         data: DeleteOAuthRegistrationRequest,
     ): CompletableFuture<StytchResult<DeleteOAuthRegistrationResponse>>
+
+    /**
+     * User Get Connected Apps retrieves a list of Connected Apps with which the User has successfully completed an
+     * authorization flow.
+     * If the User revokes a Connected App's access (e.g. via the Revoke Connected App endpoint) then the Connected App will
+     * no longer be returned in the response.
+     */
+    public suspend fun connectedApps(data: ConnectedAppsRequest): StytchResult<ConnectedAppsResponse>
+
+    /**
+     * User Get Connected Apps retrieves a list of Connected Apps with which the User has successfully completed an
+     * authorization flow.
+     * If the User revokes a Connected App's access (e.g. via the Revoke Connected App endpoint) then the Connected App will
+     * no longer be returned in the response.
+     */
+    public fun connectedApps(
+        data: ConnectedAppsRequest,
+        callback: (StytchResult<ConnectedAppsResponse>) -> Unit,
+    )
+
+    /**
+     * User Get Connected Apps retrieves a list of Connected Apps with which the User has successfully completed an
+     * authorization flow.
+     * If the User revokes a Connected App's access (e.g. via the Revoke Connected App endpoint) then the Connected App will
+     * no longer be returned in the response.
+     */
+    public fun connectedAppsCompletable(data: ConnectedAppsRequest): CompletableFuture<StytchResult<ConnectedAppsResponse>>
+
+    /**
+     * Revoke Connected App revokes a Connected App's access to a User and revokes all active tokens that have been created
+     * on the User's behalf. New tokens cannot be created until the User completes a new authorization flow with the
+     * Connected App.
+     */
+    public suspend fun revoke(data: RevokeRequest): StytchResult<RevokeResponse>
+
+    /**
+     * Revoke Connected App revokes a Connected App's access to a User and revokes all active tokens that have been created
+     * on the User's behalf. New tokens cannot be created until the User completes a new authorization flow with the
+     * Connected App.
+     */
+    public fun revoke(
+        data: RevokeRequest,
+        callback: (StytchResult<RevokeResponse>) -> Unit,
+    )
+
+    /**
+     * Revoke Connected App revokes a Connected App's access to a User and revokes all active tokens that have been created
+     * on the User's behalf. New tokens cannot be created until the User completes a new authorization flow with the
+     * Connected App.
+     */
+    public fun revokeCompletable(data: RevokeRequest): CompletableFuture<StytchResult<RevokeResponse>>
 }
 
 internal class UsersImpl(
@@ -712,5 +767,52 @@ internal class UsersImpl(
     ): CompletableFuture<StytchResult<DeleteOAuthRegistrationResponse>> =
         coroutineScope.async {
             deleteOAuthRegistration(data)
+        }.asCompletableFuture()
+
+    override suspend fun connectedApps(data: ConnectedAppsRequest): StytchResult<ConnectedAppsResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
+            val asJson = moshi.adapter(ConnectedAppsRequest::class.java).toJson(data)
+            val type = Types.newParameterizedType(Map::class.java, String::class.java, Any::class.java)
+            val adapter: JsonAdapter<Map<String, Any>> = moshi.adapter(type)
+            val asMap = adapter.fromJson(asJson) ?: emptyMap()
+            httpClient.get("/v1/users/${data.userId}/connected_apps", asMap, headers)
+        }
+
+    override fun connectedApps(
+        data: ConnectedAppsRequest,
+        callback: (StytchResult<ConnectedAppsResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(connectedApps(data))
+        }
+    }
+
+    override fun connectedAppsCompletable(data: ConnectedAppsRequest): CompletableFuture<StytchResult<ConnectedAppsResponse>> =
+        coroutineScope.async {
+            connectedApps(data)
+        }.asCompletableFuture()
+
+    override suspend fun revoke(data: RevokeRequest): StytchResult<RevokeResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
+            val asJson = moshi.adapter(RevokeRequest::class.java).toJson(data)
+            httpClient.post("/v1/users/${data.userId}/connected_apps/${data.connectedAppId}/revoke", asJson, headers)
+        }
+
+    override fun revoke(
+        data: RevokeRequest,
+        callback: (StytchResult<RevokeResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(revoke(data))
+        }
+    }
+
+    override fun revokeCompletable(data: RevokeRequest): CompletableFuture<StytchResult<RevokeResponse>> =
+        coroutineScope.async {
+            revoke(data)
         }.asCompletableFuture()
 }

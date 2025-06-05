@@ -9,6 +9,7 @@ package com.stytch.java.b2b.models.organizationsmembers
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.stytch.java.b2b.models.organizations.Member
+import com.stytch.java.b2b.models.organizations.MemberConnectedApp
 import com.stytch.java.b2b.models.organizations.OIDCProviderInfo
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.organizations.ResultsMetadata
@@ -92,6 +93,25 @@ public data class DeleteRequestOptions
     }
 
 public data class DeleteTOTPRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
+        }
+    }
+
+public data class GetConnectedAppsRequestOptions
     @JvmOverloads
     constructor(
         /**
@@ -534,6 +554,49 @@ public data class DeleteTOTPResponse
          * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
          * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
          */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
+
+/**
+* Request type for `Members.getConnectedApps`.
+*/
+@JsonClass(generateAdapter = true)
+public data class GetConnectedAppsRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String,
+        /**
+         * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
+         * so be sure to preserve this value. You may use an external_id here if one is set for the member.
+         */
+        @Json(name = "member_id")
+        val memberId: String,
+    )
+
+/**
+* Response type for `Members.getConnectedApps`.
+*/
+@JsonClass(generateAdapter = true)
+public data class GetConnectedAppsResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * An array of Connected Apps with which the Member has successfully completed an authorization flow.
+         */
+        @Json(name = "connected_apps")
+        val connectedApps: List<MemberConnectedApp>,
         @Json(name = "status_code")
         val statusCode: Int,
     )
