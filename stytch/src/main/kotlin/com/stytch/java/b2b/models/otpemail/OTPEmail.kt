@@ -12,6 +12,7 @@ import com.stytch.java.b2b.models.mfa.MfaRequired
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
+import com.stytch.java.b2b.models.sessions.PrimaryRequired
 
 @JsonClass(generateAdapter = false)
 public enum class AuthenticateRequestLocale {
@@ -178,11 +179,6 @@ public data class AuthenticateResponse
         @Json(name = "session_jwt")
         val sessionJwt: String,
         /**
-         * The [Session object](https://stytch.com/docs/b2b/api/session-object).
-         */
-        @Json(name = "member_session")
-        val memberSession: MemberSession,
-        /**
          * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
          */
         @Json(name = "organization")
@@ -214,10 +210,17 @@ public data class AuthenticateResponse
         @Json(name = "status_code")
         val statusCode: Int,
         /**
+         * The [Session object](https://stytch.com/docs/b2b/api/session-object).
+         */
+        @Json(name = "member_session")
+        val memberSession: MemberSession? = null,
+        /**
          * Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
          */
         @Json(name = "mfa_required")
         val mfaRequired: MfaRequired? = null,
+        @Json(name = "primary_required")
+        val primaryRequired: PrimaryRequired? = null,
     )
 
 /**

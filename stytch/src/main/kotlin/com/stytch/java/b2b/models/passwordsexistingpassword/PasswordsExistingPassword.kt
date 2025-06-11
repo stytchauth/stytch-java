@@ -12,6 +12,7 @@ import com.stytch.java.b2b.models.mfa.MfaRequired
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
+import com.stytch.java.b2b.models.sessions.PrimaryRequired
 
 @JsonClass(generateAdapter = false)
 public enum class ResetRequestLocale {
@@ -183,4 +184,9 @@ public data class ResetResponse
          */
         @Json(name = "mfa_required")
         val mfaRequired: MfaRequired? = null,
+        /**
+         * Information about the primary authentication requirements of the Organization.
+         */
+        @Json(name = "primary_required")
+        val primaryRequired: PrimaryRequired? = null,
     )

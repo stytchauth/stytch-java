@@ -12,6 +12,7 @@ import com.stytch.java.b2b.models.mfa.MfaRequired
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
+import com.stytch.java.b2b.models.sessions.PrimaryRequired
 import com.stytch.java.common.methodoptions.Authorization
 
 @JsonClass(generateAdapter = false)
@@ -295,6 +296,11 @@ public data class ResetResponse
          */
         @Json(name = "mfa_required")
         val mfaRequired: MfaRequired? = null,
+        /**
+         * Information about the primary authentication requirements of the Organization.
+         */
+        @Json(name = "primary_required")
+        val primaryRequired: PrimaryRequired? = null,
     )
 
 /**
@@ -367,8 +373,8 @@ public data class ResetStartRequest
         @Json(name = "reset_password_template_id")
         val resetPasswordTemplateId: String? = null,
         /**
-         * Use a custom template for verification emails sent during password reset flows. This template will be used the first
-         * time a user sets a password via a
+         * Use a custom template for verification emails sent during password reset flows. When cross-organization passwords are
+         * enabled for your Project, this template will be used the first time a user sets a password via a
          *   password reset flow. By default, it will use your default email template. The template must be a template using our
          * built-in customizations or a custom HTML email for Passwords - Email Verification.
          */

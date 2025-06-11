@@ -470,11 +470,6 @@ public data class ExchangeResponse
         @Json(name = "member_id")
         val memberId: String,
         /**
-         * The [Session object](https://stytch.com/docs/b2b/api/session-object).
-         */
-        @Json(name = "member_session")
-        val memberSession: MemberSession,
-        /**
          * A secret token for a given Stytch Session.
          */
         @Json(name = "session_token")
@@ -521,6 +516,11 @@ public data class ExchangeResponse
          */
         @Json(name = "status_code")
         val statusCode: Int,
+        /**
+         * The [Session object](https://stytch.com/docs/b2b/api/session-object).
+         */
+        @Json(name = "member_session")
+        val memberSession: MemberSession? = null,
         /**
          * Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
          */
