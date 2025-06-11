@@ -12,6 +12,7 @@ import com.stytch.java.b2b.models.mfa.MfaRequired
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
+import com.stytch.java.b2b.models.sessions.PrimaryRequired
 import com.stytch.java.consumer.models.passwords.Argon2Config
 import com.stytch.java.consumer.models.passwords.MD5Config
 import com.stytch.java.consumer.models.passwords.PBKDF2Config
@@ -280,6 +281,11 @@ public data class AuthenticateResponse
          */
         @Json(name = "mfa_required")
         val mfaRequired: MfaRequired? = null,
+        /**
+         * Information about the primary authentication requirements of the Organization.
+         */
+        @Json(name = "primary_required")
+        val primaryRequired: PrimaryRequired? = null,
     )
 
 /**
