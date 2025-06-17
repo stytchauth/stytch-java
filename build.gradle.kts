@@ -21,6 +21,8 @@ allprojects {
             // Dependabot forces
             force("com.fasterxml.woodstox:woodstox-core:6.4.0")
             force("com.google.guava:guava:32.0.1-jre")
+            force("com.fasterxml.jackson.core:jackson-core:2.13.0")
+            force("ch.qos.logback:logback-core:1.3.15")
         }
     }
 }
