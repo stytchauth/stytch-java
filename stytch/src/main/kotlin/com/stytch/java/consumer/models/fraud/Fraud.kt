@@ -67,6 +67,30 @@ public enum class VerdictAction {
     BLOCK,
 }
 
+@JsonClass(generateAdapter = false)
+public enum class VerdictReasonActionAction {
+    @Json(name = "ALLOW")
+    ALLOW,
+
+    @Json(name = "CHALLENGE")
+    CHALLENGE,
+
+    @Json(name = "BLOCK")
+    BLOCK,
+}
+
+@JsonClass(generateAdapter = false)
+public enum class VerdictReasonOverrideAction {
+    @Json(name = "ALLOW")
+    ALLOW,
+
+    @Json(name = "CHALLENGE")
+    CHALLENGE,
+
+    @Json(name = "BLOCK")
+    BLOCK,
+}
+
 @JsonClass(generateAdapter = true)
 public data class ASNProperties
     @JvmOverloads
@@ -339,6 +363,11 @@ public data class Verdict
         @Json(name = "is_authentic_device")
         val isAuthenticDevice: Boolean,
         /**
+         * A list of verdict reason overrides that were applied, if any.
+         */
+        @Json(name = "verdict_reason_overrides")
+        val verdictReasonOverrides: List<VerdictReasonOverride>,
+        /**
          * The type of rule match that was applied (e.g. `VISITOR_ID`), if any. This field will only be present if there is a
          * `RULE_MATCH` reason in the list of verdict reasons.
          */
@@ -350,4 +379,53 @@ public data class Verdict
          */
         @Json(name = "rule_match_identifier")
         val ruleMatchIdentifier: String? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class VerdictReasonAction
+    @JvmOverloads
+    constructor(
+        /**
+         * The verdict reason.
+         */
+        @Json(name = "verdict_reason")
+        val verdictReason: String,
+        /**
+         * The default action returned for the specified verdict reason in a fingerprint lookup when no overrides are specified.
+         */
+        @Json(name = "default_action")
+        val defaultAction: VerdictReasonActionAction,
+        /**
+         * If not null, this action will be returned for the specified verdict reason in a fingerprint lookup, in place of the
+         * default action.
+         */
+        @Json(name = "override_action")
+        val overrideAction: VerdictReasonActionAction? = null,
+        /**
+         * The time when the override was created, if one exists. Values conform to the RFC 3339 standard and are expressed in
+         * UTC, e.g. `2021-12-29T12:33:09Z`.
+         */
+        @Json(name = "override_created_at")
+        val overrideCreatedAt: Instant? = null,
+        /**
+         * A description of the override, if one exists.
+         */
+        @Json(name = "override_description")
+        val overrideDescription: String? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class VerdictReasonOverride
+    @JvmOverloads
+    constructor(
+        /**
+         * The verdict reason that was overridden.
+         */
+        @Json(name = "verdict_reason")
+        val verdictReason: String,
+        /**
+         * The action that was applied for the given verdict reason.
+         */
+        @Json(name = "override_action")
+        val overrideAction: VerdictReasonOverrideAction? = null,
     )
