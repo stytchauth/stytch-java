@@ -126,7 +126,8 @@ public data class ResetStartRequest
         @Json(name = "reset_password_template_id")
         val resetPasswordTemplateId: String? = null,
         /**
-         * Sets a time limit after which the email link to reset the member's password will no longer be valid.
+         * Sets a time limit after which the email link to reset the member's password will no longer be valid. The minimum
+         * allowed expiration is 5 minutes and the maximum is 10080 minutes (7 days). By default, the expiration is 30 minutes.
          */
         @Json(name = "reset_password_expiration_minutes")
         val resetPasswordExpirationMinutes: Int? = null,

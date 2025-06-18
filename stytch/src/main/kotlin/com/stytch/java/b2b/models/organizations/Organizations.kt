@@ -1257,12 +1257,44 @@ public data class CreateRequest
          */
         @Json(name = "claimed_email_domains")
         val claimedEmailDomains: List<String>? = emptyList(),
+        /**
+         * The authentication setting that sets the Organization's policy towards first party Connected Apps. The accepted values
+         * are:
+         *
+         *   `ALL_ALLOWED` – any first party Connected App in the Project is permitted for use by Members.
+         *
+         *   `RESTRICTED` – only first party Connected Apps with IDs in `allowed_first_party_connected_apps` can be used by
+         * Members.
+         *
+         *   `NOT_ALLOWED` – no first party Connected Apps are permitted.
+         *
+         */
         @Json(name = "first_party_connected_apps_allowed_type")
         val firstPartyConnectedAppsAllowedType: CreateRequestFirstPartyConnectedAppsAllowedType? = null,
+        /**
+         * An array of first party Connected App IDs that are allowed for the Organization. Only used when the Organization's
+         * `first_party_connected_apps_allowed_type` is `RESTRICTED`.
+         */
         @Json(name = "allowed_first_party_connected_apps")
         val allowedFirstPartyConnectedApps: List<String>? = emptyList(),
+        /**
+         * The authentication setting that sets the Organization's policy towards third party Connected Apps. The accepted values
+         * are:
+         *
+         *   `ALL_ALLOWED` – any third party Connected App in the Project is permitted for use by Members.
+         *
+         *   `RESTRICTED` – only third party Connected Apps with IDs in `allowed_first_party_connected_apps` can be used by
+         * Members.
+         *
+         *   `NOT_ALLOWED` – no third party Connected Apps are permitted.
+         *
+         */
         @Json(name = "third_party_connected_apps_allowed_type")
         val thirdPartyConnectedAppsAllowedType: CreateRequestThirdPartyConnectedAppsAllowedType? = null,
+        /**
+         * An array of third party Connected App IDs that are allowed for the Organization. Only used when the Organization's
+         * `third_party_connected_apps_allowed_type` is `RESTRICTED`.
+         */
         @Json(name = "allowed_third_party_connected_apps")
         val allowedThirdPartyConnectedApps: List<String>? = emptyList(),
     )
@@ -1751,12 +1783,44 @@ public data class UpdateRequest
          */
         @Json(name = "claimed_email_domains")
         val claimedEmailDomains: List<String>? = emptyList(),
+        /**
+         * The authentication setting that sets the Organization's policy towards first party Connected Apps. The accepted values
+         * are:
+         *
+         *   `ALL_ALLOWED` – any first party Connected App in the Project is permitted for use by Members.
+         *
+         *   `RESTRICTED` – only first party Connected Apps with IDs in `allowed_first_party_connected_apps` can be used by
+         * Members.
+         *
+         *   `NOT_ALLOWED` – no first party Connected Apps are permitted.
+         *
+         */
         @Json(name = "first_party_connected_apps_allowed_type")
         val firstPartyConnectedAppsAllowedType: UpdateRequestFirstPartyConnectedAppsAllowedType? = null,
+        /**
+         * An array of first party Connected App IDs that are allowed for the Organization. Only used when the Organization's
+         * `first_party_connected_apps_allowed_type` is `RESTRICTED`.
+         */
         @Json(name = "allowed_first_party_connected_apps")
         val allowedFirstPartyConnectedApps: List<String>? = emptyList(),
+        /**
+         * The authentication setting that sets the Organization's policy towards third party Connected Apps. The accepted values
+         * are:
+         *
+         *   `ALL_ALLOWED` – any third party Connected App in the Project is permitted for use by Members.
+         *
+         *   `RESTRICTED` – only third party Connected Apps with IDs in `allowed_first_party_connected_apps` can be used by
+         * Members.
+         *
+         *   `NOT_ALLOWED` – no third party Connected Apps are permitted.
+         *
+         */
         @Json(name = "third_party_connected_apps_allowed_type")
         val thirdPartyConnectedAppsAllowedType: UpdateRequestThirdPartyConnectedAppsAllowedType? = null,
+        /**
+         * An array of third party Connected App IDs that are allowed for the Organization. Only used when the Organization's
+         * `third_party_connected_apps_allowed_type` is `RESTRICTED`.
+         */
         @Json(name = "allowed_third_party_connected_apps")
         val allowedThirdPartyConnectedApps: List<String>? = emptyList(),
     )
