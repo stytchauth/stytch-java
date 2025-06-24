@@ -380,8 +380,17 @@ public data class MigrateRequest
          */
         @Json(name = "preserve_existing_sessions")
         val preserveExistingSessions: Boolean? = null,
+        /**
+         * The Member's phone number. A Member may only have one phone number. The phone number should be in E.164 format (i.e.
+         * +1XXXXXXXXXX).
+         */
         @Json(name = "mfa_phone_number")
         val mfaPhoneNumber: String? = null,
+        /**
+         * Whether to set the user's phone number as verified. This is a dangerous field. This flag should only be set if you can
+         * attest that
+         *    the user owns the phone number in question.
+         */
         @Json(name = "set_phone_number_verified")
         val setPhoneNumberVerified: Boolean? = null,
         /**

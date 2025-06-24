@@ -16,6 +16,30 @@ import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
 import com.stytch.java.b2b.models.sessions.PrimaryRequired
 
+@JsonClass(generateAdapter = false)
+public enum class CreateRequestFirstPartyConnectedAppsAllowedType {
+    @Json(name = "ALL_ALLOWED")
+    ALL_ALLOWED,
+
+    @Json(name = "RESTRICTED")
+    RESTRICTED,
+
+    @Json(name = "NOT_ALLOWED")
+    NOT_ALLOWED,
+}
+
+@JsonClass(generateAdapter = false)
+public enum class CreateRequestThirdPartyConnectedAppsAllowedType {
+    @Json(name = "ALL_ALLOWED")
+    ALL_ALLOWED,
+
+    @Json(name = "RESTRICTED")
+    RESTRICTED,
+
+    @Json(name = "NOT_ALLOWED")
+    NOT_ALLOWED,
+}
+
 /**
 * Request type for `Organizations.create`.
 */
@@ -219,6 +243,46 @@ public data class CreateRequest
          */
         @Json(name = "allowed_oauth_tenants")
         val allowedOAuthTenants: Map<String, Any?>? = emptyMap(),
+        /**
+         * The authentication setting that sets the Organization's policy towards first party Connected Apps. The accepted values
+         * are:
+         *
+         *   `ALL_ALLOWED` – any first party Connected App in the Project is permitted for use by Members.
+         *
+         *   `RESTRICTED` – only first party Connected Apps with IDs in `allowed_first_party_connected_apps` can be used by
+         * Members.
+         *
+         *   `NOT_ALLOWED` – no first party Connected Apps are permitted.
+         *
+         */
+        @Json(name = "first_party_connected_apps_allowed_type")
+        val firstPartyConnectedAppsAllowedType: CreateRequestFirstPartyConnectedAppsAllowedType? = null,
+        /**
+         * An array of first party Connected App IDs that are allowed for the Organization. Only used when the Organization's
+         * `first_party_connected_apps_allowed_type` is `RESTRICTED`.
+         */
+        @Json(name = "allowed_first_party_connected_apps")
+        val allowedFirstPartyConnectedApps: List<String>? = emptyList(),
+        /**
+         * The authentication setting that sets the Organization's policy towards third party Connected Apps. The accepted values
+         * are:
+         *
+         *   `ALL_ALLOWED` – any third party Connected App in the Project is permitted for use by Members.
+         *
+         *   `RESTRICTED` – only third party Connected Apps with IDs in `allowed_first_party_connected_apps` can be used by
+         * Members.
+         *
+         *   `NOT_ALLOWED` – no third party Connected Apps are permitted.
+         *
+         */
+        @Json(name = "third_party_connected_apps_allowed_type")
+        val thirdPartyConnectedAppsAllowedType: CreateRequestThirdPartyConnectedAppsAllowedType? = null,
+        /**
+         * An array of third party Connected App IDs that are allowed for the Organization. Only used when the Organization's
+         * `third_party_connected_apps_allowed_type` is `RESTRICTED`.
+         */
+        @Json(name = "allowed_third_party_connected_apps")
+        val allowedThirdPartyConnectedApps: List<String>? = emptyList(),
     )
 
 /**

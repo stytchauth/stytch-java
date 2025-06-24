@@ -365,7 +365,8 @@ public data class Member
         @Json(name = "mfa_enrolled")
         val mfaEnrolled: Boolean,
         /**
-         * The Member's phone number. A Member may only have one phone number.
+         * The Member's phone number. A Member may only have one phone number. The phone number should be in E.164 format (i.e.
+         * +1XXXXXXXXXX).
          */
         @Json(name = "mfa_phone_number")
         val mfaPhoneNumber: String,
