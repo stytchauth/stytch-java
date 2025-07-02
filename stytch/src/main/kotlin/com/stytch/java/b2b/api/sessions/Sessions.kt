@@ -9,6 +9,8 @@ package com.stytch.java.b2b.api.sessions
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import com.stytch.java.b2b.models.sessions.AttestRequest
+import com.stytch.java.b2b.models.sessions.AttestResponse
 import com.stytch.java.b2b.models.sessions.AuthenticateRequest
 import com.stytch.java.b2b.models.sessions.AuthenticateResponse
 import com.stytch.java.b2b.models.sessions.AuthorizationCheck
@@ -308,19 +310,34 @@ public interface Sessions {
         data: ExchangeAccessTokenRequest,
     ): CompletableFuture<StytchResult<ExchangeAccessTokenResponse>>
 
+    public suspend fun attest(data: AttestRequest): StytchResult<AttestResponse>
+
+    public fun attest(
+        data: AttestRequest,
+        callback: (StytchResult<AttestResponse>) -> Unit,
+    )
+
+    public fun attestCompletable(data: AttestRequest): CompletableFuture<StytchResult<AttestResponse>>
+
     /**
-     * Migrate a session from an external OIDC compliant endpoint. Stytch will call the external UserInfo endpoint defined in
-     * your Stytch Project settings in the [Dashboard](https://stytch.com/docs/dashboard), and then perform a lookup using the
-     * `session_token`. If the response contains a valid email address, Stytch will attempt to match that email address with
-     * an existing in your and create a Stytch Session. You will need to create the member before using this endpoint.
+     * Migrate a session from an external OIDC compliant endpoint.
+     * Stytch will call the external UserInfo endpoint defined in your Stytch Project settings in the
+     * [Dashboard](https://stytch.com/docs/dashboard), and then perform a lookup using the `session_token`. <!-- FIXME more
+     * specific dashboard link-->
+     * If the response contains a valid email address, Stytch will attempt to match that email address with an existing in
+     * your and create a Stytch Session.
+     * You will need to create the member before using this endpoint.
      */
     public suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse>
 
     /**
-     * Migrate a session from an external OIDC compliant endpoint. Stytch will call the external UserInfo endpoint defined in
-     * your Stytch Project settings in the [Dashboard](https://stytch.com/docs/dashboard), and then perform a lookup using the
-     * `session_token`. If the response contains a valid email address, Stytch will attempt to match that email address with
-     * an existing in your and create a Stytch Session. You will need to create the member before using this endpoint.
+     * Migrate a session from an external OIDC compliant endpoint.
+     * Stytch will call the external UserInfo endpoint defined in your Stytch Project settings in the
+     * [Dashboard](https://stytch.com/docs/dashboard), and then perform a lookup using the `session_token`. <!-- FIXME more
+     * specific dashboard link-->
+     * If the response contains a valid email address, Stytch will attempt to match that email address with an existing in
+     * your and create a Stytch Session.
+     * You will need to create the member before using this endpoint.
      */
     public fun migrate(
         data: MigrateRequest,
@@ -328,10 +345,13 @@ public interface Sessions {
     )
 
     /**
-     * Migrate a session from an external OIDC compliant endpoint. Stytch will call the external UserInfo endpoint defined in
-     * your Stytch Project settings in the [Dashboard](https://stytch.com/docs/dashboard), and then perform a lookup using the
-     * `session_token`. If the response contains a valid email address, Stytch will attempt to match that email address with
-     * an existing in your and create a Stytch Session. You will need to create the member before using this endpoint.
+     * Migrate a session from an external OIDC compliant endpoint.
+     * Stytch will call the external UserInfo endpoint defined in your Stytch Project settings in the
+     * [Dashboard](https://stytch.com/docs/dashboard), and then perform a lookup using the `session_token`. <!-- FIXME more
+     * specific dashboard link-->
+     * If the response contains a valid email address, Stytch will attempt to match that email address with an existing in
+     * your and create a Stytch Session.
+     * You will need to create the member before using this endpoint.
      */
     public fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>>
 
@@ -644,6 +664,28 @@ internal class SessionsImpl(
     ): CompletableFuture<StytchResult<ExchangeAccessTokenResponse>> =
         coroutineScope.async {
             exchangeAccessToken(data)
+        }.asCompletableFuture()
+
+    override suspend fun attest(data: AttestRequest): StytchResult<AttestResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
+            val asJson = moshi.adapter(AttestRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/sessions/attest", asJson, headers)
+        }
+
+    override fun attest(
+        data: AttestRequest,
+        callback: (StytchResult<AttestResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(attest(data))
+        }
+    }
+
+    override fun attestCompletable(data: AttestRequest): CompletableFuture<StytchResult<AttestResponse>> =
+        coroutineScope.async {
+            attest(data)
         }.asCompletableFuture()
 
     override suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse> =

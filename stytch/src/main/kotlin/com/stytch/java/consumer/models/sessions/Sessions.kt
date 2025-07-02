@@ -920,6 +920,44 @@ public data class YahooOAuthFactor
         val emailId: String? = null,
     )
 
+@JsonClass(generateAdapter = true)
+public data class AttestRequest
+    @JvmOverloads
+    constructor(
+        @Json(name = "profile_id")
+        val profileId: String,
+        @Json(name = "token")
+        val token: String,
+        @Json(name = "session_duration_minutes")
+        val sessionDurationMinutes: Int? = null,
+        @Json(name = "session_custom_claims")
+        val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
+        @Json(name = "session_token")
+        val sessionToken: String? = null,
+        @Json(name = "session_jwt")
+        val sessionJwt: String? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class AttestResponse
+    @JvmOverloads
+    constructor(
+        @Json(name = "request_id")
+        val requestId: String,
+        @Json(name = "user_id")
+        val userId: String,
+        @Json(name = "session_token")
+        val sessionToken: String,
+        @Json(name = "session_jwt")
+        val sessionJwt: String,
+        @Json(name = "user")
+        val user: User,
+        @Json(name = "status_code")
+        val statusCode: Int,
+        @Json(name = "session")
+        val session: Session? = null,
+    )
+
 /**
 * Request type for `Sessions.authenticate`.
 */

@@ -9,6 +9,8 @@ import com.stytch.java.common.BASE_LIVE_URL
 import com.stytch.java.common.BASE_TEST_URL
 import com.stytch.java.common.JwtOptions
 import com.stytch.java.common.OptionalClientConfig
+import com.stytch.java.consumer.api.connectedapps.ConnectedApp
+import com.stytch.java.consumer.api.connectedapps.ConnectedAppImpl
 import com.stytch.java.consumer.api.cryptowallets.CryptoWallets
 import com.stytch.java.consumer.api.cryptowallets.CryptoWalletsImpl
 import com.stytch.java.consumer.api.fraud.Fraud
@@ -64,6 +66,9 @@ public class StytchClient
                 issuers = listOf("stytch.com/$projectId", baseUrl),
                 type = "JWT",
             )
+
+        @JvmField
+        public val connectedApp: ConnectedApp = ConnectedAppImpl(httpClient, coroutineScope)
 
         @JvmField
         public val cryptoWallets: CryptoWallets = CryptoWalletsImpl(httpClient, coroutineScope)

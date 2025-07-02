@@ -395,6 +395,8 @@ public data class RegisterStartRequest
         val overrideName: String? = null,
         @Json(name = "override_display_name")
         val overrideDisplayName: String? = null,
+        @Json(name = "use_base64_url_encoding")
+        val useBase64URLEncoding: Boolean? = null,
     )
 
 /**
