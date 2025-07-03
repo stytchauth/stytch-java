@@ -36,8 +36,8 @@ public interface Email {
      * if the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/guides/passwords/strength-policy), your
      * passwords are
      * considered valid if they meet the requirements that you've set with Stytch.
-     * You may update your password strength configuration in the
-     * [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
+     * You may update your password strength configuration on the
+     * [Passwords Policy page](https://stytch.com/dashboard/password-strength-config) in the Stytch Dashboard.
      */
     public suspend fun resetStart(data: ResetStartRequest): StytchResult<ResetStartResponse>
 
@@ -51,8 +51,8 @@ public interface Email {
      * if the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/guides/passwords/strength-policy), your
      * passwords are
      * considered valid if they meet the requirements that you've set with Stytch.
-     * You may update your password strength configuration in the
-     * [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
+     * You may update your password strength configuration on the
+     * [Passwords Policy page](https://stytch.com/dashboard/password-strength-config) in the Stytch Dashboard.
      */
     public fun resetStart(
         data: ResetStartRequest,
@@ -69,8 +69,8 @@ public interface Email {
      * if the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/guides/passwords/strength-policy), your
      * passwords are
      * considered valid if they meet the requirements that you've set with Stytch.
-     * You may update your password strength configuration in the
-     * [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
+     * You may update your password strength configuration on the
+     * [Passwords Policy page](https://stytch.com/dashboard/password-strength-config) in the Stytch Dashboard.
      */
     public fun resetStartCompletable(data: ResetStartRequest): CompletableFuture<StytchResult<ResetStartResponse>>
 

@@ -167,7 +167,7 @@ public interface Passwords {
      * [zxcvbn](https://stytch.com/docs/guides/passwords/strength-policy), the default, your passwords are considered valid if
      * the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/guides/passwords/strength-policy), your
      * passwords are considered valid if they meet the requirements that you've set with Stytch. You may update your password
-     * strength configuration in the [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
+     * strength configuration in the [Stytch Dashboard](https://stytch.com/dashboard/password-strength-config).
      *
      *
      * ### Password feedback
@@ -193,7 +193,7 @@ public interface Passwords {
      * [zxcvbn](https://stytch.com/docs/guides/passwords/strength-policy), the default, your passwords are considered valid if
      * the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/guides/passwords/strength-policy), your
      * passwords are considered valid if they meet the requirements that you've set with Stytch. You may update your password
-     * strength configuration in the [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
+     * strength configuration in the [Stytch Dashboard](https://stytch.com/dashboard/password-strength-config).
      *
      *
      * ### Password feedback
@@ -222,7 +222,7 @@ public interface Passwords {
      * [zxcvbn](https://stytch.com/docs/guides/passwords/strength-policy), the default, your passwords are considered valid if
      * the strength score is >= 3. If you're using [LUDS](https://stytch.com/docs/guides/passwords/strength-policy), your
      * passwords are considered valid if they meet the requirements that you've set with Stytch. You may update your password
-     * strength configuration in the [stytch dashboard](https://stytch.com/dashboard/password-strength-config).
+     * strength configuration in the [Stytch Dashboard](https://stytch.com/dashboard/password-strength-config).
      *
      *
      * ### Password feedback

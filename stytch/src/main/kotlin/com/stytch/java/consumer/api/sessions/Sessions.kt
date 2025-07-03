@@ -21,6 +21,8 @@ import com.stytch.java.common.StytchException
 import com.stytch.java.common.StytchResult
 import com.stytch.java.common.StytchSessionClaim
 import com.stytch.java.common.parseJWTClaims
+import com.stytch.java.consumer.models.sessions.AttestRequest
+import com.stytch.java.consumer.models.sessions.AttestResponse
 import com.stytch.java.consumer.models.sessions.AuthenticateRequest
 import com.stytch.java.consumer.models.sessions.AuthenticateResponse
 import com.stytch.java.consumer.models.sessions.ExchangeAccessTokenRequest
@@ -266,6 +268,33 @@ public interface Sessions {
      * See our [How to use Stytch Session JWTs](https://stytch.com/docs/guides/sessions/using-jwts) guide for more information.
      */
     public fun getJWKSCompletable(data: GetJWKSRequest): CompletableFuture<StytchResult<GetJWKSResponse>>
+
+    /**
+     * Exchange an auth token issued by a trusted identity provider for a Stytch session. You must first register a Trusted
+     * Auth Token profile in the Stytch dashboard [here](https://stytch.com/docs/dashboard/trusted-auth-tokens). If a session
+     * token or session JWT is provided, it will add the trusted auth token as an authentication factor to the existing
+     * session.
+     */
+    public suspend fun attest(data: AttestRequest): StytchResult<AttestResponse>
+
+    /**
+     * Exchange an auth token issued by a trusted identity provider for a Stytch session. You must first register a Trusted
+     * Auth Token profile in the Stytch dashboard [here](https://stytch.com/docs/dashboard/trusted-auth-tokens). If a session
+     * token or session JWT is provided, it will add the trusted auth token as an authentication factor to the existing
+     * session.
+     */
+    public fun attest(
+        data: AttestRequest,
+        callback: (StytchResult<AttestResponse>) -> Unit,
+    )
+
+    /**
+     * Exchange an auth token issued by a trusted identity provider for a Stytch session. You must first register a Trusted
+     * Auth Token profile in the Stytch dashboard [here](https://stytch.com/docs/dashboard/trusted-auth-tokens). If a session
+     * token or session JWT is provided, it will add the trusted auth token as an authentication factor to the existing
+     * session.
+     */
+    public fun attestCompletable(data: AttestRequest): CompletableFuture<StytchResult<AttestResponse>>
 
     // MANUAL(authenticateJWT_interface)(INTERFACE_METHOD)
     // ADDIMPORT: import com.stytch.java.consumer.models.sessions.Session
@@ -519,6 +548,28 @@ internal class SessionsImpl(
     override fun getJWKSCompletable(data: GetJWKSRequest): CompletableFuture<StytchResult<GetJWKSResponse>> =
         coroutineScope.async {
             getJWKS(data)
+        }.asCompletableFuture()
+
+    override suspend fun attest(data: AttestRequest): StytchResult<AttestResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
+            val asJson = moshi.adapter(AttestRequest::class.java).toJson(data)
+            httpClient.post("/v1/sessions/attest", asJson, headers)
+        }
+
+    override fun attest(
+        data: AttestRequest,
+        callback: (StytchResult<AttestResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(attest(data))
+        }
+    }
+
+    override fun attestCompletable(data: AttestRequest): CompletableFuture<StytchResult<AttestResponse>> =
+        coroutineScope.async {
+            attest(data)
         }.asCompletableFuture()
 
     // MANUAL(authenticateJWT_impl)(SERVICE_METHOD)
