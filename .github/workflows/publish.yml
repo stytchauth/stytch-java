@@ -36,6 +36,9 @@ jobs:
             fi
           done
           echo "diff=$FOUND" >> $GITHUB_OUTPUT
+      - name: Clean
+        if: steps.diff.outputs.diff != 0 || ${{ github.event_name == 'workflow_dispatch' }}
+        run: ./gradlew clean
 
       - name: Release build
         if: steps.diff.outputs.diff != 0 || ${{ github.event_name == 'workflow_dispatch' }}
@@ -45,16 +48,19 @@ jobs:
         if: steps.diff.outputs.diff != 0 || ${{ github.event_name == 'workflow_dispatch' }}
         run: ./gradlew kotlinSourcesJar
 
-      - name: Publish to Maven Central
+      - name: Publish
         if: steps.diff.outputs.diff != 0 || ${{ github.event_name == 'workflow_dispatch' }}
-        run: ./gradlew --info publishReleasePublicationToSonatypeRepository --max-workers 1 closeAndReleaseSonatypeStagingRepository
+        run: ./gradlew publish
+
+      - name: Deploy
+        if: steps.diff.outputs.diff != 0 || ${{ github.event_name == 'workflow_dispatch' }}
+        run: ./gradlew jreleaserDeploy
         env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
-          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
+          JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.JRELEASER_MAVENCENTRAL_USERNAME }}
+          JRELEASER_MAVENCENTRAL_PASSWORD: ${{ secrets.JRELEASER_MAVENCENTRAL_PASSWORD }}
+          JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
+          JRELEASER_GPG_SECRET_KEY: ${{ secrets.JRELEASER_GPG_SECRET_KEY }}
+          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
 
       - name: Create release
         if: steps.diff.outputs.diff != 0

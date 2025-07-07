@@ -2,7 +2,6 @@
 plugins {
     kotlin("jvm") version libs.versions.kotlin
     kotlin("kapt") version libs.versions.kotlin
-    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
 }
 
@@ -22,7 +21,7 @@ allprojects {
             force("com.fasterxml.woodstox:woodstox-core:6.4.0")
             force("com.google.guava:guava:32.0.1-jre")
             force("com.fasterxml.jackson.core:jackson-core:2.15.0")
-            force("com.fasterxml.jackson.core:jackson-databind:2.15.0.2")
+            force("com.fasterxml.jackson.core:jackson-databind:2.15.2")
             force("ch.qos.logback:logback-core:1.3.15")
         }
     }
@@ -40,27 +39,6 @@ repositories {
 
 group = "com.stytch.java"
 apply(from = project.rootProject.file("version.gradle.kts"))
-
-// Publishing setup
-ext["ossrhUsername"] = System.getenv("OSSRH_USERNAME") ?: ""
-ext["ossrhPassword"] = System.getenv("OSSRH_PASSWORD") ?: ""
-ext["sonatypeStagingProfileId"] = System.getenv("SONATYPE_STAGING_PROFILE_ID") ?: ""
-ext["signing.keyId"] = System.getenv("SIGNING_KEY_ID") ?: ""
-ext["signing.password"] = System.getenv("SIGNING_PASSWORD") ?: ""
-ext["signing.key"] = System.getenv("SIGNING_KEY") ?: ""
-
-// Set up Sonatype repository
-nexusPublishing {
-    repositories {
-        sonatype {
-            stagingProfileId.set(project.ext["sonatypeStagingProfileId"] as String)
-            username.set(project.ext["ossrhUsername"] as String)
-            password.set(project.ext["ossrhPassword"] as String)
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-        }
-    }
-}
 
 task("printVersion") {
     group = "Documentation"
