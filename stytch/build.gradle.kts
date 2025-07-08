@@ -30,11 +30,11 @@ kotlin {
     explicitApi()
 }
 
-val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+val dokkaJavadoc by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
 val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-    dependsOn(dokkaHtml)
+    dependsOn(dokkaJavadoc)
     archiveClassifier.set("javadoc")
-    from(dokkaHtml.outputDirectory)
+    from(dokkaJavadoc.outputDirectory)
 }
 
 // Configure module publishing
