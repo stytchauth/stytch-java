@@ -3,6 +3,17 @@ plugins {
     kotlin("jvm") version libs.versions.kotlin
     kotlin("kapt") version libs.versions.kotlin
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+    id("org.jetbrains.dokka") version "1.9.20" apply false
+}
+
+buildscript {
+    configurations.all {
+        resolutionStrategy.eachDependency {
+            if (requested.group.startsWith("com.fasterxml.jackson")) {
+                useVersion("2.19.1")
+            }
+        }
+    }
 }
 
 subprojects {
@@ -20,16 +31,8 @@ allprojects {
             // Dependabot forces
             force("com.fasterxml.woodstox:woodstox-core:6.4.0")
             force("com.google.guava:guava:32.0.1-jre")
-            force("com.fasterxml.jackson.core:jackson-core:2.15.0")
-            force("com.fasterxml.jackson.core:jackson-databind:2.15.2")
             force("ch.qos.logback:logback-core:1.3.15")
         }
-    }
-}
-
-buildscript {
-    dependencies {
-        classpath(libs.dokka)
     }
 }
 
