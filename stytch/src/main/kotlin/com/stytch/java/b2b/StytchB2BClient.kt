@@ -36,6 +36,8 @@ import com.stytch.java.common.BASE_TEST_URL
 import com.stytch.java.common.JwtOptions
 import com.stytch.java.common.OptionalClientConfig
 import com.stytch.java.common.PolicyCache
+import com.stytch.java.consumer.api.connectedapps.ConnectedApp
+import com.stytch.java.consumer.api.connectedapps.ConnectedAppImpl
 import com.stytch.java.consumer.api.fraud.Fraud
 import com.stytch.java.consumer.api.fraud.FraudImpl
 import com.stytch.java.consumer.api.m2m.M2M
@@ -72,6 +74,9 @@ public class StytchB2BClient
                 type = "JWT",
             )
         private val policyCache: PolicyCache = PolicyCache(RBACImpl(httpClient, coroutineScope))
+
+        @JvmField
+        public val connectedApp: ConnectedApp = ConnectedAppImpl(httpClient, coroutineScope)
 
         @JvmField
         public val discovery: Discovery = DiscoveryImpl(httpClient, coroutineScope)
