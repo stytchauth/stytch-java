@@ -3,8 +3,8 @@ plugins {
     kotlin("jvm") version libs.versions.kotlin
     kotlin("kapt") version libs.versions.kotlin
     id("maven-publish")
-    id("signing")
     id("org.jetbrains.dokka")
+    id("org.jreleaser").version("1.19.0")
 }
 
 repositories {
@@ -30,11 +30,11 @@ kotlin {
     explicitApi()
 }
 
-val dokkaHtml by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
+val dokkaJavadoc by tasks.getting(org.jetbrains.dokka.gradle.DokkaTask::class)
 val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
-    dependsOn(dokkaHtml)
+    dependsOn(dokkaJavadoc)
     archiveClassifier.set("javadoc")
-    from(dokkaHtml.outputDirectory)
+    from(dokkaJavadoc.outputDirectory)
 }
 
 // Configure module publishing
@@ -80,15 +80,54 @@ afterEvaluate {
                     }
                 }
             }
+            repositories {
+                maven {
+                    url =
+                        layout.buildDirectory
+                            .dir("staging-deploy")
+                            .get()
+                            .asFile
+                            .toURI()
+                }
+            }
         }
     }
 }
 
-signing {
-    useInMemoryPgpKeys(
-        rootProject.ext["signing.keyId"] as String,
-        rootProject.ext["signing.key"] as String,
-        rootProject.ext["signing.password"] as String,
-    )
-    sign(publishing.publications)
+jreleaser {
+    gitRootSearch = true
+    signing {
+        setActive("ALWAYS")
+        armored = true
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                create("sonatype") {
+                    setActive("ALWAYS")
+                    setStage("FULL")
+                    url = "https://central.sonatype.com/api/v1/publisher"
+                    stagingRepository(
+                        layout.buildDirectory
+                            .dir("staging-deploy")
+                            .get()
+                            .asFile.absolutePath,
+                    )
+                    verifyPom = false
+                }
+            }
+        }
+    }
+    project {
+        name = "sdk"
+        description = "Stytch Java SDK"
+        version = rootProject.version as String
+        authors.add("Stytch Developers")
+        license.set("Stytch License")
+    }
+    release {
+        github {
+            enabled.set(false)
+        }
+    }
 }
