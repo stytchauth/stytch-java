@@ -31,7 +31,8 @@ public interface RBAC {
      * extra request to Stytch. The policy will be refreshed if an authorization check is requested and the RBAC policy was
      * last updated more than 5 minutes ago.
      *
-     * Resources and Roles can be created and managed within the [Dashboard](https://stytch.com/docs/dashboard/rbac).
+     * Resources and Roles can be created and managed within the [RBAC page](https://stytch.com/docs/dashboard/rbac) in the
+     * Dashboard.
      * Additionally, [Role assignment](https://stytch.com/docs/b2b/guides/rbac/role-assignment) can be programmatically
      * managed through certain Stytch API endpoints.
      *
@@ -48,7 +49,8 @@ public interface RBAC {
      * extra request to Stytch. The policy will be refreshed if an authorization check is requested and the RBAC policy was
      * last updated more than 5 minutes ago.
      *
-     * Resources and Roles can be created and managed within the [Dashboard](https://stytch.com/docs/dashboard/rbac).
+     * Resources and Roles can be created and managed within the [RBAC page](https://stytch.com/docs/dashboard/rbac) in the
+     * Dashboard.
      * Additionally, [Role assignment](https://stytch.com/docs/b2b/guides/rbac/role-assignment) can be programmatically
      * managed through certain Stytch API endpoints.
      *
@@ -68,7 +70,8 @@ public interface RBAC {
      * extra request to Stytch. The policy will be refreshed if an authorization check is requested and the RBAC policy was
      * last updated more than 5 minutes ago.
      *
-     * Resources and Roles can be created and managed within the [Dashboard](https://stytch.com/docs/dashboard/rbac).
+     * Resources and Roles can be created and managed within the [RBAC page](https://stytch.com/docs/dashboard/rbac) in the
+     * Dashboard.
      * Additionally, [Role assignment](https://stytch.com/docs/b2b/guides/rbac/role-assignment) can be programmatically
      * managed through certain Stytch API endpoints.
      *
