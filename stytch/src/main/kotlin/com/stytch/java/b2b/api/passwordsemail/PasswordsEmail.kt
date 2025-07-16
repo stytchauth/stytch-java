@@ -75,7 +75,7 @@ public interface Email {
     public fun resetStartCompletable(data: ResetStartRequest): CompletableFuture<StytchResult<ResetStartResponse>>
 
     /**
-     * Reset the's password and authenticate them. This endpoint checks that the password reset token is valid, hasn’t
+     * Reset the Member's password and authenticate them. This endpoint checks that the password reset token is valid, hasn’t
      * expired, or already been used.
      *
      * The provided password needs to meet our password strength requirements, which can be checked in advance with the
@@ -96,7 +96,7 @@ public interface Email {
     public suspend fun reset(data: ResetRequest): StytchResult<ResetResponse>
 
     /**
-     * Reset the's password and authenticate them. This endpoint checks that the password reset token is valid, hasn’t
+     * Reset the Member's password and authenticate them. This endpoint checks that the password reset token is valid, hasn’t
      * expired, or already been used.
      *
      * The provided password needs to meet our password strength requirements, which can be checked in advance with the
@@ -120,7 +120,7 @@ public interface Email {
     )
 
     /**
-     * Reset the's password and authenticate them. This endpoint checks that the password reset token is valid, hasn’t
+     * Reset the Member's password and authenticate them. This endpoint checks that the password reset token is valid, hasn’t
      * expired, or already been used.
      *
      * The provided password needs to meet our password strength requirements, which can be checked in advance with the
@@ -143,6 +143,8 @@ public interface Email {
     /**
      * Require a password be reset by the associated email address. This endpoint is only functional for cross-org password
      * use cases.
+     *
+     * If there are is only one active Member using the associated email address in the Project, the password will be deleted.
      */
     public suspend fun requireReset(
         data: RequireResetRequest,
@@ -152,6 +154,8 @@ public interface Email {
     /**
      * Require a password be reset by the associated email address. This endpoint is only functional for cross-org password
      * use cases.
+     *
+     * If there are is only one active Member using the associated email address in the Project, the password will be deleted.
      */
     public fun requireReset(
         data: RequireResetRequest,
@@ -162,6 +166,8 @@ public interface Email {
     /**
      * Require a password be reset by the associated email address. This endpoint is only functional for cross-org password
      * use cases.
+     *
+     * If there are is only one active Member using the associated email address in the Project, the password will be deleted.
      */
     public fun requireResetCompletable(
         data: RequireResetRequest,

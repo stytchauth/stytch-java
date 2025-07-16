@@ -78,8 +78,9 @@ public interface Sessions {
      * information.
      *
      * If an `authorization_check` object is passed in, this method will also check if the Member is authorized to perform the
-     * given action on the given Resource in the specified. A is authorized if their Member Session contains a Role, assigned
-     * [explicitly or implicitly](https://stytch.com/docs/b2b/guides/rbac/role-assignment), with adequate permissions.
+     * given action on the given Resource in the specified Organization. A Member is authorized if their Member Session
+     * contains a Role, assigned [explicitly or implicitly](https://stytch.com/docs/b2b/guides/rbac/role-assignment), with
+     * adequate permissions.
      * In addition, the `organization_id` passed in the authorization check must match the Member's Organization.
      *
      * If the Member is not authorized to perform the specified action on the specified Resource, or if the
@@ -99,8 +100,9 @@ public interface Sessions {
      * information.
      *
      * If an `authorization_check` object is passed in, this method will also check if the Member is authorized to perform the
-     * given action on the given Resource in the specified. A is authorized if their Member Session contains a Role, assigned
-     * [explicitly or implicitly](https://stytch.com/docs/b2b/guides/rbac/role-assignment), with adequate permissions.
+     * given action on the given Resource in the specified Organization. A Member is authorized if their Member Session
+     * contains a Role, assigned [explicitly or implicitly](https://stytch.com/docs/b2b/guides/rbac/role-assignment), with
+     * adequate permissions.
      * In addition, the `organization_id` passed in the authorization check must match the Member's Organization.
      *
      * If the Member is not authorized to perform the specified action on the specified Resource, or if the
@@ -123,8 +125,9 @@ public interface Sessions {
      * information.
      *
      * If an `authorization_check` object is passed in, this method will also check if the Member is authorized to perform the
-     * given action on the given Resource in the specified. A is authorized if their Member Session contains a Role, assigned
-     * [explicitly or implicitly](https://stytch.com/docs/b2b/guides/rbac/role-assignment), with adequate permissions.
+     * given action on the given Resource in the specified Organization. A Member is authorized if their Member Session
+     * contains a Role, assigned [explicitly or implicitly](https://stytch.com/docs/b2b/guides/rbac/role-assignment), with
+     * adequate permissions.
      * In addition, the `organization_id` passed in the authorization check must match the Member's Organization.
      *
      * If the Member is not authorized to perform the specified action on the specified Resource, or if the
@@ -162,10 +165,10 @@ public interface Sessions {
     ): CompletableFuture<StytchResult<RevokeResponse>>
 
     /**
-     * Use this endpoint to exchange a's existing session for another session in a different. This can be used to accept an
-     * invite, but not to create a new member via domain matching.
+     * Use this endpoint to exchange a Member's existing session for another session in a different Organization. This can be
+     * used to accept an invite, but not to create a new member via domain matching.
      *
-     * To create a new member via email domain, use the
+     * To create a new member via email domain JIT Provisioning, use the
      * [Exchange Intermediate Session](https://stytch.com/docs/b2b/api/exchange-intermediate-session) flow instead.
      *
      * If the user **has** already satisfied the authentication requirements of the Organization they are trying to switch
@@ -194,10 +197,10 @@ public interface Sessions {
     public suspend fun exchange(data: ExchangeRequest): StytchResult<ExchangeResponse>
 
     /**
-     * Use this endpoint to exchange a's existing session for another session in a different. This can be used to accept an
-     * invite, but not to create a new member via domain matching.
+     * Use this endpoint to exchange a Member's existing session for another session in a different Organization. This can be
+     * used to accept an invite, but not to create a new member via domain matching.
      *
-     * To create a new member via email domain, use the
+     * To create a new member via email domain JIT Provisioning, use the
      * [Exchange Intermediate Session](https://stytch.com/docs/b2b/api/exchange-intermediate-session) flow instead.
      *
      * If the user **has** already satisfied the authentication requirements of the Organization they are trying to switch
@@ -229,10 +232,10 @@ public interface Sessions {
     )
 
     /**
-     * Use this endpoint to exchange a's existing session for another session in a different. This can be used to accept an
-     * invite, but not to create a new member via domain matching.
+     * Use this endpoint to exchange a Member's existing session for another session in a different Organization. This can be
+     * used to accept an invite, but not to create a new member via domain matching.
      *
-     * To create a new member via email domain, use the
+     * To create a new member via email domain JIT Provisioning, use the
      * [Exchange Intermediate Session](https://stytch.com/docs/b2b/api/exchange-intermediate-session) flow instead.
      *
      * If the user **has** already satisfied the authentication requirements of the Organization they are trying to switch
@@ -342,8 +345,8 @@ public interface Sessions {
      * Stytch will call the external UserInfo endpoint defined in your Stytch Project settings in the
      * [Dashboard](https://stytch.com/docs/dashboard), and then perform a lookup using the `session_token`. <!-- FIXME more
      * specific dashboard link-->
-     * If the response contains a valid email address, Stytch will attempt to match that email address with an existing in
-     * your and create a Stytch Session.
+     * If the response contains a valid email address, Stytch will attempt to match that email address with an existing Member
+     * in your Organization and create a Stytch Session.
      * You will need to create the member before using this endpoint.
      */
     public suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse>
@@ -353,8 +356,8 @@ public interface Sessions {
      * Stytch will call the external UserInfo endpoint defined in your Stytch Project settings in the
      * [Dashboard](https://stytch.com/docs/dashboard), and then perform a lookup using the `session_token`. <!-- FIXME more
      * specific dashboard link-->
-     * If the response contains a valid email address, Stytch will attempt to match that email address with an existing in
-     * your and create a Stytch Session.
+     * If the response contains a valid email address, Stytch will attempt to match that email address with an existing Member
+     * in your Organization and create a Stytch Session.
      * You will need to create the member before using this endpoint.
      */
     public fun migrate(
@@ -367,8 +370,8 @@ public interface Sessions {
      * Stytch will call the external UserInfo endpoint defined in your Stytch Project settings in the
      * [Dashboard](https://stytch.com/docs/dashboard), and then perform a lookup using the `session_token`. <!-- FIXME more
      * specific dashboard link-->
-     * If the response contains a valid email address, Stytch will attempt to match that email address with an existing in
-     * your and create a Stytch Session.
+     * If the response contains a valid email address, Stytch will attempt to match that email address with an existing Member
+     * in your Organization and create a Stytch Session.
      * You will need to create the member before using this endpoint.
      */
     public fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>>

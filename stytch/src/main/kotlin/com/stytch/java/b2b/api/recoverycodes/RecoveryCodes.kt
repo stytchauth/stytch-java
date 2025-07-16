@@ -28,14 +28,14 @@ import java.util.concurrent.CompletableFuture
 
 public interface RecoveryCodes {
     /**
-     * Allows a to complete an MFA flow by consuming a recovery code. This consumes the recovery code and returns a session
-     * token that can be used to authenticate the Member.
+     * Allows a Member to complete an MFA flow by consuming a recovery code. This consumes the recovery code and returns a
+     * session token that can be used to authenticate the Member.
      */
     public suspend fun recover(data: RecoverRequest): StytchResult<RecoverResponse>
 
     /**
-     * Allows a to complete an MFA flow by consuming a recovery code. This consumes the recovery code and returns a session
-     * token that can be used to authenticate the Member.
+     * Allows a Member to complete an MFA flow by consuming a recovery code. This consumes the recovery code and returns a
+     * session token that can be used to authenticate the Member.
      */
     public fun recover(
         data: RecoverRequest,
@@ -43,18 +43,18 @@ public interface RecoveryCodes {
     )
 
     /**
-     * Allows a to complete an MFA flow by consuming a recovery code. This consumes the recovery code and returns a session
-     * token that can be used to authenticate the Member.
+     * Allows a Member to complete an MFA flow by consuming a recovery code. This consumes the recovery code and returns a
+     * session token that can be used to authenticate the Member.
      */
     public fun recoverCompletable(data: RecoverRequest): CompletableFuture<StytchResult<RecoverResponse>>
 
     /**
-     * Returns a's full set of active recovery codes.
+     * Returns a Member's full set of active recovery codes.
      */
     public suspend fun get(data: GetRequest): StytchResult<GetResponse>
 
     /**
-     * Returns a's full set of active recovery codes.
+     * Returns a Member's full set of active recovery codes.
      */
     public fun get(
         data: GetRequest,
@@ -62,17 +62,19 @@ public interface RecoveryCodes {
     )
 
     /**
-     * Returns a's full set of active recovery codes.
+     * Returns a Member's full set of active recovery codes.
      */
     public fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>>
 
     /**
-     * Rotate a's recovery codes. This invalidates all existing recovery codes and generates a new set of recovery codes.
+     * Rotate a Member's recovery codes. This invalidates all existing recovery codes and generates a new set of recovery
+     * codes.
      */
     public suspend fun rotate(data: RotateRequest): StytchResult<RotateResponse>
 
     /**
-     * Rotate a's recovery codes. This invalidates all existing recovery codes and generates a new set of recovery codes.
+     * Rotate a Member's recovery codes. This invalidates all existing recovery codes and generates a new set of recovery
+     * codes.
      */
     public fun rotate(
         data: RotateRequest,
@@ -80,7 +82,8 @@ public interface RecoveryCodes {
     )
 
     /**
-     * Rotate a's recovery codes. This invalidates all existing recovery codes and generates a new set of recovery codes.
+     * Rotate a Member's recovery codes. This invalidates all existing recovery codes and generates a new set of recovery
+     * codes.
      */
     public fun rotateCompletable(data: RotateRequest): CompletableFuture<StytchResult<RotateResponse>>
 }
