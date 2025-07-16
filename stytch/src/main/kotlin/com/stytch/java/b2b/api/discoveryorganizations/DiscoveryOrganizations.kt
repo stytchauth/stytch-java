@@ -25,7 +25,7 @@ import java.util.concurrent.CompletableFuture
 public interface Organizations {
     /**
      * This endpoint allows you to exchange the `intermediate_session_token` returned when the user successfully completes a
-     * authentication flow to create a new
+     * Discovery authentication flow to create a new
      * [Organization](https://stytch.com/docs/b2b/api/organization-object) and
      * [Member](https://stytch.com/docs/b2b/api/member-object) and log the user in. If the user wants to log into an existing
      * Organization, use the
@@ -58,7 +58,7 @@ public interface Organizations {
 
     /**
      * This endpoint allows you to exchange the `intermediate_session_token` returned when the user successfully completes a
-     * authentication flow to create a new
+     * Discovery authentication flow to create a new
      * [Organization](https://stytch.com/docs/b2b/api/organization-object) and
      * [Member](https://stytch.com/docs/b2b/api/member-object) and log the user in. If the user wants to log into an existing
      * Organization, use the
@@ -94,7 +94,7 @@ public interface Organizations {
 
     /**
      * This endpoint allows you to exchange the `intermediate_session_token` returned when the user successfully completes a
-     * authentication flow to create a new
+     * Discovery authentication flow to create a new
      * [Organization](https://stytch.com/docs/b2b/api/organization-object) and
      * [Member](https://stytch.com/docs/b2b/api/member-object) and log the user in. If the user wants to log into an existing
      * Organization, use the

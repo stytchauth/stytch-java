@@ -22,7 +22,7 @@ import java.util.concurrent.CompletableFuture
 
 public interface Sessions {
     /**
-     * Reset the's password using their existing session. The endpoint will error if the session does not contain an
+     * Reset the Member's password using their existing session. The endpoint will error if the session does not contain an
      * authentication factor that has been issued within the last 5 minutes. Either `session_token` or `session_jwt` should be
      * provided.
      *
@@ -32,7 +32,7 @@ public interface Sessions {
     public suspend fun reset(data: ResetRequest): StytchResult<ResetResponse>
 
     /**
-     * Reset the's password using their existing session. The endpoint will error if the session does not contain an
+     * Reset the Member's password using their existing session. The endpoint will error if the session does not contain an
      * authentication factor that has been issued within the last 5 minutes. Either `session_token` or `session_jwt` should be
      * provided.
      *
@@ -45,7 +45,7 @@ public interface Sessions {
     )
 
     /**
-     * Reset the's password using their existing session. The endpoint will error if the session does not contain an
+     * Reset the Member's password using their existing session. The endpoint will error if the session does not contain an
      * authentication factor that has been issued within the last 5 minutes. Either `session_token` or `session_jwt` should be
      * provided.
      *
