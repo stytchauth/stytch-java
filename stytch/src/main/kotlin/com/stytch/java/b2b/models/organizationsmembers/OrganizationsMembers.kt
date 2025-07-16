@@ -16,6 +16,21 @@ import com.stytch.java.b2b.models.organizations.ResultsMetadata
 import com.stytch.java.b2b.models.organizations.SearchQuery
 import com.stytch.java.common.methodoptions.Authorization
 
+@JsonClass(generateAdapter = false)
+public enum class StartEmailUpdateRequestLocale {
+    @Json(name = "en")
+    EN,
+
+    @Json(name = "es")
+    ES,
+
+    @Json(name = "ptbr")
+    PTBR,
+
+    @Json(name = "fr")
+    FR,
+}
+
 public data class CreateRequestOptions
     @JvmOverloads
     constructor(
@@ -150,6 +165,25 @@ public data class ReactivateRequestOptions
     }
 
 public data class SearchRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
+        }
+    }
+
+public data class StartEmailUpdateRequestOptions
     @JvmOverloads
     constructor(
         /**
@@ -840,6 +874,98 @@ public data class SearchResponse
          */
         @Json(name = "organizations")
         val organizations: Map<String, Organization>,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
+
+/**
+* Request type for `Members.startEmailUpdate`.
+*/
+@JsonClass(generateAdapter = true)
+public data class StartEmailUpdateRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String,
+        /**
+         * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
+         * so be sure to preserve this value. You may use an external_id here if one is set for the member.
+         */
+        @Json(name = "member_id")
+        val memberId: String,
+        /**
+         * The email address of the Member.
+         */
+        @Json(name = "email_address")
+        val emailAddress: String,
+        /**
+         * The URL that the Member clicks from the login Email Magic Link. This URL should be an endpoint in the backend server
+         * that
+         *   verifies the request by querying Stytch's authenticate endpoint and finishes the login. If this value is not passed,
+         * the default login
+         *   redirect URL that you set in your Dashboard is used. If you have not set a default login redirect URL, an error is
+         * returned.
+         */
+        @Json(name = "login_redirect_url")
+        val loginRedirectURL: String? = null,
+        /**
+         * Used to determine which language to use when sending the user this delivery method. Parameter is a
+         * [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
+         *
+         * Currently supported languages are English (`"en"`), Spanish (`"es"`), French (`"fr"`) and Brazilian Portuguese
+         * (`"pt-br"`); if no value is provided, the copy defaults to English.
+         *
+         * Request support for additional languages
+         * [here](https://docs.google.com/forms/d/e/1FAIpQLScZSpAu_m2AmLXRT3F3kap-s_mcV6UTBitYn6CdyWP0-o7YjQ/viewform?usp=sf_link")!
+         *
+         */
+        @Json(name = "locale")
+        val locale: StartEmailUpdateRequestLocale? = null,
+        /**
+         * Use a custom template for login emails. By default, it will use your default email template. The template must be from
+         * Stytch's
+         * built-in customizations or a custom HTML email for Magic Links - Login.
+         */
+        @Json(name = "login_template_id")
+        val loginTemplateId: String? = null,
+    )
+
+/**
+* Response type for `Members.startEmailUpdate`.
+*/
+@JsonClass(generateAdapter = true)
+public data class StartEmailUpdateResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * Globally unique UUID that identifies a specific Member.
+         */
+        @Json(name = "member_id")
+        val memberId: String,
+        /**
+         * The [Member object](https://stytch.com/docs/b2b/api/member-object)
+         */
+        @Json(name = "member")
+        val member: Member,
+        /**
+         * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
+         */
+        @Json(name = "organization")
+        val organization: Organization,
         /**
          * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
          * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.

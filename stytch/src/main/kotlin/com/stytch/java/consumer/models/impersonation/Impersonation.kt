@@ -19,7 +19,7 @@ public data class AuthenticateRequest
     @JvmOverloads
     constructor(
         /**
-         * The User Impersonation token to authenticate.
+         * The User Impersonation token to authenticate. Expires in 5 minutes by default.
          */
         @Json(name = "impersonation_token")
         val impersonationToken: String,

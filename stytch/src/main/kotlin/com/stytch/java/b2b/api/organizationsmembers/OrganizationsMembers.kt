@@ -42,6 +42,9 @@ import com.stytch.java.b2b.models.organizationsmembers.ReactivateResponse
 import com.stytch.java.b2b.models.organizationsmembers.SearchRequest
 import com.stytch.java.b2b.models.organizationsmembers.SearchRequestOptions
 import com.stytch.java.b2b.models.organizationsmembers.SearchResponse
+import com.stytch.java.b2b.models.organizationsmembers.StartEmailUpdateRequest
+import com.stytch.java.b2b.models.organizationsmembers.StartEmailUpdateRequestOptions
+import com.stytch.java.b2b.models.organizationsmembers.StartEmailUpdateResponse
 import com.stytch.java.b2b.models.organizationsmembers.UnlinkRetiredEmailRequest
 import com.stytch.java.b2b.models.organizationsmembers.UnlinkRetiredEmailRequestOptions
 import com.stytch.java.b2b.models.organizationsmembers.UnlinkRetiredEmailResponse
@@ -273,6 +276,9 @@ public interface Members {
 
     /**
      * Delete a's password.
+     *
+     * This endpoint only works for Organization-scoped passwords. For cross-org password Projects, use
+     * [Require Password Reset By Email](https://stytch.com/docs/b2b/api/passwords-require-reset-by-email) instead.
      */
     public suspend fun deletePassword(
         data: DeletePasswordRequest,
@@ -281,6 +287,9 @@ public interface Members {
 
     /**
      * Delete a's password.
+     *
+     * This endpoint only works for Organization-scoped passwords. For cross-org password Projects, use
+     * [Require Password Reset By Email](https://stytch.com/docs/b2b/api/passwords-require-reset-by-email) instead.
      */
     public fun deletePassword(
         data: DeletePasswordRequest,
@@ -290,6 +299,9 @@ public interface Members {
 
     /**
      * Delete a's password.
+     *
+     * This endpoint only works for Organization-scoped passwords. For cross-org password Projects, use
+     * [Require Password Reset By Email](https://stytch.com/docs/b2b/api/passwords-require-reset-by-email) instead.
      */
     public fun deletePasswordCompletable(
         data: DeletePasswordRequest,
@@ -410,6 +422,67 @@ public interface Members {
         data: UnlinkRetiredEmailRequest,
         methodOptions: UnlinkRetiredEmailRequestOptions? = null,
     ): CompletableFuture<StytchResult<UnlinkRetiredEmailResponse>>
+
+    /**
+     * Starts a self-serve email update for a specified by their `organization_id` and `member_id`.
+     * To perform a self-serve update, members must be active and have an active, verified email address.
+     *
+     * The new email address must meet the following requirements:
+     *
+     * - Must not be in use by another member (retired emails count as used until they are
+     * [unlinked](https://stytch.com/docs/b2b/api/unlink-retired-email))
+     * - Must not be updating for another member (i.e. two members cannot attempt to update to the same email at once)
+     *
+     * The member will receive an Email Magic Link that expires in 5 minutes. If they do not verify their new email address in
+     * that timeframe, the email
+     * will be freed up for other members to use.
+     *  %}
+     */
+    public suspend fun startEmailUpdate(
+        data: StartEmailUpdateRequest,
+        methodOptions: StartEmailUpdateRequestOptions? = null,
+    ): StytchResult<StartEmailUpdateResponse>
+
+    /**
+     * Starts a self-serve email update for a specified by their `organization_id` and `member_id`.
+     * To perform a self-serve update, members must be active and have an active, verified email address.
+     *
+     * The new email address must meet the following requirements:
+     *
+     * - Must not be in use by another member (retired emails count as used until they are
+     * [unlinked](https://stytch.com/docs/b2b/api/unlink-retired-email))
+     * - Must not be updating for another member (i.e. two members cannot attempt to update to the same email at once)
+     *
+     * The member will receive an Email Magic Link that expires in 5 minutes. If they do not verify their new email address in
+     * that timeframe, the email
+     * will be freed up for other members to use.
+     *  %}
+     */
+    public fun startEmailUpdate(
+        data: StartEmailUpdateRequest,
+        methodOptions: StartEmailUpdateRequestOptions? = null,
+        callback: (StytchResult<StartEmailUpdateResponse>) -> Unit,
+    )
+
+    /**
+     * Starts a self-serve email update for a specified by their `organization_id` and `member_id`.
+     * To perform a self-serve update, members must be active and have an active, verified email address.
+     *
+     * The new email address must meet the following requirements:
+     *
+     * - Must not be in use by another member (retired emails count as used until they are
+     * [unlinked](https://stytch.com/docs/b2b/api/unlink-retired-email))
+     * - Must not be updating for another member (i.e. two members cannot attempt to update to the same email at once)
+     *
+     * The member will receive an Email Magic Link that expires in 5 minutes. If they do not verify their new email address in
+     * that timeframe, the email
+     * will be freed up for other members to use.
+     *  %}
+     */
+    public fun startEmailUpdateCompletable(
+        data: StartEmailUpdateRequest,
+        methodOptions: StartEmailUpdateRequestOptions? = null,
+    ): CompletableFuture<StytchResult<StartEmailUpdateResponse>>
 
     /**
      * Member Get Connected Apps retrieves a list of Connected Apps with which the Member has successfully completed an
@@ -804,6 +877,38 @@ internal class MembersImpl(
     ): CompletableFuture<StytchResult<UnlinkRetiredEmailResponse>> =
         coroutineScope.async {
             unlinkRetiredEmail(data, methodOptions)
+        }.asCompletableFuture()
+
+    override suspend fun startEmailUpdate(
+        data: StartEmailUpdateRequest,
+        methodOptions: StartEmailUpdateRequestOptions?,
+    ): StytchResult<StartEmailUpdateResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
+
+            val asJson = moshi.adapter(StartEmailUpdateRequest::class.java).toJson(data)
+            httpClient.post("/v1/b2b/organizations/${data.organizationId}/members/${data.memberId}/start_email_update", asJson, headers)
+        }
+
+    override fun startEmailUpdate(
+        data: StartEmailUpdateRequest,
+        methodOptions: StartEmailUpdateRequestOptions?,
+        callback: (StytchResult<StartEmailUpdateResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(startEmailUpdate(data, methodOptions))
+        }
+    }
+
+    override fun startEmailUpdateCompletable(
+        data: StartEmailUpdateRequest,
+        methodOptions: StartEmailUpdateRequestOptions?,
+    ): CompletableFuture<StytchResult<StartEmailUpdateResponse>> =
+        coroutineScope.async {
+            startEmailUpdate(data, methodOptions)
         }.asCompletableFuture()
 
     override suspend fun getConnectedApps(
