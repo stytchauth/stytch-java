@@ -820,6 +820,7 @@ internal class SessionsImpl(
                 } ?: throw JWTException.JwtMissingClaims
             val orgSessionClaims = jwtClaims.payload.claimsMap["https://stytch.com/organization"] as? Map<*, *>
             val organizationId = orgSessionClaims?.get("organization_id") as String
+            val organizationSlug = orgSessionClaims?.get("slug") as String
             if (authorizationCheck != null) {
                 if (stytchSessionClaim.roles == null) {
                     throw JWTException.MissingRolesClaim
@@ -843,6 +844,7 @@ internal class SessionsImpl(
                     expiresAt = Instant.parse(stytchSessionClaim.expiresAt),
                     customClaims = jwtClaims.customClaims,
                     roles = stytchSessionClaim.roles ?: emptyList(),
+                    organizationSlug = organizationSlug,
                 ),
             )
         } catch (e: JWTException.JwtTooOld) {
