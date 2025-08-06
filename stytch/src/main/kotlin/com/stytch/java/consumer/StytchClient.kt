@@ -29,6 +29,8 @@ import com.stytch.java.consumer.api.passwords.Passwords
 import com.stytch.java.consumer.api.passwords.PasswordsImpl
 import com.stytch.java.consumer.api.project.Project
 import com.stytch.java.consumer.api.project.ProjectImpl
+import com.stytch.java.consumer.api.rbac.RBAC
+import com.stytch.java.consumer.api.rbac.RBACImpl
 import com.stytch.java.consumer.api.sessions.Sessions
 import com.stytch.java.consumer.api.sessions.SessionsImpl
 import com.stytch.java.consumer.api.totps.TOTPs
@@ -96,6 +98,9 @@ public class StytchClient
 
         @JvmField
         public val project: Project = ProjectImpl(httpClient, coroutineScope)
+
+        @JvmField
+        public val rbac: RBAC = RBACImpl(httpClient, coroutineScope)
 
         @JvmField
         public val sessions: Sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
