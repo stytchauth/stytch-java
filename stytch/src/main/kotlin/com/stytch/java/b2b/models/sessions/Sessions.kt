@@ -48,8 +48,7 @@ public data class AuthorizationCheck
     @JvmOverloads
     constructor(
         /**
-         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
+         * Globally unique UUID that identifies a specific Organization. The Organization's ID must match the Member's Organization
          */
         @Json(name = "organization_id")
         val organizationId: String,
@@ -57,7 +56,7 @@ public data class AuthorizationCheck
          * A unique identifier of the RBAC Resource, provided by the developer and intended to be human-readable.
          *
          *   A `resource_id` is not allowed to start with `stytch`, which is a special prefix used for Stytch default Resources
-         * with reserved  `resource_id`s. These include:
+         * with reserved `resource_id`s. These include:
          *
          *   * `stytch.organization`
          *   * `stytch.member`
@@ -82,8 +81,15 @@ public data class AuthorizationCheck
 public data class AuthorizationVerdict
     @JvmOverloads
     constructor(
+        /**
+         * Whether the Member was authorized to perform the specified action on the specified Resource. Always true if the request
+         * succeeds.
+         */
         @Json(name = "authorized")
         val authorized: Boolean,
+        /**
+         * The complete list of Roles that gave the Member permission to perform the specified action on the specified Resource.
+         */
         @Json(name = "granting_roles")
         val grantingRoles: List<String>,
     )
@@ -133,6 +139,13 @@ public data class MemberSession
         val organizationId: String,
         @Json(name = "roles")
         val roles: List<String>,
+        /**
+         * The unique URL slug of the Organization. The slug only accepts alphanumeric characters and the following reserved
+         * characters: `-` `.` `_` `~`. Must be between 2 and 128 characters in length. Wherever an organization_id is expected in
+         * a path or request parameter, you may also use the organization_slug as a convenience.
+         */
+        @Json(name = "organization_slug")
+        val organizationSlug: String,
         /**
          * The custom claims map for a Session. Claims can be added to a session during a Sessions authenticate call.
          */
@@ -396,7 +409,7 @@ public data class AuthenticateResponse
         val statusCode: Int,
         /**
          * If an `authorization_check` is provided in the request and the check succeeds, this field will return
-         *   the complete list of Roles that gave the Member permission to perform the specified action on the specified Resource.
+         *   information about why the Member was granted permission.
          */
         @Json(name = "verdict")
         val verdict: AuthorizationVerdict? = null,

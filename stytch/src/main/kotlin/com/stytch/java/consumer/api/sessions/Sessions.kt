@@ -17,6 +17,7 @@ import com.stytch.java.common.JWTResponse
 import com.stytch.java.common.JWTSessionResponse
 import com.stytch.java.common.JwtOptions
 import com.stytch.java.common.ParseJWTClaimsOptions
+import com.stytch.java.common.PolicyCache
 import com.stytch.java.common.StytchException
 import com.stytch.java.common.StytchResult
 import com.stytch.java.common.StytchSessionClaim
@@ -137,7 +138,7 @@ public interface Sessions {
 
     /**
      * Migrate a session from an external OIDC compliant endpoint. Stytch will call the external UserInfo endpoint defined in
-     * your Stytch Project settings in the [Dashboard](https://stytch.com/docs/dashboard), and then perform a lookup using the
+     * your Stytch Project settings in the [Dashboard](https://stytch.com/dashboard), and then perform a lookup using the
      * `session_token`. If the response contains a valid email address, Stytch will attempt to match that email address with
      * an existing User and create a Stytch Session. You will need to create the user before using this endpoint.
      */
@@ -145,7 +146,7 @@ public interface Sessions {
 
     /**
      * Migrate a session from an external OIDC compliant endpoint. Stytch will call the external UserInfo endpoint defined in
-     * your Stytch Project settings in the [Dashboard](https://stytch.com/docs/dashboard), and then perform a lookup using the
+     * your Stytch Project settings in the [Dashboard](https://stytch.com/dashboard), and then perform a lookup using the
      * `session_token`. If the response contains a valid email address, Stytch will attempt to match that email address with
      * an existing User and create a Stytch Session. You will need to create the user before using this endpoint.
      */
@@ -156,7 +157,7 @@ public interface Sessions {
 
     /**
      * Migrate a session from an external OIDC compliant endpoint. Stytch will call the external UserInfo endpoint defined in
-     * your Stytch Project settings in the [Dashboard](https://stytch.com/docs/dashboard), and then perform a lookup using the
+     * your Stytch Project settings in the [Dashboard](https://stytch.com/dashboard), and then perform a lookup using the
      * `session_token`. If the response contains a valid email address, Stytch will attempt to match that email address with
      * an existing User and create a Stytch Session. You will need to create the user before using this endpoint.
      */
@@ -271,17 +272,15 @@ public interface Sessions {
 
     /**
      * Exchange an auth token issued by a trusted identity provider for a Stytch session. You must first register a Trusted
-     * Auth Token profile in the Stytch dashboard [here](https://stytch.com/docs/dashboard/trusted-auth-tokens). If a session
-     * token or session JWT is provided, it will add the trusted auth token as an authentication factor to the existing
-     * session.
+     * Auth Token profile in the Stytch dashboard [here](https://stytch.com/dashboard/trusted-auth-tokens). If a session token
+     * or session JWT is provided, it will add the trusted auth token as an authentication factor to the existing session.
      */
     public suspend fun attest(data: AttestRequest): StytchResult<AttestResponse>
 
     /**
      * Exchange an auth token issued by a trusted identity provider for a Stytch session. You must first register a Trusted
-     * Auth Token profile in the Stytch dashboard [here](https://stytch.com/docs/dashboard/trusted-auth-tokens). If a session
-     * token or session JWT is provided, it will add the trusted auth token as an authentication factor to the existing
-     * session.
+     * Auth Token profile in the Stytch dashboard [here](https://stytch.com/dashboard/trusted-auth-tokens). If a session token
+     * or session JWT is provided, it will add the trusted auth token as an authentication factor to the existing session.
      */
     public fun attest(
         data: AttestRequest,
@@ -290,9 +289,8 @@ public interface Sessions {
 
     /**
      * Exchange an auth token issued by a trusted identity provider for a Stytch session. You must first register a Trusted
-     * Auth Token profile in the Stytch dashboard [here](https://stytch.com/docs/dashboard/trusted-auth-tokens). If a session
-     * token or session JWT is provided, it will add the trusted auth token as an authentication factor to the existing
-     * session.
+     * Auth Token profile in the Stytch dashboard [here](https://stytch.com/dashboard/trusted-auth-tokens). If a session token
+     * or session JWT is provided, it will add the trusted auth token as an authentication factor to the existing session.
      */
     public fun attestCompletable(data: AttestRequest): CompletableFuture<StytchResult<AttestResponse>>
 
@@ -407,6 +405,7 @@ internal class SessionsImpl(
     private val coroutineScope: CoroutineScope,
     private val jwksClient: HttpsJwks,
     private val jwtOptions: JwtOptions,
+    private val policyCache: PolicyCache,
 ) : Sessions {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 

@@ -221,23 +221,48 @@ public data class AuthenticationFactor
     @JvmOverloads
     constructor(
         /**
-         * The type of authentication factor. The possible values are: `magic_link`, `otp`,
-         *        `oauth`, `password`, `email_otp`, or `sso` .
+         * The type of authentication factor. The possible values are: `email_otp`, `impersonated`, `imported`,
+         *        `magic_link`, `oauth`, `otp`, `password`, `recovery_codes`, `sso`, `trusted_auth_token`, or `totp`.
          */
         @Json(name = "type")
         val type: AuthenticationFactorType,
         /**
          * The method that was used to deliver the authentication factor. The possible values depend on the `type`:
          *
+         *       `email_otp` – Only `email`.
+         *
+         *       `impersonated` – Only `impersonation`.
+         *
+         *       `imported` – Only `imported_auth0`.
+         *
          *       `magic_link` – Only `email`.
          *
-         *       `otp` –  Either `sms` or `email` .
+         *       `oauth` – The delivery method is determined by the specific OAuth provider used. The possible values are
+         * `oauth_google`, `oauth_microsoft`, `oauth_hubspot`, `oauth_slack`, or `oauth_github`.
          *
-         *       `oauth` – Either `oauth_google` or `oauth_microsoft`.
+         *         In addition, you may see an 'exchange' delivery method when a non-email-verifying OAuth factor originally
+         * authenticated in one organization is exchanged for a factor in another organization.
+         *         This can happen during authentication flows such as
+         * [session exchange](https://stytch.com/docs/b2b/api/exchange-session).
+         *         The non-email-verifying OAuth providers are Hubspot, Slack, and Github.
+         *         Google is also considered non-email-verifying when the HD claim is empty.
+         *         The possible exchange values are `oauth_exchange_google`, `oauth_exchange_hubspot`, `oauth_exchange_slack`, or
+         * `oauth_exchange_github`.
+         *
+         *         The final possible value is `oauth_access_token_exchange`, if this factor came from an
+         * [access token exchange flow](https://stytch.com/docs/b2b/api/connected-app-access-token-exchange).
+         *
+         *       `otp` –  Only `sms`.
          *
          *       `password` – Only `knowledge`.
          *
+         *       `recovery_codes` – Only `recovery_code`.
+         *
          *       `sso` – Either `sso_saml` or `sso_oidc`.
+         *
+         *       `trusted_auth_token` – Only `trusted_token_exchange`.
+         *
+         *       `totp` – Only `authenticator_app`.
          *
          */
         @Json(name = "delivery_method")
@@ -286,6 +311,9 @@ public data class AuthenticationFactor
          */
         @Json(name = "authenticator_app_factor")
         val authenticatorAppFactor: AuthenticatorAppFactor? = null,
+        /**
+         * Information about the Github OAuth factor, if one is present.
+         */
         @Json(name = "github_oauth_factor")
         val githubOAuthFactor: GithubOAuthFactor? = null,
         @Json(name = "recovery_code_factor")
@@ -312,6 +340,9 @@ public data class AuthenticationFactor
         val linkedInOAuthFactor: LinkedInOAuthFactor? = null,
         @Json(name = "shopify_oauth_factor")
         val shopifyOAuthFactor: ShopifyOAuthFactor? = null,
+        /**
+         * Information about the Slack OAuth factor, if one is present.
+         */
         @Json(name = "slack_oauth_factor")
         val slackOAuthFactor: SlackOAuthFactor? = null,
         @Json(name = "snapchat_oauth_factor")
@@ -344,14 +375,29 @@ public data class AuthenticationFactor
         val salesforceOAuthFactor: SalesforceOAuthFactor? = null,
         @Json(name = "yahoo_oauth_factor")
         val yahooOAuthFactor: YahooOAuthFactor? = null,
+        /**
+         * Information about the Hubspot OAuth factor, if one is present.
+         */
         @Json(name = "hubspot_oauth_factor")
         val hubspotOAuthFactor: HubspotOAuthFactor? = null,
+        /**
+         * Information about the Slack OAuth Exchange factor, if one is present.
+         */
         @Json(name = "slack_oauth_exchange_factor")
         val slackOAuthExchangeFactor: SlackOAuthExchangeFactor? = null,
+        /**
+         * Information about the Hubspot OAuth Exchange factor, if one is present.
+         */
         @Json(name = "hubspot_oauth_exchange_factor")
         val hubspotOAuthExchangeFactor: HubspotOAuthExchangeFactor? = null,
+        /**
+         * Information about the Github OAuth Exchange factor, if one is present.
+         */
         @Json(name = "github_oauth_exchange_factor")
         val githubOAuthExchangeFactor: GithubOAuthExchangeFactor? = null,
+        /**
+         * Information about the Google OAuth Exchange factor, if one is present.
+         */
         @Json(name = "google_oauth_exchange_factor")
         val googleOAuthExchangeFactor: GoogleOAuthExchangeFactor? = null,
         /**
@@ -359,8 +405,14 @@ public data class AuthenticationFactor
          */
         @Json(name = "impersonated_factor")
         val impersonatedFactor: ImpersonatedFactor? = null,
+        /**
+         * Information about the access token exchange factor, if one is present.
+         */
         @Json(name = "oauth_access_token_exchange_factor")
         val oauthAccessTokenExchangeFactor: OAuthAccessTokenExchangeFactor? = null,
+        /**
+         * Information about the trusted auth token factor, if one is present.
+         */
         @Json(name = "trusted_auth_token_factor")
         val trustedAuthTokenFactor: TrustedAuthTokenFactor? = null,
     )
@@ -374,6 +426,43 @@ public data class AuthenticatorAppFactor
          */
         @Json(name = "totp_id")
         val totpId: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class AuthorizationCheck
+    @JvmOverloads
+    constructor(
+        /**
+         * A unique identifier of the RBAC Resource, provided by the developer and intended to be human-readable.
+         *
+         *   A `resource_id` is not allowed to start with `stytch`, which is a special prefix used for Stytch default Resources
+         * with reserved `resource_id`s.
+         *
+         */
+        @Json(name = "resource_id")
+        val resourceId: String,
+        /**
+         * An action to take on a Resource.
+         */
+        @Json(name = "action")
+        val action: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class AuthorizationVerdict
+    @JvmOverloads
+    constructor(
+        /**
+         * Whether the User was authorized to perform the specified action on the specified Resource. Always true if the request
+         * succeeds.
+         */
+        @Json(name = "authorized")
+        val authorized: Boolean,
+        /**
+         * The complete list of Roles that gave the User permission to perform the specified action on the specified Resource.
+         */
+        @Json(name = "granting_roles")
+        val grantingRoles: List<String>,
     )
 
 @JsonClass(generateAdapter = true)
@@ -496,6 +585,9 @@ public data class GitLabOAuthFactor
 public data class GithubOAuthExchangeFactor
     @JvmOverloads
     constructor(
+        /**
+         * The globally unique UUID of the Member's email.
+         */
         @Json(name = "email_id")
         val emailId: String,
     )
@@ -504,10 +596,20 @@ public data class GithubOAuthExchangeFactor
 public data class GithubOAuthFactor
     @JvmOverloads
     constructor(
+        /**
+         * The unique ID of an OAuth registration.
+         */
         @Json(name = "id")
         val id: String,
+        /**
+         * The unique identifier for the User within a given OAuth provider. Also commonly called the `sub` or "Subject field" in
+         * OAuth protocols.
+         */
         @Json(name = "provider_subject")
         val providerSubject: String,
+        /**
+         * The globally unique UUID of the Member's email.
+         */
         @Json(name = "email_id")
         val emailId: String? = null,
     )
@@ -516,6 +618,9 @@ public data class GithubOAuthFactor
 public data class GoogleOAuthExchangeFactor
     @JvmOverloads
     constructor(
+        /**
+         * The globally unique UUID of the Member's email.
+         */
         @Json(name = "email_id")
         val emailId: String,
     )
@@ -546,6 +651,9 @@ public data class GoogleOAuthFactor
 public data class HubspotOAuthExchangeFactor
     @JvmOverloads
     constructor(
+        /**
+         * The globally unique UUID of the Member's email.
+         */
         @Json(name = "email_id")
         val emailId: String,
     )
@@ -554,10 +662,20 @@ public data class HubspotOAuthExchangeFactor
 public data class HubspotOAuthFactor
     @JvmOverloads
     constructor(
+        /**
+         * The unique ID of an OAuth registration.
+         */
         @Json(name = "id")
         val id: String,
+        /**
+         * The unique identifier for the User within a given OAuth provider. Also commonly called the `sub` or "Subject field" in
+         * OAuth protocols.
+         */
         @Json(name = "provider_subject")
         val providerSubject: String,
+        /**
+         * The globally unique UUID of the Member's email.
+         */
         @Json(name = "email_id")
         val emailId: String? = null,
     )
@@ -653,6 +771,9 @@ public data class MicrosoftOAuthFactor
 public data class OAuthAccessTokenExchangeFactor
     @JvmOverloads
     constructor(
+        /**
+         * The ID of the Connected App client.
+         */
         @Json(name = "client_id")
         val clientId: String,
     )
@@ -800,6 +921,9 @@ public data class ShopifyOAuthFactor
 public data class SlackOAuthExchangeFactor
     @JvmOverloads
     constructor(
+        /**
+         * The globally unique UUID of the Member's email.
+         */
         @Json(name = "email_id")
         val emailId: String,
     )
@@ -808,10 +932,20 @@ public data class SlackOAuthExchangeFactor
 public data class SlackOAuthFactor
     @JvmOverloads
     constructor(
+        /**
+         * The unique ID of an OAuth registration.
+         */
         @Json(name = "id")
         val id: String,
+        /**
+         * The unique identifier for the User within a given OAuth provider. Also commonly called the `sub` or "Subject field" in
+         * OAuth protocols.
+         */
         @Json(name = "provider_subject")
         val providerSubject: String,
+        /**
+         * The globally unique UUID of the Member's email.
+         */
         @Json(name = "email_id")
         val emailId: String? = null,
     )
@@ -868,6 +1002,9 @@ public data class TikTokOAuthFactor
 public data class TrustedAuthTokenFactor
     @JvmOverloads
     constructor(
+        /**
+         * The ID of the trusted auth token.
+         */
         @Json(name = "token_id")
         val tokenId: String,
     )
@@ -1059,6 +1196,16 @@ public data class AuthenticateRequest
          */
         @Json(name = "session_custom_claims")
         val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
+        /**
+         * If an `authorization_check` object is passed in, this endpoint will also check if the User is
+         *   authorized to perform the given action on the given Resource. A User is authorized if they are assigned a Role with
+         * adequate permissions.
+         *
+         *   If the User is not authorized to perform the specified action on the specified Resource, a 403 error will be thrown.
+         *   Otherwise, the response will contain a list of Roles that satisfied the authorization check.
+         */
+        @Json(name = "authorization_check")
+        val authorizationCheck: AuthorizationCheck? = null,
     )
 
 /**
@@ -1105,6 +1252,12 @@ public data class AuthenticateResponse
          */
         @Json(name = "status_code")
         val statusCode: Int,
+        /**
+         * If an `authorization_check` is provided in the request and the check succeeds, this field will return
+         *   information about why the User was granted permission.
+         */
+        @Json(name = "verdict")
+        val verdict: AuthorizationVerdict? = null,
     )
 
 /**
