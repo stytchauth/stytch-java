@@ -197,9 +197,8 @@ public data class ResetStartRequest
          * The URL Stytch redirects to after the OAuth flow is completed for a user that already exists. This URL should be a
          * route in your application which will run `oauth.authenticate` (see below) and finish the login.
          *
-         *   The URL must be configured as a Login URL in the
-         * [Redirect URL page](https://stytch.com/docs/dashboard/redirect-urls). If the field is not specified, the default Login
-         * URL will be used.
+         *   The URL must be configured as a Login URL in the [Redirect URL page](https://stytch.com/dashboard/redirect-urls). If
+         * the field is not specified, the default Login URL will be used.
          */
         @Json(name = "login_redirect_url")
         val loginRedirectURL: String? = null,

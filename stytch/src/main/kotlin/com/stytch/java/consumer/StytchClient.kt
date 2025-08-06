@@ -9,6 +9,7 @@ import com.stytch.java.common.BASE_LIVE_URL
 import com.stytch.java.common.BASE_TEST_URL
 import com.stytch.java.common.JwtOptions
 import com.stytch.java.common.OptionalClientConfig
+import com.stytch.java.common.PolicyCache
 import com.stytch.java.consumer.api.connectedapps.ConnectedApp
 import com.stytch.java.consumer.api.connectedapps.ConnectedAppImpl
 import com.stytch.java.consumer.api.cryptowallets.CryptoWallets
@@ -29,6 +30,8 @@ import com.stytch.java.consumer.api.passwords.Passwords
 import com.stytch.java.consumer.api.passwords.PasswordsImpl
 import com.stytch.java.consumer.api.project.Project
 import com.stytch.java.consumer.api.project.ProjectImpl
+import com.stytch.java.consumer.api.rbac.RBAC
+import com.stytch.java.consumer.api.rbac.RBACImpl
 import com.stytch.java.consumer.api.sessions.Sessions
 import com.stytch.java.consumer.api.sessions.SessionsImpl
 import com.stytch.java.consumer.api.totps.TOTPs
@@ -66,6 +69,7 @@ public class StytchClient
                 issuers = listOf("stytch.com/$projectId", baseUrl),
                 type = "JWT",
             )
+        private val policyCache: PolicyCache = PolicyCache(RBACImpl(httpClient, coroutineScope))
 
         @JvmField
         public val connectedApp: ConnectedApp = ConnectedAppImpl(httpClient, coroutineScope)
@@ -98,7 +102,10 @@ public class StytchClient
         public val project: Project = ProjectImpl(httpClient, coroutineScope)
 
         @JvmField
-        public val sessions: Sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
+        public val rbac: RBAC = RBACImpl(httpClient, coroutineScope)
+
+        @JvmField
+        public val sessions: Sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions, policyCache)
 
         @JvmField
         public val totps: TOTPs = TOTPsImpl(httpClient, coroutineScope)

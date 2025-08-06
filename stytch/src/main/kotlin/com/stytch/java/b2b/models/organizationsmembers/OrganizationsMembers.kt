@@ -902,7 +902,7 @@ public data class StartEmailUpdateRequest
         @Json(name = "member_id")
         val memberId: String,
         /**
-         * The email address of the Member.
+         * The new email address for the Member.
          */
         @Json(name = "email_address")
         val emailAddress: String,
