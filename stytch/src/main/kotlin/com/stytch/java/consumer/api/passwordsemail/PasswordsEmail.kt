@@ -45,7 +45,7 @@ public interface Email {
     public fun resetStartCompletable(data: ResetStartRequest): CompletableFuture<StytchResult<ResetStartResponse>>
 
     /**
-     * Reset the user’s password and authenticate them. This endpoint checks that the magic link `token` is valid, hasn’t
+     * Reset the user's password and authenticate them. This endpoint checks that the magic link `token` is valid, hasn't
      * expired, or already been used – and can optionally require additional security settings, such as the IP address and
      * user agent matching the initial reset request.
      *
@@ -58,7 +58,7 @@ public interface Email {
     public suspend fun reset(data: ResetRequest): StytchResult<ResetResponse>
 
     /**
-     * Reset the user’s password and authenticate them. This endpoint checks that the magic link `token` is valid, hasn’t
+     * Reset the user's password and authenticate them. This endpoint checks that the magic link `token` is valid, hasn't
      * expired, or already been used – and can optionally require additional security settings, such as the IP address and
      * user agent matching the initial reset request.
      *
@@ -74,7 +74,7 @@ public interface Email {
     )
 
     /**
-     * Reset the user’s password and authenticate them. This endpoint checks that the magic link `token` is valid, hasn’t
+     * Reset the user's password and authenticate them. This endpoint checks that the magic link `token` is valid, hasn't
      * expired, or already been used – and can optionally require additional security settings, such as the IP address and
      * user agent matching the initial reset request.
      *

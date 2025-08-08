@@ -270,7 +270,8 @@ public data class Member
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug or
+         * organization_external_id here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
@@ -641,7 +642,8 @@ public data class Organization
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug or
+         * organization_external_id here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
@@ -846,6 +848,11 @@ public data class Organization
          */
         @Json(name = "updated_at")
         val updatedAt: Instant? = null,
+        /**
+         * A unique identifier for the organization.
+         */
+        @Json(name = "organization_external_id")
+        val organizationExternalId: String? = null,
         /**
          * The default connection used for SSO when there are multiple active connections.
          */
@@ -1072,7 +1079,8 @@ public data class ConnectedAppsRequest
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug or
+         * organization_external_id here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
@@ -1126,6 +1134,13 @@ public data class CreateRequest
          */
         @Json(name = "trusted_metadata")
         val trustedMetadata: Map<String, Any?>? = emptyMap(),
+        /**
+         * An identifier that can be used in API calls wherever a organization_id is expected. This is a string consisting of
+         * alphanumeric, `.`, `_`, `-`, or `|` characters with a maximum length of 128 characters. External IDs must be unique
+         * within a project, but may be reused across different projects in the same workspace.
+         */
+        @Json(name = "organization_external_id")
+        val organizationExternalId: String? = null,
         /**
          * The authentication setting that controls the JIT provisioning of Members when authenticating via SSO. The accepted
          * values are:
@@ -1335,7 +1350,8 @@ public data class DeleteRequest
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug or
+         * organization_external_id here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
@@ -1377,7 +1393,8 @@ public data class GetConnectedAppRequest
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug or
+         * organization_external_id here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
@@ -1436,7 +1453,8 @@ public data class GetRequest
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug or
+         * organization_external_id here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
@@ -1560,7 +1578,8 @@ public data class UpdateRequest
     constructor(
         /**
          * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
-         * on an Organization, so be sure to preserve this value. You may also use the organization_slug here as a convenience.
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug or
+         * organization_external_id here as a convenience.
          */
         @Json(name = "organization_id")
         val organizationId: String,
@@ -1597,6 +1616,13 @@ public data class UpdateRequest
          */
         @Json(name = "trusted_metadata")
         val trustedMetadata: Map<String, Any?>? = emptyMap(),
+        /**
+         * An identifier that can be used in API calls wherever a organization_id is expected. This is a string consisting of
+         * alphanumeric, `.`, `_`, `-`, or `|` characters with a maximum length of 128 characters. External IDs must be unique
+         * within a project, but may be reused across different projects in the same workspace.
+         */
+        @Json(name = "organization_external_id")
+        val organizationExternalId: String? = null,
         /**
          * The default connection used for SSO when there are multiple active connections.
          *

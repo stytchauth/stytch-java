@@ -31,7 +31,7 @@ public interface MagicLinks {
 
     /**
      * Authenticate a Member with a Magic Link. This endpoint requires a Magic Link token that is not expired or previously
-     * used. If the Member’s status is `pending` or `invited`, they will be updated to `active`.
+     * used. If the Member's status is `pending` or `invited`, they will be updated to `active`.
      * Provide the `session_duration_minutes` parameter to set the lifetime of the session. If the `session_duration_minutes`
      * parameter is not specified, a Stytch session will be created with a 60 minute duration.
      *
@@ -54,7 +54,7 @@ public interface MagicLinks {
 
     /**
      * Authenticate a Member with a Magic Link. This endpoint requires a Magic Link token that is not expired or previously
-     * used. If the Member’s status is `pending` or `invited`, they will be updated to `active`.
+     * used. If the Member's status is `pending` or `invited`, they will be updated to `active`.
      * Provide the `session_duration_minutes` parameter to set the lifetime of the session. If the `session_duration_minutes`
      * parameter is not specified, a Stytch session will be created with a 60 minute duration.
      *
@@ -80,7 +80,7 @@ public interface MagicLinks {
 
     /**
      * Authenticate a Member with a Magic Link. This endpoint requires a Magic Link token that is not expired or previously
-     * used. If the Member’s status is `pending` or `invited`, they will be updated to `active`.
+     * used. If the Member's status is `pending` or `invited`, they will be updated to `active`.
      * Provide the `session_duration_minutes` parameter to set the lifetime of the session. If the `session_duration_minutes`
      * parameter is not specified, a Stytch session will be created with a 60 minute duration.
      *
