@@ -63,7 +63,7 @@ public interface Email {
     /**
      * Authenticate a Member with a one-time passcode (OTP). This endpoint requires an OTP that is not expired or previously
      * used.
-     * OTPs have a default expiry of 10 minutes. If the Member’s status is `pending` or `invited`, they will be updated to
+     * OTPs have a default expiry of 10 minutes. If the Member's status is `pending` or `invited`, they will be updated to
      * `active`.
      * Provide the `session_duration_minutes` parameter to set the lifetime of the session. If the `session_duration_minutes`
      * parameter is not specified, a Stytch session will be created with a 60 minute duration.
@@ -88,7 +88,7 @@ public interface Email {
     /**
      * Authenticate a Member with a one-time passcode (OTP). This endpoint requires an OTP that is not expired or previously
      * used.
-     * OTPs have a default expiry of 10 minutes. If the Member’s status is `pending` or `invited`, they will be updated to
+     * OTPs have a default expiry of 10 minutes. If the Member's status is `pending` or `invited`, they will be updated to
      * `active`.
      * Provide the `session_duration_minutes` parameter to set the lifetime of the session. If the `session_duration_minutes`
      * parameter is not specified, a Stytch session will be created with a 60 minute duration.
@@ -116,7 +116,7 @@ public interface Email {
     /**
      * Authenticate a Member with a one-time passcode (OTP). This endpoint requires an OTP that is not expired or previously
      * used.
-     * OTPs have a default expiry of 10 minutes. If the Member’s status is `pending` or `invited`, they will be updated to
+     * OTPs have a default expiry of 10 minutes. If the Member's status is `pending` or `invited`, they will be updated to
      * `active`.
      * Provide the `session_duration_minutes` parameter to set the lifetime of the session. If the `session_duration_minutes`
      * parameter is not specified, a Stytch session will be created with a 60 minute duration.
