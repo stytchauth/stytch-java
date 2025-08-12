@@ -8,6 +8,7 @@ package com.stytch.java.consumer.models.passwordsexistingpassword
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import com.stytch.java.consumer.models.devicehistory.DeviceInfo
 import com.stytch.java.consumer.models.sessions.Session
 import com.stytch.java.consumer.models.users.User
 
@@ -68,6 +69,13 @@ public data class ResetRequest
          */
         @Json(name = "session_custom_claims")
         val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
+        /**
+         * If the `telemetry_id` is passed, as part of this request, Stytch will call the
+         * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) and store the associated fingerprints
+         * and IPGEO information for the User. Your workspace must be enabled for Device Fingerprinting to use this feature.
+         */
+        @Json(name = "telemetry_id")
+        val telemetryId: String? = null,
     )
 
 /**
@@ -119,4 +127,11 @@ public data class ResetResponse
          */
         @Json(name = "session")
         val session: Session? = null,
+        /**
+         * If a valid `telemetry_id` was passed in the request and the
+         * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) returned results, the `user_device`
+         * response field will contain information about the user's device attributes.
+         */
+        @Json(name = "user_device")
+        val userDevice: DeviceInfo? = null,
     )
