@@ -8,6 +8,7 @@ package com.stytch.java.consumer.models.oauth
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import com.stytch.java.consumer.models.devicehistory.DeviceInfo
 import com.stytch.java.consumer.models.sessions.Session
 import com.stytch.java.consumer.models.users.User
 import java.time.Instant
@@ -249,4 +250,11 @@ public data class AuthenticateResponse
          */
         @Json(name = "user_session")
         val userSession: Session? = null,
+        /**
+         * If a valid `telemetry_id` was passed in the request and the
+         * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) returned results, the `user_device`
+         * response field will contain information about the user's device attributes.
+         */
+        @Json(name = "user_device")
+        val userDevice: DeviceInfo? = null,
     )

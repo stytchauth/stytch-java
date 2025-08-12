@@ -12,6 +12,7 @@ import com.stytch.java.b2b.models.mfa.MfaRequired
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
+import com.stytch.java.consumer.models.devicehistory.DeviceInfo
 
 @JsonClass(generateAdapter = false)
 public enum class ResetRequestLocale {
@@ -175,4 +176,11 @@ public data class ResetResponse
          */
         @Json(name = "mfa_required")
         val mfaRequired: MfaRequired? = null,
+        /**
+         * If a valid `telemetry_id` was passed in the request and the
+         * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) returned results, the `member_device`
+         * response field will contain information about the member's device attributes.
+         */
+        @Json(name = "member_device")
+        val memberDevice: DeviceInfo? = null,
     )

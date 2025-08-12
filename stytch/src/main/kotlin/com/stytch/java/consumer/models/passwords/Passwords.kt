@@ -8,6 +8,7 @@ package com.stytch.java.consumer.models.passwords
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import com.stytch.java.consumer.models.devicehistory.DeviceInfo
 import com.stytch.java.consumer.models.sessions.Session
 import com.stytch.java.consumer.models.users.Name
 import com.stytch.java.consumer.models.users.User
@@ -325,6 +326,13 @@ public data class AuthenticateResponse
          */
         @Json(name = "session")
         val session: Session? = null,
+        /**
+         * If a valid `telemetry_id` was passed in the request and the
+         * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) returned results, the `user_device`
+         * response field will contain information about the user's device attributes.
+         */
+        @Json(name = "user_device")
+        val userDevice: DeviceInfo? = null,
     )
 
 /**
@@ -443,6 +451,13 @@ public data class CreateResponse
          */
         @Json(name = "session")
         val session: Session? = null,
+        /**
+         * If a valid `telemetry_id` was passed in the request and the
+         * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) returned results, the `user_device`
+         * response field will contain information about the user's device attributes.
+         */
+        @Json(name = "user_device")
+        val userDevice: DeviceInfo? = null,
     )
 
 /**

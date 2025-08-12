@@ -14,6 +14,7 @@ import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
 import com.stytch.java.b2b.models.sessions.PrimaryRequired
 import com.stytch.java.common.methodoptions.Authorization
+import com.stytch.java.consumer.models.devicehistory.DeviceInfo
 import java.time.Instant
 
 @JsonClass(generateAdapter = false)
@@ -457,6 +458,13 @@ public data class AuthenticateResponse
         val mfaRequired: MfaRequired? = null,
         @Json(name = "primary_required")
         val primaryRequired: PrimaryRequired? = null,
+        /**
+         * If a valid `telemetry_id` was passed in the request and the
+         * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) returned results, the `member_device`
+         * response field will contain information about the member's device attributes.
+         */
+        @Json(name = "member_device")
+        val memberDevice: DeviceInfo? = null,
     )
 
 /**
