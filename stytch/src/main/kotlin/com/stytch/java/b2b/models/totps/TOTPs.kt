@@ -11,6 +11,7 @@ import com.squareup.moshi.JsonClass
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
+import com.stytch.java.consumer.models.devicehistory.DeviceInfo
 
 /**
 * Request type for `TOTPs.authenticate`.
@@ -110,6 +111,13 @@ public data class AuthenticateRequest
          */
         @Json(name = "set_default_mfa")
         val setDefaultMfa: Boolean? = null,
+        /**
+         * If the `telemetry_id` is passed, as part of this request, Stytch will call the
+         * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) and store the associated fingerprints
+         * and IPGEO information for the Member. Your workspace must be enabled for Device Fingerprinting to use this feature.
+         */
+        @Json(name = "telemetry_id")
+        val telemetryId: String? = null,
     )
 
 /**
@@ -161,6 +169,13 @@ public data class AuthenticateResponse
          */
         @Json(name = "member_session")
         val memberSession: MemberSession? = null,
+        /**
+         * If a valid `telemetry_id` was passed in the request and the
+         * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) returned results, the `member_device`
+         * response field will contain information about the member's device attributes.
+         */
+        @Json(name = "member_device")
+        val memberDevice: DeviceInfo? = null,
     )
 
 /**

@@ -12,6 +12,7 @@ import com.stytch.java.b2b.models.mfa.MfaRequired
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.common.methodoptions.Authorization
+import com.stytch.java.consumer.models.devicehistory.DeviceInfo
 import com.stytch.java.consumer.models.sessions.AuthenticationFactor
 import com.stytch.java.consumer.models.sessions.JWK
 import java.time.Instant
@@ -245,6 +246,13 @@ public data class AttestRequest
          */
         @Json(name = "session_jwt")
         val sessionJwt: String? = null,
+        /**
+         * If the `telemetry_id` is passed, as part of this request, Stytch will call the
+         * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) and store the associated fingerprints
+         * and IPGEO information for the Member. Your workspace must be enabled for Device Fingerprinting to use this feature.
+         */
+        @Json(name = "telemetry_id")
+        val telemetryId: String? = null,
     )
 
 /**
@@ -296,6 +304,13 @@ public data class AttestResponse
          */
         @Json(name = "status_code")
         val statusCode: Int,
+        /**
+         * If a valid `telemetry_id` was passed in the request and the
+         * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) returned results, the `member_device`
+         * response field will contain information about the member's device attributes.
+         */
+        @Json(name = "member_device")
+        val memberDevice: DeviceInfo? = null,
     )
 
 /**
@@ -455,6 +470,13 @@ public data class ExchangeAccessTokenRequest
          */
         @Json(name = "session_custom_claims")
         val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
+        /**
+         * If the `telemetry_id` is passed, as part of this request, Stytch will call the
+         * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) and store the associated fingerprints
+         * and IPGEO information for the Member. Your workspace must be enabled for Device Fingerprinting to use this feature.
+         */
+        @Json(name = "telemetry_id")
+        val telemetryId: String? = null,
     )
 
 /**
@@ -506,6 +528,13 @@ public data class ExchangeAccessTokenResponse
          */
         @Json(name = "member_session")
         val memberSession: MemberSession? = null,
+        /**
+         * If a valid `telemetry_id` was passed in the request and the
+         * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) returned results, the `member_device`
+         * response field will contain information about the member's device attributes.
+         */
+        @Json(name = "member_device")
+        val memberDevice: DeviceInfo? = null,
     )
 
 /**
@@ -576,6 +605,13 @@ public data class ExchangeRequest
          */
         @Json(name = "locale")
         val locale: ExchangeRequestLocale? = null,
+        /**
+         * If the `telemetry_id` is passed, as part of this request, Stytch will call the
+         * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) and store the associated fingerprints
+         * and IPGEO information for the Member. Your workspace must be enabled for Device Fingerprinting to use this feature.
+         */
+        @Json(name = "telemetry_id")
+        val telemetryId: String? = null,
     )
 
 /**
@@ -658,6 +694,13 @@ public data class ExchangeResponse
          */
         @Json(name = "primary_required")
         val primaryRequired: PrimaryRequired? = null,
+        /**
+         * If a valid `telemetry_id` was passed in the request and the
+         * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) returned results, the `member_device`
+         * response field will contain information about the member's device attributes.
+         */
+        @Json(name = "member_device")
+        val memberDevice: DeviceInfo? = null,
     )
 
 /**

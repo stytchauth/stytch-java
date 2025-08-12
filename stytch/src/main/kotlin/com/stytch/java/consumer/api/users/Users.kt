@@ -93,6 +93,11 @@ public interface Users {
     public fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>>
 
     /**
+     *
+     * **Warning**: This endpoint is not recommended for use in login flows. Scaling issues may occur, as search performance
+     * may vary from ~150 milliseconds to 9 seconds depending on query complexity and rate limits are set to 150
+     * requests/second.
+     *
      * Search for Users within your Stytch Project.
      *
      * Use the `query` object to filter by different fields. See the `query.operands.filter_value` documentation below for a
@@ -108,6 +113,11 @@ public interface Users {
     public suspend fun search(data: SearchRequest): StytchResult<SearchResponse>
 
     /**
+     *
+     * **Warning**: This endpoint is not recommended for use in login flows. Scaling issues may occur, as search performance
+     * may vary from ~150 milliseconds to 9 seconds depending on query complexity and rate limits are set to 150
+     * requests/second.
+     *
      * Search for Users within your Stytch Project.
      *
      * Use the `query` object to filter by different fields. See the `query.operands.filter_value` documentation below for a
@@ -126,6 +136,11 @@ public interface Users {
     )
 
     /**
+     *
+     * **Warning**: This endpoint is not recommended for use in login flows. Scaling issues may occur, as search performance
+     * may vary from ~150 milliseconds to 9 seconds depending on query complexity and rate limits are set to 150
+     * requests/second.
+     *
      * Search for Users within your Stytch Project.
      *
      * Use the `query` object to filter by different fields. See the `query.operands.filter_value` documentation below for a
