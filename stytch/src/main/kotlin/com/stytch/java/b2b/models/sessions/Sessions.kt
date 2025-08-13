@@ -194,11 +194,6 @@ public data class AttestRequest
     @JvmOverloads
     constructor(
         /**
-         * The organization ID that the session should be authenticated in.
-         */
-        @Json(name = "organization_id")
-        val organizationId: String,
-        /**
          * The ID of the trusted auth token profile to use for attestation.
          */
         @Json(name = "profile_id")
@@ -208,6 +203,11 @@ public data class AttestRequest
          */
         @Json(name = "token")
         val token: String,
+        /**
+         * The organization ID that the session should be authenticated in.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String? = null,
         /**
          * Set the session lifetime to be this many minutes from now. This will start a new session if one doesn't already exist,
          *   returning both an opaque `session_token` and `session_jwt` for this session. Remember that the `session_jwt` will
