@@ -7,6 +7,8 @@ package com.stytch.java.b2b
 // !!!
 import com.stytch.java.b2b.api.discovery.Discovery
 import com.stytch.java.b2b.api.discovery.DiscoveryImpl
+import com.stytch.java.b2b.api.idp.IDP
+import com.stytch.java.b2b.api.idp.IDPImpl
 import com.stytch.java.b2b.api.impersonation.Impersonation
 import com.stytch.java.b2b.api.impersonation.ImpersonationImpl
 import com.stytch.java.b2b.api.magiclinks.MagicLinks
@@ -83,6 +85,9 @@ public class StytchB2BClient
 
         @JvmField
         public val fraud: Fraud = FraudImpl(fraudHttpClient, coroutineScope)
+
+        @JvmField
+        public val idp: IDP = IDPImpl(httpClient, coroutineScope, httpsJwks, jwtOptions, policyCache)
 
         @JvmField
         public val impersonation: Impersonation = ImpersonationImpl(httpClient, coroutineScope)

@@ -82,6 +82,22 @@ public data class ConnectedApp
     )
 
 @JsonClass(generateAdapter = true)
+public data class ConnectedAppPublic
+    @JvmOverloads
+    constructor(
+        @Json(name = "client_id")
+        val clientId: String,
+        @Json(name = "client_name")
+        val clientName: String,
+        @Json(name = "client_description")
+        val clientDescription: String,
+        @Json(name = "client_type")
+        val clientType: String,
+        @Json(name = "logo_url")
+        val logoURL: String? = null,
+    )
+
+@JsonClass(generateAdapter = true)
 public data class ConnectedAppWithClientSecret
     @JvmOverloads
     constructor(

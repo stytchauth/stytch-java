@@ -15,6 +15,8 @@ import com.stytch.java.consumer.api.cryptowallets.CryptoWallets
 import com.stytch.java.consumer.api.cryptowallets.CryptoWalletsImpl
 import com.stytch.java.consumer.api.fraud.Fraud
 import com.stytch.java.consumer.api.fraud.FraudImpl
+import com.stytch.java.consumer.api.idp.IDP
+import com.stytch.java.consumer.api.idp.IDPImpl
 import com.stytch.java.consumer.api.impersonation.Impersonation
 import com.stytch.java.consumer.api.impersonation.ImpersonationImpl
 import com.stytch.java.consumer.api.m2m.M2M
@@ -77,6 +79,9 @@ public class StytchClient
 
         @JvmField
         public val fraud: Fraud = FraudImpl(fraudHttpClient, coroutineScope)
+
+        @JvmField
+        public val idp: IDP = IDPImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
 
         @JvmField
         public val impersonation: Impersonation = ImpersonationImpl(httpClient, coroutineScope)

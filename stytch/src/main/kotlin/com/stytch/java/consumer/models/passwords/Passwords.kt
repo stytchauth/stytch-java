@@ -568,6 +568,10 @@ public data class MigrateRequest
          */
         @Json(name = "external_id")
         val externalId: String? = null,
+        /**
+         * Roles to explicitly assign to this User.
+         *    See the [RBAC guide](https://stytch.com/docs/guides/rbac/role-assignment) for more information about role assignment.
+         */
         @Json(name = "roles")
         val roles: List<String>? = emptyList(),
     )
