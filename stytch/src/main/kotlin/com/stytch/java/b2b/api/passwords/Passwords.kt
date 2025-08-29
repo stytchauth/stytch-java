@@ -126,6 +126,10 @@ public interface Passwords {
     public fun strengthCheckCompletable(data: StrengthCheckRequest): CompletableFuture<StytchResult<StrengthCheckResponse>>
 
     /**
+     *
+     * **Warning:** This endpoint marks the Member's email address as verified. Do **not** use this endpoint unless the user
+     * has already verified their email address in your application.
+     *
      * Adds an existing password to a Member's email that doesn't have a password yet.
      *
      * We support migrating members from passwords stored with bcrypt, scrypt, argon2, MD-5, SHA-1, and PBKDF2. This endpoint
@@ -140,6 +144,10 @@ public interface Passwords {
     public suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse>
 
     /**
+     *
+     * **Warning:** This endpoint marks the Member's email address as verified. Do **not** use this endpoint unless the user
+     * has already verified their email address in your application.
+     *
      * Adds an existing password to a Member's email that doesn't have a password yet.
      *
      * We support migrating members from passwords stored with bcrypt, scrypt, argon2, MD-5, SHA-1, and PBKDF2. This endpoint
@@ -157,6 +165,10 @@ public interface Passwords {
     )
 
     /**
+     *
+     * **Warning:** This endpoint marks the Member's email address as verified. Do **not** use this endpoint unless the user
+     * has already verified their email address in your application.
+     *
      * Adds an existing password to a Member's email that doesn't have a password yet.
      *
      * We support migrating members from passwords stored with bcrypt, scrypt, argon2, MD-5, SHA-1, and PBKDF2. This endpoint
@@ -175,7 +187,7 @@ public interface Passwords {
      * currently set, and that the entered password is correct.
      *
      * If you have breach detection during authentication enabled in your
-     * [password strength policy](https://stytch.com/docs/b2b/guides/passwords/strength-policies) and the member's credentials
+     * [password strength policy](https://stytch.com/docs/b2b/guides/passwords/strength-policy) and the member's credentials
      * have appeared in the HaveIBeenPwned dataset, this endpoint will return a `member_reset_password` error even if the
      * member enters a correct password. We force a password reset in this case to ensure that the member is the legitimate
      * owner of the email address and not a malicious actor abusing the compromised credentials.
@@ -196,7 +208,7 @@ public interface Passwords {
      * currently set, and that the entered password is correct.
      *
      * If you have breach detection during authentication enabled in your
-     * [password strength policy](https://stytch.com/docs/b2b/guides/passwords/strength-policies) and the member's credentials
+     * [password strength policy](https://stytch.com/docs/b2b/guides/passwords/strength-policy) and the member's credentials
      * have appeared in the HaveIBeenPwned dataset, this endpoint will return a `member_reset_password` error even if the
      * member enters a correct password. We force a password reset in this case to ensure that the member is the legitimate
      * owner of the email address and not a malicious actor abusing the compromised credentials.
@@ -220,7 +232,7 @@ public interface Passwords {
      * currently set, and that the entered password is correct.
      *
      * If you have breach detection during authentication enabled in your
-     * [password strength policy](https://stytch.com/docs/b2b/guides/passwords/strength-policies) and the member's credentials
+     * [password strength policy](https://stytch.com/docs/b2b/guides/passwords/strength-policy) and the member's credentials
      * have appeared in the HaveIBeenPwned dataset, this endpoint will return a `member_reset_password` error even if the
      * member enters a correct password. We force a password reset in this case to ensure that the member is the legitimate
      * owner of the email address and not a malicious actor abusing the compromised credentials.

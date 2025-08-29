@@ -199,12 +199,13 @@ public data class AttestRequest
         @Json(name = "profile_id")
         val profileId: String,
         /**
-         * The trusted auth token to authenticate.
+         * The trusted auth token to authenticate. The token must have an organization ID claim if JIT provisioning is enabled.
          */
         @Json(name = "token")
         val token: String,
         /**
-         * The organization ID that the session should be authenticated in.
+         * The organization ID that the session should be authenticated in. Must be provided if the trusted auth token does not
+         * have an organization ID claim.
          */
         @Json(name = "organization_id")
         val organizationId: String? = null,

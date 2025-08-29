@@ -128,6 +128,25 @@ public data class CreateConnectionRequestOptions
         }
     }
 
+public data class DeleteEncryptionPrivateKeyRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
+        }
+    }
+
 public data class DeleteVerificationCertificateRequestOptions
     @JvmOverloads
     constructor(
@@ -240,6 +259,58 @@ public data class CreateConnectionResponse
          */
         @Json(name = "connection")
         val connection: SAMLConnection? = null,
+    )
+
+/**
+* Request type for `SAML.deleteEncryptionPrivateKey`.
+*/
+@JsonClass(generateAdapter = true)
+public data class DeleteEncryptionPrivateKeyRequest
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug or
+         * organization_external_id here as a convenience.
+         */
+        @Json(name = "organization_id")
+        val organizationId: String,
+        /**
+         * Globally unique UUID that identifies a specific SSO `connection_id` for a Member.
+         */
+        @Json(name = "connection_id")
+        val connectionId: String,
+        /**
+         * The ID of the encryption private key to be deleted.
+         */
+        @Json(name = "private_key_id")
+        val privateKeyId: String,
+    )
+
+/**
+* Response type for `SAML.deleteEncryptionPrivateKey`.
+*/
+@JsonClass(generateAdapter = true)
+public data class DeleteEncryptionPrivateKeyResponse
+    @JvmOverloads
+    constructor(
+        /**
+         * Globally unique UUID that is returned with every API call. This value is important to log for debugging purposes; we
+         * may ask for this value to help identify a specific API call when helping you debug an issue.
+         */
+        @Json(name = "request_id")
+        val requestId: String,
+        /**
+         * The ID of the encryption private key.
+         */
+        @Json(name = "private_key_id")
+        val privateKeyId: String,
+        /**
+         * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
+         * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
+         */
+        @Json(name = "status_code")
+        val statusCode: Int,
     )
 
 /**
@@ -453,6 +524,12 @@ public data class UpdateConnectionRequest
          */
         @Json(name = "idp_initiated_auth_disabled")
         val idpInitiatedAuthDisabled: Boolean? = null,
+        /**
+         * A PKCS1 format RSA private key used to decrypt encrypted SAML assertions. Only PKCS1 format (starting with "-----BEGIN
+         * RSA PRIVATE KEY-----") is supported.
+         */
+        @Json(name = "saml_encryption_private_key")
+        val samlEncryptionPrivateKey: String? = null,
     )
 
 /**

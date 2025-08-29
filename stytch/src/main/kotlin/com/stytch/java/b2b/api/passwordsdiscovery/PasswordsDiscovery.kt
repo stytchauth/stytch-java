@@ -30,7 +30,7 @@ public interface Discovery {
      * passwords use cases, and is not tied to a specific organization.
      *
      * If you have breach detection during authentication enabled in your
-     * [password strength policy](https://stytch.com/docs/b2b/guides/passwords/strength-policies) and the member's credentials
+     * [password strength policy](https://stytch.com/docs/b2b/guides/passwords/strength-policy) and the member's credentials
      * have appeared in the HaveIBeenPwned dataset, this endpoint will return a `member_reset_password` error even if the
      * member enters a correct password. We force a password reset in this case to ensure that the member is the legitimate
      * owner of the email address and not a malicious actor abusing the compromised credentials.
@@ -45,7 +45,7 @@ public interface Discovery {
      * passwords use cases, and is not tied to a specific organization.
      *
      * If you have breach detection during authentication enabled in your
-     * [password strength policy](https://stytch.com/docs/b2b/guides/passwords/strength-policies) and the member's credentials
+     * [password strength policy](https://stytch.com/docs/b2b/guides/passwords/strength-policy) and the member's credentials
      * have appeared in the HaveIBeenPwned dataset, this endpoint will return a `member_reset_password` error even if the
      * member enters a correct password. We force a password reset in this case to ensure that the member is the legitimate
      * owner of the email address and not a malicious actor abusing the compromised credentials.
@@ -63,7 +63,7 @@ public interface Discovery {
      * passwords use cases, and is not tied to a specific organization.
      *
      * If you have breach detection during authentication enabled in your
-     * [password strength policy](https://stytch.com/docs/b2b/guides/passwords/strength-policies) and the member's credentials
+     * [password strength policy](https://stytch.com/docs/b2b/guides/passwords/strength-policy) and the member's credentials
      * have appeared in the HaveIBeenPwned dataset, this endpoint will return a `member_reset_password` error even if the
      * member enters a correct password. We force a password reset in this case to ensure that the member is the legitimate
      * owner of the email address and not a malicious actor abusing the compromised credentials.
