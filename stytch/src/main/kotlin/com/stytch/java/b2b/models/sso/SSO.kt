@@ -106,6 +106,18 @@ public data class DeleteConnectionRequestOptions
         }
     }
 
+@JsonClass(generateAdapter = true)
+public data class EncryptionPrivateKey
+    @JvmOverloads
+    constructor(
+        @Json(name = "private_key_id")
+        val privateKeyId: String,
+        @Json(name = "private_key")
+        val privateKey: String,
+        @Json(name = "created_at")
+        val createdAt: Instant? = null,
+    )
+
 public data class GetConnectionsRequestOptions
     @JvmOverloads
     constructor(
@@ -211,6 +223,8 @@ public data class SAMLConnection
         val signingCertificates: List<X509Certificate>,
         @Json(name = "verification_certificates")
         val verificationCertificates: List<X509Certificate>,
+        @Json(name = "encryption_private_keys")
+        val encryptionPrivateKeys: List<EncryptionPrivateKey>,
         @Json(name = "saml_connection_implicit_role_assignments")
         val samlConnectionImplicitRoleAssignments: List<SAMLConnectionImplicitRoleAssignment>,
         @Json(name = "saml_group_implicit_role_assignments")

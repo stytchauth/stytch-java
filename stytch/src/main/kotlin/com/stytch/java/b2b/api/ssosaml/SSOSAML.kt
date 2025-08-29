@@ -10,6 +10,9 @@ import com.squareup.moshi.Moshi
 import com.stytch.java.b2b.models.ssosaml.CreateConnectionRequest
 import com.stytch.java.b2b.models.ssosaml.CreateConnectionRequestOptions
 import com.stytch.java.b2b.models.ssosaml.CreateConnectionResponse
+import com.stytch.java.b2b.models.ssosaml.DeleteEncryptionPrivateKeyRequest
+import com.stytch.java.b2b.models.ssosaml.DeleteEncryptionPrivateKeyRequestOptions
+import com.stytch.java.b2b.models.ssosaml.DeleteEncryptionPrivateKeyResponse
 import com.stytch.java.b2b.models.ssosaml.DeleteVerificationCertificateRequest
 import com.stytch.java.b2b.models.ssosaml.DeleteVerificationCertificateRequestOptions
 import com.stytch.java.b2b.models.ssosaml.DeleteVerificationCertificateResponse
@@ -175,6 +178,31 @@ public interface SAML {
         data: DeleteVerificationCertificateRequest,
         methodOptions: DeleteVerificationCertificateRequestOptions? = null,
     ): CompletableFuture<StytchResult<DeleteVerificationCertificateResponse>>
+
+    /**
+     * Delete a SAML encryption private key.
+     */
+    public suspend fun deleteEncryptionPrivateKey(
+        data: DeleteEncryptionPrivateKeyRequest,
+        methodOptions: DeleteEncryptionPrivateKeyRequestOptions? = null,
+    ): StytchResult<DeleteEncryptionPrivateKeyResponse>
+
+    /**
+     * Delete a SAML encryption private key.
+     */
+    public fun deleteEncryptionPrivateKey(
+        data: DeleteEncryptionPrivateKeyRequest,
+        methodOptions: DeleteEncryptionPrivateKeyRequestOptions? = null,
+        callback: (StytchResult<DeleteEncryptionPrivateKeyResponse>) -> Unit,
+    )
+
+    /**
+     * Delete a SAML encryption private key.
+     */
+    public fun deleteEncryptionPrivateKeyCompletable(
+        data: DeleteEncryptionPrivateKeyRequest,
+        methodOptions: DeleteEncryptionPrivateKeyRequestOptions? = null,
+    ): CompletableFuture<StytchResult<DeleteEncryptionPrivateKeyResponse>>
 }
 
 internal class SAMLImpl(
@@ -311,5 +339,39 @@ internal class SAMLImpl(
     ): CompletableFuture<StytchResult<DeleteVerificationCertificateResponse>> =
         coroutineScope.async {
             deleteVerificationCertificate(data, methodOptions)
+        }.asCompletableFuture()
+
+    override suspend fun deleteEncryptionPrivateKey(
+        data: DeleteEncryptionPrivateKeyRequest,
+        methodOptions: DeleteEncryptionPrivateKeyRequestOptions?,
+    ): StytchResult<DeleteEncryptionPrivateKeyResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
+
+            httpClient.delete(
+                "/v1/b2b/sso/saml/${data.organizationId}/connections/${data.connectionId}/encryption_private_keys/${data.privateKeyId}",
+                headers,
+            )
+        }
+
+    override fun deleteEncryptionPrivateKey(
+        data: DeleteEncryptionPrivateKeyRequest,
+        methodOptions: DeleteEncryptionPrivateKeyRequestOptions?,
+        callback: (StytchResult<DeleteEncryptionPrivateKeyResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(deleteEncryptionPrivateKey(data, methodOptions))
+        }
+    }
+
+    override fun deleteEncryptionPrivateKeyCompletable(
+        data: DeleteEncryptionPrivateKeyRequest,
+        methodOptions: DeleteEncryptionPrivateKeyRequestOptions?,
+    ): CompletableFuture<StytchResult<DeleteEncryptionPrivateKeyResponse>> =
+        coroutineScope.async {
+            deleteEncryptionPrivateKey(data, methodOptions)
         }.asCompletableFuture()
 }

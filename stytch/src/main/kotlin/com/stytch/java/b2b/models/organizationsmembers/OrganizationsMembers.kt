@@ -288,8 +288,9 @@ public data class CreateRequest
         /**
          * Identifies the Member as a break glass user - someone who has permissions to authenticate into an Organization by
          * bypassing the Organization's settings. A break glass account is typically used for emergency purposes to gain access
-         * outside of normal authentication procedures. Refer to the [Organization object](organization-object) and its
-         * `auth_methods` and `allowed_auth_methods` fields for more details.
+         * outside of normal authentication procedures. Refer to the
+         * [Organization object](https://stytch.com/docs/b2b/api/organization-object) and its `auth_methods` and
+         * `allowed_auth_methods` fields for more details.
          */
         @Json(name = "is_breakglass")
         val isBreakglass: Boolean? = null,
@@ -313,7 +314,7 @@ public data class CreateRequest
         @Json(name = "roles")
         val roles: List<String>? = emptyList(),
         /**
-         * An identifier that can be used in API calls wherever a member_id is expected. This is a string consisting of
+         * An identifier that can be used in most API calls where a `member_id` is expected. This is a string consisting of
          * alphanumeric, `.`, `_`, `-`, or `|` characters with a maximum length of 128 characters. External IDs must be unique
          * within an organization, but may be reused across different organizations in the same project.
          */
@@ -775,7 +776,7 @@ public data class ReactivateRequest
         val organizationId: String,
         /**
          * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
-         * so be sure to preserve this value. You may use an external_id here if one is set for the member.
+         * so be sure to preserve this value.
          */
         @Json(name = "member_id")
         val memberId: String,
@@ -868,7 +869,7 @@ public data class SearchResponse
         @Json(name = "request_id")
         val requestId: String,
         /**
-         * An array of [Member objects](member-object).
+         * An array of [Member objects](https://stytch.com/docs/b2b/api/member-object).
          */
         @Json(name = "members")
         val members: List<Member>,
@@ -1112,8 +1113,9 @@ public data class UpdateRequest
         /**
          * Identifies the Member as a break glass user - someone who has permissions to authenticate into an Organization by
          * bypassing the Organization's settings. A break glass account is typically used for emergency purposes to gain access
-         * outside of normal authentication procedures. Refer to the [Organization object](organization-object) and its
-         * `auth_methods` and `allowed_auth_methods` fields for more details.
+         * outside of normal authentication procedures. Refer to the
+         * [Organization object](https://stytch.com/docs/b2b/api/organization-object) and its `auth_methods` and
+         * `allowed_auth_methods` fields for more details.
          *
          * If this field is provided and a session header is passed into the request, the Member Session must have permission to
          * perform the `update.settings.is-breakglass` action on the `stytch.member` Resource.
@@ -1191,7 +1193,7 @@ public data class UpdateRequest
         @Json(name = "email_address")
         val emailAddress: String? = null,
         /**
-         * An identifier that can be used in API calls wherever a member_id is expected. This is a string consisting of
+         * An identifier that can be used in most API calls where a `member_id` is expected. This is a string consisting of
          * alphanumeric, `.`, `_`, `-`, or `|` characters with a maximum length of 128 characters. External IDs must be unique
          * within an organization, but may be reused across different organizations in the same project.
          */

@@ -41,22 +41,6 @@ public data class CreateRequest
         @Json(name = "client_type")
         val clientType: CreateRequestClientType,
         /**
-         * Array of redirect URI values for use in OAuth Authorization flows.
-         */
-        @Json(name = "redirect_urls")
-        val redirectURLS: List<String>,
-        /**
-         * Valid for first party clients only. If `true`, an authorization token granted to this Client can be exchanged for a
-         * full Stytch session.
-         */
-        @Json(name = "full_access_allowed")
-        val fullAccessAllowed: Boolean,
-        /**
-         * Array of redirect URI values for use in OIDC Logout flows.
-         */
-        @Json(name = "post_logout_redirect_urls")
-        val postLogoutRedirectURLS: List<String>,
-        /**
          * A human-readable name for the client.
          */
         @Json(name = "client_name")
@@ -66,6 +50,17 @@ public data class CreateRequest
          */
         @Json(name = "client_description")
         val clientDescription: String? = null,
+        /**
+         * Array of redirect URI values for use in OAuth Authorization flows.
+         */
+        @Json(name = "redirect_urls")
+        val redirectURLS: List<String>? = emptyList(),
+        /**
+         * Valid for first party clients only. If `true`, an authorization token granted to this Client can be exchanged for a
+         * full Stytch session.
+         */
+        @Json(name = "full_access_allowed")
+        val fullAccessAllowed: Boolean? = null,
         /**
          * The number of minutes before the access token expires. The default is 60 minutes.
          */
@@ -81,6 +76,11 @@ public data class CreateRequest
          */
         @Json(name = "access_token_template_content")
         val accessTokenTemplateContent: String? = null,
+        /**
+         * Array of redirect URI values for use in OIDC Logout flows.
+         */
+        @Json(name = "post_logout_redirect_urls")
+        val postLogoutRedirectURLS: List<String>? = emptyList(),
         /**
          * The logo URL of the Connected App, if any.
          */
