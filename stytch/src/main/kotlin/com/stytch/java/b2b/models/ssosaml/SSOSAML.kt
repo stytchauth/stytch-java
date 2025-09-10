@@ -530,6 +530,8 @@ public data class UpdateConnectionRequest
          */
         @Json(name = "saml_encryption_private_key")
         val samlEncryptionPrivateKey: String? = null,
+        @Json(name = "allow_gateway_callback")
+        val allowGatewayCallback: Boolean? = null,
     )
 
 /**
