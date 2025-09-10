@@ -239,6 +239,8 @@ public data class SAMLConnection
         val alternativeAcsURL: String,
         @Json(name = "idp_initiated_auth_disabled")
         val idpInitiatedAuthDisabled: Boolean,
+        @Json(name = "allow_gateway_callback")
+        val allowGatewayCallback: Boolean,
         @Json(name = "attribute_mapping")
         val attributeMapping: Map<String, Any?>? = emptyMap(),
     )

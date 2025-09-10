@@ -287,6 +287,12 @@ public data class User
         @Json(name = "is_locked")
         val isLocked: Boolean,
         /**
+         * Roles assigned to this User.
+         *    See the [RBAC guide](https://stytch.com/docs/guides/rbac/role-assignment) for more information about role assignment.
+         */
+        @Json(name = "roles")
+        val roles: List<String>,
+        /**
          * The name of the User. Each field in the `name` object is optional.
          */
         @Json(name = "name")
@@ -442,6 +448,12 @@ public data class ConnectedAppsResponse
 public data class CreateRequest
     @JvmOverloads
     constructor(
+        /**
+         * Roles to explicitly assign to this User.
+         *    See the [RBAC guide](https://stytch.com/docs/guides/rbac/role-assignment) for more information about role assignment.
+         */
+        @Json(name = "roles")
+        val roles: List<String>,
         /**
          * The email address of the end user.
          */
@@ -1076,6 +1088,12 @@ public data class GetResponse
         @Json(name = "is_locked")
         val isLocked: Boolean,
         /**
+         * Roles assigned to this User.
+         *    See the [RBAC guide](https://stytch.com/docs/guides/rbac/role-assignment) for more information about role assignment.
+         */
+        @Json(name = "roles")
+        val roles: List<String>,
+        /**
          * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
          * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
          */
@@ -1259,6 +1277,12 @@ public data class UpdateRequest
          */
         @Json(name = "external_id")
         val externalId: String? = null,
+        /**
+         * Roles to explicitly assign to this User.
+         *    See the [RBAC guide](https://stytch.com/docs/guides/rbac/role-assignment) for more information about role assignment.
+         */
+        @Json(name = "roles")
+        val roles: List<String>? = emptyList(),
     )
 
 /**
