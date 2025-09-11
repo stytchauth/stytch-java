@@ -13,6 +13,8 @@ import com.stytch.java.consumer.api.connectedapps.ConnectedApp
 import com.stytch.java.consumer.api.connectedapps.ConnectedAppImpl
 import com.stytch.java.consumer.api.cryptowallets.CryptoWallets
 import com.stytch.java.consumer.api.cryptowallets.CryptoWalletsImpl
+import com.stytch.java.consumer.api.debug.Debug
+import com.stytch.java.consumer.api.debug.DebugImpl
 import com.stytch.java.consumer.api.fraud.Fraud
 import com.stytch.java.consumer.api.fraud.FraudImpl
 import com.stytch.java.consumer.api.idp.IDP
@@ -76,6 +78,9 @@ public class StytchClient
 
         @JvmField
         public val cryptoWallets: CryptoWallets = CryptoWalletsImpl(httpClient, coroutineScope)
+
+        @JvmField
+        public val debug: Debug = DebugImpl(httpClient, coroutineScope)
 
         @JvmField
         public val fraud: Fraud = FraudImpl(fraudHttpClient, coroutineScope)
