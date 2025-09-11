@@ -40,6 +40,8 @@ import com.stytch.java.common.OptionalClientConfig
 import com.stytch.java.common.PolicyCache
 import com.stytch.java.consumer.api.connectedapps.ConnectedApp
 import com.stytch.java.consumer.api.connectedapps.ConnectedAppImpl
+import com.stytch.java.consumer.api.debug.Debug
+import com.stytch.java.consumer.api.debug.DebugImpl
 import com.stytch.java.consumer.api.fraud.Fraud
 import com.stytch.java.consumer.api.fraud.FraudImpl
 import com.stytch.java.consumer.api.m2m.M2M
@@ -79,6 +81,9 @@ public class StytchB2BClient
 
         @JvmField
         public val connectedApp: ConnectedApp = ConnectedAppImpl(httpClient, coroutineScope)
+
+        @JvmField
+        public val debug: Debug = DebugImpl(httpClient, coroutineScope)
 
         @JvmField
         public val discovery: Discovery = DiscoveryImpl(httpClient, coroutineScope)
