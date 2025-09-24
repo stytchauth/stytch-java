@@ -79,6 +79,8 @@ public data class ConnectedApp
          */
         @Json(name = "logo_url")
         val logoURL: String? = null,
+        @Json(name = "client_id_metadata_url")
+        val clientIdMetadataURL: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -172,6 +174,8 @@ public data class ConnectedAppWithClientSecret
          */
         @Json(name = "logo_url")
         val logoURL: String? = null,
+        @Json(name = "client_id_metadata_url")
+        val clientIdMetadataURL: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -246,6 +250,8 @@ public data class ConnectedAppWithNextClientSecret
          */
         @Json(name = "logo_url")
         val logoURL: String? = null,
+        @Json(name = "client_id_metadata_url")
+        val clientIdMetadataURL: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
