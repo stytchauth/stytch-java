@@ -18,6 +18,7 @@ dependencies {
     implementation(libs.moshi)
     kapt(libs.moshi.codegen)
     implementation(libs.okhttp)
+    implementation(libs.slf4j.api)
 
     testImplementation(libs.coroutines.test)
     testImplementation(libs.junit)
@@ -82,12 +83,14 @@ afterEvaluate {
             }
             repositories {
                 maven {
-                    url =
-                        layout.buildDirectory
-                            .dir("staging-deploy")
-                            .get()
-                            .asFile
-                            .toURI()
+                    url = uri("https://paradym.jfrog.io/artifactory/paradym-libs/")
+                    credentials(HttpHeaderCredentials::class) {
+                        name = "Authorization"
+                        value = "Bearer ${System.getenv("ARTIFACTORY_TOKEN")}"
+                    }
+                    authentication {
+                        create<HttpHeaderAuthentication>("header")
+                    }
                 }
             }
         }

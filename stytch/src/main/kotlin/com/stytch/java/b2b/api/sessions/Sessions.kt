@@ -45,6 +45,8 @@ import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jose4j.jwk.HttpsJwks
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.time.Instant
 import java.util.concurrent.CompletableFuture
 
@@ -557,6 +559,10 @@ internal class SessionsImpl(
     private val jwtOptions: JwtOptions,
     private val policyCache: PolicyCache,
 ) : Sessions {
+    companion object {
+        private val logger: Logger = LoggerFactory.getLogger(javaClass)
+    }
+
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
@@ -768,7 +774,10 @@ internal class SessionsImpl(
                 else ->
                     when (val netResult = authenticate(AuthenticateRequest(sessionJwt = jwt, authorizationCheck = authorizationCheck))) {
                         is StytchResult.Success -> StytchResult.Success(netResult.value.memberSession)
-                        else -> StytchResult.Success(null)
+                        is StytchResult.Error -> {
+                            logger.error("Failed to authenticate JWT", netResult.exception)
+                            StytchResult.Success(null)
+                        }
                     }
             }
         }
