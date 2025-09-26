@@ -17,6 +17,15 @@ import com.stytch.java.b2b.models.organizations.SearchQuery
 import com.stytch.java.common.methodoptions.Authorization
 
 @JsonClass(generateAdapter = false)
+public enum class StartEmailUpdateRequestDeliveryMethod {
+    @Json(name = "EMAIL_MAGIC_LINK")
+    EMAIL_MAGIC_LINK,
+
+    @Json(name = "EMAIL_OTP")
+    EMAIL_OTP,
+}
+
+@JsonClass(generateAdapter = false)
 public enum class StartEmailUpdateRequestLocale {
     @Json(name = "en")
     EN,
@@ -947,6 +956,12 @@ public data class StartEmailUpdateRequest
          */
         @Json(name = "login_template_id")
         val loginTemplateId: String? = null,
+        /**
+         * The method that should be used to verify a member's new email address. The options are `EMAIL_MAGIC_LINK` or
+         * `EMAIL_OTP`. This field is optional, if no value is provided, `EMAIL_MAGIC_LINK` will be used.
+         */
+        @Json(name = "delivery_method")
+        val deliveryMethod: StartEmailUpdateRequestDeliveryMethod? = null,
     )
 
 /**
