@@ -876,6 +876,8 @@ public data class Session
          */
         @Json(name = "authentication_factors")
         val authenticationFactors: List<AuthenticationFactor>,
+        @Json(name = "roles")
+        val roles: List<String>,
         /**
          * The timestamp when the Session was created. Values conform to the RFC 3339 standard and are expressed in UTC, e.g.
          * `2021-12-29T12:33:09Z`.
