@@ -637,7 +637,7 @@ internal class SessionsImpl(
                     lastAccessedAt = Instant.parse(stytchSessionClaim.lastAccessedAt),
                     expiresAt = Instant.parse(stytchSessionClaim.expiresAt),
                     customClaims = jwtClaims.customClaims,
-                    roles = jwtClaims.roles ?: emptyList(),
+                    roles = stytchSessionClaim.roles ?: emptyList(),
                 ),
             )
         } catch (e: JWTException.JwtTooOld) {
