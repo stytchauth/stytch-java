@@ -108,6 +108,13 @@ public data class CreateRequest
         @Json(name = "organization_slug")
         val organizationSlug: String? = null,
         /**
+         * An identifier that can be used in API calls wherever a organization_id is expected. This is a string consisting of
+         * alphanumeric, `.`, `_`, `-`, or `|` characters with a maximum length of 128 characters. External IDs must be unique
+         * within a project, but may be reused across different projects in the same workspace.
+         */
+        @Json(name = "organization_external_id")
+        val organizationExternalId: String? = null,
+        /**
          * The image URL of the Organization logo.
          */
         @Json(name = "organization_logo_url")
