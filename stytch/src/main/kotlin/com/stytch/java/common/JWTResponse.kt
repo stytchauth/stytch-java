@@ -10,3 +10,11 @@ public object JWTNullResponse : JWTResponse
 public data class JWTSessionResponse(val response: Session?) : JWTResponse
 
 public data class JWTAuthResponse(val response: AuthenticateResponse) : JWTResponse
+
+public data class JWTErrorResponse(
+    val statusCode: Int,
+    val requestId: String?,
+    val errorType: String,
+    val errorMessage: String,
+    val errorUrl: String,
+) : JWTResponse

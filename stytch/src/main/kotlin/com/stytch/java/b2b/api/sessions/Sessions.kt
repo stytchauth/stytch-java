@@ -768,6 +768,7 @@ internal class SessionsImpl(
                 else ->
                     when (val netResult = authenticate(AuthenticateRequest(sessionJwt = jwt, authorizationCheck = authorizationCheck))) {
                         is StytchResult.Success -> StytchResult.Success(netResult.value.memberSession)
+                        is StytchResult.Error -> netResult
                         else -> StytchResult.Success(null)
                     }
             }
