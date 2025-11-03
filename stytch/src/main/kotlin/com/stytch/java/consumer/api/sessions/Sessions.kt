@@ -11,7 +11,6 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.JWTAuthResponse
-import com.stytch.java.common.JWTErrorResponse
 import com.stytch.java.common.JWTException
 import com.stytch.java.common.JWTNullResponse
 import com.stytch.java.common.JWTResponse

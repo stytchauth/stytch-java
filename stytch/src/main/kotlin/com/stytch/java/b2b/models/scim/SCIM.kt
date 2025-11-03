@@ -327,14 +327,8 @@ public data class SCIMGroup
 public data class SCIMGroupImplicitRoleAssignments
     @JvmOverloads
     constructor(
-        /**
-         * The ID of the role.
-         */
         @Json(name = "role_id")
         val roleId: String,
-        /**
-         * The ID of the group.
-         */
         @Json(name = "group_id")
         val groupId: String,
         @Json(name = "group_name")

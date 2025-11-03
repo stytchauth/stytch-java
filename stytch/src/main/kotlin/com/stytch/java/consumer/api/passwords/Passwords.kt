@@ -242,15 +242,15 @@ public interface Passwords {
 
     /**
      * Adds an existing password to a User's email that doesn't have a password yet. We support migrating users from passwords
-     * stored with `bcrypt`, `scrypt`, `argon2`, `MD-5`, `SHA-1`, or `PBKDF2`. This endpoint has a rate limit of 100 requests
-     * per second.
+     * stored with `bcrypt`, `scrypt`, `argon2`, `MD-5`, `SHA-1`, `SHA-512`, or `PBKDF2`. This endpoint has a rate limit of
+     * 100 requests per second.
      */
     public suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse>
 
     /**
      * Adds an existing password to a User's email that doesn't have a password yet. We support migrating users from passwords
-     * stored with `bcrypt`, `scrypt`, `argon2`, `MD-5`, `SHA-1`, or `PBKDF2`. This endpoint has a rate limit of 100 requests
-     * per second.
+     * stored with `bcrypt`, `scrypt`, `argon2`, `MD-5`, `SHA-1`, `SHA-512`, or `PBKDF2`. This endpoint has a rate limit of
+     * 100 requests per second.
      */
     public fun migrate(
         data: MigrateRequest,
@@ -259,8 +259,8 @@ public interface Passwords {
 
     /**
      * Adds an existing password to a User's email that doesn't have a password yet. We support migrating users from passwords
-     * stored with `bcrypt`, `scrypt`, `argon2`, `MD-5`, `SHA-1`, or `PBKDF2`. This endpoint has a rate limit of 100 requests
-     * per second.
+     * stored with `bcrypt`, `scrypt`, `argon2`, `MD-5`, `SHA-1`, `SHA-512`, or `PBKDF2`. This endpoint has a rate limit of
+     * 100 requests per second.
      */
     public fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>>
 }

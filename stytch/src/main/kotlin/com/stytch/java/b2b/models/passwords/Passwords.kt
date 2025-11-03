@@ -18,6 +18,7 @@ import com.stytch.java.consumer.models.passwords.Argon2Config
 import com.stytch.java.consumer.models.passwords.MD5Config
 import com.stytch.java.consumer.models.passwords.PBKDF2Config
 import com.stytch.java.consumer.models.passwords.SHA1Config
+import com.stytch.java.consumer.models.passwords.SHA512Config
 import com.stytch.java.consumer.models.passwords.ScryptConfig
 
 @JsonClass(generateAdapter = false)
@@ -51,6 +52,9 @@ public enum class MigrateRequestHashType {
 
     @Json(name = "sha_1")
     SHA_1,
+
+    @Json(name = "sha_512")
+    SHA_512,
 
     @Json(name = "scrypt")
     SCRYPT,
@@ -322,8 +326,8 @@ public data class MigrateRequest
         @Json(name = "hash")
         val hash: String,
         /**
-         * The password hash used. Currently `bcrypt`, `scrypt`, `argon_2i`, `argon_2id`, `md_5`, `sha_1`, and `pbkdf_2` are
-         * supported.
+         * The password hash used. Currently `bcrypt`, `scrypt`, `argon_2i`, `argon_2id`, `md_5`, `sha_1`, `sha_512`, and
+         * `pbkdf_2` are supported.
          */
         @Json(name = "hash_type")
         val hashType: MigrateRequestHashType,
@@ -349,6 +353,11 @@ public data class MigrateRequest
          */
         @Json(name = "sha_1_config")
         val sha1Config: SHA1Config? = null,
+        /**
+         * Optional parameters for SHA-512 hash types.
+         */
+        @Json(name = "sha_512_config")
+        val sha512Config: SHA512Config? = null,
         /**
          * Required parameters if the scrypt is not provided in a **PHC encoded form**.
          */

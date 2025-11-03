@@ -96,7 +96,7 @@ public interface Users {
      *
      * **Warning**: This endpoint is not recommended for use in login flows. Scaling issues may occur, as search performance
      * may vary from ~150 milliseconds to 9 seconds depending on query complexity and rate limits are set to 150
-     * requests/second.
+     * requests/minute.
      *
      * Search for Users within your Stytch Project.
      *
@@ -116,7 +116,7 @@ public interface Users {
      *
      * **Warning**: This endpoint is not recommended for use in login flows. Scaling issues may occur, as search performance
      * may vary from ~150 milliseconds to 9 seconds depending on query complexity and rate limits are set to 150
-     * requests/second.
+     * requests/minute.
      *
      * Search for Users within your Stytch Project.
      *
@@ -139,7 +139,7 @@ public interface Users {
      *
      * **Warning**: This endpoint is not recommended for use in login flows. Scaling issues may occur, as search performance
      * may vary from ~150 milliseconds to 9 seconds depending on query complexity and rate limits are set to 150
-     * requests/second.
+     * requests/minute.
      *
      * Search for Users within your Stytch Project.
      *
