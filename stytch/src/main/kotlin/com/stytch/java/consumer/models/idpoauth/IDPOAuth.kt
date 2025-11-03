@@ -81,6 +81,8 @@ public data class AuthorizeRequest
          */
         @Json(name = "code_challenge")
         val codeChallenge: String? = null,
+        @Json(name = "resources")
+        val resources: List<String>? = emptyList(),
     )
 
 /**
