@@ -7,6 +7,7 @@ package com.stytch.java.consumer
 // !!!
 import com.stytch.java.common.BASE_LIVE_URL
 import com.stytch.java.common.BASE_TEST_URL
+import com.stytch.java.common.JwksCache
 import com.stytch.java.common.JwtOptions
 import com.stytch.java.common.OptionalClientConfig
 import com.stytch.java.consumer.api.connectedapps.ConnectedApp
@@ -46,7 +47,6 @@ import com.stytch.java.consumer.api.webauthn.WebAuthnImpl
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
-import org.jose4j.jwk.HttpsJwks
 
 public class StytchClient
     @JvmOverloads
@@ -65,7 +65,7 @@ public class StytchClient
                 projectId = projectId,
                 secret = secret,
             )
-        private val httpsJwks = HttpsJwks("$baseUrl/v1/sessions/jwks/$projectId")
+        private val httpsJwks = JwksCache.create("$baseUrl/v1/sessions/jwks/$projectId")
         private val jwtOptions: JwtOptions =
             JwtOptions(
                 audience = projectId,

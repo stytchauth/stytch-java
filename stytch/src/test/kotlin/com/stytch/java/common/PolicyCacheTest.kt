@@ -11,6 +11,8 @@ import com.stytch.java.b2b.models.rbac.PolicyScopePermission
 import com.stytch.java.b2b.models.sessions.AuthorizationCheck
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.junit.Before
 import org.junit.Test
 
@@ -106,6 +108,7 @@ private val policy =
 
 internal class PolicyCacheTest {
     private lateinit var rbac: RBAC
+    private val testScope = CoroutineScope(Dispatchers.Unconfined)
 
     @Before
     fun before() {
@@ -124,7 +127,7 @@ internal class PolicyCacheTest {
 
     @Test(expected = TenancyException::class)
     fun `throws TenancyException when subjectOrgId does not match authZ request organizationId`() {
-        val policyCache = PolicyCache(rbac)
+        val policyCache = PolicyCache(rbac, testScope)
         policyCache.performAuthorizationCheck(
             subjectRoles = listOf("admin"),
             subjectOrgId = "foo",
@@ -139,7 +142,7 @@ internal class PolicyCacheTest {
 
     @Test(expected = PermissionException::class)
     fun `throws PermissionException when subject does not have matching resource`() {
-        val policyCache = PolicyCache(rbac)
+        val policyCache = PolicyCache(rbac, testScope)
         policyCache.performAuthorizationCheck(
             subjectRoles = listOf("bar_writer"),
             subjectOrgId = "my-org",
@@ -154,7 +157,7 @@ internal class PolicyCacheTest {
 
     @Test(expected = PermissionException::class)
     fun `throws PermissionException when subject does not have matching action`() {
-        val policyCache = PolicyCache(rbac)
+        val policyCache = PolicyCache(rbac, testScope)
         policyCache.performAuthorizationCheck(
             subjectRoles = listOf("global_writer"),
             subjectOrgId = "my-org",
@@ -169,7 +172,7 @@ internal class PolicyCacheTest {
 
     @Test
     fun `succeeds when subject has matching resource and action`() {
-        val policyCache = PolicyCache(rbac)
+        val policyCache = PolicyCache(rbac, testScope)
         policyCache.performAuthorizationCheck(
             subjectRoles = listOf("global_writer"),
             subjectOrgId = "my-org",
@@ -184,7 +187,7 @@ internal class PolicyCacheTest {
 
     @Test
     fun `succeeds when subject has matching resource and star action`() {
-        val policyCache = PolicyCache(rbac)
+        val policyCache = PolicyCache(rbac, testScope)
         policyCache.performAuthorizationCheck(
             subjectRoles = listOf("admin"),
             subjectOrgId = "my-org",
