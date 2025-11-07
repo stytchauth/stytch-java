@@ -5,7 +5,10 @@ import com.stytch.java.b2b.models.rbac.Policy
 import com.stytch.java.b2b.models.rbac.PolicyRequest
 import com.stytch.java.b2b.models.sessions.AuthorizationCheck
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.Instant
@@ -18,8 +21,10 @@ public class PermissionException(authorizationCheck: AuthorizationCheck) :
 
 internal class PolicyCache(
     private val client: RBAC,
-    private val coroutineScope: CoroutineScope,
+    coroutineScope: CoroutineScope,
 ) {
+    private val job = SupervisorJob(coroutineScope.coroutineContext[Job])
+    private val scope = CoroutineScope(coroutineScope.coroutineContext + job)
     private var cachedPolicy: Policy? = null
     private var policyLastUpdate: Instant? = null
     private var backgroundRefreshStarted = false
@@ -56,12 +61,20 @@ internal class PolicyCache(
     }
 
     private fun startBackgroundRefresh() {
-        coroutineScope.launch {
-            while (true) {
+        scope.launch {
+            while (isActive) {
                 delay(REFRESH_INTERVAL_MS)
                 refreshPolicy()
             }
         }
+    }
+
+    /**
+     * Cancels the background refresh job.
+     * This allows the refresh job to be stopped independently of the parent scope.
+     */
+    fun cancelBackgroundRefresh() {
+        job.cancel()
     }
 
     fun performAuthorizationCheck(
