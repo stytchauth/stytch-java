@@ -180,7 +180,7 @@ public data class ResetRequest
          *       are provided.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * A base64url encoded one time secret used to validate that the request starts and ends on the same device.
          */
@@ -272,7 +272,7 @@ public data class ResetResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
          */

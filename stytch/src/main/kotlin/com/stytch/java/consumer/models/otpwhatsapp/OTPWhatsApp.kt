@@ -65,7 +65,7 @@ public enum class SendRequestLocale {
 }
 
 /**
-* Request type for `Whatsapp.loginOrCreate`.
+* Request type for `WhatsApp.loginOrCreate`.
 */
 @JsonClass(generateAdapter = true)
 public data class LoginOrCreateRequest
@@ -114,7 +114,7 @@ public data class LoginOrCreateRequest
     )
 
 /**
-* Response type for `Whatsapp.loginOrCreate`.
+* Response type for `WhatsApp.loginOrCreate`.
 */
 @JsonClass(generateAdapter = true)
 public data class LoginOrCreateResponse
@@ -150,7 +150,7 @@ public data class LoginOrCreateResponse
     )
 
 /**
-* Request type for `Whatsapp.send`.
+* Request type for `WhatsApp.send`.
 */
 @JsonClass(generateAdapter = true)
 public data class SendRequest
@@ -201,11 +201,11 @@ public data class SendRequest
          * The `session_jwt` associated with a User's existing Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
     )
 
 /**
-* Response type for `Whatsapp.send`.
+* Response type for `WhatsApp.send`.
 */
 @JsonClass(generateAdapter = true)
 public data class SendResponse

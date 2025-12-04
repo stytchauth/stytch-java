@@ -60,38 +60,42 @@ internal class M2MTest {
                 every { jsonWebKeys } returns listOf(jsonWebKey)
             }
         jwtNoScopes =
-            JsonWebSignature().apply {
-                payload =
-                    JwtClaims().apply {
-                        issuer = "stytch.com/$projectId"
-                        audience = listOf(projectId)
-                        subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
-                        setExpirationTimeMinutesInTheFuture(5F)
-                        setGeneratedJwtId()
-                        setIssuedAtToNow()
-                        setNotBeforeMinutesInThePast(0F)
-                    }.toJson()
-                key = rsaJsonWebKey.privateKey
-                keyIdHeaderValue = rsaJsonWebKey.keyId
-                algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
-            }.compactSerialization
+            JsonWebSignature()
+                .apply {
+                    payload =
+                        JwtClaims()
+                            .apply {
+                                issuer = "stytch.com/$projectId"
+                                audience = listOf(projectId)
+                                subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
+                                setExpirationTimeMinutesInTheFuture(5F)
+                                setGeneratedJwtId()
+                                setIssuedAtToNow()
+                                setNotBeforeMinutesInThePast(0F)
+                            }.toJson()
+                    key = rsaJsonWebKey.privateKey
+                    keyIdHeaderValue = rsaJsonWebKey.keyId
+                    algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
+                }.compactSerialization
         jwtWithScopes =
-            JsonWebSignature().apply {
-                payload =
-                    JwtClaims().apply {
-                        issuer = "stytch.com/$projectId"
-                        audience = listOf(projectId)
-                        subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
-                        setClaim("scope", "read:user write:user")
-                        setExpirationTimeMinutesInTheFuture(5F)
-                        setGeneratedJwtId()
-                        setIssuedAtToNow()
-                        setNotBeforeMinutesInThePast(0F)
-                    }.toJson()
-                key = rsaJsonWebKey.privateKey
-                keyIdHeaderValue = rsaJsonWebKey.keyId
-                algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
-            }.compactSerialization
+            JsonWebSignature()
+                .apply {
+                    payload =
+                        JwtClaims()
+                            .apply {
+                                issuer = "stytch.com/$projectId"
+                                audience = listOf(projectId)
+                                subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
+                                setClaim("scope", "read:user write:user")
+                                setExpirationTimeMinutesInTheFuture(5F)
+                                setGeneratedJwtId()
+                                setIssuedAtToNow()
+                                setNotBeforeMinutesInThePast(0F)
+                            }.toJson()
+                    key = rsaJsonWebKey.privateKey
+                    keyIdHeaderValue = rsaJsonWebKey.keyId
+                    algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
+                }.compactSerialization
         m2m =
             M2MImpl(
                 httpClient =
@@ -185,7 +189,8 @@ internal class M2MTest {
                 )
             val payload = moshi.adapter(Map::class.java).toJson(expectedPayload)
             val expectedRequest =
-                Request.Builder()
+                Request
+                    .Builder()
                     .url("http://test/v1/public/$projectId/oauth2/token")
                     .post(payload.toRequestBody(expectedMediaType))
                     .build()

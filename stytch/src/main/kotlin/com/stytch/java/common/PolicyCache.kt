@@ -13,11 +13,14 @@ import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.Instant
 
-public class TenancyException(subjectOrgId: String, authCheckOrgId: String) :
-    RuntimeException("Subject organizationId $subjectOrgId does not match authZ request organizationId $authCheckOrgId")
+public class TenancyException(
+    subjectOrgId: String,
+    authCheckOrgId: String,
+) : RuntimeException("Subject organizationId $subjectOrgId does not match authZ request organizationId $authCheckOrgId")
 
-public class PermissionException(authorizationCheck: AuthorizationCheck) :
-    RuntimeException("Permission denied for request $authorizationCheck")
+public class PermissionException(
+    authorizationCheck: AuthorizationCheck,
+) : RuntimeException("Permission denied for request $authorizationCheck")
 
 internal class PolicyCache(
     private val client: RBAC,
@@ -56,6 +59,7 @@ internal class PolicyCache(
                 cachedPolicy = result.value.policy
                 policyLastUpdate = Instant.now()
             }
+
             else -> {}
         }
     }
@@ -94,8 +98,7 @@ internal class PolicyCache(
                     val hasMatchingAction = it.actions.contains("*") || it.actions.contains(authorizationCheck.action)
                     val hasMatchingResource = it.resourceId == authorizationCheck.resourceId
                     return@filter hasMatchingAction && hasMatchingResource
-                }
-                .isNotEmpty()
+                }.isNotEmpty()
         hasMatchingActionAndResource && return
         throw PermissionException(authorizationCheck)
     }

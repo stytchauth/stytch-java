@@ -11,7 +11,6 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.JWTAuthResponse
-import com.stytch.java.common.JWTErrorResponse
 import com.stytch.java.common.JWTException
 import com.stytch.java.common.JWTNullResponse
 import com.stytch.java.common.JWTResponse
@@ -577,11 +576,17 @@ internal class SessionsImpl(
     ): StytchResult<JWTResponse> =
         withContext(Dispatchers.IO) {
             when (val localResult = authenticateJwtLocal(jwt = jwt, maxTokenAgeSeconds = maxTokenAgeSeconds)) {
-                is StytchResult.Success -> StytchResult.Success(JWTSessionResponse(localResult.value))
-                else ->
+                is StytchResult.Success -> {
+                    StytchResult.Success(JWTSessionResponse(localResult.value))
+                }
+
+                else -> {
                     when (val netResult = authenticate(AuthenticateRequest(sessionJwt = jwt))) {
-                        is StytchResult.Success -> StytchResult.Success(JWTAuthResponse(netResult.value))
-                        is StytchResult.Error ->
+                        is StytchResult.Success -> {
+                            StytchResult.Success(JWTAuthResponse(netResult.value))
+                        }
+
+                        is StytchResult.Error -> {
                             when (val exception = netResult.exception) {
                                 is StytchException.Response -> {
                                     val errorResponse = exception.reason
@@ -595,9 +600,14 @@ internal class SessionsImpl(
                                         ),
                                     )
                                 }
-                                else -> StytchResult.Success(JWTNullResponse)
+
+                                else -> {
+                                    StytchResult.Success(JWTNullResponse)
+                                }
                             }
+                        }
                     }
+                }
             }
         }
 
@@ -615,9 +625,10 @@ internal class SessionsImpl(
         jwt: String,
         maxTokenAgeSeconds: Int?,
     ): CompletableFuture<StytchResult<JWTResponse>> =
-        coroutineScope.async {
-            authenticateJwt(jwt, maxTokenAgeSeconds)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                authenticateJwt(jwt, maxTokenAgeSeconds)
+            }.asCompletableFuture()
 
     override suspend fun authenticateJwtLocal(
         jwt: String,
@@ -681,8 +692,9 @@ internal class SessionsImpl(
         maxTokenAgeSeconds: Int?,
         leeway: Int,
     ): CompletableFuture<StytchResult<Session?>> =
-        coroutineScope.async {
-            authenticateJwtLocal(jwt, maxTokenAgeSeconds, leeway)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                authenticateJwtLocal(jwt, maxTokenAgeSeconds, leeway)
+            }.asCompletableFuture()
     // ENDMANUAL(authenticateJWT_impl)
 }

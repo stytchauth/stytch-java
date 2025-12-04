@@ -59,7 +59,7 @@ public data class AuthorizeRequest
          * The `session_jwt` associated with a User's existing Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * Space separated list that specifies how the Authorization Server should prompt the user for reauthentication and
          * consent. Only `consent` is supported today.
@@ -155,7 +155,7 @@ public data class AuthorizeStartRequest
          * The `session_jwt` associated with a User's existing Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * Space separated list that specifies how the Authorization Server should prompt the user for reauthentication and
          * consent. Only `consent` is supported today.

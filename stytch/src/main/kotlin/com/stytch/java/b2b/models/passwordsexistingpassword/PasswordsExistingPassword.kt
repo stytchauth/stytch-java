@@ -85,7 +85,7 @@ public data class ResetRequest
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * Add a custom claims map to the Session being authenticated. Claims are only created if a Session is initialized by
          * providing a value in
@@ -154,7 +154,7 @@ public data class ResetResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
          */

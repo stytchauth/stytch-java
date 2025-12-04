@@ -1111,7 +1111,7 @@ public data class AttestRequest
          * The `session_jwt` for the session that you wish to add the trusted auth token authentication factor to.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * If the `telemetry_id` is passed, as part of this request, Stytch will call the
          * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) and store the associated fingerprints
@@ -1148,7 +1148,7 @@ public data class AttestResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The `user` object affected by this API call. See the [Get user endpoint](https://stytch.com/docs/api/get-user) for
          * complete response field details.
@@ -1202,7 +1202,7 @@ public data class AuthenticateRequest
          * If the signature is valid and the underlying session is still active then Stytch will return a new JWT.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * Add a custom claims map to the Session being authenticated. Claims are only created if a Session is initialized by
          * providing a value in `session_duration_minutes`. Claims will be included on the Session object and in the JWT. To
@@ -1256,7 +1256,7 @@ public data class AuthenticateResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The `user` object affected by this API call. See the [Get user endpoint](https://stytch.com/docs/api/get-user) for
          * complete response field details.
@@ -1350,7 +1350,7 @@ public data class ExchangeAccessTokenResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The `user` object affected by this API call. See the [Get user endpoint](https://stytch.com/docs/api/get-user) for
          * complete response field details.
@@ -1534,7 +1534,7 @@ public data class MigrateResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The `user` object affected by this API call. See the [Get user endpoint](https://stytch.com/docs/api/get-user) for
          * complete response field details.
@@ -1582,7 +1582,7 @@ public data class RevokeRequest
          * A JWT for the session to revoke.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
     )
 
 /**

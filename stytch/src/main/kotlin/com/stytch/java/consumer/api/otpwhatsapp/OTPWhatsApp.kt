@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
 
-public interface Whatsapp {
+public interface WhatsApp {
     /**
      * Send a One-Time Passcode (OTP) to a User's WhatsApp. If you'd like to create a user and send them a passcode with one
      * request, use our [log in or create](https://stytch.com/docs/api/whatsapp-login-or-create) endpoint.
@@ -156,10 +156,10 @@ public interface Whatsapp {
     public fun loginOrCreateCompletable(data: LoginOrCreateRequest): CompletableFuture<StytchResult<LoginOrCreateResponse>>
 }
 
-internal class WhatsappImpl(
+internal class WhatsAppImpl(
     private val httpClient: HttpClient,
     private val coroutineScope: CoroutineScope,
-) : Whatsapp {
+) : WhatsApp {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override suspend fun send(data: SendRequest): StytchResult<SendResponse> =

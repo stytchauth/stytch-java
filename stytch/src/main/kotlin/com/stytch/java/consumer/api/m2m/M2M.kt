@@ -189,9 +189,11 @@ internal class M2MImpl(
         coroutineScope.launch { callback(token(data)) }
     }
 
-    override fun tokenCompletable(data: TokenRequest): CompletableFuture<StytchResult<TokenResponse>> {
-        return coroutineScope.async { token(data) }.asCompletableFuture()
-    }
+    override fun tokenCompletable(data: TokenRequest): CompletableFuture<StytchResult<TokenResponse>> =
+        coroutineScope
+            .async {
+                token(data)
+            }.asCompletableFuture()
     // ENDMANUAL(token_impl)
 
     // MANUAL(authenticateToken_impl)(SERVICE_METHOD)
@@ -239,9 +241,11 @@ internal class M2MImpl(
         coroutineScope.launch { callback(authenticateToken(data)) }
     }
 
-    override fun authenticateTokenCompletable(data: AuthenticateTokenRequest): CompletableFuture<StytchResult<AuthenticateTokenResponse>> {
-        return coroutineScope.async { authenticateToken(data) }.asCompletableFuture()
-    }
+    override fun authenticateTokenCompletable(data: AuthenticateTokenRequest): CompletableFuture<StytchResult<AuthenticateTokenResponse>> =
+        coroutineScope
+            .async {
+                authenticateToken(data)
+            }.asCompletableFuture()
 
     companion object {
         @JvmStatic

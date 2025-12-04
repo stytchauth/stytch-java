@@ -70,7 +70,8 @@ public class StytchB2BClient
                 projectId = projectId,
                 secret = secret,
             )
-        private val httpsJwks = JwksCache.create("$baseUrl/v1/b2b/sessions/jwks/$projectId")
+        private val jwksCache = JwksCache("$baseUrl/v1/b2b/sessions/jwks/$projectId", coroutineScope)
+        private val httpsJwks = jwksCache.getHttpsJwks()
         private val jwtOptions: JwtOptions =
             JwtOptions(
                 audience = projectId,

@@ -40,8 +40,16 @@ val javadocJar: TaskProvider<Jar> by tasks.registering(Jar::class) {
 // Configure module publishing
 tasks.kotlinSourcesJar {
     archiveClassifier.set("sources")
-    from(sourceSets.main.get().kotlin.srcDirs)
-    from(sourceSets.main.get().java.srcDirs)
+    from(
+        sourceSets.main
+            .get()
+            .kotlin.srcDirs,
+    )
+    from(
+        sourceSets.main
+            .get()
+            .java.srcDirs,
+    )
 }
 artifacts {
     archives(tasks.kotlinSourcesJar)

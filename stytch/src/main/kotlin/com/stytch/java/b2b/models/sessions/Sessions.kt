@@ -246,7 +246,7 @@ public data class AttestRequest
          * The `session_jwt` for the session that you wish to add the trusted auth token authentication factor to.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * If the `telemetry_id` is passed, as part of this request, Stytch will call the
          * [Fingerprint Lookup API](https://stytch.com/docs/fraud/api/fingerprint-lookup) and store the associated fingerprints
@@ -288,7 +288,7 @@ public data class AttestResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The [Member object](https://stytch.com/docs/b2b/api/member-object)
          */
@@ -347,7 +347,7 @@ public data class AuthenticateRequest
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * Add a custom claims map to the Session being authenticated. Claims are only created if a Session is initialized by
          * providing a value in
@@ -406,7 +406,7 @@ public data class AuthenticateResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The [Member object](https://stytch.com/docs/b2b/api/member-object)
          */
@@ -507,7 +507,7 @@ public data class ExchangeAccessTokenResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The [Member object](https://stytch.com/docs/b2b/api/member-object)
          */
@@ -561,7 +561,7 @@ public data class ExchangeRequest
          * The `session_jwt` belonging to the member that you wish to associate the email with.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * Set the session lifetime to be this many minutes from now. This will start a new session if one doesn't already exist,
          *   returning both an opaque `session_token` and `session_jwt` for this session. Remember that the `session_jwt` will
@@ -642,7 +642,7 @@ public data class ExchangeResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The [Member object](https://stytch.com/docs/b2b/api/member-object)
          */
@@ -868,7 +868,7 @@ public data class MigrateResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The [Member object](https://stytch.com/docs/b2b/api/member-object)
          */
@@ -910,7 +910,7 @@ public data class RevokeRequest
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * Globally unique UUID that identifies a specific Member. The `member_id` is critical to perform operations on a Member,
          * so be sure to preserve this value.

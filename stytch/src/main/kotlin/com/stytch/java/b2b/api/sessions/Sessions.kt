@@ -764,13 +764,17 @@ internal class SessionsImpl(
                 val localResult =
                     authenticateJwtLocal(jwt = jwt, maxTokenAgeSeconds = maxTokenAgeSeconds, authorizationCheck = authorizationCheck)
             ) {
-                is StytchResult.Success -> StytchResult.Success(localResult.value)
-                else ->
+                is StytchResult.Success -> {
+                    StytchResult.Success(localResult.value)
+                }
+
+                else -> {
                     when (val netResult = authenticate(AuthenticateRequest(sessionJwt = jwt, authorizationCheck = authorizationCheck))) {
                         is StytchResult.Success -> StytchResult.Success(netResult.value.memberSession)
                         is StytchResult.Error -> netResult
                         else -> StytchResult.Success(null)
                     }
+                }
             }
         }
 
@@ -790,9 +794,10 @@ internal class SessionsImpl(
         maxTokenAgeSeconds: Int?,
         authorizationCheck: AuthorizationCheck?,
     ): CompletableFuture<StytchResult<MemberSession?>> =
-        coroutineScope.async {
-            authenticateJwt(jwt, maxTokenAgeSeconds, authorizationCheck)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                authenticateJwt(jwt, maxTokenAgeSeconds, authorizationCheck)
+            }.asCompletableFuture()
 
     override suspend fun authenticateJwtLocal(
         jwt: String,
@@ -875,8 +880,9 @@ internal class SessionsImpl(
         authorizationCheck: AuthorizationCheck?,
         leeway: Int,
     ): CompletableFuture<StytchResult<MemberSession?>> =
-        coroutineScope.async {
-            authenticateJwtLocal(jwt, maxTokenAgeSeconds, authorizationCheck, leeway)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                authenticateJwtLocal(jwt, maxTokenAgeSeconds, authorizationCheck, leeway)
+            }.asCompletableFuture()
     // ENDMANUAL(authenticateJWT_impl)
 }

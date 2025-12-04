@@ -32,13 +32,15 @@ private fun createHttpClient(
     secret: String,
 ): OkHttpClient {
     val credentials = Credentials.basic(username = projectId, password = secret)
-    return OkHttpClient.Builder()
+    return OkHttpClient
+        .Builder()
         .readTimeout(ONE_HUNDRED_TWENTY, TimeUnit.SECONDS)
         .writeTimeout(ONE_HUNDRED_TWENTY, TimeUnit.SECONDS)
         .connectTimeout(ONE_HUNDRED_TWENTY, TimeUnit.SECONDS)
         .addNetworkInterceptor {
             it.proceed(
-                it.request()
+                it
+                    .request()
                     .newBuilder()
                     // OkHttp is adding a charset to the content-type which is rejected by the API
                     // see: https://github.com/square/okhttp/issues/3081
@@ -47,8 +49,7 @@ private fun createHttpClient(
                     .header("Authorization", credentials)
                     .build(),
             )
-        }
-        .build()
+        }.build()
 }
 
 internal class HttpClient(
@@ -63,11 +64,14 @@ internal class HttpClient(
         path: String,
         params: Map<String, Any> = emptyMap(),
     ): HttpUrl =
-        "$baseUrl$path".toHttpUrl().newBuilder().apply {
-            params.forEach { (key, value) ->
-                addQueryParameter(key, value.toString())
-            }
-        }.build()
+        "$baseUrl$path"
+            .toHttpUrl()
+            .newBuilder()
+            .apply {
+                params.forEach { (key, value) ->
+                    addQueryParameter(key, value.toString())
+                }
+            }.build()
 
     internal inline fun <reified T> mapResponseToClass(
         response: Response,
@@ -109,16 +113,22 @@ internal class HttpClient(
                                                 mapResponseToClass(response, ErrorResponse::class.java)
                                                     ?: mapResponseToClass(response, OAuth2ErrorResponse::class.java)
                                         ) {
-                                            is ErrorResponse -> StytchException.Response(errorResponse)
-                                            is OAuth2ErrorResponse ->
+                                            is ErrorResponse -> {
+                                                StytchException.Response(errorResponse)
+                                            }
+
+                                            is OAuth2ErrorResponse -> {
                                                 StytchException.Response(
                                                     errorResponse.toErrorResponse(),
                                                 )
-                                            else ->
+                                            }
+
+                                            else -> {
                                                 StytchException.Critical(
                                                     reason = IllegalStateException("Unable to map error data"),
                                                     response = response.body?.source()?.readUtf8(),
                                                 )
+                                            }
                                         },
                                     )
                                 }
@@ -143,7 +153,8 @@ internal class HttpClient(
         headers: Map<String, String> = emptyMap(),
     ): StytchResult<T> {
         val request =
-            Request.Builder()
+            Request
+                .Builder()
                 .url(buildUrl(path, params))
                 .headers(headers.toHeaders())
                 .build()
@@ -161,7 +172,8 @@ internal class HttpClient(
         mediaType: MediaType = "application/json".toMediaType(),
     ): StytchResult<T> {
         val request =
-            Request.Builder()
+            Request
+                .Builder()
                 .url(buildUrl(path))
                 .post(json.toRequestBody(mediaType))
                 .headers(headers.toHeaders())
@@ -180,7 +192,8 @@ internal class HttpClient(
         mediaType: MediaType = "application/json".toMediaType(),
     ): StytchResult<T> {
         val request =
-            Request.Builder()
+            Request
+                .Builder()
                 .url(buildUrl(path))
                 .put(json.toRequestBody(mediaType))
                 .headers(headers.toHeaders())
@@ -197,7 +210,8 @@ internal class HttpClient(
         headers: Map<String, String> = emptyMap(),
     ): StytchResult<T> {
         val request =
-            Request.Builder()
+            Request
+                .Builder()
                 .url(buildUrl(path, emptyMap()))
                 .delete()
                 .headers(headers.toHeaders())

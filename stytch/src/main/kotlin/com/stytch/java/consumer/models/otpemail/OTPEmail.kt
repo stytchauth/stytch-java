@@ -189,7 +189,7 @@ public data class SendRequest
          * The `session_jwt` associated with a User's existing Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * Use a custom template for login emails. By default, it will use your default email template. The template must be a
          * template using our built-in customizations or a custom HTML email for OTP - Login.

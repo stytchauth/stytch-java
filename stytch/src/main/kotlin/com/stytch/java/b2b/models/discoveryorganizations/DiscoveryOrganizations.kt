@@ -71,7 +71,7 @@ public data class ListRequest
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
     )
 
 /**
@@ -412,7 +412,7 @@ public data class CreateResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The [Member object](https://stytch.com/docs/b2b/api/member-object)
          */

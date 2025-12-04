@@ -78,7 +78,7 @@ public data class AuthenticateRequest
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * The Intermediate Session Token. This token does not necessarily belong to a specific instance of a Member, but
          * represents a bag of factors that may be converted to a member session. The token can be used with the
@@ -186,7 +186,7 @@ public data class AuthenticateResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
          */

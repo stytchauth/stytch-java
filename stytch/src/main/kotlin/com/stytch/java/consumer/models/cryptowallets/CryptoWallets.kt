@@ -114,7 +114,7 @@ public data class AuthenticateRequest
          * The `session_jwt` associated with a User's existing Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * Add a custom claims map to the Session being authenticated. Claims are only created if a Session is initialized by
          * providing a value in `session_duration_minutes`. Claims will be included on the Session object and in the JWT. To
@@ -161,7 +161,7 @@ public data class AuthenticateResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The `user` object affected by this API call. See the [Get user endpoint](https://stytch.com/docs/api/get-user) for
          * complete response field details.
@@ -229,7 +229,7 @@ public data class AuthenticateStartRequest
          * The `session_jwt` associated with a User's existing Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * The parameters for a Sign In With Ethereum (SIWE) message. May only be passed if the `crypto_wallet_type` is `ethereum`.
          */

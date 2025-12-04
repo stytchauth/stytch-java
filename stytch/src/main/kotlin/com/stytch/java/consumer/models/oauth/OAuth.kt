@@ -74,7 +74,7 @@ public data class AttachRequest
          * The `session_jwt` associated with a User's existing Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
     )
 
 /**
@@ -152,7 +152,7 @@ public data class AuthenticateRequest
          * provided.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * Add a custom claims map to the Session being authenticated. Claims are only created if a Session is initialized by
          * providing a value in `session_duration_minutes`. Claims will be included on the Session object and in the JWT. To
@@ -215,7 +215,7 @@ public data class AuthenticateResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The `provider_values` object lists relevant identifiers, values, and scopes for a given OAuth provider. For example
          * this object will include a provider's `access_token` that you can use to access the provider's API for a given user.
