@@ -283,9 +283,10 @@ internal class WebAuthnImpl(
     }
 
     override fun registerStartCompletable(data: RegisterStartRequest): CompletableFuture<StytchResult<RegisterStartResponse>> =
-        coroutineScope.async {
-            registerStart(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                registerStart(data)
+            }.asCompletableFuture()
 
     override suspend fun register(data: RegisterRequest): StytchResult<RegisterResponse> =
         withContext(Dispatchers.IO) {
@@ -305,9 +306,10 @@ internal class WebAuthnImpl(
     }
 
     override fun registerCompletable(data: RegisterRequest): CompletableFuture<StytchResult<RegisterResponse>> =
-        coroutineScope.async {
-            register(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                register(data)
+            }.asCompletableFuture()
 
     override suspend fun authenticateStart(data: AuthenticateStartRequest): StytchResult<AuthenticateStartResponse> =
         withContext(Dispatchers.IO) {
@@ -327,9 +329,10 @@ internal class WebAuthnImpl(
     }
 
     override fun authenticateStartCompletable(data: AuthenticateStartRequest): CompletableFuture<StytchResult<AuthenticateStartResponse>> =
-        coroutineScope.async {
-            authenticateStart(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                authenticateStart(data)
+            }.asCompletableFuture()
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
@@ -349,9 +352,10 @@ internal class WebAuthnImpl(
     }
 
     override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
-        coroutineScope.async {
-            authenticate(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                authenticate(data)
+            }.asCompletableFuture()
 
     override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> =
         withContext(Dispatchers.IO) {
@@ -371,9 +375,10 @@ internal class WebAuthnImpl(
     }
 
     override fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>> =
-        coroutineScope.async {
-            update(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                update(data)
+            }.asCompletableFuture()
 
     override suspend fun listCredentials(data: ListCredentialsRequest): StytchResult<ListCredentialsResponse> =
         withContext(Dispatchers.IO) {
@@ -396,7 +401,8 @@ internal class WebAuthnImpl(
     }
 
     override fun listCredentialsCompletable(data: ListCredentialsRequest): CompletableFuture<StytchResult<ListCredentialsResponse>> =
-        coroutineScope.async {
-            listCredentials(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                listCredentials(data)
+            }.asCompletableFuture()
 }
