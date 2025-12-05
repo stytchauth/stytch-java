@@ -1,6 +1,8 @@
 package com.stytch.java.common
 
-public sealed class StytchException(public open val reason: Any?) : Exception() {
+public sealed class StytchException(
+    public open val reason: Any?,
+) : Exception() {
     /**
      * Critical exception wrapper
      * @property reason provides a Throwable with information on what went wrong.
@@ -15,5 +17,7 @@ public sealed class StytchException(public open val reason: Any?) : Exception() 
      * Response exception wrapper
      * @property reason provides a StytchErrorResponse object with a reason as to what went wrong.
      */
-    public data class Response(override val reason: ErrorResponse) : StytchException(reason)
+    public data class Response(
+        override val reason: ErrorResponse,
+    ) : StytchException(reason)
 }

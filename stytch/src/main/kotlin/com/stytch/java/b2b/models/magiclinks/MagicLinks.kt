@@ -64,7 +64,7 @@ public data class AuthenticateRequest
          *       are provided.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * Set the session lifetime to be this many minutes from now. This will start a new session if one doesn't already exist,
          *   returning both an opaque `session_token` and `session_jwt` for this session. Remember that the `session_jwt` will
@@ -173,7 +173,7 @@ public data class AuthenticateResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
          */

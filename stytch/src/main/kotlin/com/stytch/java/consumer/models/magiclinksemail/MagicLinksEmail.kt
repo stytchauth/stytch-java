@@ -389,7 +389,7 @@ public data class SendRequest
          * The `session_jwt` of the user to associate the email with.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * Used to determine which language to use when sending the user this delivery method. Parameter is a
          * [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.

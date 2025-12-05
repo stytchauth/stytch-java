@@ -7,9 +7,13 @@ public sealed interface JWTResponse
 
 public object JWTNullResponse : JWTResponse
 
-public data class JWTSessionResponse(val response: Session?) : JWTResponse
+public data class JWTSessionResponse(
+    val response: Session?,
+) : JWTResponse
 
-public data class JWTAuthResponse(val response: AuthenticateResponse) : JWTResponse
+public data class JWTAuthResponse(
+    val response: AuthenticateResponse,
+) : JWTResponse
 
 public data class JWTErrorResponse(
     val statusCode: Int,

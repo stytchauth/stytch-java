@@ -13,8 +13,8 @@ import com.stytch.java.consumer.api.otpemail.Email
 import com.stytch.java.consumer.api.otpemail.EmailImpl
 import com.stytch.java.consumer.api.otpsms.Sms
 import com.stytch.java.consumer.api.otpsms.SmsImpl
-import com.stytch.java.consumer.api.otpwhatsapp.Whatsapp
-import com.stytch.java.consumer.api.otpwhatsapp.WhatsappImpl
+import com.stytch.java.consumer.api.otpwhatsapp.WhatsApp
+import com.stytch.java.consumer.api.otpwhatsapp.WhatsAppImpl
 import com.stytch.java.consumer.models.otp.AuthenticateRequest
 import com.stytch.java.consumer.models.otp.AuthenticateResponse
 import com.stytch.java.http.HttpClient
@@ -29,7 +29,7 @@ import java.util.concurrent.CompletableFuture
 public interface OTPs {
     public val sms: Sms
 
-    public val whatsapp: Whatsapp
+    public val whatsapp: WhatsApp
 
     public val email: Email
 
@@ -68,7 +68,7 @@ internal class OTPsImpl(
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     override val sms: Sms = SmsImpl(httpClient, coroutineScope)
-    override val whatsapp: Whatsapp = WhatsappImpl(httpClient, coroutineScope)
+    override val whatsapp: WhatsApp = WhatsAppImpl(httpClient, coroutineScope)
     override val email: Email = EmailImpl(httpClient, coroutineScope)
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
@@ -89,7 +89,8 @@ internal class OTPsImpl(
     }
 
     override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
-        coroutineScope.async {
-            authenticate(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                authenticate(data)
+            }.asCompletableFuture()
 }

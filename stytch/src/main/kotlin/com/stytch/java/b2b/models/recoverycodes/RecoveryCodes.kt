@@ -125,7 +125,7 @@ public data class RecoverRequest
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * Set the session lifetime to be this many minutes from now. This will start a new session if one doesn't already exist,
          *   returning both an opaque `session_token` and `session_jwt` for this session. Remember that the `session_jwt` will
@@ -200,7 +200,7 @@ public data class RecoverResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The number of recovery codes remaining for a Member.
          */

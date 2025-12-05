@@ -179,13 +179,15 @@ internal class HttpClientTest {
         runTest {
             val mockRequest: Request = mockk(relaxed = true, relaxUnitFun = true)
             val mockResponse =
-                Response.Builder().apply {
-                    request(mockRequest)
-                    protocol(Protocol.HTTP_2)
-                    code(200)
-                    message("")
-                    body("{}".toResponseBody("application/json".toMediaType()))
-                }.build()
+                Response
+                    .Builder()
+                    .apply {
+                        request(mockRequest)
+                        protocol(Protocol.HTTP_2)
+                        code(200)
+                        message("")
+                        body("{}".toResponseBody("application/json".toMediaType()))
+                    }.build()
             val slot = slot<Callback>()
             val mockCall: Call =
                 mockk {

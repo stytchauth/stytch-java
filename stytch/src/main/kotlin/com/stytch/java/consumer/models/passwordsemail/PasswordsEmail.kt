@@ -74,7 +74,7 @@ public data class ResetRequest
          * The `session_jwt` associated with a User's existing Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * A base64url encoded one time secret used to validate that the request starts and ends on the same device.
          */
@@ -137,7 +137,7 @@ public data class ResetResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The `user` object affected by this API call. See the [Get user endpoint](https://stytch.com/docs/api/get-user) for
          * complete response field details.

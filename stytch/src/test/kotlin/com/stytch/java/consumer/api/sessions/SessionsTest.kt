@@ -72,38 +72,42 @@ internal class SessionsTest {
                     ),
             )
         jwtNoClaims =
-            JsonWebSignature().apply {
-                payload =
-                    JwtClaims().apply {
-                        issuer = "stytch.com/$projectId"
-                        audience = listOf(projectId)
-                        subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
-                        setExpirationTimeMinutesInTheFuture(5F)
-                        setGeneratedJwtId()
-                        setIssuedAtToNow()
-                        setNotBeforeMinutesInThePast(0F)
-                    }.toJson()
-                key = rsaJsonWebKey.privateKey
-                keyIdHeaderValue = rsaJsonWebKey.keyId
-                algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
-            }.compactSerialization
+            JsonWebSignature()
+                .apply {
+                    payload =
+                        JwtClaims()
+                            .apply {
+                                issuer = "stytch.com/$projectId"
+                                audience = listOf(projectId)
+                                subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
+                                setExpirationTimeMinutesInTheFuture(5F)
+                                setGeneratedJwtId()
+                                setIssuedAtToNow()
+                                setNotBeforeMinutesInThePast(0F)
+                            }.toJson()
+                    key = rsaJsonWebKey.privateKey
+                    keyIdHeaderValue = rsaJsonWebKey.keyId
+                    algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
+                }.compactSerialization
         jwtWithClaims =
-            JsonWebSignature().apply {
-                payload =
-                    JwtClaims().apply {
-                        issuer = "stytch.com/$projectId"
-                        audience = listOf(projectId)
-                        subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
-                        setClaim("https://stytch.com/session", sessionClaim)
-                        setExpirationTimeMinutesInTheFuture(5F)
-                        setGeneratedJwtId()
-                        setIssuedAtToNow()
-                        setNotBeforeMinutesInThePast(0F)
-                    }.toJson()
-                key = rsaJsonWebKey.privateKey
-                keyIdHeaderValue = rsaJsonWebKey.keyId
-                algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
-            }.compactSerialization
+            JsonWebSignature()
+                .apply {
+                    payload =
+                        JwtClaims()
+                            .apply {
+                                issuer = "stytch.com/$projectId"
+                                audience = listOf(projectId)
+                                subject = "user-live-fde03dd1-fff7-4b3c-9b31-ead3fbc224de"
+                                setClaim("https://stytch.com/session", sessionClaim)
+                                setExpirationTimeMinutesInTheFuture(5F)
+                                setGeneratedJwtId()
+                                setIssuedAtToNow()
+                                setNotBeforeMinutesInThePast(0F)
+                            }.toJson()
+                    key = rsaJsonWebKey.privateKey
+                    keyIdHeaderValue = rsaJsonWebKey.keyId
+                    algorithmHeaderValue = AlgorithmIdentifiers.RSA_USING_SHA256
+                }.compactSerialization
         sessions =
             SessionsImpl(
                 httpClient = mockk(relaxed = true, relaxUnitFun = true),

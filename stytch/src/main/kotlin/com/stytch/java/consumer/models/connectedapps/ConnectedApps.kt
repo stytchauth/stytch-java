@@ -46,7 +46,7 @@ public data class ConnectedApp
          * Array of redirect URI values for use in OAuth Authorization flows.
          */
         @Json(name = "redirect_urls")
-        val redirectURLS: List<String>,
+        val redirectURLs: List<String>,
         @Json(name = "access_token_expiry_minutes")
         val accessTokenExpiryMinutes: Int,
         @Json(name = "access_token_template_content")
@@ -55,7 +55,7 @@ public data class ConnectedApp
          * Array of redirect URI values for use in OIDC Logout flows.
          */
         @Json(name = "post_logout_redirect_urls")
-        val postLogoutRedirectURLS: List<String>,
+        val postLogoutRedirectURLs: List<String>,
         /**
          * Valid for first party clients only. If true, the client does not need to request explicit user consent for the
          * `offline_access` scope.
@@ -136,7 +136,7 @@ public data class ConnectedAppWithClientSecret
          * Array of redirect URI values for use in OAuth Authorization flows.
          */
         @Json(name = "redirect_urls")
-        val redirectURLS: List<String>,
+        val redirectURLs: List<String>,
         @Json(name = "access_token_expiry_minutes")
         val accessTokenExpiryMinutes: Int,
         @Json(name = "access_token_template_content")
@@ -145,7 +145,7 @@ public data class ConnectedAppWithClientSecret
          * Array of redirect URI values for use in OIDC Logout flows.
          */
         @Json(name = "post_logout_redirect_urls")
-        val postLogoutRedirectURLS: List<String>,
+        val postLogoutRedirectURLs: List<String>,
         /**
          * Valid for first party clients only. If true, the client does not need to request explicit user consent for the
          * `offline_access` scope.
@@ -220,7 +220,7 @@ public data class ConnectedAppWithNextClientSecret
          * Array of redirect URI values for use in OAuth Authorization flows.
          */
         @Json(name = "redirect_urls")
-        val redirectURLS: List<String>,
+        val redirectURLs: List<String>,
         @Json(name = "next_client_secret")
         val nextClientSecret: String,
         @Json(name = "access_token_expiry_minutes")
@@ -231,7 +231,7 @@ public data class ConnectedAppWithNextClientSecret
          * Array of redirect URI values for use in OIDC Logout flows.
          */
         @Json(name = "post_logout_redirect_urls")
-        val postLogoutRedirectURLS: List<String>,
+        val postLogoutRedirectURLs: List<String>,
         /**
          * Valid for first party clients only. If true, the client does not need to request explicit user consent for the
          * `offline_access` scope.

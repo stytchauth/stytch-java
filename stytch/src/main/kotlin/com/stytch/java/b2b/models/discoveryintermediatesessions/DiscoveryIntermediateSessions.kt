@@ -150,7 +150,7 @@ public data class ExchangeResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * The [Member object](https://stytch.com/docs/b2b/api/member-object)
          */

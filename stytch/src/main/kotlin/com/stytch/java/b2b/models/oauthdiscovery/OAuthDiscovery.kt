@@ -27,7 +27,7 @@ public data class AuthenticateRequest
         @Json(name = "session_duration_minutes")
         val sessionDurationMinutes: Int? = null,
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         @Json(name = "session_custom_claims")
         val sessionCustomClaims: Map<String, Any?>? = emptyMap(),
         /**

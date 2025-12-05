@@ -278,7 +278,7 @@ public data class AuthenticateRequest
          * The `session_jwt` belonging to the member that you wish to associate the email with.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * Set the session lifetime to be this many minutes from now. This will start a new session if one doesn't already exist,
          *   returning both an opaque `session_token` and `session_jwt` for this session. Remember that the `session_jwt` will
@@ -377,7 +377,7 @@ public data class AuthenticateResponse
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String,
+        val sessionJWT: String,
         /**
          * This field is deprecated.
          */

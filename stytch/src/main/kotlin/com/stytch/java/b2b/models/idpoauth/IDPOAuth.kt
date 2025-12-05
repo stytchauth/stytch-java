@@ -68,7 +68,7 @@ public data class AuthorizeRequest
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * Space separated list that specifies how the Authorization Server should prompt the user for reauthentication and
          * consent. Only `consent` is supported today.
@@ -172,7 +172,7 @@ public data class AuthorizeStartRequest
          * The JSON Web Token (JWT) for a given Stytch Session.
          */
         @Json(name = "session_jwt")
-        val sessionJwt: String? = null,
+        val sessionJWT: String? = null,
         /**
          * Space separated list that specifies how the Authorization Server should prompt the user for reauthentication and
          * consent. Only `consent` is supported today.

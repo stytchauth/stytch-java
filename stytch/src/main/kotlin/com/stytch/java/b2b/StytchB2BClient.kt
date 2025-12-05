@@ -55,7 +55,11 @@ import kotlinx.coroutines.SupervisorJob
 
 public class StytchB2BClient
     @JvmOverloads
-    constructor(projectId: String, secret: String, clientConfig: OptionalClientConfig = OptionalClientConfig()) {
+    constructor(
+        projectId: String,
+        secret: String,
+        clientConfig: OptionalClientConfig = OptionalClientConfig(),
+    ) {
         private val coroutineScope = CoroutineScope(SupervisorJob())
         private val baseUrl = getBaseUrl(projectId, clientConfig)
         private val httpClient: HttpClient =
@@ -70,7 +74,8 @@ public class StytchB2BClient
                 projectId = projectId,
                 secret = secret,
             )
-        private val httpsJwks = JwksCache.create("$baseUrl/v1/b2b/sessions/jwks/$projectId")
+        private val jwksCache = JwksCache("$baseUrl/v1/b2b/sessions/jwks/$projectId", coroutineScope)
+        private val httpsJwks = jwksCache.getHttpsJwks()
         private val jwtOptions: JwtOptions =
             JwtOptions(
                 audience = projectId,

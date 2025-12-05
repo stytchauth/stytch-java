@@ -54,7 +54,7 @@ public data class CreateRequest
          * Array of redirect URI values for use in OAuth Authorization flows.
          */
         @Json(name = "redirect_urls")
-        val redirectURLS: List<String>? = emptyList(),
+        val redirectURLs: List<String>? = emptyList(),
         /**
          * Valid for first party clients only. If `true`, an authorization token granted to this Client can be exchanged for a
          * full Stytch session.
@@ -80,7 +80,7 @@ public data class CreateRequest
          * Array of redirect URI values for use in OIDC Logout flows.
          */
         @Json(name = "post_logout_redirect_urls")
-        val postLogoutRedirectURLS: List<String>? = emptyList(),
+        val postLogoutRedirectURLs: List<String>? = emptyList(),
         /**
          * The logo URL of the Connected App, if any.
          */
@@ -271,7 +271,7 @@ public data class UpdateRequest
          * Array of redirect URI values for use in OAuth Authorization flows.
          */
         @Json(name = "redirect_urls")
-        val redirectURLS: List<String>? = emptyList(),
+        val redirectURLs: List<String>? = emptyList(),
         /**
          * Valid for first party clients only. If `true`, an authorization token granted to this Client can be exchanged for a
          * full Stytch session.
@@ -297,7 +297,7 @@ public data class UpdateRequest
          * Array of redirect URI values for use in OIDC Logout flows.
          */
         @Json(name = "post_logout_redirect_urls")
-        val postLogoutRedirectURLS: List<String>? = emptyList(),
+        val postLogoutRedirectURLs: List<String>? = emptyList(),
         /**
          * The logo URL of the Connected App, if any.
          */
