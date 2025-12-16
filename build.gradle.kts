@@ -4,13 +4,18 @@ plugins {
     kotlin("kapt") version libs.versions.kotlin
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
     id("org.jetbrains.dokka") version "1.9.20" apply false
+    id("org.jreleaser") version "1.20.0" apply false
 }
 
 buildscript {
     configurations.all {
-        resolutionStrategy.eachDependency {
-            if (requested.group.startsWith("com.fasterxml.jackson")) {
-                useVersion("2.19.1")
+        resolutionStrategy {
+            force("org.apache.tika:tika-core:3.2.3")
+            force("org.eclipse.jgit:org.eclipse.jgit:5.13.4.202507202350-r")
+            eachDependency {
+                if (requested.group.startsWith("com.fasterxml.jackson")) {
+                    useVersion("2.19.1")
+                }
             }
         }
     }

@@ -4,7 +4,7 @@ plugins {
     kotlin("kapt") version libs.versions.kotlin
     id("maven-publish")
     id("org.jetbrains.dokka")
-    id("org.jreleaser").version("1.20.0")
+    id("org.jreleaser")
 }
 
 repositories {
