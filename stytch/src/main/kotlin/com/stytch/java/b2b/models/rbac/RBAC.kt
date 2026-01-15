@@ -10,6 +10,17 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
+public data class OrgPolicy
+    @JvmOverloads
+    constructor(
+        /**
+         * An array of [Role objects](https://stytch.com/docs/b2b/api/rbac-role-object).
+         */
+        @Json(name = "roles")
+        val roles: List<PolicyRole>,
+    )
+
+@JsonClass(generateAdapter = true)
 public data class Policy
     @JvmOverloads
     constructor(

@@ -81,6 +81,8 @@ public data class ConnectedApp
         val logoURL: String? = null,
         @Json(name = "client_id_metadata_url")
         val clientIdMetadataURL: String? = null,
+        @Json(name = "creation_method")
+        val creationMethod: String? = null,
     )
 
 @JsonClass(generateAdapter = true)

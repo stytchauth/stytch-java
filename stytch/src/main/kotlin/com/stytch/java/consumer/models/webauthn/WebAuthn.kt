@@ -183,6 +183,8 @@ public data class AuthenticateStartRequest
          */
         @Json(name = "return_passkey_credential_options")
         val returnPasskeyCredentialOptions: Boolean? = null,
+        @Json(name = "use_base64_url_encoding")
+        val useBase64URLEncoding: Boolean? = null,
     )
 
 /**
