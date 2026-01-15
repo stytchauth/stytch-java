@@ -666,9 +666,10 @@ internal class MembersImpl(
         data: UpdateRequest,
         methodOptions: UpdateRequestOptions?,
     ): CompletableFuture<StytchResult<UpdateResponse>> =
-        coroutineScope.async {
-            update(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                update(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun delete(
         data: DeleteRequest,
@@ -697,9 +698,10 @@ internal class MembersImpl(
         data: DeleteRequest,
         methodOptions: DeleteRequestOptions?,
     ): CompletableFuture<StytchResult<DeleteResponse>> =
-        coroutineScope.async {
-            delete(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                delete(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun reactivate(
         data: ReactivateRequest,
@@ -729,9 +731,10 @@ internal class MembersImpl(
         data: ReactivateRequest,
         methodOptions: ReactivateRequestOptions?,
     ): CompletableFuture<StytchResult<ReactivateResponse>> =
-        coroutineScope.async {
-            reactivate(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                reactivate(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun deleteMFAPhoneNumber(
         data: DeleteMFAPhoneNumberRequest,
@@ -760,9 +763,10 @@ internal class MembersImpl(
         data: DeleteMFAPhoneNumberRequest,
         methodOptions: DeleteMFAPhoneNumberRequestOptions?,
     ): CompletableFuture<StytchResult<DeleteMFAPhoneNumberResponse>> =
-        coroutineScope.async {
-            deleteMFAPhoneNumber(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                deleteMFAPhoneNumber(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun deleteTOTP(
         data: DeleteTOTPRequest,
@@ -791,9 +795,10 @@ internal class MembersImpl(
         data: DeleteTOTPRequest,
         methodOptions: DeleteTOTPRequestOptions?,
     ): CompletableFuture<StytchResult<DeleteTOTPResponse>> =
-        coroutineScope.async {
-            deleteTOTP(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                deleteTOTP(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun search(
         data: SearchRequest,
@@ -823,9 +828,10 @@ internal class MembersImpl(
         data: SearchRequest,
         methodOptions: SearchRequestOptions?,
     ): CompletableFuture<StytchResult<SearchResponse>> =
-        coroutineScope.async {
-            search(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                search(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun deletePassword(
         data: DeletePasswordRequest,
@@ -854,9 +860,10 @@ internal class MembersImpl(
         data: DeletePasswordRequest,
         methodOptions: DeletePasswordRequestOptions?,
     ): CompletableFuture<StytchResult<DeletePasswordResponse>> =
-        coroutineScope.async {
-            deletePassword(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                deletePassword(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun dangerouslyGet(data: DangerouslyGetRequest): StytchResult<GetResponse> =
         withContext(Dispatchers.IO) {
@@ -879,9 +886,10 @@ internal class MembersImpl(
     }
 
     override fun dangerouslyGetCompletable(data: DangerouslyGetRequest): CompletableFuture<StytchResult<GetResponse>> =
-        coroutineScope.async {
-            dangerouslyGet(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                dangerouslyGet(data)
+            }.asCompletableFuture()
 
     override suspend fun oidcProviders(data: OIDCProviderInformationRequest): StytchResult<OIDCProvidersResponse> =
         withContext(Dispatchers.IO) {
@@ -904,9 +912,10 @@ internal class MembersImpl(
     }
 
     override fun oidcProvidersCompletable(data: OIDCProviderInformationRequest): CompletableFuture<StytchResult<OIDCProvidersResponse>> =
-        coroutineScope.async {
-            oidcProviders(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                oidcProviders(data)
+            }.asCompletableFuture()
 
     override suspend fun unlinkRetiredEmail(
         data: UnlinkRetiredEmailRequest,
@@ -936,9 +945,10 @@ internal class MembersImpl(
         data: UnlinkRetiredEmailRequest,
         methodOptions: UnlinkRetiredEmailRequestOptions?,
     ): CompletableFuture<StytchResult<UnlinkRetiredEmailResponse>> =
-        coroutineScope.async {
-            unlinkRetiredEmail(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                unlinkRetiredEmail(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun startEmailUpdate(
         data: StartEmailUpdateRequest,
@@ -968,9 +978,10 @@ internal class MembersImpl(
         data: StartEmailUpdateRequest,
         methodOptions: StartEmailUpdateRequestOptions?,
     ): CompletableFuture<StytchResult<StartEmailUpdateResponse>> =
-        coroutineScope.async {
-            startEmailUpdate(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                startEmailUpdate(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun getConnectedApps(
         data: GetConnectedAppsRequest,
@@ -1003,9 +1014,10 @@ internal class MembersImpl(
         data: GetConnectedAppsRequest,
         methodOptions: GetConnectedAppsRequestOptions?,
     ): CompletableFuture<StytchResult<GetConnectedAppsResponse>> =
-        coroutineScope.async {
-            getConnectedApps(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                getConnectedApps(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun deleteExternalId(
         data: DeleteExternalIdRequest,
@@ -1034,9 +1046,10 @@ internal class MembersImpl(
         data: DeleteExternalIdRequest,
         methodOptions: DeleteExternalIdRequestOptions?,
     ): CompletableFuture<StytchResult<DeleteExternalIdResponse>> =
-        coroutineScope.async {
-            deleteExternalId(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                deleteExternalId(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun create(
         data: CreateRequest,
@@ -1066,9 +1079,10 @@ internal class MembersImpl(
         data: CreateRequest,
         methodOptions: CreateRequestOptions?,
     ): CompletableFuture<StytchResult<CreateResponse>> =
-        coroutineScope.async {
-            create(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                create(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
         withContext(Dispatchers.IO) {
@@ -1091,7 +1105,8 @@ internal class MembersImpl(
     }
 
     override fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>> =
-        coroutineScope.async {
-            get(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                get(data)
+            }.asCompletableFuture()
 }

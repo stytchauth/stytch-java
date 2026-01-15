@@ -179,9 +179,10 @@ internal class OIDCImpl(
         data: CreateConnectionRequest,
         methodOptions: CreateConnectionRequestOptions?,
     ): CompletableFuture<StytchResult<CreateConnectionResponse>> =
-        coroutineScope.async {
-            createConnection(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                createConnection(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun updateConnection(
         data: UpdateConnectionRequest,
@@ -211,7 +212,8 @@ internal class OIDCImpl(
         data: UpdateConnectionRequest,
         methodOptions: UpdateConnectionRequestOptions?,
     ): CompletableFuture<StytchResult<UpdateConnectionResponse>> =
-        coroutineScope.async {
-            updateConnection(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                updateConnection(data, methodOptions)
+            }.asCompletableFuture()
 }

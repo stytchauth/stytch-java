@@ -114,7 +114,8 @@ internal class RBACImpl(
     }
 
     override fun policyCompletable(data: PolicyRequest): CompletableFuture<StytchResult<PolicyResponse>> =
-        coroutineScope.async {
-            policy(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                policy(data)
+            }.asCompletableFuture()
 }
