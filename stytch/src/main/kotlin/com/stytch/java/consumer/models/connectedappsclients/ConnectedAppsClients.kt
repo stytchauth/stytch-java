@@ -11,6 +11,7 @@ import com.squareup.moshi.JsonClass
 import com.stytch.java.consumer.models.connectedapps.ConnectedApp
 import com.stytch.java.consumer.models.connectedapps.ConnectedAppWithClientSecret
 import com.stytch.java.consumer.models.connectedapps.ResultsMetadata
+import com.stytch.java.consumer.models.connectedapps.SearchConnectedAppsQuery
 
 @JsonClass(generateAdapter = false)
 public enum class CreateRequestClientType {
@@ -215,6 +216,8 @@ public data class SearchRequest
          */
         @Json(name = "limit")
         val limit: Long? = null,
+        @Json(name = "query")
+        val query: SearchConnectedAppsQuery? = null,
     )
 
 /**

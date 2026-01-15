@@ -9,6 +9,51 @@ package com.stytch.java.consumer.models.connectedapps
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = false)
+public enum class SearchConnectedAppsOperandClientTypes {
+    @Json(name = "first_party")
+    FIRST_PARTY,
+
+    @Json(name = "first_party_public")
+    FIRST_PARTY_PUBLIC,
+
+    @Json(name = "third_party")
+    THIRD_PARTY,
+
+    @Json(name = "third_party_public")
+    THIRD_PARTY_PUBLIC,
+}
+
+@JsonClass(generateAdapter = false)
+public enum class SearchConnectedAppsOperandCreationMethods {
+    @Json(name = "dcr")
+    DCR,
+
+    @Json(name = "cimd")
+    CIMD,
+
+    @Json(name = "manual")
+    MANUAL,
+}
+
+@JsonClass(generateAdapter = false)
+public enum class SearchConnectedAppsOperandFilterTypeSearchConnectedAppsOperandFilterType {
+    @Json(name = "UNKNOWN_OPERAND")
+    UNKNOWN_OPERAND,
+
+    @Json(name = "client_ids")
+    CLIENT_IDS,
+
+    @Json(name = "client_name_prefix")
+    CLIENT_NAME_PREFIX,
+
+    @Json(name = "client_types")
+    CLIENT_TYPES,
+
+    @Json(name = "creation_methods")
+    CREATION_METHODS,
+}
+
 @JsonClass(generateAdapter = true)
 public data class ConnectedApp
     @JvmOverloads
@@ -81,6 +126,8 @@ public data class ConnectedApp
         val logoURL: String? = null,
         @Json(name = "client_id_metadata_url")
         val clientIdMetadataURL: String? = null,
+        @Json(name = "creation_method")
+        val creationMethod: String? = null,
     )
 
 @JsonClass(generateAdapter = true)
@@ -270,4 +317,33 @@ public data class ResultsMetadata
          */
         @Json(name = "next_cursor")
         val nextCursor: String? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class SearchConnectedAppsOperand
+    @JvmOverloads
+    constructor(
+        @Json(name = "client_ids")
+        val clientIds: List<String>,
+        @Json(name = "client_types")
+        val clientTypes: List<SearchConnectedAppsOperandClientTypes>,
+        @Json(name = "creation_methods")
+        val creationMethods: List<SearchConnectedAppsOperandCreationMethods>,
+        @Json(name = "filter")
+        val filter: SearchConnectedAppsOperandFilterTypeSearchConnectedAppsOperandFilterType? = null,
+        @Json(name = "client_name_prefix")
+        val clientNamePrefix: String? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public class SearchConnectedAppsOperandFilterType
+    @JvmOverloads
+    constructor()
+
+@JsonClass(generateAdapter = true)
+public data class SearchConnectedAppsQuery
+    @JvmOverloads
+    constructor(
+        @Json(name = "operands")
+        val operands: List<SearchConnectedAppsOperand>,
     )
