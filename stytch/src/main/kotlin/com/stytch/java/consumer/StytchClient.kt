@@ -50,7 +50,11 @@ import kotlinx.coroutines.SupervisorJob
 
 public class StytchClient
     @JvmOverloads
-    constructor(projectId: String, secret: String, clientConfig: OptionalClientConfig = OptionalClientConfig()) {
+    constructor(
+        projectId: String,
+        secret: String,
+        clientConfig: OptionalClientConfig = OptionalClientConfig(),
+    ) {
         private val coroutineScope = CoroutineScope(SupervisorJob())
         private val baseUrl = getBaseUrl(projectId, clientConfig)
         private val httpClient: HttpClient =

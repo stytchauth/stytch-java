@@ -203,9 +203,10 @@ internal class OAuthProvidersImpl(
     }
 
     override fun googleCompletable(data: ProviderInformationRequest): CompletableFuture<StytchResult<GoogleResponse>> =
-        coroutineScope.async {
-            google(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                google(data)
+            }.asCompletableFuture()
 
     override suspend fun microsoft(data: ProviderInformationRequest): StytchResult<MicrosoftResponse> =
         withContext(Dispatchers.IO) {
@@ -232,9 +233,10 @@ internal class OAuthProvidersImpl(
     }
 
     override fun microsoftCompletable(data: ProviderInformationRequest): CompletableFuture<StytchResult<MicrosoftResponse>> =
-        coroutineScope.async {
-            microsoft(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                microsoft(data)
+            }.asCompletableFuture()
 
     override suspend fun slack(data: SlackRequest): StytchResult<SlackResponse> =
         withContext(Dispatchers.IO) {
@@ -257,9 +259,10 @@ internal class OAuthProvidersImpl(
     }
 
     override fun slackCompletable(data: SlackRequest): CompletableFuture<StytchResult<SlackResponse>> =
-        coroutineScope.async {
-            slack(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                slack(data)
+            }.asCompletableFuture()
 
     override suspend fun hubspot(data: ProviderInformationRequest): StytchResult<HubspotResponse> =
         withContext(Dispatchers.IO) {
@@ -282,9 +285,10 @@ internal class OAuthProvidersImpl(
     }
 
     override fun hubspotCompletable(data: ProviderInformationRequest): CompletableFuture<StytchResult<HubspotResponse>> =
-        coroutineScope.async {
-            hubspot(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                hubspot(data)
+            }.asCompletableFuture()
 
     override suspend fun github(data: ProviderInformationRequest): StytchResult<GithubResponse> =
         withContext(Dispatchers.IO) {
@@ -307,7 +311,8 @@ internal class OAuthProvidersImpl(
     }
 
     override fun githubCompletable(data: ProviderInformationRequest): CompletableFuture<StytchResult<GithubResponse>> =
-        coroutineScope.async {
-            github(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                github(data)
+            }.asCompletableFuture()
 }
