@@ -301,6 +301,7 @@ public interface Sessions {
     // ADDIMPORT: import com.stytch.java.common.StytchSessionClaim
     // ADDIMPORT: import com.stytch.java.common.parseJWTClaims
     // ADDIMPORT: import com.stytch.java.common.ParsedJWTClaims
+    // ADDIMPORT: import com.stytch.java.common.JWTErrorResponse
     // ADDIMPORT: import com.stytch.java.common.JWTResponse
     // ADDIMPORT: import com.stytch.java.common.JWTAuthResponse
     // ADDIMPORT: import com.stytch.java.common.JWTNullResponse

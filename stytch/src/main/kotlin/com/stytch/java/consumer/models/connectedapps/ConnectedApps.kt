@@ -62,6 +62,8 @@ public data class ConnectedApp
          */
         @Json(name = "bypass_consent_for_offline_access")
         val bypassConsentForOfflineAccess: Boolean,
+        @Json(name = "creation_method")
+        val creationMethod: String,
         /**
          * The last four characters of the client secret.
          */

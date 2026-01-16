@@ -17,6 +17,9 @@ import com.stytch.java.b2b.models.organizationsmembers.CreateRequest
 import com.stytch.java.b2b.models.organizationsmembers.CreateRequestOptions
 import com.stytch.java.b2b.models.organizationsmembers.CreateResponse
 import com.stytch.java.b2b.models.organizationsmembers.DangerouslyGetRequest
+import com.stytch.java.b2b.models.organizationsmembers.DeleteExternalIdRequest
+import com.stytch.java.b2b.models.organizationsmembers.DeleteExternalIdRequestOptions
+import com.stytch.java.b2b.models.organizationsmembers.DeleteExternalIdResponse
 import com.stytch.java.b2b.models.organizationsmembers.DeleteMFAPhoneNumberRequest
 import com.stytch.java.b2b.models.organizationsmembers.DeleteMFAPhoneNumberRequestOptions
 import com.stytch.java.b2b.models.organizationsmembers.DeleteMFAPhoneNumberResponse
@@ -566,6 +569,22 @@ public interface Members {
         methodOptions: GetConnectedAppsRequestOptions? = null,
     ): CompletableFuture<StytchResult<GetConnectedAppsResponse>>
 
+    public suspend fun deleteExternalId(
+        data: DeleteExternalIdRequest,
+        methodOptions: DeleteExternalIdRequestOptions? = null,
+    ): StytchResult<DeleteExternalIdResponse>
+
+    public fun deleteExternalId(
+        data: DeleteExternalIdRequest,
+        methodOptions: DeleteExternalIdRequestOptions? = null,
+        callback: (StytchResult<DeleteExternalIdResponse>) -> Unit,
+    )
+
+    public fun deleteExternalIdCompletable(
+        data: DeleteExternalIdRequest,
+        methodOptions: DeleteExternalIdRequestOptions? = null,
+    ): CompletableFuture<StytchResult<DeleteExternalIdResponse>>
+
     /**
      * Creates a Member. An `organization_id` and `email_address` are required.
      */
@@ -998,6 +1017,38 @@ internal class MembersImpl(
         coroutineScope
             .async {
                 getConnectedApps(data, methodOptions)
+            }.asCompletableFuture()
+
+    override suspend fun deleteExternalId(
+        data: DeleteExternalIdRequest,
+        methodOptions: DeleteExternalIdRequestOptions?,
+    ): StytchResult<DeleteExternalIdResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
+
+            httpClient.delete("/v1/b2b/organizations/${data.organizationId}/members/${data.memberId}/external_id", headers)
+        }
+
+    override fun deleteExternalId(
+        data: DeleteExternalIdRequest,
+        methodOptions: DeleteExternalIdRequestOptions?,
+        callback: (StytchResult<DeleteExternalIdResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(deleteExternalId(data, methodOptions))
+        }
+    }
+
+    override fun deleteExternalIdCompletable(
+        data: DeleteExternalIdRequest,
+        methodOptions: DeleteExternalIdRequestOptions?,
+    ): CompletableFuture<StytchResult<DeleteExternalIdResponse>> =
+        coroutineScope
+            .async {
+                deleteExternalId(data, methodOptions)
             }.asCompletableFuture()
 
     override suspend fun create(

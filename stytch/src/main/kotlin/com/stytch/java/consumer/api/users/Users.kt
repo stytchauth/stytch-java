@@ -21,6 +21,8 @@ import com.stytch.java.consumer.models.users.DeleteCryptoWalletRequest
 import com.stytch.java.consumer.models.users.DeleteCryptoWalletResponse
 import com.stytch.java.consumer.models.users.DeleteEmailRequest
 import com.stytch.java.consumer.models.users.DeleteEmailResponse
+import com.stytch.java.consumer.models.users.DeleteExternalIdRequest
+import com.stytch.java.consumer.models.users.DeleteExternalIdResponse
 import com.stytch.java.consumer.models.users.DeleteOAuthRegistrationRequest
 import com.stytch.java.consumer.models.users.DeleteOAuthRegistrationResponse
 import com.stytch.java.consumer.models.users.DeletePasswordRequest
@@ -410,6 +412,15 @@ public interface Users {
         data: DeleteOAuthRegistrationRequest,
     ): CompletableFuture<StytchResult<DeleteOAuthRegistrationResponse>>
 
+    public suspend fun deleteExternalId(data: DeleteExternalIdRequest): StytchResult<DeleteExternalIdResponse>
+
+    public fun deleteExternalId(
+        data: DeleteExternalIdRequest,
+        callback: (StytchResult<DeleteExternalIdResponse>) -> Unit,
+    )
+
+    public fun deleteExternalIdCompletable(data: DeleteExternalIdRequest): CompletableFuture<StytchResult<DeleteExternalIdResponse>>
+
     /**
      * User Get Connected Apps retrieves a list of Connected Apps with which the User has successfully completed an
      * authorization flow.
@@ -796,6 +807,28 @@ internal class UsersImpl(
         coroutineScope
             .async {
                 deleteOAuthRegistration(data)
+            }.asCompletableFuture()
+
+    override suspend fun deleteExternalId(data: DeleteExternalIdRequest): StytchResult<DeleteExternalIdResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
+            httpClient.delete("/v1/users/${data.userId}/external_id", headers)
+        }
+
+    override fun deleteExternalId(
+        data: DeleteExternalIdRequest,
+        callback: (StytchResult<DeleteExternalIdResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(deleteExternalId(data))
+        }
+    }
+
+    override fun deleteExternalIdCompletable(data: DeleteExternalIdRequest): CompletableFuture<StytchResult<DeleteExternalIdResponse>> =
+        coroutineScope
+            .async {
+                deleteExternalId(data)
             }.asCompletableFuture()
 
     override suspend fun connectedApps(data: ConnectedAppsRequest): StytchResult<ConnectedAppsResponse> =

@@ -59,6 +59,25 @@ public data class CreateRequestOptions
         }
     }
 
+public data class DeleteExternalIdRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
+        }
+    }
+
 public data class DeleteMFAPhoneNumberRequestOptions
     @JvmOverloads
     constructor(
@@ -385,6 +404,32 @@ public data class DangerouslyGetRequest
          */
         @Json(name = "include_deleted")
         val includeDeleted: Boolean? = null,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class DeleteExternalIdRequest
+    @JvmOverloads
+    constructor(
+        @Json(name = "organization_id")
+        val organizationId: String,
+        @Json(name = "member_id")
+        val memberId: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class DeleteExternalIdResponse
+    @JvmOverloads
+    constructor(
+        @Json(name = "request_id")
+        val requestId: String,
+        @Json(name = "member_id")
+        val memberId: String,
+        @Json(name = "member")
+        val member: Member,
+        @Json(name = "organization")
+        val organization: Organization,
+        @Json(name = "status_code")
+        val statusCode: Int,
     )
 
 /**
