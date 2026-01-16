@@ -1,8 +1,12 @@
 package com.stytch.java.common
 
 import com.stytch.java.b2b.api.rbac.RBAC
+import com.stytch.java.b2b.api.rbacorganizations.Organizations
+import com.stytch.java.b2b.models.rbac.OrgPolicy
 import com.stytch.java.b2b.models.rbac.Policy
 import com.stytch.java.b2b.models.rbac.PolicyRequest
+import com.stytch.java.b2b.models.rbac.PolicyRole
+import com.stytch.java.b2b.models.rbacorganizations.GetOrgPolicyRequest
 import com.stytch.java.b2b.models.sessions.AuthorizationCheck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -22,14 +26,21 @@ public class PermissionException(
     authorizationCheck: AuthorizationCheck,
 ) : RuntimeException("Permission denied for request $authorizationCheck")
 
+private data class CachedOrgPolicy(
+    val orgPolicy: OrgPolicy,
+    val lastUpdate: Instant,
+)
+
 internal class PolicyCache(
-    private val client: RBAC,
+    private val rbacClient: RBAC,
+    private val rbacOrganizationsClient: Organizations,
     coroutineScope: CoroutineScope,
 ) {
     private val job = SupervisorJob(coroutineScope.coroutineContext[Job])
     private val scope = CoroutineScope(coroutineScope.coroutineContext + job)
     private var cachedPolicy: Policy? = null
     private var policyLastUpdate: Instant? = null
+    private val cachedOrgPolicies: MutableMap<String, CachedOrgPolicy> = mutableMapOf()
     private var backgroundRefreshStarted = false
 
     companion object {
@@ -53,11 +64,38 @@ internal class PolicyCache(
         return cachedPolicy ?: throw Exception("Error fetching the policy")
     }
 
+    private fun getOrgPolicy(
+        orgId: String,
+        invalidate: Boolean = false,
+    ): OrgPolicy? {
+        val cached = cachedOrgPolicies[orgId]
+        val isMissing = cached == null
+        val isStale = cached != null && Duration.between(cached.lastUpdate, Instant.now()).seconds > CACHE_TTL_SECONDS
+
+        if (invalidate || isMissing || isStale) {
+            refreshOrgPolicy(orgId)
+        }
+
+        return cachedOrgPolicies[orgId]?.orgPolicy
+    }
+
     private fun refreshPolicy() {
-        when (val result = client.policyCompletable(PolicyRequest()).get()) {
+        when (val result = rbacClient.policyCompletable(PolicyRequest()).get()) {
             is StytchResult.Success -> {
                 cachedPolicy = result.value.policy
                 policyLastUpdate = Instant.now()
+            }
+
+            else -> {}
+        }
+    }
+
+    private fun refreshOrgPolicy(orgId: String) {
+        when (val result = rbacOrganizationsClient.getOrgPolicyCompletable(GetOrgPolicyRequest(orgId)).get()) {
+            is StytchResult.Success -> {
+                result.value.orgPolicy?.let { orgPolicy ->
+                    cachedOrgPolicies[orgId] = CachedOrgPolicy(orgPolicy, Instant.now())
+                }
             }
 
             else -> {}
@@ -69,6 +107,10 @@ internal class PolicyCache(
             while (isActive) {
                 delay(REFRESH_INTERVAL_MS)
                 refreshPolicy()
+                // Refresh all cached org policies
+                cachedOrgPolicies.keys.toList().forEach { orgId ->
+                    refreshOrgPolicy(orgId)
+                }
             }
         }
     }
@@ -89,9 +131,18 @@ internal class PolicyCache(
         if (authorizationCheck.organizationId != subjectOrgId) {
             throw TenancyException(subjectOrgId, authorizationCheck.organizationId)
         }
+
         val policy = getPolicy()
+        val orgPolicy = getOrgPolicy(subjectOrgId)
+
+        // Combine roles from both global policy and org-specific policy
+        val allRoles: List<PolicyRole> = buildList {
+            addAll(policy.roles)
+            orgPolicy?.roles?.let { addAll(it) }
+        }
+
         val hasMatchingActionAndResource =
-            policy.roles
+            allRoles
                 .filter { it.roleId in subjectRoles }
                 .flatMap { it.permissions }
                 .filter {

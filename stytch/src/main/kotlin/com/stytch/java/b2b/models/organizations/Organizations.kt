@@ -832,6 +832,8 @@ public data class Organization
          */
         @Json(name = "allowed_third_party_connected_apps")
         val allowedThirdPartyConnectedApps: List<String>,
+        @Json(name = "custom_roles")
+        val customRoles: List<CustomRole>,
         /**
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */

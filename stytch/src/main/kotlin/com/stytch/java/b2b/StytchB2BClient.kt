@@ -23,6 +23,7 @@ import com.stytch.java.b2b.api.passwords.Passwords
 import com.stytch.java.b2b.api.passwords.PasswordsImpl
 import com.stytch.java.b2b.api.rbac.RBAC
 import com.stytch.java.b2b.api.rbac.RBACImpl
+import com.stytch.java.b2b.api.rbacorganizations.OrganizationsImpl as RBACOrganizationsImpl
 import com.stytch.java.b2b.api.recoverycodes.RecoveryCodes
 import com.stytch.java.b2b.api.recoverycodes.RecoveryCodesImpl
 import com.stytch.java.b2b.api.scim.SCIM
@@ -82,7 +83,12 @@ public class StytchB2BClient
                 issuers = listOf("stytch.com/$projectId", baseUrl),
                 type = "JWT",
             )
-        private val policyCache: PolicyCache = PolicyCache(RBACImpl(httpClient, coroutineScope), coroutineScope)
+        private val policyCache: PolicyCache =
+            PolicyCache(
+                RBACImpl(httpClient, coroutineScope),
+                RBACOrganizationsImpl(httpClient, coroutineScope),
+                coroutineScope,
+            )
 
         @JvmField
         public val connectedApp: ConnectedApp = ConnectedAppImpl(httpClient, coroutineScope)
