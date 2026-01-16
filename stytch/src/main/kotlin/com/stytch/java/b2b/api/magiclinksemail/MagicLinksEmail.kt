@@ -137,10 +137,9 @@ internal class EmailImpl(
     }
 
     override fun loginOrSignupCompletable(data: LoginOrSignupRequest): CompletableFuture<StytchResult<LoginOrSignupResponse>> =
-        coroutineScope
-            .async {
-                loginOrSignup(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            loginOrSignup(data)
+        }.asCompletableFuture()
 
     override suspend fun invite(
         data: InviteRequest,
@@ -170,8 +169,7 @@ internal class EmailImpl(
         data: InviteRequest,
         methodOptions: InviteRequestOptions?,
     ): CompletableFuture<StytchResult<InviteResponse>> =
-        coroutineScope
-            .async {
-                invite(data, methodOptions)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            invite(data, methodOptions)
+        }.asCompletableFuture()
 }

@@ -239,10 +239,9 @@ internal class SAMLImpl(
         data: CreateConnectionRequest,
         methodOptions: CreateConnectionRequestOptions?,
     ): CompletableFuture<StytchResult<CreateConnectionResponse>> =
-        coroutineScope
-            .async {
-                createConnection(data, methodOptions)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            createConnection(data, methodOptions)
+        }.asCompletableFuture()
 
     override suspend fun updateConnection(
         data: UpdateConnectionRequest,
@@ -272,10 +271,9 @@ internal class SAMLImpl(
         data: UpdateConnectionRequest,
         methodOptions: UpdateConnectionRequestOptions?,
     ): CompletableFuture<StytchResult<UpdateConnectionResponse>> =
-        coroutineScope
-            .async {
-                updateConnection(data, methodOptions)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            updateConnection(data, methodOptions)
+        }.asCompletableFuture()
 
     override suspend fun updateByURL(
         data: UpdateByURLRequest,
@@ -305,10 +303,9 @@ internal class SAMLImpl(
         data: UpdateByURLRequest,
         methodOptions: UpdateByURLRequestOptions?,
     ): CompletableFuture<StytchResult<UpdateByURLResponse>> =
-        coroutineScope
-            .async {
-                updateByURL(data, methodOptions)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            updateByURL(data, methodOptions)
+        }.asCompletableFuture()
 
     override suspend fun deleteVerificationCertificate(
         data: DeleteVerificationCertificateRequest,
@@ -340,10 +337,9 @@ internal class SAMLImpl(
         data: DeleteVerificationCertificateRequest,
         methodOptions: DeleteVerificationCertificateRequestOptions?,
     ): CompletableFuture<StytchResult<DeleteVerificationCertificateResponse>> =
-        coroutineScope
-            .async {
-                deleteVerificationCertificate(data, methodOptions)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            deleteVerificationCertificate(data, methodOptions)
+        }.asCompletableFuture()
 
     override suspend fun deleteEncryptionPrivateKey(
         data: DeleteEncryptionPrivateKeyRequest,
@@ -375,8 +371,7 @@ internal class SAMLImpl(
         data: DeleteEncryptionPrivateKeyRequest,
         methodOptions: DeleteEncryptionPrivateKeyRequestOptions?,
     ): CompletableFuture<StytchResult<DeleteEncryptionPrivateKeyResponse>> =
-        coroutineScope
-            .async {
-                deleteEncryptionPrivateKey(data, methodOptions)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            deleteEncryptionPrivateKey(data, methodOptions)
+        }.asCompletableFuture()
 }

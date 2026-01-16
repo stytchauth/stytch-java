@@ -205,10 +205,9 @@ internal class SSOImpl(
         data: GetConnectionsRequest,
         methodOptions: GetConnectionsRequestOptions?,
     ): CompletableFuture<StytchResult<GetConnectionsResponse>> =
-        coroutineScope
-            .async {
-                getConnections(data, methodOptions)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            getConnections(data, methodOptions)
+        }.asCompletableFuture()
 
     override suspend fun deleteConnection(
         data: DeleteConnectionRequest,
@@ -237,10 +236,9 @@ internal class SSOImpl(
         data: DeleteConnectionRequest,
         methodOptions: DeleteConnectionRequestOptions?,
     ): CompletableFuture<StytchResult<DeleteConnectionResponse>> =
-        coroutineScope
-            .async {
-                deleteConnection(data, methodOptions)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            deleteConnection(data, methodOptions)
+        }.asCompletableFuture()
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
@@ -260,8 +258,7 @@ internal class SSOImpl(
     }
 
     override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
-        coroutineScope
-            .async {
-                authenticate(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            authenticate(data)
+        }.asCompletableFuture()
 }

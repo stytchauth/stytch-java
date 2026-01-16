@@ -16,6 +16,9 @@ import com.stytch.java.b2b.models.organizations.ConnectedAppsRequestOptions
 import com.stytch.java.b2b.models.organizations.ConnectedAppsResponse
 import com.stytch.java.b2b.models.organizations.CreateRequest
 import com.stytch.java.b2b.models.organizations.CreateResponse
+import com.stytch.java.b2b.models.organizations.DeleteExternalIdRequest
+import com.stytch.java.b2b.models.organizations.DeleteExternalIdRequestOptions
+import com.stytch.java.b2b.models.organizations.DeleteExternalIdResponse
 import com.stytch.java.b2b.models.organizations.DeleteRequest
 import com.stytch.java.b2b.models.organizations.DeleteRequestOptions
 import com.stytch.java.b2b.models.organizations.DeleteResponse
@@ -270,6 +273,22 @@ public interface Organizations {
         data: GetConnectedAppRequest,
         methodOptions: GetConnectedAppRequestOptions? = null,
     ): CompletableFuture<StytchResult<GetConnectedAppResponse>>
+
+    public suspend fun deleteExternalId(
+        data: DeleteExternalIdRequest,
+        methodOptions: DeleteExternalIdRequestOptions? = null,
+    ): StytchResult<DeleteExternalIdResponse>
+
+    public fun deleteExternalId(
+        data: DeleteExternalIdRequest,
+        methodOptions: DeleteExternalIdRequestOptions? = null,
+        callback: (StytchResult<DeleteExternalIdResponse>) -> Unit,
+    )
+
+    public fun deleteExternalIdCompletable(
+        data: DeleteExternalIdRequest,
+        methodOptions: DeleteExternalIdRequestOptions? = null,
+    ): CompletableFuture<StytchResult<DeleteExternalIdResponse>>
 }
 
 internal class OrganizationsImpl(
@@ -298,10 +317,9 @@ internal class OrganizationsImpl(
     }
 
     override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> =
-        coroutineScope
-            .async {
-                create(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            create(data)
+        }.asCompletableFuture()
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
         withContext(Dispatchers.IO) {
@@ -324,10 +342,9 @@ internal class OrganizationsImpl(
     }
 
     override fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>> =
-        coroutineScope
-            .async {
-                get(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            get(data)
+        }.asCompletableFuture()
 
     override suspend fun update(
         data: UpdateRequest,
@@ -357,10 +374,9 @@ internal class OrganizationsImpl(
         data: UpdateRequest,
         methodOptions: UpdateRequestOptions?,
     ): CompletableFuture<StytchResult<UpdateResponse>> =
-        coroutineScope
-            .async {
-                update(data, methodOptions)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            update(data, methodOptions)
+        }.asCompletableFuture()
 
     override suspend fun delete(
         data: DeleteRequest,
@@ -389,10 +405,9 @@ internal class OrganizationsImpl(
         data: DeleteRequest,
         methodOptions: DeleteRequestOptions?,
     ): CompletableFuture<StytchResult<DeleteResponse>> =
-        coroutineScope
-            .async {
-                delete(data, methodOptions)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            delete(data, methodOptions)
+        }.asCompletableFuture()
 
     override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> =
         withContext(Dispatchers.IO) {
@@ -412,10 +427,9 @@ internal class OrganizationsImpl(
     }
 
     override fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>> =
-        coroutineScope
-            .async {
-                search(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            search(data)
+        }.asCompletableFuture()
 
     override suspend fun metrics(data: MetricsRequest): StytchResult<MetricsResponse> =
         withContext(Dispatchers.IO) {
@@ -438,10 +452,9 @@ internal class OrganizationsImpl(
     }
 
     override fun metricsCompletable(data: MetricsRequest): CompletableFuture<StytchResult<MetricsResponse>> =
-        coroutineScope
-            .async {
-                metrics(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            metrics(data)
+        }.asCompletableFuture()
 
     override suspend fun connectedApps(
         data: ConnectedAppsRequest,
@@ -474,10 +487,9 @@ internal class OrganizationsImpl(
         data: ConnectedAppsRequest,
         methodOptions: ConnectedAppsRequestOptions?,
     ): CompletableFuture<StytchResult<ConnectedAppsResponse>> =
-        coroutineScope
-            .async {
-                connectedApps(data, methodOptions)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            connectedApps(data, methodOptions)
+        }.asCompletableFuture()
 
     override suspend fun getConnectedApp(
         data: GetConnectedAppRequest,
@@ -510,8 +522,38 @@ internal class OrganizationsImpl(
         data: GetConnectedAppRequest,
         methodOptions: GetConnectedAppRequestOptions?,
     ): CompletableFuture<StytchResult<GetConnectedAppResponse>> =
-        coroutineScope
-            .async {
-                getConnectedApp(data, methodOptions)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            getConnectedApp(data, methodOptions)
+        }.asCompletableFuture()
+
+    override suspend fun deleteExternalId(
+        data: DeleteExternalIdRequest,
+        methodOptions: DeleteExternalIdRequestOptions?,
+    ): StytchResult<DeleteExternalIdResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+            methodOptions?.let {
+                headers = methodOptions.addHeaders(headers)
+            }
+
+            httpClient.delete("/v1/b2b/organizations/${data.organizationId}/external_id", headers)
+        }
+
+    override fun deleteExternalId(
+        data: DeleteExternalIdRequest,
+        methodOptions: DeleteExternalIdRequestOptions?,
+        callback: (StytchResult<DeleteExternalIdResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(deleteExternalId(data, methodOptions))
+        }
+    }
+
+    override fun deleteExternalIdCompletable(
+        data: DeleteExternalIdRequest,
+        methodOptions: DeleteExternalIdRequestOptions?,
+    ): CompletableFuture<StytchResult<DeleteExternalIdResponse>> =
+        coroutineScope.async {
+            deleteExternalId(data, methodOptions)
+        }.asCompletableFuture()
 }

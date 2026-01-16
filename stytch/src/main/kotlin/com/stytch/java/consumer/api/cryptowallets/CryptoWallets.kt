@@ -108,10 +108,9 @@ internal class CryptoWalletsImpl(
     }
 
     override fun authenticateStartCompletable(data: AuthenticateStartRequest): CompletableFuture<StytchResult<AuthenticateStartResponse>> =
-        coroutineScope
-            .async {
-                authenticateStart(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            authenticateStart(data)
+        }.asCompletableFuture()
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
@@ -131,8 +130,7 @@ internal class CryptoWalletsImpl(
     }
 
     override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
-        coroutineScope
-            .async {
-                authenticate(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            authenticate(data)
+        }.asCompletableFuture()
 }
