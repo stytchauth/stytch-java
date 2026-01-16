@@ -126,6 +126,28 @@ public data class ConnectedAppsRequestOptions
         }
     }
 
+@JsonClass(generateAdapter = true)
+public data class CustomRole
+    @JvmOverloads
+    constructor(
+        @Json(name = "role_id")
+        val roleId: String,
+        @Json(name = "description")
+        val description: String,
+        @Json(name = "permissions")
+        val permissions: List<CustomRolePermission>,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class CustomRolePermission
+    @JvmOverloads
+    constructor(
+        @Json(name = "resource_id")
+        val resourceId: String,
+        @Json(name = "actions")
+        val actions: List<String>,
+    )
+
 public data class DeleteRequestOptions
     @JvmOverloads
     constructor(
