@@ -255,6 +255,14 @@ internal class PolicyCacheTest {
                             policy = policy,
                         ),
                     )
+                every { organizations.getOrgPolicyCompletable(any()).get() } returns
+                    StytchResult.Success(
+                        GetOrgPolicyResponse(
+                            statusCode = 200,
+                            requestId = "",
+                            orgPolicy = OrgPolicy(roles = emptyList()),
+                        ),
+                    )
             }
 
         val policyCache = PolicyCache(rbacMock, testScope)
@@ -289,6 +297,14 @@ internal class PolicyCacheTest {
                         ),
                     )
                 }
+                every { organizations.getOrgPolicyCompletable(any()).get() } returns
+                    StytchResult.Success(
+                        GetOrgPolicyResponse(
+                            statusCode = 200,
+                            requestId = "",
+                            orgPolicy = OrgPolicy(roles = emptyList()),
+                        ),
+                    )
             }
 
         val policyCache = PolicyCache(rbacMock, testScope)
@@ -331,6 +347,14 @@ internal class PolicyCacheTest {
                             statusCode = 200,
                             requestId = "",
                             policy = policy,
+                        ),
+                    )
+                every { organizations.getOrgPolicyCompletable(any()).get() } returns
+                    StytchResult.Success(
+                        GetOrgPolicyResponse(
+                            statusCode = 200,
+                            requestId = "",
+                            orgPolicy = OrgPolicy(roles = emptyList()),
                         ),
                     )
             }

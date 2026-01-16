@@ -7,7 +7,6 @@ import com.stytch.java.b2b.models.rbac.Policy
 import com.stytch.java.b2b.models.rbac.PolicyRequest
 import com.stytch.java.b2b.models.rbac.PolicyRole
 import com.stytch.java.b2b.models.rbacorganizations.GetOrgPolicyRequest
-import com.stytch.java.b2b.models.rbacorganizations.GetOrgPolicyResponse
 import com.stytch.java.b2b.models.sessions.AuthorizationCheck
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -83,7 +82,7 @@ internal class PolicyCache(
     private fun refreshOrgPolicy(orgId: String) {
         val orgs = organizations ?: client.organizations
         when (val result = orgs.getOrgPolicyCompletable(GetOrgPolicyRequest(orgId)).get()) {
-            is StytchResult.Success<GetOrgPolicyResponse> -> {
+            is StytchResult.Success -> {
                 result.value.orgPolicy?.let { orgPolicy ->
                     cachedOrgPolicies[orgId] = CachedOrgPolicy(orgPolicy, Instant.now())
                 }
