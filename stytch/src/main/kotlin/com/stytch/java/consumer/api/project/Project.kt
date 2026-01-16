@@ -60,8 +60,7 @@ internal class ProjectImpl(
     }
 
     override fun metricsCompletable(data: MetricsRequest): CompletableFuture<StytchResult<MetricsResponse>> =
-        coroutineScope
-            .async {
-                metrics(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            metrics(data)
+        }.asCompletableFuture()
 }

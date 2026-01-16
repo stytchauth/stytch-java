@@ -687,6 +687,28 @@ public data class DeleteEmailResponse
         val statusCode: Int,
     )
 
+@JsonClass(generateAdapter = true)
+public data class DeleteExternalIdRequest
+    @JvmOverloads
+    constructor(
+        @Json(name = "user_id")
+        val userId: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class DeleteExternalIdResponse
+    @JvmOverloads
+    constructor(
+        @Json(name = "request_id")
+        val requestId: String,
+        @Json(name = "user_id")
+        val userId: String,
+        @Json(name = "user")
+        val user: User,
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
+
 /**
 * Request type for `Users.deleteOAuthRegistration`.
 */

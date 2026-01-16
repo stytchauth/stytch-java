@@ -126,6 +126,47 @@ public data class ConnectedAppsRequestOptions
         }
     }
 
+@JsonClass(generateAdapter = true)
+public data class CustomRole
+    @JvmOverloads
+    constructor(
+        @Json(name = "role_id")
+        val roleId: String,
+        @Json(name = "description")
+        val description: String,
+        @Json(name = "permissions")
+        val permissions: List<CustomRolePermission>,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class CustomRolePermission
+    @JvmOverloads
+    constructor(
+        @Json(name = "resource_id")
+        val resourceId: String,
+        @Json(name = "actions")
+        val actions: List<String>,
+    )
+
+public data class DeleteExternalIdRequestOptions
+    @JvmOverloads
+    constructor(
+        /**
+         * Optional authorization object.
+         * Pass in an active Stytch Member session token or session JWT and the request
+         * will be run using that member's permissions.
+         */
+        val authorization: Authorization? = null,
+    ) {
+        internal fun addHeaders(headers: Map<String, String> = emptyMap()): Map<String, String> {
+            var res = mapOf<String, String>()
+            if (authorization != null) {
+                res = authorization.addHeaders(res)
+            }
+            return res + headers
+        }
+    }
+
 public data class DeleteRequestOptions
     @JvmOverloads
     constructor(
@@ -832,6 +873,8 @@ public data class Organization
          */
         @Json(name = "allowed_third_party_connected_apps")
         val allowedThirdPartyConnectedApps: List<String>,
+        @Json(name = "custom_roles")
+        val customRoles: List<CustomRole>,
         /**
          * An arbitrary JSON object for storing application-specific data or identity-provider-specific data.
          */
@@ -1340,6 +1383,26 @@ public data class CreateResponse
          * The HTTP status code of the response. Stytch follows standard HTTP response status code patterns, e.g. 2XX values
          * equate to success, 3XX values are redirects, 4XX are client errors, and 5XX are server errors.
          */
+        @Json(name = "status_code")
+        val statusCode: Int,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class DeleteExternalIdRequest
+    @JvmOverloads
+    constructor(
+        @Json(name = "organization_id")
+        val organizationId: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class DeleteExternalIdResponse
+    @JvmOverloads
+    constructor(
+        @Json(name = "request_id")
+        val requestId: String,
+        @Json(name = "organization")
+        val organization: Organization,
         @Json(name = "status_code")
         val statusCode: Int,
     )

@@ -21,6 +21,8 @@ import com.stytch.java.consumer.models.users.DeleteCryptoWalletRequest
 import com.stytch.java.consumer.models.users.DeleteCryptoWalletResponse
 import com.stytch.java.consumer.models.users.DeleteEmailRequest
 import com.stytch.java.consumer.models.users.DeleteEmailResponse
+import com.stytch.java.consumer.models.users.DeleteExternalIdRequest
+import com.stytch.java.consumer.models.users.DeleteExternalIdResponse
 import com.stytch.java.consumer.models.users.DeleteOAuthRegistrationRequest
 import com.stytch.java.consumer.models.users.DeleteOAuthRegistrationResponse
 import com.stytch.java.consumer.models.users.DeletePasswordRequest
@@ -410,6 +412,15 @@ public interface Users {
         data: DeleteOAuthRegistrationRequest,
     ): CompletableFuture<StytchResult<DeleteOAuthRegistrationResponse>>
 
+    public suspend fun deleteExternalId(data: DeleteExternalIdRequest): StytchResult<DeleteExternalIdResponse>
+
+    public fun deleteExternalId(
+        data: DeleteExternalIdRequest,
+        callback: (StytchResult<DeleteExternalIdResponse>) -> Unit,
+    )
+
+    public fun deleteExternalIdCompletable(data: DeleteExternalIdRequest): CompletableFuture<StytchResult<DeleteExternalIdResponse>>
+
     /**
      * User Get Connected Apps retrieves a list of Connected Apps with which the User has successfully completed an
      * authorization flow.
@@ -486,10 +497,9 @@ internal class UsersImpl(
     }
 
     override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> =
-        coroutineScope
-            .async {
-                create(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            create(data)
+        }.asCompletableFuture()
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
         withContext(Dispatchers.IO) {
@@ -512,10 +522,9 @@ internal class UsersImpl(
     }
 
     override fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>> =
-        coroutineScope
-            .async {
-                get(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            get(data)
+        }.asCompletableFuture()
 
     override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> =
         withContext(Dispatchers.IO) {
@@ -535,10 +544,9 @@ internal class UsersImpl(
     }
 
     override fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>> =
-        coroutineScope
-            .async {
-                search(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            search(data)
+        }.asCompletableFuture()
 
     override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> =
         withContext(Dispatchers.IO) {
@@ -558,10 +566,9 @@ internal class UsersImpl(
     }
 
     override fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>> =
-        coroutineScope
-            .async {
-                update(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            update(data)
+        }.asCompletableFuture()
 
     override suspend fun exchangePrimaryFactor(data: ExchangePrimaryFactorRequest): StytchResult<ExchangePrimaryFactorResponse> =
         withContext(Dispatchers.IO) {
@@ -583,10 +590,9 @@ internal class UsersImpl(
     override fun exchangePrimaryFactorCompletable(
         data: ExchangePrimaryFactorRequest,
     ): CompletableFuture<StytchResult<ExchangePrimaryFactorResponse>> =
-        coroutineScope
-            .async {
-                exchangePrimaryFactor(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            exchangePrimaryFactor(data)
+        }.asCompletableFuture()
 
     override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> =
         withContext(Dispatchers.IO) {
@@ -605,10 +611,9 @@ internal class UsersImpl(
     }
 
     override fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>> =
-        coroutineScope
-            .async {
-                delete(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            delete(data)
+        }.asCompletableFuture()
 
     override suspend fun deleteEmail(data: DeleteEmailRequest): StytchResult<DeleteEmailResponse> =
         withContext(Dispatchers.IO) {
@@ -627,10 +632,9 @@ internal class UsersImpl(
     }
 
     override fun deleteEmailCompletable(data: DeleteEmailRequest): CompletableFuture<StytchResult<DeleteEmailResponse>> =
-        coroutineScope
-            .async {
-                deleteEmail(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            deleteEmail(data)
+        }.asCompletableFuture()
 
     override suspend fun deletePhoneNumber(data: DeletePhoneNumberRequest): StytchResult<DeletePhoneNumberResponse> =
         withContext(Dispatchers.IO) {
@@ -649,10 +653,9 @@ internal class UsersImpl(
     }
 
     override fun deletePhoneNumberCompletable(data: DeletePhoneNumberRequest): CompletableFuture<StytchResult<DeletePhoneNumberResponse>> =
-        coroutineScope
-            .async {
-                deletePhoneNumber(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            deletePhoneNumber(data)
+        }.asCompletableFuture()
 
     override suspend fun deleteWebAuthnRegistration(
         data: DeleteWebAuthnRegistrationRequest,
@@ -675,10 +678,9 @@ internal class UsersImpl(
     override fun deleteWebAuthnRegistrationCompletable(
         data: DeleteWebAuthnRegistrationRequest,
     ): CompletableFuture<StytchResult<DeleteWebAuthnRegistrationResponse>> =
-        coroutineScope
-            .async {
-                deleteWebAuthnRegistration(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            deleteWebAuthnRegistration(data)
+        }.asCompletableFuture()
 
     override suspend fun deleteBiometricRegistration(
         data: DeleteBiometricRegistrationRequest,
@@ -701,10 +703,9 @@ internal class UsersImpl(
     override fun deleteBiometricRegistrationCompletable(
         data: DeleteBiometricRegistrationRequest,
     ): CompletableFuture<StytchResult<DeleteBiometricRegistrationResponse>> =
-        coroutineScope
-            .async {
-                deleteBiometricRegistration(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            deleteBiometricRegistration(data)
+        }.asCompletableFuture()
 
     override suspend fun deleteTOTP(data: DeleteTOTPRequest): StytchResult<DeleteTOTPResponse> =
         withContext(Dispatchers.IO) {
@@ -723,10 +724,9 @@ internal class UsersImpl(
     }
 
     override fun deleteTOTPCompletable(data: DeleteTOTPRequest): CompletableFuture<StytchResult<DeleteTOTPResponse>> =
-        coroutineScope
-            .async {
-                deleteTOTP(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            deleteTOTP(data)
+        }.asCompletableFuture()
 
     override suspend fun deleteCryptoWallet(data: DeleteCryptoWalletRequest): StytchResult<DeleteCryptoWalletResponse> =
         withContext(Dispatchers.IO) {
@@ -747,10 +747,9 @@ internal class UsersImpl(
     override fun deleteCryptoWalletCompletable(
         data: DeleteCryptoWalletRequest,
     ): CompletableFuture<StytchResult<DeleteCryptoWalletResponse>> =
-        coroutineScope
-            .async {
-                deleteCryptoWallet(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            deleteCryptoWallet(data)
+        }.asCompletableFuture()
 
     override suspend fun deletePassword(data: DeletePasswordRequest): StytchResult<DeletePasswordResponse> =
         withContext(Dispatchers.IO) {
@@ -769,10 +768,9 @@ internal class UsersImpl(
     }
 
     override fun deletePasswordCompletable(data: DeletePasswordRequest): CompletableFuture<StytchResult<DeletePasswordResponse>> =
-        coroutineScope
-            .async {
-                deletePassword(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            deletePassword(data)
+        }.asCompletableFuture()
 
     override suspend fun deleteOAuthRegistration(data: DeleteOAuthRegistrationRequest): StytchResult<DeleteOAuthRegistrationResponse> =
         withContext(Dispatchers.IO) {
@@ -793,10 +791,30 @@ internal class UsersImpl(
     override fun deleteOAuthRegistrationCompletable(
         data: DeleteOAuthRegistrationRequest,
     ): CompletableFuture<StytchResult<DeleteOAuthRegistrationResponse>> =
-        coroutineScope
-            .async {
-                deleteOAuthRegistration(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            deleteOAuthRegistration(data)
+        }.asCompletableFuture()
+
+    override suspend fun deleteExternalId(data: DeleteExternalIdRequest): StytchResult<DeleteExternalIdResponse> =
+        withContext(Dispatchers.IO) {
+            var headers = emptyMap<String, String>()
+
+            httpClient.delete("/v1/users/${data.userId}/external_id", headers)
+        }
+
+    override fun deleteExternalId(
+        data: DeleteExternalIdRequest,
+        callback: (StytchResult<DeleteExternalIdResponse>) -> Unit,
+    ) {
+        coroutineScope.launch {
+            callback(deleteExternalId(data))
+        }
+    }
+
+    override fun deleteExternalIdCompletable(data: DeleteExternalIdRequest): CompletableFuture<StytchResult<DeleteExternalIdResponse>> =
+        coroutineScope.async {
+            deleteExternalId(data)
+        }.asCompletableFuture()
 
     override suspend fun connectedApps(data: ConnectedAppsRequest): StytchResult<ConnectedAppsResponse> =
         withContext(Dispatchers.IO) {
@@ -819,10 +837,9 @@ internal class UsersImpl(
     }
 
     override fun connectedAppsCompletable(data: ConnectedAppsRequest): CompletableFuture<StytchResult<ConnectedAppsResponse>> =
-        coroutineScope
-            .async {
-                connectedApps(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            connectedApps(data)
+        }.asCompletableFuture()
 
     override suspend fun revoke(data: RevokeRequest): StytchResult<RevokeResponse> =
         withContext(Dispatchers.IO) {
@@ -842,8 +859,7 @@ internal class UsersImpl(
     }
 
     override fun revokeCompletable(data: RevokeRequest): CompletableFuture<StytchResult<RevokeResponse>> =
-        coroutineScope
-            .async {
-                revoke(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            revoke(data)
+        }.asCompletableFuture()
 }

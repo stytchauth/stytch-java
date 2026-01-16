@@ -214,10 +214,9 @@ internal class EmailImpl(
     }
 
     override fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>> =
-        coroutineScope
-            .async {
-                send(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            send(data)
+        }.asCompletableFuture()
 
     override suspend fun loginOrCreate(data: LoginOrCreateRequest): StytchResult<LoginOrCreateResponse> =
         withContext(Dispatchers.IO) {
@@ -237,10 +236,9 @@ internal class EmailImpl(
     }
 
     override fun loginOrCreateCompletable(data: LoginOrCreateRequest): CompletableFuture<StytchResult<LoginOrCreateResponse>> =
-        coroutineScope
-            .async {
-                loginOrCreate(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            loginOrCreate(data)
+        }.asCompletableFuture()
 
     override suspend fun invite(data: InviteRequest): StytchResult<InviteResponse> =
         withContext(Dispatchers.IO) {
@@ -260,10 +258,9 @@ internal class EmailImpl(
     }
 
     override fun inviteCompletable(data: InviteRequest): CompletableFuture<StytchResult<InviteResponse>> =
-        coroutineScope
-            .async {
-                invite(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            invite(data)
+        }.asCompletableFuture()
 
     override suspend fun revokeInvite(data: RevokeInviteRequest): StytchResult<RevokeInviteResponse> =
         withContext(Dispatchers.IO) {
@@ -283,8 +280,7 @@ internal class EmailImpl(
     }
 
     override fun revokeInviteCompletable(data: RevokeInviteRequest): CompletableFuture<StytchResult<RevokeInviteResponse>> =
-        coroutineScope
-            .async {
-                revokeInvite(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            revokeInvite(data)
+        }.asCompletableFuture()
 }

@@ -9,6 +9,8 @@ package com.stytch.java.b2b.api.rbac
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import com.stytch.java.b2b.api.rbacorganizations.Organizations
+import com.stytch.java.b2b.api.rbacorganizations.OrganizationsImpl
 import com.stytch.java.b2b.models.rbac.PolicyRequest
 import com.stytch.java.b2b.models.rbac.PolicyResponse
 import com.stytch.java.common.InstantAdapter
@@ -23,6 +25,8 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.CompletableFuture
 
 public interface RBAC {
+    public val organizations: Organizations
+
     /**
      * Get the active RBAC Policy for your current Stytch Project. An RBAC Policy is the canonical document that stores all
      * defined Resources and Roles within your RBAC permissioning model.
@@ -87,6 +91,8 @@ internal class RBACImpl(
 ) : RBAC {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
+    override val organizations: Organizations = OrganizationsImpl(httpClient, coroutineScope)
+
     override suspend fun policy(data: PolicyRequest): StytchResult<PolicyResponse> =
         withContext(Dispatchers.IO) {
             var headers = emptyMap<String, String>()
@@ -108,8 +114,7 @@ internal class RBACImpl(
     }
 
     override fun policyCompletable(data: PolicyRequest): CompletableFuture<StytchResult<PolicyResponse>> =
-        coroutineScope
-            .async {
-                policy(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            policy(data)
+        }.asCompletableFuture()
 }
