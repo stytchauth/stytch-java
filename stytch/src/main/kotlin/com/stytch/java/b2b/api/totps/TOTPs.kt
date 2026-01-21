@@ -128,10 +128,9 @@ internal class TOTPsImpl(
     }
 
     override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> =
-        coroutineScope
-            .async {
-                create(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            create(data)
+        }.asCompletableFuture()
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
@@ -151,10 +150,9 @@ internal class TOTPsImpl(
     }
 
     override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
-        coroutineScope
-            .async {
-                authenticate(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            authenticate(data)
+        }.asCompletableFuture()
 
     override suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse> =
         withContext(Dispatchers.IO) {
@@ -174,8 +172,7 @@ internal class TOTPsImpl(
     }
 
     override fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>> =
-        coroutineScope
-            .async {
-                migrate(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            migrate(data)
+        }.asCompletableFuture()
 }

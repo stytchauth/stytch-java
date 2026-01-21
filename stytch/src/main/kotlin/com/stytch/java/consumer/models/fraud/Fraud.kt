@@ -113,6 +113,38 @@ public data class ASNProperties
     )
 
 @JsonClass(generateAdapter = true)
+public data class AddressInformation
+    @JvmOverloads
+    constructor(
+        /**
+         * Whether email sent to this address is known to have bounced previously.
+         */
+        @Json(name = "has_known_bounces")
+        val hasKnownBounces: Boolean,
+        /**
+         * Whether this email address is valid.
+         */
+        @Json(name = "has_valid_syntax")
+        val hasValidSyntax: Boolean,
+        /**
+         * Whether the local part of the email appears to be a role or group, rather than an individual end user.
+         */
+        @Json(name = "is_suspected_role_address")
+        val isSuspectedRoleAddress: Boolean,
+        /**
+         * The normalized email address after removing '.' characters and any characters after a '+'.
+         */
+        @Json(name = "normalized_email")
+        val normalizedEmail: String,
+        /**
+         * The number of '.' and '+' characters in the email address. A higher tumbling count indicates a higher potential for
+         * fraud.
+         */
+        @Json(name = "tumbling_character_count")
+        val tumblingCharacterCount: Int,
+    )
+
+@JsonClass(generateAdapter = true)
 public data class BrowserProperties
     @JvmOverloads
     constructor(
@@ -121,6 +153,22 @@ public data class BrowserProperties
          */
         @Json(name = "user_agent")
         val userAgent: String,
+    )
+
+@JsonClass(generateAdapter = true)
+public data class DomainInformation
+    @JvmOverloads
+    constructor(
+        /**
+         * Whether the email has appropriate DNS records to deliver a message.
+         */
+        @Json(name = "has_mx_or_a_record")
+        val hasMXOrARecord: Boolean,
+        /**
+         * Whether the email domain is known to be disposable.
+         */
+        @Json(name = "is_disposable_domain")
+        val isDisposableDomain: Boolean,
     )
 
 @JsonClass(generateAdapter = true)

@@ -8,6 +8,8 @@ package com.stytch.java.consumer.api.fraud
 
 import com.squareup.moshi.Moshi
 import com.stytch.java.common.InstantAdapter
+import com.stytch.java.consumer.api.fraudemail.Email
+import com.stytch.java.consumer.api.fraudemail.EmailImpl
 import com.stytch.java.consumer.api.fraudfingerprint.Fingerprint
 import com.stytch.java.consumer.api.fraudfingerprint.FingerprintImpl
 import com.stytch.java.consumer.api.fraudrules.Rules
@@ -23,6 +25,8 @@ public interface Fraud {
     public val rules: Rules
 
     public val verdictReasons: VerdictReasons
+
+    public val email: Email
 }
 
 internal class FraudImpl(
@@ -34,4 +38,5 @@ internal class FraudImpl(
     override val fingerprint: Fingerprint = FingerprintImpl(httpClient, coroutineScope)
     override val rules: Rules = RulesImpl(httpClient, coroutineScope)
     override val verdictReasons: VerdictReasons = VerdictReasonsImpl(httpClient, coroutineScope)
+    override val email: Email = EmailImpl(httpClient, coroutineScope)
 }
