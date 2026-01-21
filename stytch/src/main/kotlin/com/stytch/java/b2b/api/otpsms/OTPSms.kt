@@ -273,9 +273,10 @@ internal class SmsImpl(
     }
 
     override fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>> =
-        coroutineScope.async {
-            send(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                send(data)
+            }.asCompletableFuture()
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
@@ -295,7 +296,8 @@ internal class SmsImpl(
     }
 
     override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
-        coroutineScope.async {
-            authenticate(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                authenticate(data)
+            }.asCompletableFuture()
 }

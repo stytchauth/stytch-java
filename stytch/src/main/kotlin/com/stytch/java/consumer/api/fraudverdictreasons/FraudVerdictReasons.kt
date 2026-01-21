@@ -108,9 +108,10 @@ internal class VerdictReasonsImpl(
     }
 
     override fun overrideCompletable(data: OverrideRequest): CompletableFuture<StytchResult<OverrideResponse>> =
-        coroutineScope.async {
-            override(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                override(data)
+            }.asCompletableFuture()
 
     override suspend fun list(data: ListRequest): StytchResult<ListResponse> =
         withContext(Dispatchers.IO) {
@@ -130,7 +131,8 @@ internal class VerdictReasonsImpl(
     }
 
     override fun listCompletable(data: ListRequest): CompletableFuture<StytchResult<ListResponse>> =
-        coroutineScope.async {
-            list(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                list(data)
+            }.asCompletableFuture()
 }

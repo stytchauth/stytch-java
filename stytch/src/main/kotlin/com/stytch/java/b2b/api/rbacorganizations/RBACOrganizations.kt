@@ -203,9 +203,10 @@ internal class OrganizationsImpl(
     }
 
     override fun getOrgPolicyCompletable(data: GetOrgPolicyRequest): CompletableFuture<StytchResult<GetOrgPolicyResponse>> =
-        coroutineScope.async {
-            getOrgPolicy(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                getOrgPolicy(data)
+            }.asCompletableFuture()
 
     override suspend fun setOrgPolicy(data: SetOrgPolicyRequest): StytchResult<SetOrgPolicyResponse> =
         withContext(Dispatchers.IO) {
@@ -225,7 +226,8 @@ internal class OrganizationsImpl(
     }
 
     override fun setOrgPolicyCompletable(data: SetOrgPolicyRequest): CompletableFuture<StytchResult<SetOrgPolicyResponse>> =
-        coroutineScope.async {
-            setOrgPolicy(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                setOrgPolicy(data)
+            }.asCompletableFuture()
 }

@@ -82,7 +82,8 @@ internal class EmailImpl(
     }
 
     override fun riskCompletable(data: RiskRequest): CompletableFuture<StytchResult<RiskResponse>> =
-        coroutineScope.async {
-            risk(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                risk(data)
+            }.asCompletableFuture()
 }

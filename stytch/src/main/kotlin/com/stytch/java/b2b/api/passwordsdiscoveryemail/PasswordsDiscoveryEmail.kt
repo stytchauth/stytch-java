@@ -138,9 +138,10 @@ internal class EmailImpl(
     }
 
     override fun resetStartCompletable(data: ResetStartRequest): CompletableFuture<StytchResult<ResetStartResponse>> =
-        coroutineScope.async {
-            resetStart(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                resetStart(data)
+            }.asCompletableFuture()
 
     override suspend fun reset(data: ResetRequest): StytchResult<ResetResponse> =
         withContext(Dispatchers.IO) {
@@ -160,7 +161,8 @@ internal class EmailImpl(
     }
 
     override fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>> =
-        coroutineScope.async {
-            reset(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                reset(data)
+            }.asCompletableFuture()
 }

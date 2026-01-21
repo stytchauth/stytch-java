@@ -213,9 +213,10 @@ internal class OAuthImpl(
     }
 
     override fun authorizeStartCompletable(data: AuthorizeStartRequest): CompletableFuture<StytchResult<AuthorizeStartResponse>> =
-        coroutineScope.async {
-            authorizeStart(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                authorizeStart(data)
+            }.asCompletableFuture()
 
     override suspend fun authorize(data: AuthorizeRequest): StytchResult<AuthorizeResponse> =
         withContext(Dispatchers.IO) {
@@ -235,7 +236,8 @@ internal class OAuthImpl(
     }
 
     override fun authorizeCompletable(data: AuthorizeRequest): CompletableFuture<StytchResult<AuthorizeResponse>> =
-        coroutineScope.async {
-            authorize(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                authorize(data)
+            }.asCompletableFuture()
 }

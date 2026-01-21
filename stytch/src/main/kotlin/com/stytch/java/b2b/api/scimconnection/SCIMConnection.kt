@@ -286,9 +286,10 @@ internal class ConnectionImpl(
         data: UpdateRequest,
         methodOptions: UpdateRequestOptions?,
     ): CompletableFuture<StytchResult<UpdateResponse>> =
-        coroutineScope.async {
-            update(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                update(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun delete(
         data: DeleteRequest,
@@ -317,9 +318,10 @@ internal class ConnectionImpl(
         data: DeleteRequest,
         methodOptions: DeleteRequestOptions?,
     ): CompletableFuture<StytchResult<DeleteResponse>> =
-        coroutineScope.async {
-            delete(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                delete(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun rotateStart(
         data: RotateStartRequest,
@@ -349,9 +351,10 @@ internal class ConnectionImpl(
         data: RotateStartRequest,
         methodOptions: RotateStartRequestOptions?,
     ): CompletableFuture<StytchResult<RotateStartResponse>> =
-        coroutineScope.async {
-            rotateStart(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                rotateStart(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun rotateComplete(
         data: RotateCompleteRequest,
@@ -381,9 +384,10 @@ internal class ConnectionImpl(
         data: RotateCompleteRequest,
         methodOptions: RotateCompleteRequestOptions?,
     ): CompletableFuture<StytchResult<RotateCompleteResponse>> =
-        coroutineScope.async {
-            rotateComplete(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                rotateComplete(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun rotateCancel(
         data: RotateCancelRequest,
@@ -413,9 +417,10 @@ internal class ConnectionImpl(
         data: RotateCancelRequest,
         methodOptions: RotateCancelRequestOptions?,
     ): CompletableFuture<StytchResult<RotateCancelResponse>> =
-        coroutineScope.async {
-            rotateCancel(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                rotateCancel(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun getGroups(
         data: GetGroupsRequest,
@@ -448,9 +453,10 @@ internal class ConnectionImpl(
         data: GetGroupsRequest,
         methodOptions: GetGroupsRequestOptions?,
     ): CompletableFuture<StytchResult<GetGroupsResponse>> =
-        coroutineScope.async {
-            getGroups(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                getGroups(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun create(
         data: CreateRequest,
@@ -480,9 +486,10 @@ internal class ConnectionImpl(
         data: CreateRequest,
         methodOptions: CreateRequestOptions?,
     ): CompletableFuture<StytchResult<CreateResponse>> =
-        coroutineScope.async {
-            create(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                create(data, methodOptions)
+            }.asCompletableFuture()
 
     override suspend fun get(
         data: GetRequest,
@@ -515,7 +522,8 @@ internal class ConnectionImpl(
         data: GetRequest,
         methodOptions: GetRequestOptions?,
     ): CompletableFuture<StytchResult<GetResponse>> =
-        coroutineScope.async {
-            get(data, methodOptions)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                get(data, methodOptions)
+            }.asCompletableFuture()
 }

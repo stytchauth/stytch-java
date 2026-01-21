@@ -112,9 +112,10 @@ internal class RecoveryCodesImpl(
     }
 
     override fun recoverCompletable(data: RecoverRequest): CompletableFuture<StytchResult<RecoverResponse>> =
-        coroutineScope.async {
-            recover(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                recover(data)
+            }.asCompletableFuture()
 
     override suspend fun get(data: GetRequest): StytchResult<GetResponse> =
         withContext(Dispatchers.IO) {
@@ -137,9 +138,10 @@ internal class RecoveryCodesImpl(
     }
 
     override fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>> =
-        coroutineScope.async {
-            get(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                get(data)
+            }.asCompletableFuture()
 
     override suspend fun rotate(data: RotateRequest): StytchResult<RotateResponse> =
         withContext(Dispatchers.IO) {
@@ -159,7 +161,8 @@ internal class RecoveryCodesImpl(
     }
 
     override fun rotateCompletable(data: RotateRequest): CompletableFuture<StytchResult<RotateResponse>> =
-        coroutineScope.async {
-            rotate(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                rotate(data)
+            }.asCompletableFuture()
 }

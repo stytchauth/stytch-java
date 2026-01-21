@@ -60,7 +60,8 @@ internal class DebugImpl(
     }
 
     override fun whoamiCompletable(data: WhoamiRequest): CompletableFuture<StytchResult<WhoamiResponse>> =
-        coroutineScope.async {
-            whoami(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                whoami(data)
+            }.asCompletableFuture()
 }

@@ -137,9 +137,10 @@ internal class SecretsImpl(
     }
 
     override fun rotateStartCompletable(data: RotateStartRequest): CompletableFuture<StytchResult<RotateStartResponse>> =
-        coroutineScope.async {
-            rotateStart(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                rotateStart(data)
+            }.asCompletableFuture()
 
     override suspend fun rotateCancel(data: RotateCancelRequest): StytchResult<RotateCancelResponse> =
         withContext(Dispatchers.IO) {
@@ -159,9 +160,10 @@ internal class SecretsImpl(
     }
 
     override fun rotateCancelCompletable(data: RotateCancelRequest): CompletableFuture<StytchResult<RotateCancelResponse>> =
-        coroutineScope.async {
-            rotateCancel(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                rotateCancel(data)
+            }.asCompletableFuture()
 
     override suspend fun rotate(data: RotateRequest): StytchResult<RotateResponse> =
         withContext(Dispatchers.IO) {
@@ -181,7 +183,8 @@ internal class SecretsImpl(
     }
 
     override fun rotateCompletable(data: RotateRequest): CompletableFuture<StytchResult<RotateResponse>> =
-        coroutineScope.async {
-            rotate(data)
-        }.asCompletableFuture()
+        coroutineScope
+            .async {
+                rotate(data)
+            }.asCompletableFuture()
 }
