@@ -145,8 +145,7 @@ internal class IntermediateSessionsImpl(
     }
 
     override fun exchangeCompletable(data: ExchangeRequest): CompletableFuture<StytchResult<ExchangeResponse>> =
-        coroutineScope
-            .async {
-                exchange(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            exchange(data)
+        }.asCompletableFuture()
 }

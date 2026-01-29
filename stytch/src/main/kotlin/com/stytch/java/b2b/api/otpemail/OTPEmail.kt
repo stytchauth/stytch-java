@@ -165,10 +165,9 @@ internal class EmailImpl(
     }
 
     override fun loginOrSignupCompletable(data: LoginOrSignupRequest): CompletableFuture<StytchResult<LoginOrSignupResponse>> =
-        coroutineScope
-            .async {
-                loginOrSignup(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            loginOrSignup(data)
+        }.asCompletableFuture()
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
@@ -188,8 +187,7 @@ internal class EmailImpl(
     }
 
     override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
-        coroutineScope
-            .async {
-                authenticate(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            authenticate(data)
+        }.asCompletableFuture()
 }

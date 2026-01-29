@@ -170,10 +170,9 @@ internal class ClientsImpl(
     }
 
     override fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>> =
-        coroutineScope
-            .async {
-                get(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            get(data)
+        }.asCompletableFuture()
 
     override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> =
         withContext(Dispatchers.IO) {
@@ -193,10 +192,9 @@ internal class ClientsImpl(
     }
 
     override fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>> =
-        coroutineScope
-            .async {
-                update(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            update(data)
+        }.asCompletableFuture()
 
     override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> =
         withContext(Dispatchers.IO) {
@@ -215,10 +213,9 @@ internal class ClientsImpl(
     }
 
     override fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>> =
-        coroutineScope
-            .async {
-                delete(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            delete(data)
+        }.asCompletableFuture()
 
     override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> =
         withContext(Dispatchers.IO) {
@@ -238,10 +235,9 @@ internal class ClientsImpl(
     }
 
     override fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>> =
-        coroutineScope
-            .async {
-                search(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            search(data)
+        }.asCompletableFuture()
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
         withContext(Dispatchers.IO) {
@@ -261,8 +257,7 @@ internal class ClientsImpl(
     }
 
     override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> =
-        coroutineScope
-            .async {
-                create(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            create(data)
+        }.asCompletableFuture()
 }

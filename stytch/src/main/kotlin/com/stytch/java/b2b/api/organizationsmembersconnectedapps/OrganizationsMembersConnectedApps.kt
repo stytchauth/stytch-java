@@ -92,8 +92,7 @@ internal class ConnectedAppsImpl(
         data: RevokeRequest,
         methodOptions: RevokeRequestOptions?,
     ): CompletableFuture<StytchResult<RevokeResponse>> =
-        coroutineScope
-            .async {
-                revoke(data, methodOptions)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            revoke(data, methodOptions)
+        }.asCompletableFuture()
 }

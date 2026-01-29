@@ -124,8 +124,7 @@ internal class ExistingPasswordImpl(
     }
 
     override fun resetCompletable(data: ResetRequest): CompletableFuture<StytchResult<ResetResponse>> =
-        coroutineScope
-            .async {
-                reset(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            reset(data)
+        }.asCompletableFuture()
 }

@@ -127,10 +127,9 @@ internal class TOTPsImpl(
     }
 
     override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> =
-        coroutineScope
-            .async {
-                create(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            create(data)
+        }.asCompletableFuture()
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
@@ -150,10 +149,9 @@ internal class TOTPsImpl(
     }
 
     override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
-        coroutineScope
-            .async {
-                authenticate(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            authenticate(data)
+        }.asCompletableFuture()
 
     override suspend fun recoveryCodes(data: RecoveryCodesRequest): StytchResult<RecoveryCodesResponse> =
         withContext(Dispatchers.IO) {
@@ -173,10 +171,9 @@ internal class TOTPsImpl(
     }
 
     override fun recoveryCodesCompletable(data: RecoveryCodesRequest): CompletableFuture<StytchResult<RecoveryCodesResponse>> =
-        coroutineScope
-            .async {
-                recoveryCodes(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            recoveryCodes(data)
+        }.asCompletableFuture()
 
     override suspend fun recover(data: RecoverRequest): StytchResult<RecoverResponse> =
         withContext(Dispatchers.IO) {
@@ -196,8 +193,7 @@ internal class TOTPsImpl(
     }
 
     override fun recoverCompletable(data: RecoverRequest): CompletableFuture<StytchResult<RecoverResponse>> =
-        coroutineScope
-            .async {
-                recover(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            recover(data)
+        }.asCompletableFuture()
 }
