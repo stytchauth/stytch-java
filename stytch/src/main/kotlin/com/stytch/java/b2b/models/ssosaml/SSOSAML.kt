@@ -254,8 +254,7 @@ public data class CreateConnectionResponse
         @Json(name = "status_code")
         val statusCode: Int,
         /**
-         * The `SAML Connection` object affected by this API call. See the
-         * [SAML Connection Object](https://stytch.com/docs/b2b/api/saml-connection-object) for complete response field details.
+         * The [SAML Connection Object](https://stytch.com/docs/b2b/api/saml-connection-object)
          */
         @Json(name = "connection")
         val connection: SAMLConnection? = null,
@@ -410,8 +409,7 @@ public data class UpdateByURLResponse
         @Json(name = "status_code")
         val statusCode: Int,
         /**
-         * The `SAML Connection` object affected by this API call. See the
-         * [SAML Connection Object](https://stytch.com/docs/b2b/api/saml-connection-object) for complete response field details.
+         * The [SAML Connection Object](https://stytch.com/docs/b2b/api/saml-connection-object)
          */
         @Json(name = "connection")
         val connection: SAMLConnection? = null,
@@ -554,8 +552,7 @@ public data class UpdateConnectionResponse
         @Json(name = "status_code")
         val statusCode: Int,
         /**
-         * The `SAML Connection` object affected by this API call. See the
-         * [SAML Connection Object](https://stytch.com/docs/b2b/api/saml-connection-object) for complete response field details.
+         * The [SAML Connection Object](https://stytch.com/docs/b2b/api/saml-connection-object)
          */
         @Json(name = "connection")
         val connection: SAMLConnection? = null,

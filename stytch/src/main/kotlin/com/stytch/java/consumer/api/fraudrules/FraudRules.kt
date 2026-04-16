@@ -141,10 +141,9 @@ internal class RulesImpl(
     }
 
     override fun setCompletable(data: SetRequest): CompletableFuture<StytchResult<SetResponse>> =
-        coroutineScope
-            .async {
-                set(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            set(data)
+        }.asCompletableFuture()
 
     override suspend fun list(data: ListRequest): StytchResult<ListResponse> =
         withContext(Dispatchers.IO) {
@@ -164,8 +163,7 @@ internal class RulesImpl(
     }
 
     override fun listCompletable(data: ListRequest): CompletableFuture<StytchResult<ListResponse>> =
-        coroutineScope
-            .async {
-                list(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            list(data)
+        }.asCompletableFuture()
 }

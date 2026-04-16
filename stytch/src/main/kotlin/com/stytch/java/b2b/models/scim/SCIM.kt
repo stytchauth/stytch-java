@@ -218,26 +218,66 @@ public data class SCIMAttributes
 public data class SCIMConnection
     @JvmOverloads
     constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug or
+         * organization_external_id here as a convenience.
+         */
         @Json(name = "organization_id")
         val organizationId: String,
+        /**
+         * The ID of the SCIM connection.
+         */
         @Json(name = "connection_id")
         val connectionId: String,
+        /**
+         * The status of the connection. The possible values are deleted or active.
+         */
         @Json(name = "status")
         val status: String,
+        /**
+         * A human-readable display name for the connection.
+         */
         @Json(name = "display_name")
         val displayName: String,
+        /**
+         * Name of the IdP. Enum with possible values: `okta`, `microsoft-entra`, `cyberark`, `jumpcloud`, `onelogin`,
+         * `pingfederate`, `rippling` or `generic`.
+         *
+         * Specifying a known provider allows Stytch to handle any provider-specific logic, such as automatically appending
+         * `?aadOptscim062020` to the returned BaseURL for `microsoft-entra` SCIM Connections to
+         * [enable the SCIM 2.0 compliant flag](https://learn.microsoft.com/en-us/entra/identity/app-provisioning/application-provisioning-config-problem-scim-compatibility#scim-20-compliance-issues-and-status).
+         */
         @Json(name = "identity_provider")
         val identityProvider: String,
+        /**
+         * The URL supplied to the Identity Provider (IdP) alongside the bearer token enabling access to Stytch's SCIM API
+         * endpoints
+         */
         @Json(name = "base_url")
         val baseURL: String,
+        /**
+         * The last four digits of the bearer token. If you've lost access to your `bearer_token` and need to generate a new one,
+         * use the [SCIM rotate token start endpoint](https://stytch.com/docs/b2b/api/scim-rotate-token-start).
+         */
         @Json(name = "bearer_token_last_four")
         val bearerTokenLastFour: String,
+        /**
+         * An array of SCIM group implicit role assignments. Each object in the array must contain a `group_id` and a `role_id`.
+         */
         @Json(name = "scim_group_implicit_role_assignments")
         val scimGroupImplicitRoleAssignments: List<SCIMGroupImplicitRoleAssignments>,
         @Json(name = "next_bearer_token_last_four")
         val nextBearerTokenLastFour: String,
+        /**
+         * The bearer token expiry time.
+         */
         @Json(name = "bearer_token_expires_at")
         val bearerTokenExpiresAt: Instant? = null,
+        /**
+         * This field is supplied only during [token rotation](https://stytch.com/docs/b2b/api/scim-rotate-token-start). The next
+         * bearer token expiry time.
+         */
         @Json(name = "next_bearer_token_expires_at")
         val nextBearerTokenExpiresAt: Instant? = null,
     )
@@ -246,26 +286,71 @@ public data class SCIMConnection
 public data class SCIMConnectionWithNextToken
     @JvmOverloads
     constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug or
+         * organization_external_id here as a convenience.
+         */
         @Json(name = "organization_id")
         val organizationId: String,
+        /**
+         * The ID of the SCIM connection.
+         */
         @Json(name = "connection_id")
         val connectionId: String,
+        /**
+         * The status of the connection. The possible values are deleted or active.
+         */
         @Json(name = "status")
         val status: String,
+        /**
+         * A human-readable display name for the connection.
+         */
         @Json(name = "display_name")
         val displayName: String,
+        /**
+         * The URL supplied to the Identity Provider (IdP) alongside the bearer token enabling access to Stytch's SCIM API
+         * endpoints
+         */
         @Json(name = "base_url")
         val baseURL: String,
+        /**
+         * Name of the IdP. Enum with possible values: `okta`, `microsoft-entra`, `cyberark`, `jumpcloud`, `onelogin`,
+         * `pingfederate`, `rippling` or `generic`.
+         *
+         * Specifying a known provider allows Stytch to handle any provider-specific logic, such as automatically appending
+         * `?aadOptscim062020` to the returned BaseURL for `microsoft-entra` SCIM Connections to
+         * [enable the SCIM 2.0 compliant flag](https://learn.microsoft.com/en-us/entra/identity/app-provisioning/application-provisioning-config-problem-scim-compatibility#scim-20-compliance-issues-and-status).
+         */
         @Json(name = "identity_provider")
         val identityProvider: String,
+        /**
+         * The last four digits of the bearer token. If you've lost access to your `bearer_token` and need to generate a new one,
+         * use the [SCIM rotate token start endpoint](https://stytch.com/docs/b2b/api/scim-rotate-token-start).
+         */
         @Json(name = "bearer_token_last_four")
         val bearerTokenLastFour: String,
+        /**
+         * This field is supplied only during [token rotation](https://stytch.com/docs/b2b/api/scim-rotate-token-start). This
+         * token should be used as the new bearer token for the SCIM connection after token rotation has been completed using the
+         * [SCIM rotate token complete endpoint](https://stytch.com/docs/b2b/api/scim-rotate-token-complete).
+         */
         @Json(name = "next_bearer_token")
         val nextBearerToken: String,
+        /**
+         * An array of SCIM group implicit role assignments. Each object in the array must contain a `group_id` and a `role_id`.
+         */
         @Json(name = "scim_group_implicit_role_assignments")
         val scimGroupImplicitRoleAssignments: List<SCIMGroupImplicitRoleAssignments>,
+        /**
+         * The bearer token expiry time.
+         */
         @Json(name = "bearer_token_expires_at")
         val bearerTokenExpiresAt: Instant? = null,
+        /**
+         * This field is supplied only during [token rotation](https://stytch.com/docs/b2b/api/scim-rotate-token-start). The next
+         * bearer token expiry time.
+         */
         @Json(name = "next_bearer_token_expires_at")
         val nextBearerTokenExpiresAt: Instant? = null,
     )
@@ -274,22 +359,59 @@ public data class SCIMConnectionWithNextToken
 public data class SCIMConnectionWithToken
     @JvmOverloads
     constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug or
+         * organization_external_id here as a convenience.
+         */
         @Json(name = "organization_id")
         val organizationId: String,
+        /**
+         * The ID of the SCIM connection.
+         */
         @Json(name = "connection_id")
         val connectionId: String,
+        /**
+         * The status of the connection. The possible values are deleted or active.
+         */
         @Json(name = "status")
         val status: String,
+        /**
+         * A human-readable display name for the connection.
+         */
         @Json(name = "display_name")
         val displayName: String,
+        /**
+         * Name of the IdP. Enum with possible values: `okta`, `microsoft-entra`, `cyberark`, `jumpcloud`, `onelogin`,
+         * `pingfederate`, `rippling` or `generic`.
+         *
+         * Specifying a known provider allows Stytch to handle any provider-specific logic, such as automatically appending
+         * `?aadOptscim062020` to the returned BaseURL for `microsoft-entra` SCIM Connections to
+         * [enable the SCIM 2.0 compliant flag](https://learn.microsoft.com/en-us/entra/identity/app-provisioning/application-provisioning-config-problem-scim-compatibility#scim-20-compliance-issues-and-status).
+         */
         @Json(name = "identity_provider")
         val identityProvider: String,
+        /**
+         * The URL supplied to the Identity Provider (IdP) alongside the bearer token enabling access to Stytch's SCIM API
+         * endpoints
+         */
         @Json(name = "base_url")
         val baseURL: String,
+        /**
+         * The token supplied to the Identity Provider (IdP) alongside the base URL that grants access to Stytch's SCIM API
+         * endpoints. It should be included in HTTP authorization headers. This field is supplied only on creation of the SCIM
+         * connection.
+         */
         @Json(name = "bearer_token")
         val bearerToken: String,
+        /**
+         * An array of SCIM group implicit role assignments. Each object in the array must contain a `group_id` and a `role_id`.
+         */
         @Json(name = "scim_group_implicit_role_assignments")
         val scimGroupImplicitRoleAssignments: List<SCIMGroupImplicitRoleAssignments>,
+        /**
+         * The bearer token expiry time.
+         */
         @Json(name = "bearer_token_expires_at")
         val bearerTokenExpiresAt: Instant? = null,
     )
@@ -327,8 +449,14 @@ public data class SCIMGroup
 public data class SCIMGroupImplicitRoleAssignments
     @JvmOverloads
     constructor(
+        /**
+         * The ID of the role.
+         */
         @Json(name = "role_id")
         val roleId: String,
+        /**
+         * The ID of the group.
+         */
         @Json(name = "group_id")
         val groupId: String,
         @Json(name = "group_name")

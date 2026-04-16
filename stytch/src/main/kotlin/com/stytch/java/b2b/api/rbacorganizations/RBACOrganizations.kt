@@ -26,6 +26,10 @@ import java.util.concurrent.CompletableFuture
 
 public interface Organizations {
     /**
+     *
+     * The organization RBAC policy feature is currently in private beta and must be enabled for your Workspace. Please
+     * contact Stytch support at support@stytch.com to request access.
+     *
      * Get the active RBAC Policy for a specific Organization within your Stytch Project. An Organization RBAC Policy contains
      * the roles that have been defined specifically for that organization, allowing for organization-specific permissioning
      * models.
@@ -46,6 +50,10 @@ public interface Organizations {
     public suspend fun getOrgPolicy(data: GetOrgPolicyRequest): StytchResult<GetOrgPolicyResponse>
 
     /**
+     *
+     * The organization RBAC policy feature is currently in private beta and must be enabled for your Workspace. Please
+     * contact Stytch support at support@stytch.com to request access.
+     *
      * Get the active RBAC Policy for a specific Organization within your Stytch Project. An Organization RBAC Policy contains
      * the roles that have been defined specifically for that organization, allowing for organization-specific permissioning
      * models.
@@ -69,6 +77,10 @@ public interface Organizations {
     )
 
     /**
+     *
+     * The organization RBAC policy feature is currently in private beta and must be enabled for your Workspace. Please
+     * contact Stytch support at support@stytch.com to request access.
+     *
      * Get the active RBAC Policy for a specific Organization within your Stytch Project. An Organization RBAC Policy contains
      * the roles that have been defined specifically for that organization, allowing for organization-specific permissioning
      * models.
@@ -89,6 +101,10 @@ public interface Organizations {
     public fun getOrgPolicyCompletable(data: GetOrgPolicyRequest): CompletableFuture<StytchResult<GetOrgPolicyResponse>>
 
     /**
+     *
+     * The organization RBAC policy feature is currently in private beta and must be enabled for your Workspace. Please
+     * contact Stytch support at support@stytch.com to request access.
+     *
      * Set the RBAC Policy for a specific Organization within your Stytch Project. An Organization RBAC Policy allows you to
      * define roles that are specific to that organization, providing fine-grained control over permissions at the
      * organization level.
@@ -117,6 +133,10 @@ public interface Organizations {
     public suspend fun setOrgPolicy(data: SetOrgPolicyRequest): StytchResult<SetOrgPolicyResponse>
 
     /**
+     *
+     * The organization RBAC policy feature is currently in private beta and must be enabled for your Workspace. Please
+     * contact Stytch support at support@stytch.com to request access.
+     *
      * Set the RBAC Policy for a specific Organization within your Stytch Project. An Organization RBAC Policy allows you to
      * define roles that are specific to that organization, providing fine-grained control over permissions at the
      * organization level.
@@ -148,6 +168,10 @@ public interface Organizations {
     )
 
     /**
+     *
+     * The organization RBAC policy feature is currently in private beta and must be enabled for your Workspace. Please
+     * contact Stytch support at support@stytch.com to request access.
+     *
      * Set the RBAC Policy for a specific Organization within your Stytch Project. An Organization RBAC Policy allows you to
      * define roles that are specific to that organization, providing fine-grained control over permissions at the
      * organization level.
@@ -203,10 +227,9 @@ internal class OrganizationsImpl(
     }
 
     override fun getOrgPolicyCompletable(data: GetOrgPolicyRequest): CompletableFuture<StytchResult<GetOrgPolicyResponse>> =
-        coroutineScope
-            .async {
-                getOrgPolicy(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            getOrgPolicy(data)
+        }.asCompletableFuture()
 
     override suspend fun setOrgPolicy(data: SetOrgPolicyRequest): StytchResult<SetOrgPolicyResponse> =
         withContext(Dispatchers.IO) {
@@ -226,8 +249,7 @@ internal class OrganizationsImpl(
     }
 
     override fun setOrgPolicyCompletable(data: SetOrgPolicyRequest): CompletableFuture<StytchResult<SetOrgPolicyResponse>> =
-        coroutineScope
-            .async {
-                setOrgPolicy(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            setOrgPolicy(data)
+        }.asCompletableFuture()
 }

@@ -42,11 +42,13 @@ public interface WebAuthn {
      * [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) with the data from
      * [public_key_credential_creation_options](https://w3c.github.io/webauthn/#dictionary-makecredentialoptions) passed to
      * the [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) request via the public
-     * key argument. We recommend using the `create()` wrapper provided by the webauthn-json library.
+     * key argument.
      *
-     * If you are not using the [webauthn-json](https://github.com/github/webauthn-json) library, the
-     * `public_key_credential_creation_options` will need to be converted to a suitable public key by unmarshalling the JSON,
-     * base64 decoding the user ID field, and converting user ID and the challenge fields into an array buffer.
+     * When using built-in browser methods like `navigator.credentials.create()`, set the `use_base64_url_encoding` option to
+     * `true`.
+     *
+     * See our [WebAuthn setup guide](https://stytch.com/docs/guides/webauthn/api) for additional usage instructions and
+     * example code.
      */
     public suspend fun registerStart(data: RegisterStartRequest): StytchResult<RegisterStartResponse>
 
@@ -59,11 +61,13 @@ public interface WebAuthn {
      * [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) with the data from
      * [public_key_credential_creation_options](https://w3c.github.io/webauthn/#dictionary-makecredentialoptions) passed to
      * the [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) request via the public
-     * key argument. We recommend using the `create()` wrapper provided by the webauthn-json library.
+     * key argument.
      *
-     * If you are not using the [webauthn-json](https://github.com/github/webauthn-json) library, the
-     * `public_key_credential_creation_options` will need to be converted to a suitable public key by unmarshalling the JSON,
-     * base64 decoding the user ID field, and converting user ID and the challenge fields into an array buffer.
+     * When using built-in browser methods like `navigator.credentials.create()`, set the `use_base64_url_encoding` option to
+     * `true`.
+     *
+     * See our [WebAuthn setup guide](https://stytch.com/docs/guides/webauthn/api) for additional usage instructions and
+     * example code.
      */
     public fun registerStart(
         data: RegisterStartRequest,
@@ -79,11 +83,13 @@ public interface WebAuthn {
      * [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) with the data from
      * [public_key_credential_creation_options](https://w3c.github.io/webauthn/#dictionary-makecredentialoptions) passed to
      * the [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) request via the public
-     * key argument. We recommend using the `create()` wrapper provided by the webauthn-json library.
+     * key argument.
      *
-     * If you are not using the [webauthn-json](https://github.com/github/webauthn-json) library, the
-     * `public_key_credential_creation_options` will need to be converted to a suitable public key by unmarshalling the JSON,
-     * base64 decoding the user ID field, and converting user ID and the challenge fields into an array buffer.
+     * When using built-in browser methods like `navigator.credentials.create()`, set the `use_base64_url_encoding` option to
+     * `true`.
+     *
+     * See our [WebAuthn setup guide](https://stytch.com/docs/guides/webauthn/api) for additional usage instructions and
+     * example code.
      */
     public fun registerStartCompletable(data: RegisterStartRequest): CompletableFuture<StytchResult<RegisterStartResponse>>
 
@@ -92,11 +98,8 @@ public interface WebAuthn {
      * [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) request to this endpoint as
      * the `public_key_credential` parameter.
      *
-     * If the [webauthn-json](https://github.com/github/webauthn-json) library's `create()` method was used, the response can
-     * be passed directly to the [register endpoint](https://stytch.com/docs/api/webauthn-register). If not, some fields (the
-     * client data and the attestation object) from the
-     * [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) response will need to be
-     * converted from array buffers to strings and marshalled into JSON.
+     * See our [WebAuthn setup guide](https://stytch.com/docs/guides/webauthn/api) for additional usage instructions and
+     * example code.
      */
     public suspend fun register(data: RegisterRequest): StytchResult<RegisterResponse>
 
@@ -105,11 +108,8 @@ public interface WebAuthn {
      * [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) request to this endpoint as
      * the `public_key_credential` parameter.
      *
-     * If the [webauthn-json](https://github.com/github/webauthn-json) library's `create()` method was used, the response can
-     * be passed directly to the [register endpoint](https://stytch.com/docs/api/webauthn-register). If not, some fields (the
-     * client data and the attestation object) from the
-     * [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) response will need to be
-     * converted from array buffers to strings and marshalled into JSON.
+     * See our [WebAuthn setup guide](https://stytch.com/docs/guides/webauthn/api) for additional usage instructions and
+     * example code.
      */
     public fun register(
         data: RegisterRequest,
@@ -121,11 +121,8 @@ public interface WebAuthn {
      * [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) request to this endpoint as
      * the `public_key_credential` parameter.
      *
-     * If the [webauthn-json](https://github.com/github/webauthn-json) library's `create()` method was used, the response can
-     * be passed directly to the [register endpoint](https://stytch.com/docs/api/webauthn-register). If not, some fields (the
-     * client data and the attestation object) from the
-     * [navigator.credentials.create()](https://www.w3.org/TR/webauthn-2/#sctn-createCredential) response will need to be
-     * converted from array buffers to strings and marshalled into JSON.
+     * See our [WebAuthn setup guide](https://stytch.com/docs/guides/webauthn/api) for additional usage instructions and
+     * example code.
      */
     public fun registerCompletable(data: RegisterRequest): CompletableFuture<StytchResult<RegisterResponse>>
 
@@ -138,11 +135,12 @@ public interface WebAuthn {
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) with the data from
      * `public_key_credential_request_options` passed to the
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) request via the public key argument.
-     * We recommend using the `get()` wrapper provided by the webauthn-json library.
      *
-     * If you are not using the [webauthn-json](https://github.com/github/webauthn-json) library, `the
-     * public_key_credential_request_options` will need to be converted to a suitable public key by unmarshalling the JSON and
-     * converting some the fields to array buffers.
+     * When using built-in browser methods like `navigator.credentials.get()`, set the `use_base64_url_encoding` option to
+     * `true`.
+     *
+     * See our [WebAuthn setup guide](https://stytch.com/docs/guides/webauthn/api) for additional usage instructions and
+     * example code.
      */
     public suspend fun authenticateStart(data: AuthenticateStartRequest): StytchResult<AuthenticateStartResponse>
 
@@ -155,11 +153,12 @@ public interface WebAuthn {
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) with the data from
      * `public_key_credential_request_options` passed to the
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) request via the public key argument.
-     * We recommend using the `get()` wrapper provided by the webauthn-json library.
      *
-     * If you are not using the [webauthn-json](https://github.com/github/webauthn-json) library, `the
-     * public_key_credential_request_options` will need to be converted to a suitable public key by unmarshalling the JSON and
-     * converting some the fields to array buffers.
+     * When using built-in browser methods like `navigator.credentials.get()`, set the `use_base64_url_encoding` option to
+     * `true`.
+     *
+     * See our [WebAuthn setup guide](https://stytch.com/docs/guides/webauthn/api) for additional usage instructions and
+     * example code.
      */
     public fun authenticateStart(
         data: AuthenticateStartRequest,
@@ -175,11 +174,12 @@ public interface WebAuthn {
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) with the data from
      * `public_key_credential_request_options` passed to the
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) request via the public key argument.
-     * We recommend using the `get()` wrapper provided by the webauthn-json library.
      *
-     * If you are not using the [webauthn-json](https://github.com/github/webauthn-json) library, `the
-     * public_key_credential_request_options` will need to be converted to a suitable public key by unmarshalling the JSON and
-     * converting some the fields to array buffers.
+     * When using built-in browser methods like `navigator.credentials.get()`, set the `use_base64_url_encoding` option to
+     * `true`.
+     *
+     * See our [WebAuthn setup guide](https://stytch.com/docs/guides/webauthn/api) for additional usage instructions and
+     * example code.
      */
     public fun authenticateStartCompletable(data: AuthenticateStartRequest): CompletableFuture<StytchResult<AuthenticateStartResponse>>
 
@@ -188,10 +188,8 @@ public interface WebAuthn {
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) request to the authenticate
      * endpoint.
      *
-     * If the [webauthn-json](https://github.com/github/webauthn-json) library's `get()` method was used, the response can be
-     * passed directly to the [authenticate endpoint](https://stytch.com/docs/api/webauthn-authenticate). If not some fields
-     * from the [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) response will need to be
-     * converted from array buffers to strings and marshalled into JSON.
+     * See our [WebAuthn setup guide](https://stytch.com/docs/guides/webauthn/api) for additional usage instructions and
+     * example code.
      */
     public suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse>
 
@@ -200,10 +198,8 @@ public interface WebAuthn {
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) request to the authenticate
      * endpoint.
      *
-     * If the [webauthn-json](https://github.com/github/webauthn-json) library's `get()` method was used, the response can be
-     * passed directly to the [authenticate endpoint](https://stytch.com/docs/api/webauthn-authenticate). If not some fields
-     * from the [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) response will need to be
-     * converted from array buffers to strings and marshalled into JSON.
+     * See our [WebAuthn setup guide](https://stytch.com/docs/guides/webauthn/api) for additional usage instructions and
+     * example code.
      */
     public fun authenticate(
         data: AuthenticateRequest,
@@ -215,10 +211,8 @@ public interface WebAuthn {
      * [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) request to the authenticate
      * endpoint.
      *
-     * If the [webauthn-json](https://github.com/github/webauthn-json) library's `get()` method was used, the response can be
-     * passed directly to the [authenticate endpoint](https://stytch.com/docs/api/webauthn-authenticate). If not some fields
-     * from the [navigator.credentials.get()](https://www.w3.org/TR/webauthn-2/#sctn-getAssertion) response will need to be
-     * converted from array buffers to strings and marshalled into JSON.
+     * See our [WebAuthn setup guide](https://stytch.com/docs/guides/webauthn/api) for additional usage instructions and
+     * example code.
      */
     public fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>>
 
@@ -283,10 +277,9 @@ internal class WebAuthnImpl(
     }
 
     override fun registerStartCompletable(data: RegisterStartRequest): CompletableFuture<StytchResult<RegisterStartResponse>> =
-        coroutineScope
-            .async {
-                registerStart(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            registerStart(data)
+        }.asCompletableFuture()
 
     override suspend fun register(data: RegisterRequest): StytchResult<RegisterResponse> =
         withContext(Dispatchers.IO) {
@@ -306,10 +299,9 @@ internal class WebAuthnImpl(
     }
 
     override fun registerCompletable(data: RegisterRequest): CompletableFuture<StytchResult<RegisterResponse>> =
-        coroutineScope
-            .async {
-                register(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            register(data)
+        }.asCompletableFuture()
 
     override suspend fun authenticateStart(data: AuthenticateStartRequest): StytchResult<AuthenticateStartResponse> =
         withContext(Dispatchers.IO) {
@@ -329,10 +321,9 @@ internal class WebAuthnImpl(
     }
 
     override fun authenticateStartCompletable(data: AuthenticateStartRequest): CompletableFuture<StytchResult<AuthenticateStartResponse>> =
-        coroutineScope
-            .async {
-                authenticateStart(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            authenticateStart(data)
+        }.asCompletableFuture()
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
@@ -352,10 +343,9 @@ internal class WebAuthnImpl(
     }
 
     override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
-        coroutineScope
-            .async {
-                authenticate(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            authenticate(data)
+        }.asCompletableFuture()
 
     override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> =
         withContext(Dispatchers.IO) {
@@ -375,10 +365,9 @@ internal class WebAuthnImpl(
     }
 
     override fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>> =
-        coroutineScope
-            .async {
-                update(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            update(data)
+        }.asCompletableFuture()
 
     override suspend fun listCredentials(data: ListCredentialsRequest): StytchResult<ListCredentialsResponse> =
         withContext(Dispatchers.IO) {
@@ -401,8 +390,7 @@ internal class WebAuthnImpl(
     }
 
     override fun listCredentialsCompletable(data: ListCredentialsRequest): CompletableFuture<StytchResult<ListCredentialsResponse>> =
-        coroutineScope
-            .async {
-                listCredentials(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            listCredentials(data)
+        }.asCompletableFuture()
 }

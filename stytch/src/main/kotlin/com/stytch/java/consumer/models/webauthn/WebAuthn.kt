@@ -183,6 +183,10 @@ public data class AuthenticateStartRequest
          */
         @Json(name = "return_passkey_credential_options")
         val returnPasskeyCredentialOptions: Boolean? = null,
+        /**
+         * If true, values in the `public_key_credential_creation_options` will be base64 URL encoded. Set this option to true
+         * when using built-in browser methods like `navigator.credentials.create` and `navigator.credentials.get`.
+         */
         @Json(name = "use_base64_url_encoding")
         val useBase64URLEncoding: Boolean? = null,
     )
@@ -426,6 +430,10 @@ public data class RegisterStartRequest
         val overrideName: String? = null,
         @Json(name = "override_display_name")
         val overrideDisplayName: String? = null,
+        /**
+         * If true, values in the `public_key_credential_creation_options` will be base64 URL encoded. Set this option to true
+         * when using built-in browser methods like `navigator.credentials.create` and `navigator.credentials.get`.
+         */
         @Json(name = "use_base64_url_encoding")
         val useBase64URLEncoding: Boolean? = null,
     )

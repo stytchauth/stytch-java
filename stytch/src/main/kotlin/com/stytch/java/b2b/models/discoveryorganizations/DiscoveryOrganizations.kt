@@ -419,6 +419,11 @@ public data class CreateResponse
         @Json(name = "member")
         val member: Member,
         /**
+         * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
+         */
+        @Json(name = "organization")
+        val organization: Organization,
+        /**
          * Indicates whether the Member is fully authenticated. If false, the Member needs to complete an MFA step to log in to
          * the Organization.
          */
@@ -449,11 +454,6 @@ public data class CreateResponse
          */
         @Json(name = "member_session")
         val memberSession: MemberSession? = null,
-        /**
-         * The [Organization object](https://stytch.com/docs/b2b/api/organization-object).
-         */
-        @Json(name = "organization")
-        val organization: Organization? = null,
         /**
          * Information about the MFA requirements of the Organization and the Member's options for fulfilling MFA.
          */

@@ -64,8 +64,7 @@ internal class DiscoveryImpl(
     }
 
     override fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>> =
-        coroutineScope
-            .async {
-                send(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            send(data)
+        }.asCompletableFuture()
 }

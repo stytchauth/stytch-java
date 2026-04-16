@@ -69,8 +69,9 @@ public data class InviteRequest
         @Json(name = "email")
         val email: String,
         /**
-         * Use a custom template for invite emails. By default, it will use your default email template. The template must be a
-         * template using our built-in customizations or a custom HTML email for Magic links - Invite.
+         * Use a custom template for invite emails. By default, it will use your default email template. Templates can be added in
+         * the [Stytch dashboard](https://stytch.com/dashboard/templates) using our built-in customization options or custom HTML
+         * templates with type “Magic links - Invite”.
          */
         @Json(name = "invite_template_id")
         val inviteTemplateId: String? = null,
@@ -100,7 +101,7 @@ public data class InviteRequest
         @Json(name = "invite_expiration_minutes")
         val inviteExpirationMinutes: Int? = null,
         /**
-         * Used to determine which language to use when sending the user this delivery method. Parameter is a
+         * Used to determine which language to use when sending the user this delivery method. Parameter is an
          * [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
          *
          * Currently supported languages are English (`"en"`), Spanish (`"es"`), French (`"fr"`) and Brazilian Portuguese
@@ -199,14 +200,16 @@ public data class LoginOrCreateRequest
         @Json(name = "signup_expiration_minutes")
         val signupExpirationMinutes: Int? = null,
         /**
-         * Use a custom template for login emails. By default, it will use your default email template. The template must be a
-         * template using our built-in customizations or a custom HTML email for Magic links - Login.
+         * Use a custom template for login emails. By default, it will use your default email template. Templates can be added in
+         * the [Stytch dashboard](https://stytch.com/dashboard/templates) using our built-in customization options or custom HTML
+         * templates with type “Magic links - Login”.
          */
         @Json(name = "login_template_id")
         val loginTemplateId: String? = null,
         /**
-         * Use a custom template for sign-up emails. By default, it will use your default email template. The template must be a
-         * template using our built-in customizations or a custom HTML email for Magic links - Sign-up.
+         * Use a custom template for sign-up emails. By default, it will use your default email template. Templates can be added
+         * in the [Stytch dashboard](https://stytch.com/dashboard/templates) using our built-in customization options or custom
+         * HTML templates with type “Magic links - Sign-up”.
          */
         @Json(name = "signup_template_id")
         val signupTemplateId: String? = null,
@@ -232,7 +235,7 @@ public data class LoginOrCreateRequest
         @Json(name = "code_challenge")
         val codeChallenge: String? = null,
         /**
-         * Used to determine which language to use when sending the user this delivery method. Parameter is a
+         * Used to determine which language to use when sending the user this delivery method. Parameter is an
          * [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
          *
          * Currently supported languages are English (`"en"`), Spanish (`"es"`), French (`"fr"`) and Brazilian Portuguese
@@ -330,8 +333,9 @@ public data class SendRequest
         @Json(name = "email")
         val email: String,
         /**
-         * Use a custom template for login emails. By default, it will use your default email template. The template must be a
-         * template using our built-in customizations or a custom HTML email for Magic links - Login.
+         * Use a custom template for login emails. By default, it will use your default email template. Templates can be added in
+         * the [Stytch dashboard](https://stytch.com/dashboard/templates) using our built-in customization options or custom HTML
+         * templates with type “Magic links - Login”.
          */
         @Json(name = "login_template_id")
         val loginTemplateId: String? = null,
@@ -391,7 +395,7 @@ public data class SendRequest
         @Json(name = "session_jwt")
         val sessionJWT: String? = null,
         /**
-         * Used to determine which language to use when sending the user this delivery method. Parameter is a
+         * Used to determine which language to use when sending the user this delivery method. Parameter is an
          * [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
          *
          * Currently supported languages are English (`"en"`), Spanish (`"es"`), French (`"fr"`) and Brazilian Portuguese
@@ -404,8 +408,9 @@ public data class SendRequest
         @Json(name = "locale")
         val locale: SendRequestLocale? = null,
         /**
-         * Use a custom template for sign-up emails. By default, it will use your default email template. The template must be a
-         * template using our built-in customizations or a custom HTML email for Magic links - Sign-up.
+         * Use a custom template for sign-up emails. By default, it will use your default email template. Templates can be added
+         * in the [Stytch dashboard](https://stytch.com/dashboard/templates) using our built-in customization options or custom
+         * HTML templates with type “Magic links - Sign-up”.
          */
         @Json(name = "signup_template_id")
         val signupTemplateId: String? = null,

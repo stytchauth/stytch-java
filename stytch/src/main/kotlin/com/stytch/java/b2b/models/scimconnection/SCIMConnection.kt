@@ -264,8 +264,7 @@ public data class CreateResponse
         @Json(name = "status_code")
         val statusCode: Int,
         /**
-         * The `SCIM Connection` object affected by this API call. See the
-         * [SCIM Connection Object](https://stytch.com/docs/b2b/api/scim-connection-object) for complete response field details.
+         * The [SCIM Connection Object](https://stytch.com/docs/b2b/api/scim-connection-object).
          */
         @Json(name = "connection")
         val connection: SCIMConnectionWithToken? = null,
@@ -413,8 +412,7 @@ public data class GetResponse
         @Json(name = "status_code")
         val statusCode: Int,
         /**
-         * A [SCIM Connection](https://stytch.com/docs/b2b/api/scim-connection-object) connection belonging to the organization
-         * (currently limited to one).
+         * The [SCIM Connection Object](https://stytch.com/docs/b2b/api/scim-connection-object).
          */
         @Json(name = "connection")
         val connection: SCIMConnection? = null,
@@ -461,8 +459,7 @@ public data class RotateCancelResponse
         @Json(name = "status_code")
         val statusCode: Int,
         /**
-         * The `SCIM Connection` object affected by this API call. See the
-         * [SCIM Connection Object](https://stytch.com/docs/b2b/api/scim-connection-object) for complete response field details.
+         * The [SCIM Connection Object](https://stytch.com/docs/b2b/api/scim-connection-object).
          */
         @Json(name = "connection")
         val connection: SCIMConnection? = null,
@@ -509,8 +506,7 @@ public data class RotateCompleteResponse
         @Json(name = "status_code")
         val statusCode: Int,
         /**
-         * The `SCIM Connection` object affected by this API call. See the
-         * [SCIM Connection Object](https://stytch.com/docs/b2b/api/scim-connection-object) for complete response field details.
+         * The [SCIM Connection Object](https://stytch.com/docs/b2b/api/scim-connection-object).
          */
         @Json(name = "connection")
         val connection: SCIMConnection? = null,
@@ -557,8 +553,7 @@ public data class RotateStartResponse
         @Json(name = "status_code")
         val statusCode: Int,
         /**
-         * The `SCIM Connection` object affected by this API call. See the
-         * [SCIM Connection Object](https://stytch.com/docs/b2b/api/scim-connection-object) for complete response field details.
+         * The [SCIM Connection Object](https://stytch.com/docs/b2b/api/scim-connection-object).
          */
         @Json(name = "connection")
         val connection: SCIMConnectionWithNextToken? = null,
@@ -617,8 +612,7 @@ public data class UpdateResponse
         @Json(name = "status_code")
         val statusCode: Int,
         /**
-         * The `SAML Connection` object affected by this API call. See the
-         * [SAML Connection Object](https://stytch.com/docs/b2b/api/saml-connection-object) for complete response field details.
+         * The [SCIM Connection Object](https://stytch.com/docs/b2b/api/scim-connection-object).
          */
         @Json(name = "connection")
         val connection: SCIMConnection? = null,

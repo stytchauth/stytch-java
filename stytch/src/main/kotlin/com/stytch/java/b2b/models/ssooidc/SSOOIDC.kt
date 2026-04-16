@@ -195,8 +195,7 @@ public data class CreateConnectionResponse
         @Json(name = "status_code")
         val statusCode: Int,
         /**
-         * The `OIDC Connection` object affected by this API call. See the
-         * [OIDC Connection Object](https://stytch.com/docs/b2b/api/oidc-connection-object) for complete response field details.
+         * The [OIDC Connection Object](https://stytch.com/docs/b2b/api/oidc-connection-object).
          */
         @Json(name = "connection")
         val connection: OIDCConnection? = null,
@@ -306,8 +305,7 @@ public data class UpdateConnectionResponse
         @Json(name = "status_code")
         val statusCode: Int,
         /**
-         * The `OIDC Connection` object affected by this API call. See the
-         * [OIDC Connection Object](https://stytch.com/docs/b2b/api/oidc-connection-object) for complete response field details.
+         * The [OIDC Connection Object](https://stytch.com/docs/b2b/api/oidc-connection-object).
          */
         @Json(name = "connection")
         val connection: OIDCConnection? = null,

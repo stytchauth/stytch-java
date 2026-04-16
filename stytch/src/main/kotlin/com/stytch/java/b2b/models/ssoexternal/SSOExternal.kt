@@ -108,9 +108,7 @@ public data class CreateConnectionResponse
         @Json(name = "status_code")
         val statusCode: Int,
         /**
-         * The `External Connection` object affected by this API call. See the
-         * [External Connection Object](https://stytch.com/docs/b2b/api/external-connection-object) for complete response field
-         * details.
+         * The [External Connection Object](https://stytch.com/docs/b2b/api/external-connection-object).
          */
         @Json(name = "connection")
         val connection: Connection? = null,
@@ -183,9 +181,7 @@ public data class UpdateConnectionResponse
         @Json(name = "status_code")
         val statusCode: Int,
         /**
-         * The `External Connection` object affected by this API call. See the
-         * [External Connection Object](https://stytch.com/docs/b2b/api/external-connection-object) for complete response field
-         * details.
+         * The [External Connection Object](https://stytch.com/docs/b2b/api/external-connection-object).
          */
         @Json(name = "connection")
         val connection: Connection? = null,

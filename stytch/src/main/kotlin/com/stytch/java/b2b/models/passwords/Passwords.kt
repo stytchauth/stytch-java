@@ -190,7 +190,7 @@ public data class AuthenticateRequest
          * one-time passcode (OTP) to the Member's phone number. The locale argument will be used to determine which language to
          * use when sending the passcode.
          *
-         * Parameter is a [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
+         * Parameter is an [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
          *
          * Currently supported languages are English (`"en"`), Spanish (`"es"`), and Brazilian Portuguese (`"pt-br"`); if no value
          * is provided, the copy defaults to English.
@@ -507,8 +507,8 @@ public data class StrengthCheckResponse
          * Returns `true` if the password passes our password validation. We offer two validation options,
          *   [zxcvbn](https://stytch.com/docs/guides/passwords/strength-policy) is the default option which offers a high level of
          * sophistication.
-         *   We also offer [LUDS](https://stytch.com/docs/b2b/guides/passwords/strength-policy). If an email address is included
-         * in the call we also
+         *   We also offer [LUDS](https://stytch.com/docs/b2b/guides/passwords/strength-policy) which is less sophisticated
+         *   but easier to understand. If an email address is included in the call we also
          *   require that the password hasn't been compromised using built-in breach detection powered by
          * [HaveIBeenPwned](https://haveibeenpwned.com/)
          */
@@ -532,8 +532,8 @@ public data class StrengthCheckResponse
         val strengthPolicy: String,
         /**
          * Will return `true` if breach detection will be evaluated. By default this option is enabled.
-         *   This option can be disabled by contacting
-         * [support@stytch.com](mailto:support@stytch.com?subject=Password%20strength%20configuration).
+         *   This option can be disabled in the
+         * [dashboard](https://stytch.com/dashboard/password-strength-config#breach-detection).
          *   If this value is false then `breached_password` will always be `false` as well.
          */
         @Json(name = "breach_detection_on_create")
