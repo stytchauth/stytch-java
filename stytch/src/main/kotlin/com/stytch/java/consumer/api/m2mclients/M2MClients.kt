@@ -87,10 +87,10 @@ public interface Clients {
     public fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>>
 
     /**
-     * Updates an existing M2M Client. You can use this endpoint to activate or deactivate a M2M Client by changing its
+     * Updates an existing M2M Client. You can use this endpoint to activate or deactivate an M2M Client by changing its
      * `status`. A deactivated M2M Client will not be allowed to perform future token exchange flows until it is reactivated.
      *
-     * **Important:** Deactivating a M2M Client will not invalidate any existing JWTs issued to the client, only prevent it
+     * **Important:** Deactivating an M2M Client will not invalidate any existing JWTs issued to the client, only prevent it
      * from receiving new ones.
      * To protect more-sensitive routes, pass a lower `max_token_age` value
      * when[authenticating the token](https://stytch.com/docs/b2b/api/authenticate-m2m-token)[authenticating the token](https://stytch.com/docs/api/authenticate-m2m-token).
@@ -98,10 +98,10 @@ public interface Clients {
     public suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse>
 
     /**
-     * Updates an existing M2M Client. You can use this endpoint to activate or deactivate a M2M Client by changing its
+     * Updates an existing M2M Client. You can use this endpoint to activate or deactivate an M2M Client by changing its
      * `status`. A deactivated M2M Client will not be allowed to perform future token exchange flows until it is reactivated.
      *
-     * **Important:** Deactivating a M2M Client will not invalidate any existing JWTs issued to the client, only prevent it
+     * **Important:** Deactivating an M2M Client will not invalidate any existing JWTs issued to the client, only prevent it
      * from receiving new ones.
      * To protect more-sensitive routes, pass a lower `max_token_age` value
      * when[authenticating the token](https://stytch.com/docs/b2b/api/authenticate-m2m-token)[authenticating the token](https://stytch.com/docs/api/authenticate-m2m-token).
@@ -112,10 +112,10 @@ public interface Clients {
     )
 
     /**
-     * Updates an existing M2M Client. You can use this endpoint to activate or deactivate a M2M Client by changing its
+     * Updates an existing M2M Client. You can use this endpoint to activate or deactivate an M2M Client by changing its
      * `status`. A deactivated M2M Client will not be allowed to perform future token exchange flows until it is reactivated.
      *
-     * **Important:** Deactivating a M2M Client will not invalidate any existing JWTs issued to the client, only prevent it
+     * **Important:** Deactivating an M2M Client will not invalidate any existing JWTs issued to the client, only prevent it
      * from receiving new ones.
      * To protect more-sensitive routes, pass a lower `max_token_age` value
      * when[authenticating the token](https://stytch.com/docs/b2b/api/authenticate-m2m-token)[authenticating the token](https://stytch.com/docs/api/authenticate-m2m-token).
@@ -125,7 +125,7 @@ public interface Clients {
     /**
      * Deletes the M2M Client.
      *
-     * **Important:** Deleting a M2M Client will not invalidate any existing JWTs issued to the client, only prevent it from
+     * **Important:** Deleting an M2M Client will not invalidate any existing JWTs issued to the client, only prevent it from
      * receiving new ones.
      * To protect more-sensitive routes, pass a lower `max_token_age` value
      * when[authenticating the token](https://stytch.com/docs/b2b/api/authenticate-m2m-token)[authenticating the token](https://stytch.com/docs/api/authenticate-m2m-token).
@@ -135,7 +135,7 @@ public interface Clients {
     /**
      * Deletes the M2M Client.
      *
-     * **Important:** Deleting a M2M Client will not invalidate any existing JWTs issued to the client, only prevent it from
+     * **Important:** Deleting an M2M Client will not invalidate any existing JWTs issued to the client, only prevent it from
      * receiving new ones.
      * To protect more-sensitive routes, pass a lower `max_token_age` value
      * when[authenticating the token](https://stytch.com/docs/b2b/api/authenticate-m2m-token)[authenticating the token](https://stytch.com/docs/api/authenticate-m2m-token).
@@ -148,7 +148,7 @@ public interface Clients {
     /**
      * Deletes the M2M Client.
      *
-     * **Important:** Deleting a M2M Client will not invalidate any existing JWTs issued to the client, only prevent it from
+     * **Important:** Deleting an M2M Client will not invalidate any existing JWTs issued to the client, only prevent it from
      * receiving new ones.
      * To protect more-sensitive routes, pass a lower `max_token_age` value
      * when[authenticating the token](https://stytch.com/docs/b2b/api/authenticate-m2m-token)[authenticating the token](https://stytch.com/docs/api/authenticate-m2m-token).
@@ -221,10 +221,9 @@ internal class ClientsImpl(
     }
 
     override fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>> =
-        coroutineScope
-            .async {
-                get(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            get(data)
+        }.asCompletableFuture()
 
     override suspend fun search(data: SearchRequest): StytchResult<SearchResponse> =
         withContext(Dispatchers.IO) {
@@ -244,10 +243,9 @@ internal class ClientsImpl(
     }
 
     override fun searchCompletable(data: SearchRequest): CompletableFuture<StytchResult<SearchResponse>> =
-        coroutineScope
-            .async {
-                search(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            search(data)
+        }.asCompletableFuture()
 
     override suspend fun update(data: UpdateRequest): StytchResult<UpdateResponse> =
         withContext(Dispatchers.IO) {
@@ -267,10 +265,9 @@ internal class ClientsImpl(
     }
 
     override fun updateCompletable(data: UpdateRequest): CompletableFuture<StytchResult<UpdateResponse>> =
-        coroutineScope
-            .async {
-                update(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            update(data)
+        }.asCompletableFuture()
 
     override suspend fun delete(data: DeleteRequest): StytchResult<DeleteResponse> =
         withContext(Dispatchers.IO) {
@@ -289,10 +286,9 @@ internal class ClientsImpl(
     }
 
     override fun deleteCompletable(data: DeleteRequest): CompletableFuture<StytchResult<DeleteResponse>> =
-        coroutineScope
-            .async {
-                delete(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            delete(data)
+        }.asCompletableFuture()
 
     override suspend fun create(data: CreateRequest): StytchResult<CreateResponse> =
         withContext(Dispatchers.IO) {
@@ -312,8 +308,7 @@ internal class ClientsImpl(
     }
 
     override fun createCompletable(data: CreateRequest): CompletableFuture<StytchResult<CreateResponse>> =
-        coroutineScope
-            .async {
-                create(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            create(data)
+        }.asCompletableFuture()
 }

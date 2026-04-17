@@ -284,6 +284,10 @@ public data class User
          */
         @Json(name = "biometric_registrations")
         val biometricRegistrations: List<BiometricRegistration>,
+        /**
+         * Whether the User is temporarily locked due to too many failed authentication attempts. See the
+         * [User Locking Guide](https://stytch.com/docs/resources/platform/user-locks) for more information.
+         */
         @Json(name = "is_locked")
         val isLocked: Boolean,
         /**
@@ -321,10 +325,23 @@ public data class User
          */
         @Json(name = "untrusted_metadata")
         val untrustedMetadata: Map<String, Any?>? = emptyMap(),
+        /**
+         * An identifier that can be used in most API calls where a `member_id` is expected. This is a string consisting of
+         * alphanumeric, `.`, `_`, `-`, or `|` characters with a maximum length of 128 characters. External IDs must be unique
+         * within the project.
+         */
         @Json(name = "external_id")
         val externalId: String? = null,
+        /**
+         * When the user lock was created, if there is one. Values conform to the RFC 3339 standard and are expressed in UTC, e.g.
+         * `2021-12-29T12:33:09Z`.
+         */
         @Json(name = "lock_created_at")
         val lockCreatedAt: Instant? = null,
+        /**
+         * When the user lock expires, if there is one. Values conform to the RFC 3339 standard and are expressed in UTC, e.g.
+         * `2021-12-29T12:33:09Z`.
+         */
         @Json(name = "lock_expires_at")
         val lockExpiresAt: Instant? = null,
     )

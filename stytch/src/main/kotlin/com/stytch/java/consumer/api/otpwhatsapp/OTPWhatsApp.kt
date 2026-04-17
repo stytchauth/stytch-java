@@ -180,10 +180,9 @@ internal class WhatsAppImpl(
     }
 
     override fun sendCompletable(data: SendRequest): CompletableFuture<StytchResult<SendResponse>> =
-        coroutineScope
-            .async {
-                send(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            send(data)
+        }.asCompletableFuture()
 
     override suspend fun loginOrCreate(data: LoginOrCreateRequest): StytchResult<LoginOrCreateResponse> =
         withContext(Dispatchers.IO) {
@@ -203,8 +202,7 @@ internal class WhatsAppImpl(
     }
 
     override fun loginOrCreateCompletable(data: LoginOrCreateRequest): CompletableFuture<StytchResult<LoginOrCreateResponse>> =
-        coroutineScope
-            .async {
-                loginOrCreate(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            loginOrCreate(data)
+        }.asCompletableFuture()
 }

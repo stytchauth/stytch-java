@@ -270,9 +270,6 @@ public interface Sessions {
      * The Access Token must contain the `full_access` scope (only available to First Party clients) and must not be more than
      * 5 minutes old. Access Tokens may only be exchanged a single time.
      *
-     * The Member Session returned will be the same Member Session that was active in your application (the authorizing party)
-     * during the initial authorization flow.
-     *
      * Because the Member previously completed MFA and satisfied all Organization authentication requirements at the time of
      * the original Access Token issuance, this endpoint will never return an `intermediate_session_token` or require MFA.
      */
@@ -284,9 +281,6 @@ public interface Sessions {
      *
      * The Access Token must contain the `full_access` scope (only available to First Party clients) and must not be more than
      * 5 minutes old. Access Tokens may only be exchanged a single time.
-     *
-     * The Member Session returned will be the same Member Session that was active in your application (the authorizing party)
-     * during the initial authorization flow.
      *
      * Because the Member previously completed MFA and satisfied all Organization authentication requirements at the time of
      * the original Access Token issuance, this endpoint will never return an `intermediate_session_token` or require MFA.
@@ -302,9 +296,6 @@ public interface Sessions {
      *
      * The Access Token must contain the `full_access` scope (only available to First Party clients) and must not be more than
      * 5 minutes old. Access Tokens may only be exchanged a single time.
-     *
-     * The Member Session returned will be the same Member Session that was active in your application (the authorizing party)
-     * during the initial authorization flow.
      *
      * Because the Member previously completed MFA and satisfied all Organization authentication requirements at the time of
      * the original Access Token issuance, this endpoint will never return an `intermediate_session_token` or require MFA.
@@ -580,10 +571,9 @@ internal class SessionsImpl(
     }
 
     override fun getCompletable(data: GetRequest): CompletableFuture<StytchResult<GetResponse>> =
-        coroutineScope
-            .async {
-                get(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            get(data)
+        }.asCompletableFuture()
 
     override suspend fun authenticate(data: AuthenticateRequest): StytchResult<AuthenticateResponse> =
         withContext(Dispatchers.IO) {
@@ -603,10 +593,9 @@ internal class SessionsImpl(
     }
 
     override fun authenticateCompletable(data: AuthenticateRequest): CompletableFuture<StytchResult<AuthenticateResponse>> =
-        coroutineScope
-            .async {
-                authenticate(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            authenticate(data)
+        }.asCompletableFuture()
 
     override suspend fun revoke(
         data: RevokeRequest,
@@ -636,10 +625,9 @@ internal class SessionsImpl(
         data: RevokeRequest,
         methodOptions: RevokeRequestOptions?,
     ): CompletableFuture<StytchResult<RevokeResponse>> =
-        coroutineScope
-            .async {
-                revoke(data, methodOptions)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            revoke(data, methodOptions)
+        }.asCompletableFuture()
 
     override suspend fun exchange(data: ExchangeRequest): StytchResult<ExchangeResponse> =
         withContext(Dispatchers.IO) {
@@ -659,10 +647,9 @@ internal class SessionsImpl(
     }
 
     override fun exchangeCompletable(data: ExchangeRequest): CompletableFuture<StytchResult<ExchangeResponse>> =
-        coroutineScope
-            .async {
-                exchange(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            exchange(data)
+        }.asCompletableFuture()
 
     override suspend fun exchangeAccessToken(data: ExchangeAccessTokenRequest): StytchResult<ExchangeAccessTokenResponse> =
         withContext(Dispatchers.IO) {
@@ -684,10 +671,9 @@ internal class SessionsImpl(
     override fun exchangeAccessTokenCompletable(
         data: ExchangeAccessTokenRequest,
     ): CompletableFuture<StytchResult<ExchangeAccessTokenResponse>> =
-        coroutineScope
-            .async {
-                exchangeAccessToken(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            exchangeAccessToken(data)
+        }.asCompletableFuture()
 
     override suspend fun attest(data: AttestRequest): StytchResult<AttestResponse> =
         withContext(Dispatchers.IO) {
@@ -707,10 +693,9 @@ internal class SessionsImpl(
     }
 
     override fun attestCompletable(data: AttestRequest): CompletableFuture<StytchResult<AttestResponse>> =
-        coroutineScope
-            .async {
-                attest(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            attest(data)
+        }.asCompletableFuture()
 
     override suspend fun migrate(data: MigrateRequest): StytchResult<MigrateResponse> =
         withContext(Dispatchers.IO) {
@@ -730,10 +715,9 @@ internal class SessionsImpl(
     }
 
     override fun migrateCompletable(data: MigrateRequest): CompletableFuture<StytchResult<MigrateResponse>> =
-        coroutineScope
-            .async {
-                migrate(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            migrate(data)
+        }.asCompletableFuture()
 
     override suspend fun getJWKS(data: GetJWKSRequest): StytchResult<GetJWKSResponse> =
         withContext(Dispatchers.IO) {
@@ -756,10 +740,9 @@ internal class SessionsImpl(
     }
 
     override fun getJWKSCompletable(data: GetJWKSRequest): CompletableFuture<StytchResult<GetJWKSResponse>> =
-        coroutineScope
-            .async {
-                getJWKS(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            getJWKS(data)
+        }.asCompletableFuture()
 
     // MANUAL(authenticateJWT_impl)(SERVICE_METHOD)
     override suspend fun authenticateJwt(

@@ -23,6 +23,9 @@ public data class Policy
          */
         @Json(name = "resources")
         val resources: List<PolicyResource>,
+        /**
+         * An array of [Scope objects](https://stytch.com/docs/api/rbac-scope-object).
+         */
         @Json(name = "scopes")
         val scopes: List<PolicyScope>,
     )
@@ -102,10 +105,19 @@ public data class PolicyRolePermission
 public data class PolicyScope
     @JvmOverloads
     constructor(
+        /**
+         * The unique identifier of the RBAC Scope, provided by the developer and intended to be human-readable.
+         */
         @Json(name = "scope")
         val scope: String,
+        /**
+         * The description of the RBAC Scope.
+         */
         @Json(name = "description")
         val description: String,
+        /**
+         * A list of permissions that link a [Resource](https://stytch.com/docs/api/rbac-resource-object) to a list of actions.
+         */
         @Json(name = "permissions")
         val permissions: List<PolicyScopePermission>,
     )
@@ -114,8 +126,19 @@ public data class PolicyScope
 public data class PolicyScopePermission
     @JvmOverloads
     constructor(
+        /**
+         * A unique identifier of the RBAC Resource, provided by the developer and intended to be human-readable.
+         *
+         *   A `resource_id` is not allowed to start with `stytch`, which is a special prefix used for Stytch default Resources
+         * with reserved `resource_id`s.
+         *
+         */
         @Json(name = "resource_id")
         val resourceId: String,
+        /**
+         * A list of permitted actions the Scope is required to take with the provided Resource. You can use `*` as a wildcard to
+         * require a Scope permission to use all possible actions related to the Resource.
+         */
         @Json(name = "actions")
         val actions: List<String>,
     )

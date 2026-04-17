@@ -380,6 +380,9 @@ public data class Member
          */
         @Json(name = "is_admin")
         val isAdmin: Boolean,
+        /**
+         * Globally unique UUID that identifies a TOTP instance.
+         */
         @Json(name = "totp_registration_id")
         val totpRegistrationId: String,
         /**
@@ -398,6 +401,10 @@ public data class Member
          */
         @Json(name = "retired_email_addresses")
         val retiredEmailAddresses: List<RetiredEmail>,
+        /**
+         * Whether the Member is temporarily locked due to too many failed authentication attempts. See the
+         * [User Locking Guide](https://stytch.com/docs/resources/platform/user-locks) for more information.
+         */
         @Json(name = "is_locked")
         val isLocked: Boolean,
         /**
@@ -413,6 +420,10 @@ public data class Member
          */
         @Json(name = "mfa_phone_number")
         val mfaPhoneNumber: String,
+        /**
+         * The Member's default MFA method. This value is used to determine which secondary MFA method to use in the case of
+         * multiple methods registered for a Member. The current possible values are `sms_otp` and `totp`.
+         */
         @Json(name = "default_mfa_method")
         val defaultMfaMethod: String,
         /**
@@ -458,8 +469,16 @@ public data class Member
          */
         @Json(name = "external_id")
         val externalId: String? = null,
+        /**
+         * When the member lock was created, if there is one. Values conform to the RFC 3339 standard and are expressed in UTC,
+         * e.g. `2021-12-29T12:33:09Z`.
+         */
         @Json(name = "lock_created_at")
         val lockCreatedAt: Instant? = null,
+        /**
+         * When the member lock expires, if there is one. Values conform to the RFC 3339 standard and are expressed in UTC, e.g.
+         * `2021-12-29T12:33:09Z`.
+         */
         @Json(name = "lock_expires_at")
         val lockExpiresAt: Instant? = null,
     )
@@ -791,6 +810,16 @@ public data class Organization
          */
         @Json(name = "allowed_auth_methods")
         val allowedAuthMethods: List<String>,
+        /**
+         * The setting that controls the MFA policy for all Members in the Organization. The accepted values are:
+         *
+         *   `REQUIRED_FOR_ALL` – All Members within the Organization will be required to complete MFA every time they wish to log
+         * in. However, any active Session that existed prior to this setting change will remain valid.
+         *
+         *   `OPTIONAL` – The default value. The Organization does not require MFA by default for all Members. Members will be
+         * required to complete MFA only if their `mfa_enrolled` status is set to true.
+         *
+         */
         @Json(name = "mfa_policy")
         val mfaPolicy: String,
         /**
@@ -831,6 +860,9 @@ public data class Organization
          */
         @Json(name = "oauth_tenant_jit_provisioning")
         val oauthTenantJITProvisioning: String,
+        /**
+         * A list of email domains that are claimed by the Organization.
+         */
         @Json(name = "claimed_email_domains")
         val claimedEmailDomains: List<String>,
         /**

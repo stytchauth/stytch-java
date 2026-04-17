@@ -48,20 +48,52 @@ public enum class AuthenticateRequestLocale {
 public data class Connection
     @JvmOverloads
     constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug or
+         * organization_external_id here as a convenience.
+         */
         @Json(name = "organization_id")
         val organizationId: String,
+        /**
+         * Globally unique UUID that identifies a specific External SSO Connection.
+         */
         @Json(name = "connection_id")
         val connectionId: String,
+        /**
+         * Globally unique UUID that identifies a different Organization within your Project.
+         */
         @Json(name = "external_organization_id")
         val externalOrganizationId: String,
+        /**
+         * Globally unique UUID that identifies a specific SSO connection configured for a different Organization in your Project.
+         */
         @Json(name = "external_connection_id")
         val externalConnectionId: String,
+        /**
+         * A human-readable display name for the connection.
+         */
         @Json(name = "display_name")
         val displayName: String,
+        /**
+         * The status of the connection. External connections are always active.
+         */
         @Json(name = "status")
         val status: String,
+        /**
+         * All Members who log in with this External connection will implicitly receive the specified Roles. See the
+         * [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment) for more information about role assignment.
+         * Implicit role assignments are not supported for External connections if the underlying SSO connection is an OIDC
+         * connection.
+         */
         @Json(name = "external_connection_implicit_role_assignments")
         val externalConnectionImplicitRoleAssignments: List<ConnectionImplicitRoleAssignment>,
+        /**
+         * Defines the names of the groups
+         *  that grant specific role assignments. For each group-Role pair, if a Member logs in with this external connection and
+         *  belongs to the specified group, they will be granted the associated Role. See the
+         *  [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment) for more information about role assignment.
+         */
         @Json(name = "external_group_implicit_role_assignments")
         val externalGroupImplicitRoleAssignments: List<GroupImplicitRoleAssignment>,
     )
@@ -70,6 +102,19 @@ public data class Connection
 public data class ConnectionImplicitRoleAssignment
     @JvmOverloads
     constructor(
+        /**
+         * The unique identifier of the RBAC Role, provided by the developer and intended to be human-readable.
+         *
+         *   Reserved `role_id`s that are predefined by Stytch include:
+         *
+         *   * `stytch_member`
+         *   * `stytch_admin`
+         *
+         *   Check out the [guide on Stytch default Roles](https://stytch.com/docs/b2b/guides/rbac/stytch-default) for a more
+         * detailed explanation.
+         *
+         *
+         */
         @Json(name = "role_id")
         val roleId: String,
     )
@@ -138,34 +183,92 @@ public data class GroupImplicitRoleAssignment
 public data class OIDCConnection
     @JvmOverloads
     constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug or
+         * organization_external_id here as a convenience.
+         */
         @Json(name = "organization_id")
         val organizationId: String,
+        /**
+         * Globally unique UUID that identifies a specific OIDC Connection.
+         */
         @Json(name = "connection_id")
         val connectionId: String,
+        /**
+         * The status of the connection. The possible values are pending or active. See the
+         * [Update OIDC Connection endpoint](https://stytch.com/docs/b2b/api/update-oidc-connection) for more details.
+         */
         @Json(name = "status")
         val status: String,
+        /**
+         * A human-readable display name for the connection.
+         */
         @Json(name = "display_name")
         val displayName: String,
+        /**
+         * The callback URL for this OIDC connection. This value will be passed to the IdP to redirect the Member back to Stytch
+         * after a sign-in attempt.
+         */
         @Json(name = "redirect_url")
         val redirectURL: String,
+        /**
+         * The OAuth2.0 client ID used to authenticate login attempts. This will be provided by the IdP.
+         */
         @Json(name = "client_id")
         val clientId: String,
+        /**
+         * The secret belonging to the OAuth2.0 client used to authenticate login attempts. This will be provided by the IdP.
+         */
         @Json(name = "client_secret")
         val clientSecret: String,
+        /**
+         * A case-sensitive `https://` URL that uniquely identifies the IdP. This will be provided by the IdP.
+         */
         @Json(name = "issuer")
         val issuer: String,
+        /**
+         * The location of the URL that starts an OAuth login at the IdP. This will be provided by the IdP.
+         */
         @Json(name = "authorization_url")
         val authorizationURL: String,
+        /**
+         * The location of the URL that issues OAuth2.0 access tokens and OIDC ID tokens. This will be provided by the IdP.
+         */
         @Json(name = "token_url")
         val tokenURL: String,
+        /**
+         * The location of the IDP's [UserInfo Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo). This
+         * will be provided by the IdP.
+         */
         @Json(name = "userinfo_url")
         val userinfoURL: String,
+        /**
+         * The location of the IdP's JSON Web Key Set, used to verify credentials issued by the IdP. This will be provided by the
+         * IdP.
+         */
         @Json(name = "jwks_url")
         val jwksURL: String,
+        /**
+         * Name of the IdP. Enum with possible values: `classlink`, `cyberark`, `duo`, `google-workspace`, `jumpcloud`,
+         * `keycloak`, `miniorange`, `microsoft-entra`, `okta`, `onelogin`, `pingfederate`, `rippling`, `salesforce`,
+         * `shibboleth`, or `generic`.
+         *
+         * Specifying a known provider allows Stytch to handle any provider-specific logic.
+         */
         @Json(name = "identity_provider")
         val identityProvider: String,
+        /**
+         * A space-separated list of custom scopes that will be requested on every SSOStart call. If set, this value will replace
+         * the default set of OIDC scopes requested: `openid email profile`. Additional scopes can be requested using the
+         * `custom_scopes` query parameter on individual SSOStart calls.
+         */
         @Json(name = "custom_scopes")
         val customScopes: String,
+        /**
+         * An object that represents the attributes used to identify a Member. This object will map the IdP-defined User
+         * attributes to Stytch-specific values, which will appear on the member's Trusted Metadata.
+         */
         @Json(name = "attribute_mapping")
         val attributeMapping: Map<String, Any?>? = emptyMap(),
     )
@@ -174,44 +277,121 @@ public data class OIDCConnection
 public data class SAMLConnection
     @JvmOverloads
     constructor(
+        /**
+         * Globally unique UUID that identifies a specific Organization. The `organization_id` is critical to perform operations
+         * on an Organization, so be sure to preserve this value. You may also use the organization_slug or
+         * organization_external_id here as a convenience.
+         */
         @Json(name = "organization_id")
         val organizationId: String,
+        /**
+         * Globally unique UUID that identifies a specific SAML Connection.
+         */
         @Json(name = "connection_id")
         val connectionId: String,
+        /**
+         * The status of the connection. The possible values are pending or active. See the
+         * [Update SAML Connection endpoint](https://stytch.com/docs/b2b/api/update-saml-connection) for more details.
+         */
         @Json(name = "status")
         val status: String,
+        /**
+         * A globally unique name for the IdP. This will be provided by the IdP.
+         */
         @Json(name = "idp_entity_id")
         val idpEntityId: String,
+        /**
+         * A human-readable display name for the connection.
+         */
         @Json(name = "display_name")
         val displayName: String,
+        /**
+         * The URL for which assertions for login requests will be sent. This will be provided by the IdP.
+         */
         @Json(name = "idp_sso_url")
         val idpSSOURL: String,
+        /**
+         * The URL of the Assertion Consumer Service. This value will be passed to the IdP to redirect the Member back to Stytch
+         * after a sign-in attempt. Read our [SAML Overview](https://stytch.com/docs/b2b/api/saml-overview) for more info.
+         */
         @Json(name = "acs_url")
         val acsURL: String,
+        /**
+         * The URL of the Audience Restriction. This value will indicate that Stytch is the intended audience of an assertion.
+         * Read our [SAML Overview](https://stytch.com/docs/b2b/api/saml-overview) for more info.
+         */
         @Json(name = "audience_uri")
         val audienceUri: String,
+        /**
+         * A list of X.509 certificates Stytch will use to sign its assertion requests. Certificates should be uploaded to the IdP.
+         */
         @Json(name = "signing_certificates")
         val signingCertificates: List<X509Certificate>,
+        /**
+         * A list of X.509 certificates Stytch will use to validate an assertion callback. Certificates should be populated from
+         * the IdP.
+         */
         @Json(name = "verification_certificates")
         val verificationCertificates: List<X509Certificate>,
         @Json(name = "encryption_private_keys")
         val encryptionPrivateKeys: List<EncryptionPrivateKey>,
+        /**
+         * All Members who log in with this SAML connection will implicitly receive the specified Roles. See the
+         * [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment) for more information about role assignment.
+         */
         @Json(name = "saml_connection_implicit_role_assignments")
         val samlConnectionImplicitRoleAssignments: List<SAMLConnectionImplicitRoleAssignment>,
+        /**
+         * Defines the names of the SAML groups
+         *  that grant specific role assignments. For each group-Role pair, if a Member logs in with this SAML connection and
+         *  belongs to the specified SAML group, they will be granted the associated Role. See the
+         *  [RBAC guide](https://stytch.com/docs/b2b/guides/rbac/role-assignment) for more information about role assignment.
+         */
         @Json(name = "saml_group_implicit_role_assignments")
         val samlGroupImplicitRoleAssignments: List<SAMLGroupImplicitRoleAssignment>,
+        /**
+         * An alternative URL to use for the Audience Restriction. This value can be used when you wish to migrate an existing
+         * SAML integration to Stytch with zero downtime. Read our
+         * [SSO migration guide](https://stytch.com/docs/b2b/guides/migrations/additional-migration-considerations) for more info.
+         */
         @Json(name = "alternative_audience_uri")
         val alternativeAudienceUri: String,
+        /**
+         * Name of the IdP. Enum with possible values: `classlink`, `cyberark`, `duo`, `google-workspace`, `jumpcloud`,
+         * `keycloak`, `miniorange`, `microsoft-entra`, `okta`, `onelogin`, `pingfederate`, `rippling`, `salesforce`,
+         * `shibboleth`, or `generic`.
+         *
+         * Specifying a known provider allows Stytch to handle any provider-specific logic.
+         */
         @Json(name = "identity_provider")
         val identityProvider: String,
+        /**
+         * The NameID format the SAML Connection expects to use. Defaults to
+         * `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress`.
+         */
         @Json(name = "nameid_format")
         val nameidFormat: String,
+        /**
+         * An alternative URL to use for the `AssertionConsumerServiceURL` in SP initiated SAML AuthNRequests. This value can be
+         * used when you wish to migrate an existing SAML integration to Stytch with zero downtime. Note that you will be
+         * responsible for proxying requests sent to the Alternative ACS URL to Stytch. Read our
+         * [SSO migration guide](https://stytch.com/docs/b2b/guides/migrations/additional-migration-considerations) for more info.
+         */
         @Json(name = "alternative_acs_url")
         val alternativeAcsURL: String,
+        /**
+         * Determines whether IDP initiated auth is allowed for a given SAML connection. Defaults to false (IDP Initiated Auth is
+         * enabled).
+         */
         @Json(name = "idp_initiated_auth_disabled")
         val idpInitiatedAuthDisabled: Boolean,
         @Json(name = "allow_gateway_callback")
         val allowGatewayCallback: Boolean,
+        /**
+         * An object that represents the attributes used to identify a Member. This object will map the IdP-defined User
+         * attributes to Stytch-specific values. Required attributes: `email` and one of `full_name` or `first_name` and
+         * `last_name`.
+         */
         @Json(name = "attribute_mapping")
         val attributeMapping: Map<String, Any?>? = emptyMap(),
     )
@@ -220,6 +400,19 @@ public data class SAMLConnection
 public data class SAMLConnectionImplicitRoleAssignment
     @JvmOverloads
     constructor(
+        /**
+         * The unique identifier of the RBAC Role, provided by the developer and intended to be human-readable.
+         *
+         *   Reserved `role_id`s that are predefined by Stytch include:
+         *
+         *   * `stytch_member`
+         *   * `stytch_admin`
+         *
+         *   Check out the [guide on Stytch default Roles](https://stytch.com/docs/b2b/guides/rbac/stytch-default) for a more
+         * detailed explanation.
+         *
+         *
+         */
         @Json(name = "role_id")
         val roleId: String,
     )
@@ -238,16 +431,34 @@ public data class SAMLGroupImplicitRoleAssignment
 public data class X509Certificate
     @JvmOverloads
     constructor(
+        /**
+         * The ID of the certificate.
+         */
         @Json(name = "certificate_id")
         val certificateId: String,
+        /**
+         * The certificate, in [PEM](https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail) format.
+         */
         @Json(name = "certificate")
         val certificate: String,
+        /**
+         * The issuer of the certificate. For signing certificates, this value will be "Stytch".
+         */
         @Json(name = "issuer")
         val issuer: String,
+        /**
+         * A timestamp that indicates when the certificate was created.
+         */
         @Json(name = "created_at")
         val createdAt: Instant? = null,
+        /**
+         * A timestamp that indicates when the certificate will expire.
+         */
         @Json(name = "expires_at")
         val expiresAt: Instant? = null,
+        /**
+         * A timestamp that indicates when the certificate was updated.
+         */
         @Json(name = "updated_at")
         val updatedAt: Instant? = null,
     )
@@ -312,7 +523,7 @@ public data class AuthenticateRequest
          * one-time passcode (OTP) to the Member's phone number. The locale argument will be used to determine which language to
          * use when sending the passcode.
          *
-         * Parameter is a [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
+         * Parameter is an [IETF BCP 47 language tag](https://www.w3.org/International/articles/language-tags/), e.g. `"en"`.
          *
          * Currently supported languages are English (`"en"`), Spanish (`"es"`), and Brazilian Portuguese (`"pt-br"`); if no value
          * is provided, the copy defaults to English.

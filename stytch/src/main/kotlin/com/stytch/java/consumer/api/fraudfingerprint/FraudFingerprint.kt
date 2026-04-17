@@ -115,8 +115,7 @@ internal class FingerprintImpl(
     }
 
     override fun lookupCompletable(data: LookupRequest): CompletableFuture<StytchResult<LookupResponse>> =
-        coroutineScope
-            .async {
-                lookup(data)
-            }.asCompletableFuture()
+        coroutineScope.async {
+            lookup(data)
+        }.asCompletableFuture()
 }
