@@ -80,61 +80,24 @@ public class StytchB2BClient
             )
         private val policyCache: PolicyCache = PolicyCache(RBACImpl(httpClient, coroutineScope), coroutineScope)
 
-        @JvmField
         public val connectedApp: ConnectedApp = ConnectedAppImpl(httpClient, coroutineScope)
-
-        @JvmField
         public val debug: Debug = DebugImpl(httpClient, coroutineScope)
-
-        @JvmField
         public val discovery: Discovery = DiscoveryImpl(httpClient, coroutineScope)
-
-        @JvmField
         public val fraud: Fraud = FraudImpl(fraudHttpClient, coroutineScope)
-
-        @JvmField
         public val idp: IDP = IDPImpl(httpClient, coroutineScope, httpsJwks, jwtOptions, policyCache)
-
-        @JvmField
         public val impersonation: Impersonation = ImpersonationImpl(httpClient, coroutineScope)
-
-        @JvmField
         public val m2m: M2M = M2MImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
-
-        @JvmField
         public val magicLinks: MagicLinks = MagicLinksImpl(httpClient, coroutineScope)
-
-        @JvmField
         public val oauth: OAuth = OAuthImpl(httpClient, coroutineScope)
-
-        @JvmField
         public val otps: OTPs = OTPsImpl(httpClient, coroutineScope)
-
-        @JvmField
         public val organizations: Organizations = OrganizationsImpl(httpClient, coroutineScope)
-
-        @JvmField
         public val passwords: Passwords = PasswordsImpl(httpClient, coroutineScope)
-
-        @JvmField
         public val project: Project = ProjectImpl(httpClient, coroutineScope)
-
-        @JvmField
         public val rbac: RBAC = RBACImpl(httpClient, coroutineScope)
-
-        @JvmField
         public val recoveryCodes: RecoveryCodes = RecoveryCodesImpl(httpClient, coroutineScope)
-
-        @JvmField
         public val scim: SCIM = SCIMImpl(httpClient, coroutineScope)
-
-        @JvmField
         public val sso: SSO = SSOImpl(httpClient, coroutineScope)
-
-        @JvmField
         public val sessions: Sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions, policyCache)
-
-        @JvmField
         public val totps: TOTPs = TOTPsImpl(httpClient, coroutineScope)
 
         /**
