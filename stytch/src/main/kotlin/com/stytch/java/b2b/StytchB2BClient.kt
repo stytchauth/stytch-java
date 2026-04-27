@@ -52,10 +52,15 @@ import com.stytch.java.consumer.api.project.ProjectImpl
 import com.stytch.java.http.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 
 public class StytchB2BClient
     @JvmOverloads
-    constructor(projectId: String, secret: String, clientConfig: OptionalClientConfig = OptionalClientConfig()) {
+    constructor(
+        projectId: String,
+        secret: String,
+        clientConfig: OptionalClientConfig = OptionalClientConfig(),
+    ) : AutoCloseable {
         private val coroutineScope = CoroutineScope(SupervisorJob())
         private val baseUrl = getBaseUrl(projectId, clientConfig)
         private val httpClient: HttpClient =
@@ -99,6 +104,17 @@ public class StytchB2BClient
         public val sso: SSO = SSOImpl(httpClient, coroutineScope)
         public val sessions: Sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions, policyCache)
         public val totps: TOTPs = TOTPsImpl(httpClient, coroutineScope)
+
+        override fun close() {
+            // Cancel the scope first so in-flight coroutines stop enqueuing new OkHttp calls.
+            // cancelBackgroundRefresh() is redundant once the scope is cancelled (child jobs
+            // are parented off this scope), but called first for explicit intent.
+            jwksCache.cancelBackgroundRefresh()
+            policyCache.cancelBackgroundRefresh()
+            coroutineScope.cancel()
+            httpClient.close()
+            fraudHttpClient.close()
+        }
 
         /**
          * Resolve the base URL for the Stytch API environment.

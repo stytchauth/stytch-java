@@ -57,7 +57,7 @@ internal class HttpClient(
     projectId: String,
     secret: String,
     private val client: OkHttpClient = createHttpClient(projectId, secret),
-) {
+) : AutoCloseable {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
     internal fun buildUrl(
@@ -221,5 +221,11 @@ internal class HttpClient(
         } catch (e: Exception) {
             StytchResult.Error(StytchException.Critical(e))
         }
+    }
+
+    override fun close() {
+        client.dispatcher.cancelAll()
+        client.dispatcher.executorService.shutdown()
+        client.connectionPool.evictAll()
     }
 }

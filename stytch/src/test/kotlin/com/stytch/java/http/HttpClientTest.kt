@@ -18,6 +18,8 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.ConnectionPool
+import okhttp3.Dispatcher
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
@@ -27,6 +29,7 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import okio.IOException
 import org.junit.Before
 import org.junit.Test
+import java.util.concurrent.ExecutorService
 
 @OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
 internal class HttpClientTest {
@@ -173,6 +176,35 @@ internal class HttpClientTest {
             val result = httpClient.makeRequest(mockRequest, Any::class.java)
             assert(result is StytchResult.Error)
         }
+
+    @Test
+    fun `close cancels in-flight calls, shuts down executor, and evicts connection pool`() {
+        val mockExecutorService: ExecutorService = mockk(relaxUnitFun = true)
+        val mockDispatcher: Dispatcher =
+            mockk {
+                every { cancelAll() } just runs
+                every { executorService } returns mockExecutorService
+            }
+        val mockConnectionPool: ConnectionPool = mockk(relaxUnitFun = true)
+        val mockClient: OkHttpClient =
+            mockk {
+                every { dispatcher } returns mockDispatcher
+                every { connectionPool } returns mockConnectionPool
+            }
+        val client =
+            HttpClient(
+                baseUrl = "http://something",
+                projectId = "project-id",
+                secret = "secret",
+                client = mockClient,
+            )
+
+        client.close()
+
+        verify(exactly = 1) { mockDispatcher.cancelAll() }
+        verify(exactly = 1) { mockExecutorService.shutdown() }
+        verify(exactly = 1) { mockConnectionPool.evictAll() }
+    }
 
     @Test
     fun `makeRequest returns StytchResult_Success for successful requests that are mappable`() =
