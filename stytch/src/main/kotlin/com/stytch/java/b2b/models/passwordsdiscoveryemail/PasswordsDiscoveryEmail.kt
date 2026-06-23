@@ -9,6 +9,7 @@ package com.stytch.java.b2b.models.passwordsdiscoveryemail
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.stytch.java.b2b.models.discovery.DiscoveredOrganization
+import java.time.Instant
 
 /**
 * Request type for `Email.reset`.
@@ -86,6 +87,8 @@ public data class ResetResponse
          */
         @Json(name = "status_code")
         val statusCode: Int,
+        @Json(name = "intermediate_session_token_expires_at")
+        val intermediateSessionTokenExpiresAt: Instant? = null,
     )
 
 /**

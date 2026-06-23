@@ -64,6 +64,8 @@ public data class ConnectedApp
         val bypassConsentForOfflineAccess: Boolean,
         @Json(name = "creation_method")
         val creationMethod: String,
+        @Json(name = "id_token_template_content")
+        val idTokenTemplateContent: String,
         /**
          * The last four characters of the client secret.
          */
@@ -154,6 +156,8 @@ public data class ConnectedAppWithClientSecret
          */
         @Json(name = "bypass_consent_for_offline_access")
         val bypassConsentForOfflineAccess: Boolean,
+        @Json(name = "id_token_template_content")
+        val idTokenTemplateContent: String,
         /**
          * The last four characters of the client secret.
          */
@@ -240,6 +244,8 @@ public data class ConnectedAppWithNextClientSecret
          */
         @Json(name = "bypass_consent_for_offline_access")
         val bypassConsentForOfflineAccess: Boolean,
+        @Json(name = "id_token_template_content")
+        val idTokenTemplateContent: String,
         /**
          * The last four characters of the `next_client_secret`. Null if no `next_client_secret` exists.
          */

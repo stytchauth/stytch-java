@@ -9,6 +9,7 @@ package com.stytch.java.b2b.models.magiclinksdiscovery
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.stytch.java.b2b.models.discovery.DiscoveredOrganization
+import java.time.Instant
 
 /**
 * Request type for `Discovery.authenticate`.
@@ -86,4 +87,6 @@ public data class AuthenticateResponse
          */
         @Json(name = "status_code")
         val statusCode: Int,
+        @Json(name = "intermediate_session_token_expires_at")
+        val intermediateSessionTokenExpiresAt: Instant? = null,
     )
