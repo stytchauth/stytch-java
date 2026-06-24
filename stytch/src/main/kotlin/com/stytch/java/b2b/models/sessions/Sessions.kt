@@ -42,6 +42,30 @@ public enum class ExchangeRequestLocale {
 
     @Json(name = "caES")
     CAES,
+
+    @Json(name = "ja")
+    JA,
+
+    @Json(name = "ru")
+    RU,
+
+    @Json(name = "nl")
+    NL,
+
+    @Json(name = "pl")
+    PL,
+
+    @Json(name = "tr")
+    TR,
+
+    @Json(name = "fa")
+    FA,
+
+    @Json(name = "vi")
+    VI,
+
+    @Json(name = "cs")
+    CS,
 }
 
 @JsonClass(generateAdapter = true)
@@ -702,6 +726,8 @@ public data class ExchangeResponse
          */
         @Json(name = "member_device")
         val memberDevice: DeviceInfo? = null,
+        @Json(name = "intermediate_session_token_expires_at")
+        val intermediateSessionTokenExpiresAt: Instant? = null,
     )
 
 /**

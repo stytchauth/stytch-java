@@ -38,6 +38,30 @@ public enum class SendRequestLocale {
 
     @Json(name = "caES")
     CAES,
+
+    @Json(name = "ja")
+    JA,
+
+    @Json(name = "ru")
+    RU,
+
+    @Json(name = "nl")
+    NL,
+
+    @Json(name = "pl")
+    PL,
+
+    @Json(name = "tr")
+    TR,
+
+    @Json(name = "fa")
+    FA,
+
+    @Json(name = "vi")
+    VI,
+
+    @Json(name = "cs")
+    CS,
 }
 
 /**

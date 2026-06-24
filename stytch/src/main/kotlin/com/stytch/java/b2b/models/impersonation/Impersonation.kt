@@ -12,6 +12,7 @@ import com.stytch.java.b2b.models.mfa.MfaRequired
 import com.stytch.java.b2b.models.organizations.Member
 import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
+import java.time.Instant
 
 /**
 * Request type for `Impersonation.authenticate`.
@@ -98,4 +99,6 @@ public data class AuthenticateResponse
          */
         @Json(name = "mfa_required")
         val mfaRequired: MfaRequired? = null,
+        @Json(name = "intermediate_session_token_expires_at")
+        val intermediateSessionTokenExpiresAt: Instant? = null,
     )

@@ -14,6 +14,7 @@ import com.stytch.java.b2b.models.organizations.Organization
 import com.stytch.java.b2b.models.sessions.MemberSession
 import com.stytch.java.b2b.models.sessions.PrimaryRequired
 import com.stytch.java.consumer.models.devicehistory.DeviceInfo
+import java.time.Instant
 
 @JsonClass(generateAdapter = false)
 public enum class AuthenticateRequestLocale {
@@ -237,6 +238,8 @@ public data class AuthenticateResponse
          */
         @Json(name = "member_device")
         val memberDevice: DeviceInfo? = null,
+        @Json(name = "intermediate_session_token_expires_at")
+        val intermediateSessionTokenExpiresAt: Instant? = null,
     )
 
 /**

@@ -20,6 +20,7 @@ import com.stytch.java.consumer.models.passwords.PBKDF2Config
 import com.stytch.java.consumer.models.passwords.SHA1Config
 import com.stytch.java.consumer.models.passwords.SHA512Config
 import com.stytch.java.consumer.models.passwords.ScryptConfig
+import java.time.Instant
 
 @JsonClass(generateAdapter = false)
 public enum class AuthenticateRequestLocale {
@@ -306,6 +307,8 @@ public data class AuthenticateResponse
          */
         @Json(name = "member_device")
         val memberDevice: DeviceInfo? = null,
+        @Json(name = "intermediate_session_token_expires_at")
+        val intermediateSessionTokenExpiresAt: Instant? = null,
     )
 
 /**

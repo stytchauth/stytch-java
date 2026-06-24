@@ -51,11 +51,7 @@ import kotlinx.coroutines.cancel
 
 public class StytchClient
     @JvmOverloads
-    constructor(
-        projectId: String,
-        secret: String,
-        clientConfig: OptionalClientConfig = OptionalClientConfig(),
-    ) : AutoCloseable {
+    constructor(projectId: String, secret: String, clientConfig: OptionalClientConfig = OptionalClientConfig()) : AutoCloseable {
         private val coroutineScope = CoroutineScope(SupervisorJob())
         private val baseUrl = getBaseUrl(projectId, clientConfig)
         private val httpClient: HttpClient =

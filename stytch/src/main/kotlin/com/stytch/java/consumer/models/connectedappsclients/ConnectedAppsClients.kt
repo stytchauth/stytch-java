@@ -92,6 +92,8 @@ public data class CreateRequest
          */
         @Json(name = "bypass_consent_for_offline_access")
         val bypassConsentForOfflineAccess: Boolean? = null,
+        @Json(name = "id_token_template_content")
+        val idTokenTemplateContent: String? = null,
     )
 
 /**
@@ -309,6 +311,8 @@ public data class UpdateRequest
          */
         @Json(name = "bypass_consent_for_offline_access")
         val bypassConsentForOfflineAccess: Boolean? = null,
+        @Json(name = "id_token_template_content")
+        val idTokenTemplateContent: String? = null,
     )
 
 /**
