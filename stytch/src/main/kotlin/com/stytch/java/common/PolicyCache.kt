@@ -9,11 +9,6 @@ import com.stytch.java.b2b.models.rbac.PolicyRole
 import com.stytch.java.b2b.models.rbacorganizations.GetOrgPolicyRequest
 import com.stytch.java.b2b.models.sessions.AuthorizationCheck
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.Instant
 
@@ -21,10 +16,6 @@ public class TenancyException(
     subjectOrgId: String,
     authCheckOrgId: String,
 ) : RuntimeException("Subject organizationId $subjectOrgId does not match authZ request organizationId $authCheckOrgId")
-
-public class PermissionException(
-    authorizationCheck: AuthorizationCheck,
-) : RuntimeException("Permission denied for request $authorizationCheck")
 
 private data class CachedOrgPolicy(
     val orgPolicy: OrgPolicy,
@@ -35,33 +26,24 @@ internal class PolicyCache(
     private val client: RBAC,
     coroutineScope: CoroutineScope,
     private val organizations: Organizations? = null,
-) {
-    private val job = SupervisorJob(coroutineScope.coroutineContext[Job])
-    private val scope = CoroutineScope(coroutineScope.coroutineContext + job)
-    private var cachedPolicy: Policy? = null
+) : BasePolicyCache<Policy>(coroutineScope) {
     private val cachedOrgPolicies: MutableMap<String, CachedOrgPolicy> = mutableMapOf()
-    private var policyLastUpdate: Instant? = null
-    private var backgroundRefreshStarted = false
 
     companion object {
         private const val CACHE_TTL_SECONDS = 3600L // 1 hour
-        private const val REFRESH_INTERVAL_MS = 3600000L // 1 hour in milliseconds
     }
 
-    private fun getPolicy(invalidate: Boolean = false): Policy {
-        val isMissing = cachedPolicy == null || policyLastUpdate == null
-        val isStale = policyLastUpdate == null || Duration.between(policyLastUpdate, Instant.now()).seconds > CACHE_TTL_SECONDS
-        if (invalidate || isMissing || isStale) {
-            refreshPolicy()
+    override fun fetchPolicy(): Policy? =
+        when (val result = client.policyCompletable(PolicyRequest()).get()) {
+            is StytchResult.Success -> result.value.policy
+            else -> null
         }
 
-        // Start background refresh after first successful fetch
-        if (!backgroundRefreshStarted && cachedPolicy != null) {
-            startBackgroundRefresh()
-            backgroundRefreshStarted = true
+    override fun refreshAdditionalCaches() {
+        // Refresh all cached org policies
+        cachedOrgPolicies.keys.toList().forEach { orgId ->
+            refreshOrgPolicy(orgId)
         }
-
-        return cachedPolicy ?: throw Exception("Error fetching the policy")
     }
 
     private fun getOrgPolicy(
@@ -92,38 +74,6 @@ internal class PolicyCache(
         }
     }
 
-    private fun refreshPolicy() {
-        when (val result = client.policyCompletable(PolicyRequest()).get()) {
-            is StytchResult.Success -> {
-                cachedPolicy = result.value.policy
-                policyLastUpdate = Instant.now()
-            }
-
-            else -> {}
-        }
-    }
-
-    private fun startBackgroundRefresh() {
-        scope.launch {
-            while (isActive) {
-                delay(REFRESH_INTERVAL_MS)
-                refreshPolicy()
-                // Refresh all cached org policies
-                cachedOrgPolicies.keys.toList().forEach { orgId ->
-                    refreshOrgPolicy(orgId)
-                }
-            }
-        }
-    }
-
-    /**
-     * Cancels the background refresh job.
-     * This allows the refresh job to be stopped independently of the parent scope.
-     */
-    fun cancelBackgroundRefresh() {
-        job.cancel()
-    }
-
     fun performAuthorizationCheck(
         subjectRoles: List<String>,
         subjectOrgId: String,
@@ -142,16 +92,17 @@ internal class PolicyCache(
                 orgPolicy?.roles?.let { addAll(it) }
             }
 
-        val hasMatchingActionAndResource =
-            allRoles
-                .filter { it.roleId in subjectRoles }
-                .flatMap { it.permissions }
-                .filter {
-                    val hasMatchingAction = it.actions.contains("*") || it.actions.contains(authorizationCheck.action)
-                    val hasMatchingResource = it.resourceId == authorizationCheck.resourceId
-                    return@filter hasMatchingAction && hasMatchingResource
-                }.isNotEmpty()
-        hasMatchingActionAndResource && return
+        val roleViews =
+            allRoles.map { role ->
+                RoleView(
+                    roleId = role.roleId,
+                    permissions = role.permissions.map { PermissionView(it.resourceId, it.actions) },
+                )
+            }
+
+        if (hasRolePermission(subjectRoles, roleViews, authorizationCheck.resourceId, authorizationCheck.action)) {
+            return
+        }
         throw PermissionException(authorizationCheck)
     }
 }
