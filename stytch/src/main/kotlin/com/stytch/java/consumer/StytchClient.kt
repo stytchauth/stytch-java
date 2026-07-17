@@ -81,7 +81,7 @@ public class StytchClient
         public val cryptoWallets: CryptoWallets = CryptoWalletsImpl(httpClient, coroutineScope)
         public val debug: Debug = DebugImpl(httpClient, coroutineScope)
         public val fraud: Fraud = FraudImpl(fraudHttpClient, coroutineScope)
-        public val idp: IDP = IDPImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
+        public val idp: IDP = IDPImpl(httpClient, coroutineScope, httpsJwks, jwtOptions, policyCache)
         public val impersonation: Impersonation = ImpersonationImpl(httpClient, coroutineScope)
         public val m2m: M2M = M2MImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
         public val magicLinks: MagicLinks = MagicLinksImpl(httpClient, coroutineScope)
