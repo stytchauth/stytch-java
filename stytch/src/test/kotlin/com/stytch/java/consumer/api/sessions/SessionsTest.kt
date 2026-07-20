@@ -119,6 +119,7 @@ internal class SessionsTest {
                         issuers = listOf("stytch.com/$projectId"),
                         type = "JWT",
                     ),
+                policyCache = mockk(relaxed = true, relaxUnitFun = true),
             )
     }
 

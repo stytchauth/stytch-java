@@ -7,6 +7,7 @@ package com.stytch.java.consumer
 // !!!
 import com.stytch.java.common.BASE_LIVE_URL
 import com.stytch.java.common.BASE_TEST_URL
+import com.stytch.java.common.ConsumerPolicyCache
 import com.stytch.java.common.JwksCache
 import com.stytch.java.common.JwtOptions
 import com.stytch.java.common.OptionalClientConfig
@@ -74,12 +75,13 @@ public class StytchClient
                 issuers = listOf("stytch.com/$projectId", baseUrl),
                 type = "JWT",
             )
+        private val policyCache: ConsumerPolicyCache = ConsumerPolicyCache(RBACImpl(httpClient, coroutineScope), coroutineScope)
 
         public val connectedApp: ConnectedApp = ConnectedAppImpl(httpClient, coroutineScope)
         public val cryptoWallets: CryptoWallets = CryptoWalletsImpl(httpClient, coroutineScope)
         public val debug: Debug = DebugImpl(httpClient, coroutineScope)
         public val fraud: Fraud = FraudImpl(fraudHttpClient, coroutineScope)
-        public val idp: IDP = IDPImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
+        public val idp: IDP = IDPImpl(httpClient, coroutineScope, httpsJwks, jwtOptions, policyCache)
         public val impersonation: Impersonation = ImpersonationImpl(httpClient, coroutineScope)
         public val m2m: M2M = M2MImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
         public val magicLinks: MagicLinks = MagicLinksImpl(httpClient, coroutineScope)
@@ -88,7 +90,7 @@ public class StytchClient
         public val passwords: Passwords = PasswordsImpl(httpClient, coroutineScope)
         public val project: Project = ProjectImpl(httpClient, coroutineScope)
         public val rbac: RBAC = RBACImpl(httpClient, coroutineScope)
-        public val sessions: Sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions)
+        public val sessions: Sessions = SessionsImpl(httpClient, coroutineScope, httpsJwks, jwtOptions, policyCache)
         public val totps: TOTPs = TOTPsImpl(httpClient, coroutineScope)
         public val users: Users = UsersImpl(httpClient, coroutineScope)
         public val webauthn: WebAuthn = WebAuthnImpl(httpClient, coroutineScope)
@@ -98,6 +100,7 @@ public class StytchClient
             // cancelBackgroundRefresh() is redundant once the scope is cancelled (child jobs
             // are parented off this scope), but called first for explicit intent.
             jwksCache.cancelBackgroundRefresh()
+            policyCache.cancelBackgroundRefresh()
             coroutineScope.cancel()
             httpClient.close()
             fraudHttpClient.close()

@@ -9,6 +9,7 @@ package com.stytch.java.consumer.api.sessions
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import com.stytch.java.common.ConsumerPolicyCache
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.JWTAuthResponse
 import com.stytch.java.common.JWTErrorResponse
@@ -26,6 +27,7 @@ import com.stytch.java.consumer.models.sessions.AttestRequest
 import com.stytch.java.consumer.models.sessions.AttestResponse
 import com.stytch.java.consumer.models.sessions.AuthenticateRequest
 import com.stytch.java.consumer.models.sessions.AuthenticateResponse
+import com.stytch.java.consumer.models.sessions.AuthorizationCheck
 import com.stytch.java.consumer.models.sessions.ExchangeAccessTokenRequest
 import com.stytch.java.consumer.models.sessions.ExchangeAccessTokenResponse
 import com.stytch.java.consumer.models.sessions.GetJWKSRequest
@@ -287,6 +289,8 @@ public interface Sessions {
 
     // MANUAL(authenticateJWT_interface)(INTERFACE_METHOD)
     // ADDIMPORT: import com.stytch.java.consumer.models.sessions.Session
+    // ADDIMPORT: import com.stytch.java.consumer.models.sessions.AuthorizationCheck
+    // ADDIMPORT: import com.stytch.java.common.ConsumerPolicyCache
     // ADDIMPORT: import com.stytch.java.common.JWTException
     // ADDIMPORT: import com.stytch.java.common.ParseJWTClaimsOptions
     // ADDIMPORT: import com.stytch.java.common.StytchSessionClaim
@@ -352,6 +356,7 @@ public interface Sessions {
     public suspend fun authenticateJwtLocal(
         jwt: String,
         maxTokenAgeSeconds: Int?,
+        authorizationCheck: AuthorizationCheck? = null,
         leeway: Int = 0,
     ): StytchResult<Session?>
 
@@ -369,6 +374,7 @@ public interface Sessions {
     public fun authenticateJwtLocal(
         jwt: String,
         maxTokenAgeSeconds: Int?,
+        authorizationCheck: AuthorizationCheck? = null,
         leeway: Int = 0,
         callback: (StytchResult<Session?>) -> Unit,
     )
@@ -387,6 +393,7 @@ public interface Sessions {
     public fun authenticateJwtLocalCompletable(
         jwt: String,
         maxTokenAgeSeconds: Int?,
+        authorizationCheck: AuthorizationCheck? = null,
         leeway: Int = 0,
     ): CompletableFuture<StytchResult<Session?>>
     // ENDMANUAL(authenticateJWT_interface)
@@ -397,6 +404,7 @@ internal class SessionsImpl(
     private val coroutineScope: CoroutineScope,
     private val jwksClient: HttpsJwks,
     private val jwtOptions: JwtOptions,
+    private val policyCache: ConsumerPolicyCache,
 ) : Sessions {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
@@ -626,6 +634,7 @@ internal class SessionsImpl(
     override suspend fun authenticateJwtLocal(
         jwt: String,
         maxTokenAgeSeconds: Int?,
+        authorizationCheck: AuthorizationCheck?,
         leeway: Int,
     ): StytchResult<Session?> {
         return try {
@@ -647,6 +656,16 @@ internal class SessionsImpl(
                     val adapter: JsonAdapter<Map<*, *>> = moshi.adapter(type)
                     moshi.adapter(StytchSessionClaim::class.java).fromJson(adapter.toJson(it))
                 } ?: throw JWTException.JwtMissingClaims
+            if (authorizationCheck != null) {
+                if (stytchSessionClaim.roles == null) {
+                    throw JWTException.MissingRolesClaim
+                }
+
+                policyCache.performAuthorizationCheck(
+                    subjectRoles = stytchSessionClaim.roles,
+                    authorizationCheck = authorizationCheck,
+                )
+            }
             return StytchResult.Success(
                 Session(
                     sessionId = stytchSessionClaim.id,
@@ -672,22 +691,24 @@ internal class SessionsImpl(
     override fun authenticateJwtLocal(
         jwt: String,
         maxTokenAgeSeconds: Int?,
+        authorizationCheck: AuthorizationCheck?,
         leeway: Int,
         callback: (StytchResult<Session?>) -> Unit,
     ) {
         coroutineScope.launch {
-            callback(authenticateJwtLocal(jwt, maxTokenAgeSeconds, leeway))
+            callback(authenticateJwtLocal(jwt, maxTokenAgeSeconds, authorizationCheck, leeway))
         }
     }
 
     override fun authenticateJwtLocalCompletable(
         jwt: String,
         maxTokenAgeSeconds: Int?,
+        authorizationCheck: AuthorizationCheck?,
         leeway: Int,
     ): CompletableFuture<StytchResult<Session?>> =
         coroutineScope
             .async {
-                authenticateJwtLocal(jwt, maxTokenAgeSeconds, leeway)
+                authenticateJwtLocal(jwt, maxTokenAgeSeconds, authorizationCheck, leeway)
             }.asCompletableFuture()
     // ENDMANUAL(authenticateJWT_impl)
 }

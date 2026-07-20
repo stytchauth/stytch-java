@@ -7,6 +7,7 @@ package com.stytch.java.consumer.api.idp
 // !!!
 
 import com.squareup.moshi.Moshi
+import com.stytch.java.common.ConsumerPolicyCache
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.JwtOptions
 import com.stytch.java.consumer.api.idpoauth.OAuth
@@ -24,6 +25,7 @@ internal class IDPImpl(
     private val coroutineScope: CoroutineScope,
     private val jwksClient: HttpsJwks,
     private val jwtOptions: JwtOptions,
+    private val policyCache: ConsumerPolicyCache,
 ) : IDP {
     private val moshi = Moshi.Builder().add(InstantAdapter()).build()
 
