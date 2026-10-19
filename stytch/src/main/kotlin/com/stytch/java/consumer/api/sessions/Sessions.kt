@@ -12,9 +12,7 @@ import com.squareup.moshi.Types
 import com.stytch.java.common.ConsumerPolicyCache
 import com.stytch.java.common.InstantAdapter
 import com.stytch.java.common.JWTAuthResponse
-import com.stytch.java.common.JWTErrorResponse
 import com.stytch.java.common.JWTException
-import com.stytch.java.common.JWTNullResponse
 import com.stytch.java.common.JWTResponse
 import com.stytch.java.common.JWTSessionResponse
 import com.stytch.java.common.JwtOptions
@@ -587,26 +585,7 @@ internal class SessionsImpl(
                             StytchResult.Success(JWTAuthResponse(netResult.value))
                         }
 
-                        is StytchResult.Error -> {
-                            when (val exception = netResult.exception) {
-                                is StytchException.Response -> {
-                                    val errorResponse = exception.reason
-                                    StytchResult.Success(
-                                        JWTErrorResponse(
-                                            statusCode = errorResponse.statusCode,
-                                            requestId = errorResponse.requestId,
-                                            errorType = errorResponse.errorType,
-                                            errorMessage = errorResponse.errorMessage,
-                                            errorUrl = errorResponse.errorUrl,
-                                        ),
-                                    )
-                                }
-
-                                else -> {
-                                    StytchResult.Success(JWTNullResponse)
-                                }
-                            }
-                        }
+                        is StytchResult.Error -> netResult
                     }
                 }
             }

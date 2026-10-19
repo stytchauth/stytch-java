@@ -2,7 +2,9 @@ package com.stytch.java.consumer.api.sessions
 
 import com.stytch.java.common.JWTException
 import com.stytch.java.common.JwtOptions
+import com.stytch.java.common.StytchException
 import com.stytch.java.common.StytchResult
+import com.stytch.java.http.HttpClient
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.CoroutineScope
@@ -12,12 +14,15 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
 import org.jose4j.jwk.HttpsJwks
 import org.jose4j.jwk.JsonWebKey
 import org.jose4j.jwk.RsaJwkGenerator
 import org.jose4j.jws.AlgorithmIdentifiers
 import org.jose4j.jws.JsonWebSignature
 import org.jose4j.jwt.JwtClaims
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.time.Instant
@@ -30,10 +35,12 @@ internal class SessionsTest {
     private lateinit var jwtNoClaims: String
     private lateinit var jwtWithClaims: String
     private val projectId = "project-test-00000000-0000-0000-0000-000000000000"
+    private lateinit var server: MockWebServer
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
     @Before
     fun before() {
+        server = MockWebServer().apply { start() }
         Dispatchers.setMain(mainThreadSurrogate)
         val rsaJsonWebKey = RsaJwkGenerator.generateJwk(2048)
         val jsonWebKey = JsonWebKey.Factory.newJwk(rsaJsonWebKey.publicKey)
@@ -110,7 +117,7 @@ internal class SessionsTest {
                 }.compactSerialization
         sessions =
             SessionsImpl(
-                httpClient = mockk(relaxed = true, relaxUnitFun = true),
+                httpClient = HttpClient(server.url("").toString().trimEnd('/'), projectId, "secret"),
                 coroutineScope = CoroutineScope(mainThreadSurrogate),
                 jwksClient = jwksClient,
                 jwtOptions =
@@ -136,5 +143,32 @@ internal class SessionsTest {
         runTest {
             val result = sessions.authenticateJwtLocal(jwtWithClaims, 50000)
             require(result is StytchResult.Success)
+        }
+
+    @After
+    fun after() {
+        server.shutdown()
+    }
+
+    @Test
+    fun `authenticateJwt returns Error when the API rejects the JWT`() =
+        runTest {
+            server.enqueue(
+                MockResponse().setResponseCode(401).setBody(
+                    """{"status_code":401,"request_id":"req","error_type":"session_not_found","error_message":"nope","error_url":"url"}""",
+                ),
+            )
+            val result = sessions.authenticateJwt("aaa.bbb.ccc", null)
+            require(result is StytchResult.Error)
+            assert(result.exception is StytchException.Response)
+        }
+
+    @Test
+    fun `authenticateJwt returns Error when the API error response cannot be parsed`() =
+        runTest {
+            server.enqueue(MockResponse().setResponseCode(500).setBody("upstream unavailable"))
+            val result = sessions.authenticateJwt("aaa.bbb.ccc", null)
+            require(result is StytchResult.Error)
+            assert(result.exception is StytchException.Critical)
         }
 }
