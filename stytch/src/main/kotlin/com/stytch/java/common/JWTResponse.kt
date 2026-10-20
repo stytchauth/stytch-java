@@ -5,6 +5,7 @@ import com.stytch.java.consumer.models.sessions.Session
 
 public sealed interface JWTResponse
 
+@Deprecated("No longer returned; authenticateJwt reports failures as StytchResult.Error.")
 public object JWTNullResponse : JWTResponse
 
 public data class JWTSessionResponse(
@@ -15,6 +16,7 @@ public data class JWTAuthResponse(
     val response: AuthenticateResponse,
 ) : JWTResponse
 
+@Deprecated("No longer returned; authenticateJwt reports failures as StytchResult.Error.")
 public data class JWTErrorResponse(
     val statusCode: Int,
     val requestId: String?,
